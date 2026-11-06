@@ -1,0 +1,57 @@
+[project]
+name = "qms-automotive"
+version = "0.1.0"
+description = "Enterprise Quality Management System (QMS) for Automotive Injection Molding"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1,<5.2",
+    "djangorestframework>=3.15,<3.16",
+    "django-cors-headers>=4.4",
+    "django-environ>=0.11",
+    "psycopg[binary]>=3.2",
+    "argon2-cffi>=23.1",
+    "celery[redis]>=5.4",
+    "redis>=5.0",
+    "numpy>=1.26",
+    "scipy>=1.13",
+    "statsmodels>=0.14",
+    "weasyprint>=62.0",
+    "pdfplumber>=0.11",
+    "requests>=2.32",
+    "gunicorn>=22.0",
+    "pycryptodome>=3.20",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-django>=4.8",
+    "black>=24.0",
+    "flake8>=7.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.local"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]
+addopts = "--nomigrations --reuse-db"
+
+[tool.black]
+line-length = 100
+target-version = ['py312']
+exclude = '''
+/(
+    \.git
+  | \.reference
+  | \.venv
+  | build
+  | dist
+)/
+'''

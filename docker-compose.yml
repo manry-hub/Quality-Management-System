@@ -1,0 +1,160 @@
+# ==============================================================================
+# Docker Compose for Enterprise QMS Automotive
+# Rules: Compose v2 without 'version:', healthchecks, rotation logging, backend internal isolation
+# ==============================================================================
+
+x-common: &common
+  restart: unless-stopped
+  init: true
+  security_opt: ["no-new-privileges:true"]
+  logging:
+    driver: json-file
+    options:
+      max-size: "10m"
+      max-file: "3"
+
+services:
+  # ----------------------------------------------------------------------------
+  # PostgreSQL 16 Database
+  # ----------------------------------------------------------------------------
+  db:
+    <<: *common
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-qms_production}
+      POSTGRES_USER: ${POSTGRES_USER:-qms_app_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qms_dev_password_2026}
+    volumes:
+      - qms_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-qms_app_user} -d ${POSTGRES_DB:-qms_production}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    stop_grace_period: 30s
+    networks:
+      - backend
+
+  # ----------------------------------------------------------------------------
+  # Redis 7 In-Memory Store & Task Broker
+  # ----------------------------------------------------------------------------
+  redis:
+    <<: *common
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - qms_redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+    networks:
+      - backend
+
+  # ----------------------------------------------------------------------------
+  # QMS Web Application (Django Gunicorn)
+  # ----------------------------------------------------------------------------
+  web:
+    <<: *common
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DEBUG=${DEBUG:-False}
+      - SECRET_KEY=${SECRET_KEY:-dev_insecure_key_for_scaffold_testing_only_min_50_chars}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS:-localhost,127.0.0.1,web}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-qms_app_user}:${POSTGRES_PASSWORD:-qms_dev_password_2026}@db:5432/${POSTGRES_DB:-qms_production}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    ports:
+      - "8000:8000"
+    volumes:
+      - qms_media:/app/media
+      - qms_staticfiles:/app/staticfiles
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health/"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 25s
+    networks:
+      - frontend
+      - backend
+
+  # ----------------------------------------------------------------------------
+  # Celery Async Worker (Transactional Outbox & Nelson Rules)
+  # ----------------------------------------------------------------------------
+  celery_worker:
+    <<: *common
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["celery", "-A", "config", "worker", "-l", "INFO", "-Q", "default,high_priority,outbox"]
+    environment:
+      - DEBUG=${DEBUG:-False}
+      - SECRET_KEY=${SECRET_KEY:-dev_insecure_key_for_scaffold_testing_only_min_50_chars}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-qms_app_user}:${POSTGRES_PASSWORD:-qms_dev_password_2026}@db:5432/${POSTGRES_DB:-qms_production}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+      - CELERY_RESULT_BACKEND=redis://redis:6379/2
+    volumes:
+      - qms_media:/app/media
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+
+  # ----------------------------------------------------------------------------
+  # Celery Periodic Scheduler (Audit Chains & Calibration Expiry Checks)
+  # ----------------------------------------------------------------------------
+  celery_beat:
+    <<: *common
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ["celery", "-A", "config", "beat", "-l", "INFO"]
+    environment:
+      - DEBUG=${DEBUG:-False}
+      - SECRET_KEY=${SECRET_KEY:-dev_insecure_key_for_scaffold_testing_only_min_50_chars}
+      - DATABASE_URL=postgres://${POSTGRES_USER:-qms_app_user}:${POSTGRES_PASSWORD:-qms_dev_password_2026}@db:5432/${POSTGRES_DB:-qms_production}
+      - REDIS_URL=redis://redis:6379/0
+      - CELERY_BROKER_URL=redis://redis:6379/1
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+
+# ------------------------------------------------------------------------------
+# Networks & Persistent Volumes
+# ------------------------------------------------------------------------------
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true
+
+volumes:
+  qms_pgdata:
+    name: qms_pgdata
+  qms_redisdata:
+    name: qms_redisdata
+  qms_media:
+    name: qms_media
+  qms_staticfiles:
+    name: qms_staticfiles

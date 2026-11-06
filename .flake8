@@ -1,0 +1,13 @@
+[flake8]
+max-line-length = 120
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    .reference,
+    */migrations/*
+per-file-ignores =
+    config/settings/*: F403,F405,F401
+    config/__init__.py: F401
+    apps/*/models/__init__.py: F401
+    apps/*/__init__.py: F401
