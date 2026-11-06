@@ -24,6 +24,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-qms_production}
       POSTGRES_USER: ${POSTGRES_USER:-qms_app_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qms_dev_password_2026}
+    ports:
+      - "127.0.0.1:5432:5432"
     volumes:
       - qms_pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -43,6 +45,8 @@ services:
     <<: *common
     image: redis:7-alpine
     command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "127.0.0.1:6379:6379"
     volumes:
       - qms_redisdata:/data
     healthcheck:
@@ -71,7 +75,7 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/1
       - CELERY_RESULT_BACKEND=redis://redis:6379/2
     ports:
-      - "8000:8000"
+      - "${WEB_PORT:-8001}:8000"
     volumes:
       - qms_media:/app/media
       - qms_staticfiles:/app/staticfiles
@@ -147,7 +151,6 @@ networks:
     driver: bridge
   backend:
     driver: bridge
-    internal: true
 
 volumes:
   qms_pgdata:

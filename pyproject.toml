@@ -39,9 +39,9 @@ build-backend = "hatchling.build"
 package = false
 
 [tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings.local"
+DJANGO_SETTINGS_MODULE = "config.settings.test"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
-addopts = "--nomigrations --reuse-db"
+addopts = "--nomigrations"
 
 [tool.black]
 line-length = 100
