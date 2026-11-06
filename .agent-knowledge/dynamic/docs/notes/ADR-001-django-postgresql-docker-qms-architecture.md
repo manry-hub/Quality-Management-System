@@ -20,7 +20,7 @@ Key drivers and constraints:
 
 ## Decision
 
-We will architect and implement the QMS as a **Modular Monolith** using **Python 3.12**, **Django 5.1**, **Django REST Framework (DRF)**, **PostgreSQL 16**, **Redis 7**, and **Celery 5.4**, containerized and orchestrated via **Docker & Docker Compose**.
+We will architect and implement the QMS as a **Modular Monolith** using **Python 3.12**, **Django 5.1**, **Django REST Framework (DRF)**, **PostgreSQL 16**, **Redis 7**, and **Celery 5.4**, managed by **uv** as the fast Python package/virtualenv manager (`pyproject.toml` + `uv.lock`), containerized and orchestrated via **Docker & Docker Compose**.
 
 Domain applications will be organized under `apps/` (`apps/core`, `apps/quality_planning`, `apps/iqc`, `apps/ipqc`, `apps/oqc`, `apps/ncr`, `apps/capa`, `apps/spc`, `apps/metrology`, `apps/doc_control`, `apps/audits`, `apps/integrations`).
 

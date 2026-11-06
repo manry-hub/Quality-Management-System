@@ -7,6 +7,7 @@
 | Layer | Technology | Version | Role |
 | :--- | :--- | :--- | :--- |
 | **Runtime** | Python | `3.12.x` | Core execution runtime for backend logic and statistical computing. |
+| **Package & Project Manager** | uv | `0.12.x` | Extremely fast Python package installer and virtual environment resolver (`pyproject.toml`, `uv.lock`). |
 | **Backend Framework** | Django | `5.1.x` | Primary web framework providing ORM, authentication, admin, and 16 domain apps. |
 | **API Framework** | Django REST Framework (DRF) | `3.15.x` | Serializers and API views for M2M integration contracts (MES, WMS). |
 | **Frontend UI Foundation** | WowDash Template / Bootstrap / SCSS | `5.3.x` | Server-rendered responsive UI with reactive partial updates, styled via [DESIGN.md](file:///home/ughway/Debiancode/Myprojects/Quality-Management-System/DESIGN.md). |
