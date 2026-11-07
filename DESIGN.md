@@ -1,114 +1,98 @@
 # Design System & UI/UX Guidelines — Quality Management System (QMS)
 
-> **Status:** `ACTIVE` — Derived from WowDash Dashboard Template (`.reference/wowdash-template/`)  
-> **Target Framework:** Django Templates + Bootstrap 5.3 + SCSS + ApexCharts + Remixicon / FontAwesome  
-> **Domain:** Precision Automotive Plastic Injection Molding & Discrete Assembly (Shop Floor & Metrology Lab)
+> **Status:** `ACTIVE` — Powered by Vireo Design System (`.reference/vireo-template/`)  
+> **Architecture:** Django Server-Rendered Templates + Tailwind CSS v4 Design Tokens + Alpine.js + ApexCharts  
+> **Aesthetic:** Crisp Industrial Solid UI (Zero Gradient, Flat Structural Cards, Metrology Tabular Typography)  
+> **Brand Primary:** `#1e5885` (Deep Automotive Slate Blue)  
+> **Theming:** Full Dynamic Light / Dark Mode Toggle with Synchronous Anti-Flash Restore  
+> **Target Domain:** Automotive Plastic Injection Molding & Discrete Component Quality (IATF 16949:2016 & 21 CFR Part 11)
 
 ---
 
-## 1. Visual Direction & Brand Identity
+## 1. Visual Identity & Zero Gradient Philosophy
 
-The QMS interface bridges high-density engineering data (SPC control charts, CMM point clouds, tolerance tables) with rapid shop floor touch interactions (patrol inspection entries, First-Piece FAI approvals, quality hold alerts).
+The QMS interface adheres strictly to a **solid, flat, high-contrast industrial design** with **zero gradients**:
 
-### Core Brand & Quality Status Palette
-
-| Token | Hex Code | Visual Meaning / Automotive Quality Semantic |
-| :--- | :--- | :--- |
-| `--qms-primary` | `#487fff` | Primary brand blue, action buttons, active tabs, standard navigational focus. |
-| `--qms-success` | `#45b369` | **ACCEPTED / RELEASED**: Dimension within tolerance, FAI unlocked, CoA passed, lot available. |
-| `--qms-warning` | `#ff9f43` | **QA_HOLD / CONDITIONAL**: Awaiting inspection, calibration due within 14 days, concession review. |
-| `--qms-danger` | `#ef4a00` | **REJECTED / QUARANTINE / LINE STOP**: Defect out of tolerance, expired gauge lockout, critical NCR. |
-| `--qms-info` | `#00cfe8` | Audit trail record, informational notice, revision note, telemetry status. |
-| `--qms-dark` | `#1e293b` | Primary high-contrast text, dark sidebar navigation, terminal headers. |
-| `--qms-bg-light`| `#f8fafc` | Clean neutral background for desktop and administrative views. |
-| `--qms-bg-card` | `#ffffff` | Elevated card container with subtle shadow (`0 2px 6px rgba(0,0,0,0.04)`). |
-
-### Quality Hold Placard / Andon High-Visibility Theme
-For physical shop floor terminals and Andon display screens:
-* **Quality Hold Active:** Full-screen red banner (`#ef4a00`) with bold white monospace text, displaying target mold, machine, lot number, and immediate line-stop directive.
-* **Line Cleared / FAI Approved:** Distinctive green badge (`#45b369`) displaying cryptographic release token and inspector badge.
+1. **Zero Gradients Mandate:** All linear gradients, radial gradients, and decorative glow backdrops (`.ax-ambient`) are disabled. All surfaces, buttons, indicators, and brand marks use solid, uniform colors for maximum legibility in factory lighting and on rugged touchscreens.
+2. **Crisp Structural Panels (`.ax-card`):** Resting cards utilize clean, flat surfaces (`var(--ax-surface)` with 1px hairline border `--ax-border`) and minimal elevation (`0 1px 3px rgba(0,0,0,0.04)` in light mode, `0 1px 3px rgba(0,0,0,0.3)` in dark mode).
+3. **Responsive Dark / Light Mode:** A dynamic switch in the top navigation bar enables instant flipping between Light and Dark modes. The state is synchronously restored on first paint from `localStorage.getItem('ax:theme')` in $<1\text{ms}$, completely eliminating flash of unstyled content (FOUC).
 
 ---
 
-## 2. Typography
+## 2. Color Palettes & Industrial Quality Semantics
 
-* **Primary Font Family:** `'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif`
-* **Data & Tolerance Font Family:** `'JetBrains Mono', 'Fira Code', 'Courier New', monospace` (mandatory for dimensional tolerances, CMM coordinate readings, serial numbers, lot codes, and hash chains).
+### Primary Brand Palette (`#1e5885`)
 
-### Scale & Hierarchy
-* **Display / KPI Header:** `32px` (`font-weight: 700`, line-height: 1.2)
-* **Page Title (H1):** `24px` (`font-weight: 600`, line-height: 1.3)
-* **Section Title (H2):** `20px` (`font-weight: 600`, line-height: 1.4)
-* **Card Header (H3):** `16px` (`font-weight: 600`, line-height: 1.5)
-* **Body Text:** `14px` (`font-weight: 400`, line-height: 1.6)
-* **Table Cell / Small Monospace:** `12px` / `13px` (`font-weight: 500`)
+The primary brand accent is set to **`#1e5885`** (Automotive Slate Blue), providing authoritative visual focus without eye fatigue:
+
+| Token | Light Value | Dark Value | Purpose |
+| :--- | :--- | :--- | :--- |
+| `--ax-accent` | `#1e5885` | `#337bb2` | Primary buttons, active navigation state, active tab borders, brand icon. |
+| `--ax-accent-hover` | `#18466b` | `#4a93cb` | Button hover and interactive focus state. |
+| `--ax-accent-wash` | `#edf4f9` | `#13273a` | Selected table row background, soft brand badges. |
+| `--ax-on-accent` | `#FFFFFF` | `#FFFFFF` | Text and icons placed on top of primary buttons. |
+| `--ax-accent-rgb` | `30, 88, 133` | `51, 123, 178` | Focus ring glow alpha channels. |
+
+### Base Theme Surfaces (Solid, Flat)
+
+| Token | Light Value | Dark Value | Purpose |
+| :--- | :--- | :--- | :--- |
+| `--ax-canvas` | `#F6F8FC` | `#0A0C11` | Application background (solid, no ambient glow). |
+| `--ax-surface` | `#FFFFFF` / `rgba(255,255,255,0.85)` | `#161A23` / `rgba(22,26,35,0.85)` | Primary card container (`.ax-card`). |
+| `--ax-surface-solid` | `#FFFFFF` | `#161A23` | High-contrast opaque modal surface. |
+| `--ax-surface-subtle` | `#F0F3F9` | `#1C212C` | Secondary card headers and table headers. |
+| `--ax-border` | `rgba(20,28,45,0.08)` | `rgba(255,255,255,0.08)` | 1px hairline framing stroke. |
+
+### Industrial Quality & Andon Status Tokens
+
+| Status Semantic | Primary Token | Hex Code | Visual Meaning & Shopfloor Directive |
+| :--- | :--- | :--- | :--- |
+| **RELEASED / ACCEPTED / NOMINAL** | `--ax-success-500` | `#10b981` / `#34D399` | **Pass:** Dimensions within specification limits, CoA verified, FAI cryptographic token issued, pallet cleared for shipment. |
+| **PENDING / CONDITIONAL / WARNING** | `--ax-warning-500` | `#f59e0b` / `#FBBF24` | **Attention:** Lot awaiting physical dock inspection, calibration due within 14 days, 1–2 consecutive cushion drift shots observed. |
+| **REJECTED / QUARANTINE / LINE STOP** | `--ax-danger-500` | `#ef4444` / `#FB7185` | **Hard Stop:** Out-of-tolerance dimensions, 3 consecutive cushion drift shots, moisture exceeding threshold, MRB containment active. |
+| **TELEMETRY / AUDIT / INFO** | `--ax-viz-cyan` | `#0ea5e9` / `#38BDF8` | **Process Info:** Real-time IMM injection pressure, screw recovery time, cycle time telemetry, 21 CFR Part 11 audit trails. |
 
 ---
 
-## 3. Layout Structure & Breakpoints
+## 3. Typography & Metrology Readability
 
-Derived from WowDash architecture (`.reference/wowdash-template/templates/layout/layout.html`):
+* **Display Font (`--ax-font-display`):** `Space Grotesk`, sans-serif. Applied to high-level KPI values and major status titles.
+* **Body Font (`--ax-font-sans`):** `Inter`, sans-serif. Engineered for optical clarity on screens, form controls, and table bodies.
+* **Tabular Monospace Font (`--ax-font-mono`):** `JetBrains Mono`, monospace. **Mandatory** for dimensional measurements, tolerances (`Nominal ± Tol`), batch numbers, cryptographic SHA-256 tokens, and machine serials. Numeric figures always render with tabular numbers (`.ax-num`).
+
+---
+
+## 4. Layout Architecture & Vireo Shell Anatomy
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────┐
-│ Top Navbar (Plant ID, Shift Status, Active Machine Indicator, User Profile) │
+│ Top Navbar (Sidebar Toggle, Breadcrumbs, ⌘K Search, Dark/Light Toggle, Badge)│
 ├───────────────┬────────────────────────────────────────────────────────┤
-│ Sidebar       │ Breadcrumb & Quick Action Bar (New NCR, Quick FAI)      │
-│ (Collapsible) ├────────────────────────────────────────────────────────┤
-│               │ Main Content Area                                      │
-│ • Dashboard   │ ┌───────────────┐ ┌───────────────┐ ┌────────────────┐ │
-│ • IQC         │ │ KPI Widget 1  │ │ KPI Widget 2  │ │ KPI Widget 3   │ │
-│ • IPQC / FAI  │ └───────────────┘ └───────────────┘ └────────────────┘ │
-│ • OQC         │ ┌────────────────────────────────────────────────────┐ │
-│ • NCR / MRB   │ │ Data Table / Inspection Entry Form / SPC Chart     │ │
-│ • CAPA (8D)   │ └────────────────────────────────────────────────────┘ │
-│ • SPC / MSA   │                                                        │
-│ • Doc Control │                                                        │
+│ .ax-sidebar   │ Main Content Area (#ax-main)                           │
+│ (Tree Nav)    │ ┌────────────────────────────────────────────────────┐ │
+│ • Dashboard   │ │ Page Header (.ax-page-head)                        │ │
+│ • IQC Dock    │ ├────────────────────────────────────────────────────┤ │
+│ • IPQC IMM    │ │ 12-Column Responsive Dashboard Grid (.ax-dash-grid) │ │
+│ • OQC c=0     │ │ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌─────────┐ │ │
+│ • Master Data │ │ │ KPI 1    │ │ KPI 2    │ │ KPI 3    │ │ KPI 4   │ │ │
+│ • Audit Trail │ │ └──────────┘ └──────────┘ └──────────┘ └─────────┘ │ │
+│ • System      │ │ ┌──────────────────────┐ ┌───────────────────────┐ │ │
+│               │ │ │ Cushion Drift Chart  │ │ Defect Pareto Chart   │ │ │
+│               │ │ └──────────────────────┘ └───────────────────────┘ │ │
+│               │ │ ┌────────────────────────────────────────────────┐ │ │
+│               │ │ │ Operational Inspection Table (.ax-table)       │ │ │
+│               │ │ └────────────────────────────────────────────────┘ │ │
+│               │ └────────────────────────────────────────────────────┘ │
 ├───────────────┴────────────────────────────────────────────────────────┤
-│ Footer (QMS Version, 21 CFR Part 11 Audit Heartbeat, Plant Network Status)│
+│ .ax-footer (IATF 16949 / 21 CFR Part 11 Compliance Sign-off & Version) │
 └────────────────────────────────────────────────────────────────────────┘
 ```
 
-### Breakpoints
-* **Desktop / Metrology Lab:** $\ge 1200\text{px}$ — Full persistent sidebar, multi-column data tables, side-by-side SPC and defect Pareto charts.
-* **Shop Floor Tablet (10"–12"):** $768\text{px} - 1199\text{px}$ — Collapsed sidebar, enlarged tap targets ($\ge 48\text{px}$), single-column inspection forms with large numeric keypads.
-* **Rugged Barcode Scanner / Mobile:** $< 768\text{px}$ — Off-canvas navigation, camera/barcode scanning full-screen interface, high-contrast text.
-
 ---
 
-## 4. UI Components & Interaction Patterns
+## 5. UI Components & Interaction Patterns
 
-### 1. Data Tables & Tolerance Lists
-* Compact density with sticky headers for inspection lists.
-* Real-time validation badges:
-  * Variable characteristics display `Nominal [LSL, USL]` with current reading.
-  * Out-of-tolerance readings automatically highlight the cell in bold red with pulse animation.
-* Instant search and trigram filtering on Lot Number, Part Number, and Machine Code.
-
-### 2. Shop Floor Inspection Forms
-* Large numeric input fields with step buttons for caliper/micrometer readings.
-* Gauge Selector dropdown with automated status badge:
-  * Green: `CALIBRATED (Expires: 2026-12-01)`
-  * Red: `OVERDUE - LOCKED` (Input fields disabled if expired gauge selected).
-* Pass/Fail toggle buttons for attribute checks (Sink Mark, Splay, Flash, Short Shot).
-
-### 3. Material Review Board (MRB) & Concession Modal
-* High-impact modal requiring multi-signature verification.
-* Radio selection for MRB Disposition: `REWORK`, `REPAIR`, `SCRAP`, `USE_AS_IS`, `RETURN_TO_SUPPLIER`, `SORTING`, `REINSPECTION`.
-* Dual re-authentication challenge (Password/PIN + Physical Badge Scan).
-
-### 4. SPC Control Charts (ApexCharts Integration)
-* Interactive $\bar{X}-R$ and $\bar{X}-s$ charts.
-* Color-coded reference lines:
-  * Upper/Lower Specification Limits ($\text{USL}/\text{LSL}$): Solid Red line.
-  * Upper/Lower Control Limits ($\text{UCL}/\text{LCL}$): Dashed Amber line.
-  * Center Line ($\text{CL}$): Solid Green line.
-* Points triggering Nelson Rules 1–8 rendered as enlarged red dots with hover tooltip explaining the specific rule violation (e.g., *"Rule 1: Point exceeds $3\sigma$ Zone A"*).
-
----
-
-## 5. Accessibility & Industrial Usability
-
-* **Color Independence:** All quality statuses pair color with iconography (Checkmark for Accepted, Warning Triangle for Hold, Octagon Cross for Rejected) to ensure readability for colorblind operators.
-* **Keyboard & Scanner Navigability:** Full keyboard tab-indexing for rapid data entry without mouse reliance; barcode scan inputs automatically capture Enter key termination to advance to the next field.
-* **Touch-Friendly Hit Targets:** All interactive buttons on floor inspection forms are minimum $44\text{px} \times 44\text{px}$ with minimum $8\text{px}$ touch separation.
+1. **Primary Buttons (`.ax-btn--primary`):** Solid `#1e5885` background with white text, flat border, zero gradient, and zero box-shadow glow.
+2. **Data Tables (`.ax-table`):** Compact density with sticky headers, clear zebra/hover rows, and status badges.
+3. **Status Badges (`.ax-badge`):** Soft solid pills (`.ax-badge--soft .ax-badge--pill`) with glowing status indicator dots.
+4. **Dark/Light Mode Switcher:** Sun/Moon toggle button in the top navbar directly flips `data-ax-theme` between `light` and `dark`, dispatches `ax:change`, and live-updates ApexCharts color themes.

@@ -1,62 +1,127 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="light">
+{% load static %}<!doctype html>
+<html
+  lang="en"
+  data-ax-route="{{ ax_route|default:'dashboards/qms' }}"
+  data-ax-manifest="{% static 'data/nav-manifest.json' %}"
+>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Executive Quality Dashboard{% endblock %} — QMS Automotive</title>
-    <link rel="icon" type="image/png" href="/static/images/favicon.png" sizes="16x16">
-    <link rel="stylesheet" href="/static/css/remixicon.css">
-    <link rel="stylesheet" href="/static/css/lib/bootstrap.min.css">
-    <link rel="stylesheet" href="/static/css/lib/apexcharts.css">
-    <link rel="stylesheet" href="/static/css/lib/dataTables.min.css">
-    <link rel="stylesheet" href="/static/css/lib/flatpickr.min.css">
-    <link rel="stylesheet" href="/static/css/style.css">
-    {% block extra_css %}{% endblock %}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- ============================================================ -->
+  <!-- VIREO ANTI-FLASH THEME RESTORE — MUST be first in <head>     -->
+  <!-- ============================================================ -->
+  <script>
+  (function () {
+    var D = document.documentElement, LS;
+    try { LS = window.localStorage; } catch (e) { LS = null; }
+    function get(k){ try { return LS && LS.getItem(k); } catch(e){ return null; } }
+
+    try { if (LS && get('ax:schema') && get('ax:schema') !== '1') {
+      Object.keys(LS).forEach(function(k){ if (k.indexOf('ax:')===0) LS.removeItem(k); });
+    } if (LS) LS.setItem('ax:schema','1'); } catch(e){}
+
+    /* Theme */
+    var theme = get('ax:theme') || 'system';
+    var sysDark = false;
+    try { sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches; } catch(e){}
+    var resolved = (theme === 'system') ? (sysDark ? 'dark' : 'light') : theme;
+    D.setAttribute('data-ax-theme', resolved);
+
+    /* Accent: strictly QMS Blue (#1e5885), zero default verdigris */
+    D.setAttribute('data-ax-accent', 'qms-blue');
+
+    /* Lang & Dir */
+    var lang = (get('ax:lang') || 'EN').toUpperCase();
+    D.setAttribute('lang', lang.toLowerCase());
+    var dirStored = get('ax:dir');
+    var dir = dirStored ? dirStored : (lang === 'AR' ? 'rtl' : 'ltr');
+    D.setAttribute('dir', dir);
+
+    function setAttr(attr, key, def){
+      var v = get(key);
+      if (v && v !== def) D.setAttribute(attr, v); else D.removeAttribute(attr);
+    }
+    setAttr('data-ax-nav',              'ax:nav',              'vertical');
+    setAttr('data-ax-shell-style',      'ax:shell-style',      'default');
+    setAttr('data-ax-sidebar-behavior', 'ax:sidebar-behavior', 'collapsible');
+    setAttr('data-ax-menu',             'ax:menu',             'click');
+    setAttr('data-ax-page',             'ax:page',             'regular');
+    setAttr('data-ax-width',            'ax:width',            'fluid');
+    setAttr('data-ax-header-position',  'ax:header-position',  'fixed');
+    setAttr('data-ax-sidebar-position', 'ax:sidebar-position', 'fixed');
+    setAttr('data-ax-sidebar',          'ax:sidebar-scheme',   'light');
+    setAttr('data-ax-header',           'ax:header-scheme',    'light');
+    setAttr('data-ax-loader',           'ax:loader',           'off');
+
+    var behavior = get('ax:sidebar-behavior') || 'collapsible';
+    if (behavior === 'collapsible' && get('ax:collapsed') === '1') D.setAttribute('data-ax-collapsed', '');
+    else D.removeAttribute('data-ax-collapsed');
+  })();
+  </script>
+
+  <title>{% block title %}Plant Quality Dashboard{% endblock %} · QMS Automotive</title>
+  <meta name="description" content="Precision Automotive Plastic Injection Molding Quality Management System — IATF 16949:2016 and 21 CFR Part 11 compliant." />
+  <meta name="theme-color" content="#0A0C11" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#FCFBF9" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}" />
+
+  <!-- Google Fonts: Inter, Space Grotesk, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Vireo Compiled Stylesheet & QMS Theme Override (#1e5885, Zero Gradient) -->
+  <link rel="stylesheet" href="{% static 'dist/vireo.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/theme-override.css' %}" />
+  {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body{% block body_attrs %}{% endblock %}>
+  <div class="ax-layout">
     {% include "partials/sidebar.html" %}
 
-    <main class="dashboard-main">
-        {% include "partials/navbar.html" %}
+    <div class="ax-shell">
+      {% include "partials/navbar.html" %}
 
-        <div class="dashboard-main-body">
-            {% if messages %}
-            <div class="row mb-3">
-                <div class="col-12">
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show radius-8" role="alert">
-                        {{ message }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-
-            {% block content %}{% endblock %}
+      <main class="ax-main" id="ax-main">
+        {% if messages %}
+        <div style="margin-block-end: var(--ax-space-4); display: flex; flex-direction: column; gap: var(--ax-space-2);">
+          {% for message in messages %}
+          <div class="ax-badge ax-badge--soft ax-badge--{{ message.tags|default:'info' }}" style="padding: var(--ax-space-3) var(--ax-space-4); font-size: var(--ax-text-sm); border-radius: var(--ax-radius-lg); width: 100%; justify-content: flex-start;">
+            <span class="ax-badge__dot"></span>
+            <span>{{ message }}</span>
+          </div>
+          {% endfor %}
         </div>
+        {% endif %}
 
-        <footer class="d-footer">
-            <div class="row align-items-center justify-content-between">
-                <div class="col-auto">
-                    <p class="mb-0 text-sm text-secondary-light">
-                        &copy; 2026 <strong>QMS Automotive</strong>. Precision Plastic Injection Molding Governance.
-                    </p>
-                </div>
-                <div class="col-auto">
-                    <p class="mb-0 text-sm text-secondary-light">
-                        Standards: <span class="text-primary-600 fw-semibold">IATF 16949:2016</span> | <span class="text-success-main fw-semibold">21 CFR Part 11</span>
-                    </p>
-                </div>
-            </div>
-        </footer>
-    </main>
+        {% block content %}{% endblock %}
+      </main>
 
-    <script src="/static/js/lib/jquery-3.7.1.min.js"></script>
-    <script src="/static/js/lib/bootstrap.bundle.min.js"></script>
-    <script src="/static/js/lib/apexcharts.min.js"></script>
-    <script src="/static/js/lib/iconify-icon.min.js"></script>
-    <script src="/static/js/app.js"></script>
-    {% block script %}{% endblock %}
+      <!-- Vireo Shell Footer -->
+      <footer class="ax-footer">
+        <div class="ax-footer__left">
+          <span class="ax-footer__copy">© 2026 QMS Automotive · Precision Plastic Injection Molding</span>
+          <span class="ax-footer__sep" aria-hidden="true">·</span>
+          <span class="ax-footer__version ax-mono">v1.2.0</span>
+        </div>
+        <nav class="ax-footer__links" aria-label="Compliance Standards">
+          <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+            <span class="ax-badge__dot"></span>IATF 16949:2016
+          </span>
+          <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">
+            <span class="ax-badge__dot"></span>21 CFR Part 11
+          </span>
+        </nav>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Vireo Runtime (Alpine.js, ApexCharts Auto-scanner, Navigation handler) -->
+  <script type="module" src="{% static 'dist/vireo.js' %}"></script>
+  {% block script %}{% endblock %}
 </body>
 </html>

@@ -1,0 +1,107 @@
+/* ==========================================================================
+   QMS Automotive — Vireo Theme Override
+   Primary Color: #1e5885 (Solid, zero gradient)
+   ========================================================================== */
+
+:root,
+[data-ax-accent="qms-blue"] {
+  /* Brand Primary: #1e5885 */
+  --ax-accent: #1e5885;
+  --ax-accent-50: #edf4f9;
+  --ax-accent-100: #d6e5f1;
+  --ax-accent-200: #b0cee4;
+  --ax-accent-300: #7eb0d3;
+  --ax-accent-400: #4a8ec0;
+  --ax-accent-500: #1e5885;
+  --ax-accent-600: #18466b;
+  --ax-accent-700: #133754;
+  --ax-accent-800: #0f2a40;
+  --ax-accent-900: #0a1c2b;
+  --ax-accent-hover: #18466b;
+  --ax-accent-wash: #edf4f9;
+  --ax-on-accent: #ffffff;
+  --ax-accent-rgb: 30, 88, 133;
+  --ax-link: #1e5885;
+  --ax-focus-ring: #1e5885;
+  --ax-focus-shadow: 0 0 0 3px rgba(30, 88, 133, 0.22);
+
+  /* Absolute Zero Gradient Guarantee */
+  --ax-gradient-accent: #1e5885;
+  --ax-gradient-plate: var(--ax-surface);
+  --ax-glow-accent: none;
+  --ax-glow-1: transparent;
+  --ax-glow-2: transparent;
+  --ax-glow-3: transparent;
+}
+
+[data-ax-theme="dark"],
+[data-ax-theme="dark"][data-ax-accent="qms-blue"] {
+  /* Dark mode readable primary */
+  --ax-accent: #337bb2;
+  --ax-accent-hover: #4a93cb;
+  --ax-accent-wash: #13273a;
+  --ax-on-accent: #ffffff;
+  --ax-accent-rgb: 51, 123, 178;
+  --ax-link: #4a93cb;
+  --ax-focus-ring: #4a93cb;
+  --ax-focus-shadow: 0 0 0 3px rgba(51, 123, 178, 0.3);
+
+  /* Absolute Zero Gradient Guarantee */
+  --ax-gradient-accent: #337bb2;
+  --ax-gradient-plate: var(--ax-surface);
+  --ax-glow-accent: none;
+  --ax-glow-1: transparent;
+  --ax-glow-2: transparent;
+  --ax-glow-3: transparent;
+}
+
+/* Eliminate background ambient blur gradient */
+.ax-ambient {
+  display: none !important;
+}
+
+/* Primary buttons: solid, crisp, zero gradient */
+.ax-btn--primary {
+  background: var(--ax-accent) !important;
+  color: var(--ax-on-accent) !important;
+  border-color: var(--ax-accent) !important;
+  box-shadow: none !important;
+}
+
+.ax-btn--primary:hover {
+  background: var(--ax-accent-hover) !important;
+  border-color: var(--ax-accent-hover) !important;
+  box-shadow: none !important;
+}
+
+.ax-btn--primary:active {
+  background: var(--ax-accent-hover) !important;
+  filter: brightness(0.92);
+}
+
+/* Nav item active highlight */
+.ax-nav__item.is-active,
+.ax-nav__item.is-active:hover {
+  background: var(--ax-accent-wash) !important;
+  color: var(--ax-accent) !important;
+  box-shadow: none !important;
+}
+
+[data-ax-theme="dark"] .ax-nav__item.is-active,
+[data-ax-theme="dark"] .ax-nav__item.is-active:hover {
+  background: var(--ax-accent-wash) !important;
+  color: var(--ax-accent) !important;
+}
+
+/* Card rim highlight: clean flat border without gradient */
+.ax-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-ax-theme="dark"] .ax-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.ax-card::after {
+  display: none !important;
+}
