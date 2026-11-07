@@ -35,6 +35,9 @@ LOCAL_APPS = [
     "apps.core.apps.CoreConfig",
     "apps.master_data.apps.MasterDataConfig",
     "apps.quality_planning.apps.QualityPlanningConfig",
+    "apps.iqc.apps.IqcConfig",
+    "apps.ipqc.apps.IpqcConfig",
+    "apps.oqc.apps.OqcConfig",
     "apps.integrations.apps.IntegrationsConfig",
 ]
 
