@@ -88,6 +88,58 @@
       "alias": null
     },
     {
+      "id": "grp.governance_trace",
+      "title": "Governance & Traceability",
+      "slug": "ncr",
+      "icon": "shield-alert",
+      "parent": null,
+      "section": "GOVERNANCE & TRACEABILITY",
+      "order": 3,
+      "badge": null,
+      "keywords": ["governance", "ncr", "hold", "mrb", "traceability", "blast radius"],
+      "inMenu": true,
+      "alias": null
+    },
+    {
+      "id": "gov.ncr",
+      "title": "Quality Holds & NCR",
+      "slug": "ncr",
+      "icon": "alert-triangle",
+      "parent": "grp.governance_trace",
+      "section": null,
+      "order": 1,
+      "badge": "Hold",
+      "keywords": ["ncr", "hold", "quarantine", "non-conformance", "containment"],
+      "inMenu": true,
+      "alias": null
+    },
+    {
+      "id": "gov.mrb",
+      "title": "Material Review Board (MRB)",
+      "slug": "mrb",
+      "icon": "users",
+      "parent": "grp.governance_trace",
+      "section": null,
+      "order": 2,
+      "badge": "4-Eyes",
+      "keywords": ["mrb", "four eyes", "concession", "use-as-is", "rework", "scrap"],
+      "inMenu": true,
+      "alias": null
+    },
+    {
+      "id": "gov.traceability",
+      "title": "Lot Genealogy & Blast Radius",
+      "slug": "traceability",
+      "icon": "git-fork",
+      "parent": "grp.governance_trace",
+      "section": null,
+      "order": 3,
+      "badge": null,
+      "keywords": ["genealogy", "traceability", "blast radius", "lot", "pallet", "shipment"],
+      "inMenu": true,
+      "alias": null
+    },
+    {
       "id": "grp.governance",
       "title": "Compliance & Admin",
       "slug": "admin",
