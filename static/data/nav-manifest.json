@@ -177,6 +177,58 @@
       "keywords": ["admin", "parts", "materials", "control plans", "users"],
       "inMenu": true,
       "alias": null
+    },
+    {
+      "id": "grp.qe",
+      "title": "Quality Engineering & Metrology",
+      "slug": "spc",
+      "icon": "chart-line",
+      "parent": null,
+      "section": "QUALITY ENGINEERING",
+      "order": 4,
+      "badge": null,
+      "keywords": ["spc", "capa", "8d", "metrology", "msa", "gauge", "calibration"],
+      "inMenu": true,
+      "alias": null
+    },
+    {
+      "id": "qe.spc",
+      "title": "Statistical Process Control (SPC)",
+      "slug": "spc",
+      "icon": "chart-line",
+      "parent": "grp.qe",
+      "section": null,
+      "order": 1,
+      "badge": "SPC",
+      "keywords": ["spc", "nelson rules", "cpk", "ppk", "control chart", "shewhart"],
+      "inMenu": true,
+      "alias": null
+    },
+    {
+      "id": "qe.capa",
+      "title": "8D Problem Solving (CAPA)",
+      "slug": "capa",
+      "icon": "rotate-2",
+      "parent": "grp.qe",
+      "section": null,
+      "order": 2,
+      "badge": "8D",
+      "keywords": ["capa", "8d", "5why", "fishbone", "ishikawa", "voe"],
+      "inMenu": true,
+      "alias": null
+    },
+    {
+      "id": "qe.metrology",
+      "title": "Metrology & Gauge Calibration",
+      "slug": "metrology",
+      "icon": "ruler",
+      "parent": "grp.qe",
+      "section": null,
+      "order": 3,
+      "badge": "MSA",
+      "keywords": ["metrology", "gauge", "calibration", "msa", "gauge r&r", "anova"],
+      "inMenu": true,
+      "alias": null
     }
   ]
 }

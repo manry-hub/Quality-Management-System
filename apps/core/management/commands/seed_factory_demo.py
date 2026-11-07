@@ -19,6 +19,23 @@ from apps.ncr.models.ncr import (
 from apps.mrb.models.mrb import MrbCase, MrbVote, MrbStatus, MrbRole, VoteChoice
 from apps.traceability.models.traceability import TraceabilityNode, NodeType
 from apps.core.models.audit import AuditTrailEvent
+from apps.spc.models.spc import SpcControlChart, SpcSubgroup
+from apps.spc.services import record_spc_subgroup
+from apps.capa.models.capa import (
+    Capa8dRecord,
+    CapaVoeRecord,
+    CapaDisciplineChoices,
+    VoeMilestoneChoices,
+)
+from apps.capa.services import create_8d_capa, advance_8d_discipline, record_voe_checkpoint
+from apps.metrology.models.metrology import (
+    Gauge,
+    GaugeCalibration,
+    GaugeStatusChoices,
+    GaugeTypeChoices,
+    MsaStudy,
+)
+from apps.metrology.services import record_calibration, compute_anova_gauge_rr
 
 User = get_user_model()
 
@@ -40,6 +57,13 @@ class Command(BaseCommand):
 
         if options.get("reset"):
             self.stdout.write("Purging operational records...")
+            SpcSubgroup.objects.all().delete()
+            SpcControlChart.objects.all().delete()
+            CapaVoeRecord.objects.all().delete()
+            Capa8dRecord.objects.all().delete()
+            MsaStudy.objects.all().delete()
+            GaugeCalibration.objects.all().delete()
+            Gauge.objects.all().delete()
             MrbVote.objects.all().delete()
             MrbCase.objects.all().delete()
             NonConformanceReport.objects.all().delete()
@@ -657,6 +681,265 @@ class Command(BaseCommand):
             )
 
         self.stdout.write(self.style.SUCCESS("  Recorded 21 CFR Part 11 electronic audit trail logs."))
+
+        # ---------------------------------------------------------------------
+        # 10. STATISTICAL PROCESS CONTROL (SPC) & NELSON RULES
+        # ---------------------------------------------------------------------
+        self.stdout.write("10. Seeding Statistical Process Control (SPC) control charts & telemetry...")
+        spc_chart_bumper = SpcControlChart.objects.create(
+            part=part_map["PRD-FASCIA-FR"],
+            characteristic_name="Main Mounting Flange Width (Dim B)",
+            chart_type="XBAR_R",
+            nominal=Decimal("12.5000"),
+            usl=Decimal("12.6500"),
+            lsl=Decimal("12.3500"),
+            subgroup_size=5,
+            unit_of_measure="mm",
+            is_active=True,
+        )
+
+        # Generate 18 in-control subgroups
+        base_samples = [
+            [12.498, 12.503, 12.501, 12.495, 12.504],
+            [12.502, 12.505, 12.497, 12.501, 12.500],
+            [12.504, 12.499, 12.503, 12.506, 12.498],
+            [12.497, 12.501, 12.502, 12.504, 12.496],
+            [12.501, 12.506, 12.502, 12.499, 12.503],
+            [12.499, 12.495, 12.504, 12.501, 12.502],
+            [12.503, 12.507, 12.498, 12.502, 12.500],
+            [12.500, 12.502, 12.505, 12.497, 12.501],
+            [12.496, 12.501, 12.504, 12.499, 12.503],
+            [12.502, 12.504, 12.498, 12.506, 12.501],
+            [12.505, 12.501, 12.503, 12.497, 12.504],
+            [12.498, 12.502, 12.500, 12.505, 12.499],
+            [12.501, 12.507, 12.503, 12.496, 12.502],
+            [12.504, 12.499, 12.501, 12.505, 12.498],
+            [12.500, 12.503, 12.506, 12.502, 12.497],
+            [12.502, 12.504, 12.499, 12.501, 12.505],
+            [12.497, 12.501, 12.503, 12.506, 12.500],
+            # Point with an anomaly shift violating Nelson Rule 1 (>3 sigma)
+            [12.610, 12.605, 12.615, 12.608, 12.612],
+        ]
+
+        for samples in base_samples:
+            record_spc_subgroup(spc_chart_bumper.id, samples)
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"  Created SPC Chart {spc_chart_bumper.characteristic_name} with {len(base_samples)} subgroups."
+            )
+        )
+
+        # ---------------------------------------------------------------------
+        # 11. IATF 16949 8D PROBLEM SOLVING (CAPA) & 30/60/90-DAY VOE
+        # ---------------------------------------------------------------------
+        self.stdout.write("11. Seeding 8D CAPA dossiers & VoE recurrence checkpoints...")
+        capa_bumper = create_8d_capa(
+            title="Excessive Gate Blush & Flash on Front Bumper Fascia",
+            champion=user_map["qa_manager"],
+            leader=user_map["chief_engineer"],
+            team_members=[
+                {"name": "Marcus Vance", "role": "Tooling Tech"},
+                {"name": "Carlos Gomez", "role": "Process Tech"},
+                {"name": "Linda Wu", "role": "Metrologist"},
+            ],
+            d2_problem_statement=(
+                "Who: Shift 2 QC Inspector. What: Severe gate flash exceeding 0.35mm on Bumper Fascia cavity 1. "
+                "Where: IMM-03 tool parting line. When: Detected at 14:30 during IPQC First Article Inspection. "
+                "How many: 120 parts quarantined in Hold Bay B-4."
+            ),
+            ncr=ncr_crit,
+            capa_number="CAPA-2026-0001",
+        )
+
+        # Advance through D3, D4, D5, D6, D7
+        advance_8d_discipline(
+            capa_bumper.id,
+            CapaDisciplineChoices.D3_CONTAINMENT,
+            {
+                "d3_containment_action": (
+                    "100% sorting gate established on IMM-03. All 120 affected parts quarantined in Hold Bay B-4."
+                )
+            },
+        )
+
+        advance_8d_discipline(
+            capa_bumper.id,
+            CapaDisciplineChoices.D4_ROOT_CAUSE,
+            {
+                "d4_root_cause_5why": [
+                    {"why": "Why did flash occur?", "answer": "Clamp tonnage dropped from 850T to 710T mid-cycle."},
+                    {
+                        "why": "Why did clamp tonnage drop?",
+                        "answer": "Proportional relief valve on hydraulic cylinder 2 was leaking internally.",
+                    },
+                    {
+                        "why": "Why was valve leaking?",
+                        "answer": "FKM O-ring suffered extrusion failure due to thermal degradation (>65°C).",
+                    },
+                    {
+                        "why": "Why was oil temp elevated?",
+                        "answer": "Heat exchanger cooling tower water filter was clogged with mineral scale.",
+                    },
+                    {
+                        "why": "Why was filter not serviced?",
+                        "answer": "PM checklist specified 6-month interval instead of monthly water hardness checks.",
+                    },
+                ],
+                "d4_fishbone_data": {
+                    "machine": ["Proportional relief valve seal extruded", "Hydraulic oil temperature spike 68°C"],
+                    "method": ["Preventive maintenance checklist lacked water hardness inspection"],
+                    "material": ["Hydraulic oil ISO VG 46 thermal viscosity breakdown"],
+                    "man": ["Operator did not monitor oil chiller temperature display"],
+                    "measurement": ["Chiller thermometer was within calibration but sensor located post-cooler"],
+                    "milieu": ["High ambient summer heat in IMM press hall"],
+                },
+                "d4_root_cause_summary": (
+                    "Hydraulic clamp pressure drop caused by cooling water filter fouling and valve thermal breakdown."
+                ),
+            },
+        )
+
+        advance_8d_discipline(
+            capa_bumper.id,
+            CapaDisciplineChoices.D5_PCA_CHOSEN,
+            {
+                "d5_permanent_corrective_actions": (
+                    "Replaced proportional valve with high-temperature FFKM seals; "
+                    "installed automated inline oil temperature thermocouple alarm interlocked with machine PLC."
+                )
+            },
+        )
+
+        advance_8d_discipline(
+            capa_bumper.id,
+            CapaDisciplineChoices.D6_PCA_IMPLEMENTED,
+            {
+                "d6_validation_results": (
+                    "500 trial parts molded over 3 consecutive shifts with continuous pressure logging. "
+                    "Maximum flash observed: 0.04mm (spec: <= 0.10mm)."
+                ),
+                "d6_implementation_date": (timezone.now() - timezone.timedelta(days=40)).date(),
+            },
+        )
+
+        advance_8d_discipline(
+            capa_bumper.id,
+            CapaDisciplineChoices.D7_PREVENTION,
+            {
+                "d7_preventive_actions": (
+                    "Updated IMM-03 PM checklist to include weekly cooling tower water conductivity test. "
+                    "Updated PFMEA #FMEA-IMM-003 line 14 (RPN reduced from 240 to 36) and Control Plan CP-2026-BUMP-01."
+                ),
+                "fmea_updated": True,
+                "control_plan_updated": True,
+            },
+        )
+
+        # Record 30-Day VoE Checkpoint (Passed with 0 defects)
+        record_voe_checkpoint(
+            capa_bumper.id,
+            milestone=VoeMilestoneChoices.DAY_30,
+            defect_count=0,
+            notes="30-day monitoring: 45,000 bumpers produced with zero flash defect recurrence.",
+            verifier=user_map["qa_manager"],
+        )
+
+        self.stdout.write(
+            self.style.SUCCESS(f"  Created 8D CAPA {capa_bumper.capa_number} (Under VoE, 30-Day Verified).")
+        )
+
+        # ---------------------------------------------------------------------
+        # 12. METROLOGY GAUGE REGISTRY & AIAG MSA GAUGE R&R
+        # ---------------------------------------------------------------------
+        self.stdout.write("12. Seeding Metrology gauge calibration registry & AIAG ANOVA Gauge R&R...")
+        today = timezone.now().date()
+
+        gauge_caliper = Gauge.objects.create(
+            device_id="GAGE-CAL-001",
+            name="Digital Vernier Caliper (0-150mm)",
+            gauge_type=GaugeTypeChoices.VERNIER_CALIPER,
+            serial_number="MIT-500-196-881",
+            location="QC Lab 1",
+            resolution_mm=Decimal("0.0100"),
+            calibration_interval_months=12,
+            last_calibration_date=today - timezone.timedelta(days=60),
+            next_calibration_due=today + timezone.timedelta(days=305),
+            status=GaugeStatusChoices.ACTIVE,
+        )
+        record_calibration(
+            gauge=gauge_caliper,
+            certificate_number="CAL-2026-MIT-091",
+            calibration_date=today - timezone.timedelta(days=60),
+            calibrated_by="Mitutoyo Calibration Center (ISO 17025 Accredited)",
+            next_due_date=today + timezone.timedelta(days=305),
+            as_found_condition="IN_TOLERANCE",
+            as_left_condition="IN_TOLERANCE",
+            uncertainty_budget_mm=0.0020,
+            notes="NIST traceable gauge block standard set #GB-884.",
+        )
+
+        Gauge.objects.create(
+            device_id="GAGE-HGT-003",
+            name="Digital Height Gauge (0-600mm)",
+            gauge_type=GaugeTypeChoices.HEIGHT_GAUGE,
+            serial_number="MIT-192-630-412",
+            location="CMM Room",
+            resolution_mm=Decimal("0.0100"),
+            calibration_interval_months=12,
+            last_calibration_date=today - timezone.timedelta(days=380),
+            next_calibration_due=today - timezone.timedelta(days=15),
+            status=GaugeStatusChoices.OVERDUE,
+        )
+
+        Gauge.objects.create(
+            device_id="CMM-01",
+            name="Zeiss Contura G2 3D CMM",
+            gauge_type=GaugeTypeChoices.CMM_STATION,
+            serial_number="ZEISS-CTG2-2021-04",
+            location="Metrology Room (Class 10,000)",
+            resolution_mm=Decimal("0.0001"),
+            calibration_interval_months=12,
+            last_calibration_date=today - timezone.timedelta(days=90),
+            next_calibration_due=today + timezone.timedelta(days=275),
+            status=GaugeStatusChoices.ACTIVE,
+        )
+
+        # AIAG MSA 4th Edition ANOVA Gauge R&R Study on Caliper
+        # 10 parts x 3 operators x 3 trials
+        raw_study_matrix = [
+            [[12.495, 12.497, 12.496], [12.496, 12.498, 12.495], [12.495, 12.496, 12.497]],
+            [[12.512, 12.510, 12.511], [12.513, 12.511, 12.512], [12.511, 12.512, 12.510]],
+            [[12.504, 12.505, 12.503], [12.506, 12.504, 12.505], [12.504, 12.505, 12.503]],
+            [[12.488, 12.489, 12.487], [12.489, 12.490, 12.488], [12.487, 12.488, 12.489]],
+            [[12.520, 12.518, 12.519], [12.521, 12.519, 12.520], [12.518, 12.520, 12.519]],
+            [[12.501, 12.503, 12.502], [12.502, 12.504, 12.501], [12.503, 12.501, 12.502]],
+            [[12.492, 12.494, 12.493], [12.493, 12.495, 12.492], [12.494, 12.492, 12.493]],
+            [[12.515, 12.516, 12.514], [12.516, 12.517, 12.515], [12.514, 12.515, 12.516]],
+            [[12.508, 12.509, 12.507], [12.509, 12.510, 12.508], [12.507, 12.508, 12.509]],
+            [[12.499, 12.500, 12.498], [12.500, 12.501, 12.499], [12.498, 12.500, 12.499]],
+        ]
+
+        msa_study = MsaStudy.objects.create(
+            study_number="MSA-2026-0001",
+            gauge=gauge_caliper,
+            part=part_map["PRD-FASCIA-FR"],
+            characteristic_name="Main Mounting Flange Width (Dim B)",
+            tolerance=Decimal("0.3000"),
+            part_count=10,
+            operator_count=3,
+            trial_count=3,
+            raw_data=raw_study_matrix,
+        )
+        compute_anova_gauge_rr(msa_study.id)
+        msa_study.refresh_from_db()
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"  Created ANOVA Gauge R&R {msa_study.study_number}: %GRR={msa_study.grr_percent}%, "
+                f"ndc={msa_study.ndc} ({msa_study.acceptance_status})."
+            )
+        )
 
         # ---------------------------------------------------------------------
         # SUMMARY

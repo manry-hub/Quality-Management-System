@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.4.0] - 2026-11-08
+
+### Added
+- **Statistical Process Control (SPC) (`apps/spc`):**
+  - Shewhart $\bar{X}-R$ and $\bar{X}-s$ control charting with AIAG unbiasing table ($A_2, D_3, D_4, d_2, c_4$).
+  - Real-time automated Nelson Rules 1 through 8 anomaly detection across statistical zones A, B, and C.
+  - ISO 21747 Process Capability ($C_p, C_{pk}$) and Overall Performance ($P_p, P_{pk}$) calculation engine.
+  - Interactive Vireo terminal at `/spc/` featuring dynamic SVG Shewhart charts, rule breach highlights, and Gaussian normal distribution bell curve overlays.
+- **8D Problem Solving & CAPA Wizard (`apps/capa`):**
+  - Complete IATF 16949 Section 10.2 Eight Disciplines problem-solving lifecycle (D1 through D8).
+  - Cross-functional team management (Executive Champion, Team Leader, Members).
+  - 5W2H structured problem statement engine.
+  - Interactive root-cause analysis with 5-Why progression chain and Ishikawa 6M Fishbone matrix (*Man, Machine, Material, Method, Measurement, Milieu*).
+  - Permanent Corrective Action (PCA) implementation, validation results, and FMEA / Control Plan synchronization.
+  - Verification of Effectiveness (VoE) governance with mandatory 30-Day, 60-Day, and 90-Day zero-recurrence checks prior to closure.
+  - Interactive terminal at `/capa/` with 8D stage stepper and VoE recurrence docket.
+- **Metrology & Gauge Governance (`apps/metrology`):**
+  - Comprehensive measurement equipment inventory (calipers, micrometers, height gauges, 3D CMM stations, moisture analyzers).
+  - Automated floor inspection lockout preventing quality inspection submissions from instruments with overdue or expired calibrations.
+  - ISO 17025 traceable calibration certificate registration with uncertainty budget tracking.
+  - AIAG MSA 4th Edition Two-Way ANOVA Gauge Repeatability & Reproducibility (Gauge R&R) engine computing $EV, AV, GRR, PV, TV, \%GRR,$ and $ndc$ with automated acceptance status classification.
+  - Metrology and ANOVA study terminal at `/metrology/`.
+- **Navigation & Seeding Updates:**
+  - Added *Quality Engineering & Metrology* section to Vireo sidebar and `nav-manifest.json`.
+  - Extended `seed_factory_demo` to seed realistic automotive SPC control charts, 8D CAPAs under VoE, calibrated gauges, and ANOVA Gauge R&R studies.
+
+---
+
 ## [0.3.0] - 2026-11-07
 
 ### Added

@@ -1,0 +1,508 @@
+{% extends "base_qms.html" %}
+
+{% block title %}8D Dossier: {{ capa.capa_number }}{% endblock %}
+
+{% block content %}
+<div x-data="{ openAdvanceModal: false, activeTab: 'disciplines', openVoeModal: false, targetDiscipline: '' }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <div style="display:flex;align-items:center;gap:var(--ax-space-3);margin-top:var(--ax-space-1);">
+          <h1 class="ax-page-head__title">{{ capa.capa_number }}: {{ capa.title }}</h1>
+          {% if capa.status == 'CLOSED' %}
+            <span class="ax-badge ax-badge--success">Closed</span>
+          {% elif capa.status == 'UNDER_VOE' %}
+            <span class="ax-badge" style="background:#1e5885;color:#ffffff;">Under VoE</span>
+          {% elif capa.status == 'IN_PROGRESS' %}
+            <span class="ax-badge ax-badge--warning">In Progress</span>
+          {% else %}
+            <span class="ax-badge ax-badge--neutral">Open</span>
+          {% endif %}
+        </div>
+        <p class="ax-page-head__subtitle">Leader: <strong>{{ capa.leader.username }}</strong> · Champion: <strong>{{ capa.champion.username }}</strong> · Created: {{ capa.created_at|date:"Y-m-d" }}</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <a href="{% url 'capa:index' %}" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill">
+          ← Back to Register
+        </a>
+        {% if capa.status != 'CLOSED' %}
+        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openAdvanceModal = true">
+          Advance Discipline Stage Gate →
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ 8D STEPPER TIMELINE ════════════════ -->
+  <div class="ax-card" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card__body" style="padding:var(--ax-space-4);">
+      <div style="display:flex;justify-content:space-between;align-items:center;position:relative;overflow-x:auto;">
+        {% for code, label in disciplines_order %}
+          <div style="display:flex;flex-direction:column;align-items:center;min-width:110px;text-align:center;">
+            <div style="width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:var(--ax-weight-bold);font-size:var(--ax-text-xs);
+              {% if forloop.counter0 < current_idx %}
+                background:var(--ax-success-500);color:#ffffff;
+              {% elif forloop.counter0 == current_idx %}
+                background:#1e5885;color:#ffffff;box-shadow:0 0 0 4px rgba(30,88,133,0.2);
+              {% else %}
+                background:var(--ax-bg-subtle);color:var(--ax-text-subtle);border:1px solid var(--ax-border);
+              {% endif %}">
+              {% if forloop.counter0 < current_idx %}✓{% else %}D{{ forloop.counter }}{% endif %}
+            </div>
+            <span style="font-size:10px;font-weight:var(--ax-weight-semibold);margin-top:var(--ax-space-1);
+              {% if forloop.counter0 == current_idx %}color:#1e5885;{% else %}color:var(--ax-text-subtle);{% endif %}">
+              {{ label }}
+            </span>
+          </div>
+          {% if not forloop.last %}
+            <div style="flex:1;height:2px;margin:0 var(--ax-space-1);
+              {% if forloop.counter0 < current_idx %}background:var(--ax-success-500);{% else %}background:var(--ax-border);{% endif %}"></div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ DOSSIER DETAILS GRID ════════════════ -->
+  <div class="ax-dash-grid">
+    <!-- Left Column: D1 through D3 -->
+    <div class="ax-col--6">
+      <!-- D1 Team -->
+      <section class="ax-card" style="margin-bottom:var(--ax-space-4);">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow">Discipline 1</span>
+            <h2 class="ax-card__title">D1: Establish the Cross-Functional Team</h2>
+          </div>
+        </div>
+        <div class="ax-card__body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-bottom:var(--ax-space-3);">
+            <div>
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);display:block;">Executive Champion</span>
+              <strong style="color:var(--ax-text-strong);">{{ capa.champion.username }}</strong>
+            </div>
+            <div>
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);display:block;">Team Leader</span>
+              <strong style="color:var(--ax-text-strong);">{{ capa.leader.username }}</strong>
+            </div>
+          </div>
+          <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);display:block;margin-bottom:var(--ax-space-1);">Cross-Functional Team Roster</span>
+          <div style="display:flex;flex-wrap:wrap;gap:var(--ax-space-2);">
+            {% for member in capa.team_members %}
+              <span class="ax-badge" style="background:var(--ax-bg-subtle);color:var(--ax-text-strong);border:1px solid var(--ax-border);">
+                {{ member.name }} ({{ member.role }})
+              </span>
+            {% empty %}
+              <span style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">No additional team members listed.</span>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+
+      <!-- D2 Problem Statement -->
+      <section class="ax-card" style="margin-bottom:var(--ax-space-4);">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow">Discipline 2</span>
+            <h2 class="ax-card__title">D2: 5W2H Problem Description</h2>
+          </div>
+        </div>
+        <div class="ax-card__body">
+          <p style="white-space:pre-wrap;color:var(--ax-text-strong);line-height:1.5;">{{ capa.d2_problem_statement }}</p>
+        </div>
+      </section>
+
+      <!-- D3 Interim Containment -->
+      <section class="ax-card" style="margin-bottom:var(--ax-space-4);border-left:3px solid var(--ax-warning-500);">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow" style="color:var(--ax-warning-500);">Discipline 3</span>
+            <h2 class="ax-card__title">D3: Interim Containment Actions (ICA)</h2>
+          </div>
+        </div>
+        <div class="ax-card__body">
+          {% if capa.d3_containment_action %}
+            <p style="white-space:pre-wrap;color:var(--ax-text-strong);">{{ capa.d3_containment_action }}</p>
+            <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);" class="ax-mono">
+              Verified at: {{ capa.d3_containment_verified_at|date:"Y-m-d H:i" }}
+            </div>
+          {% else %}
+            <span style="color:var(--ax-text-subtle);">No containment action recorded yet.</span>
+          {% endif %}
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Column: D4 Root Cause Analysis -->
+    <div class="ax-col--6">
+      <!-- D4 Root Cause 5-Why & 6M Fishbone -->
+      <section class="ax-card" style="margin-bottom:var(--ax-space-4);border-left:3px solid #1e5885;">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow" style="color:#1e5885;">Discipline 4</span>
+            <h2 class="ax-card__title">D4: Root Cause (5-Why &amp; Ishikawa 6M)</h2>
+          </div>
+        </div>
+        <div class="ax-card__body">
+          <!-- 5-Why Chain -->
+          <h4 style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-bold);margin-bottom:var(--ax-space-2);color:var(--ax-text-strong);">
+            5-Why Analysis Chain
+          </h4>
+          {% if five_why_list %}
+            <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);margin-bottom:var(--ax-space-4);">
+              {% for item in five_why_list %}
+                <div style="padding:var(--ax-space-2) var(--ax-space-3);background:var(--ax-bg-subtle);border-left:3px solid #1e5885;border-radius:0 var(--ax-radius-sm) var(--ax-radius-sm) 0;">
+                  <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-bold);color:#1e5885;">
+                    Why {{ forloop.counter }}: {{ item.why }}
+                  </div>
+                  <div style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);margin-top:2px;">
+                    ↳ {{ item.answer }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <p style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">5-Why chain not yet populated.</p>
+          {% endif %}
+
+          <!-- 6M Ishikawa Fishbone Grid -->
+          <h4 style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-bold);margin-bottom:var(--ax-space-2);color:var(--ax-text-strong);">
+            Ishikawa 6M Matrix
+          </h4>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-2);">
+            {% for cat in fishbone_categories %}
+              <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);padding:var(--ax-space-2);background:var(--ax-bg-surface);">
+                <div style="font-size:10px;font-weight:var(--ax-weight-bold);color:var(--ax-text-subtle);text-transform:uppercase;">
+                  {{ cat.label }}
+                </div>
+                <ul style="margin:var(--ax-space-1) 0 0 0;padding-left:var(--ax-space-4);font-size:var(--ax-text-xs);color:var(--ax-text-strong);">
+                  {% for val in cat.items %}
+                    <li>{{ val }}</li>
+                  {% empty %}
+                    <li style="color:var(--ax-text-subtle);list-style:none;">None identified</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endfor %}
+          </div>
+
+          {% if capa.d4_root_cause_summary %}
+            <div style="margin-top:var(--ax-space-4);padding-top:var(--ax-space-3);border-top:1px solid var(--ax-border);">
+              <span style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-bold);color:var(--ax-text-subtle);text-transform:uppercase;">
+                Confirmed Root Cause Summary:
+              </span>
+              <p style="margin-top:var(--ax-space-1);color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);">
+                {{ capa.d4_root_cause_summary }}
+              </p>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- D5 & D6 Permanent Corrective Actions -->
+      <section class="ax-card" style="margin-bottom:var(--ax-space-4);">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow">Disciplines 5 &amp; 6</span>
+            <h2 class="ax-card__title">D5 &amp; D6: Permanent Corrective Actions (PCA)</h2>
+          </div>
+        </div>
+        <div class="ax-card__body">
+          <div style="margin-bottom:var(--ax-space-3);">
+            <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);display:block;">Chosen PCA (D5)</span>
+            <p style="white-space:pre-wrap;color:var(--ax-text-strong);">{{ capa.d5_permanent_corrective_actions|default:"Pending D5 completion" }}</p>
+          </div>
+          <div>
+            <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);display:block;">Validation Results (D6)</span>
+            <p style="white-space:pre-wrap;color:var(--ax-text-strong);">{{ capa.d6_validation_results|default:"Pending D6 validation" }}</p>
+            {% if capa.d6_implementation_date %}
+              <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-1);" class="ax-mono">
+                Implemented on: {{ capa.d6_implementation_date }}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </section>
+
+      <!-- D7 Prevention & Documentation Update -->
+      <section class="ax-card" style="margin-bottom:var(--ax-space-4);">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow">Discipline 7</span>
+            <h2 class="ax-card__title">D7: Prevention of Recurrence</h2>
+          </div>
+        </div>
+        <div class="ax-card__body">
+          <p style="white-space:pre-wrap;color:var(--ax-text-strong);margin-bottom:var(--ax-space-3);">{{ capa.d7_preventive_actions|default:"Pending D7 actions" }}</p>
+          <div style="display:flex;gap:var(--ax-space-4);font-size:var(--ax-text-sm);">
+            <div>
+              FMEA Updated:
+              {% if capa.fmea_updated %}
+                <span class="ax-badge ax-badge--success">Yes (Updated)</span>
+              {% else %}
+                <span class="ax-badge ax-badge--neutral">No</span>
+              {% endif %}
+            </div>
+            <div>
+              Control Plan Updated:
+              {% if capa.control_plan_updated %}
+                <span class="ax-badge ax-badge--success">Yes (Updated)</span>
+              {% else %}
+                <span class="ax-badge ax-badge--neutral">No</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ════════════════ VERIFICATION OF EFFECTIVENESS (VoE) ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="VoE Checkpoints">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Discipline 8 Governance</span>
+          <h2 class="ax-card__title">Verification of Effectiveness (VoE) Recurrence Docket</h2>
+          <p class="ax-card__subtitle">IATF 16949 Section 10.2 mandatory 30-Day, 60-Day, and 90-Day zero-recurrence verification before final 8D closure</p>
+        </div>
+        {% if capa.status != 'CLOSED' %}
+        <div class="ax-card__actions">
+          <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openVoeModal = true">
+            Submit VoE Checkpoint
+          </button>
+        </div>
+        {% endif %}
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">MILESTONE</th>
+                <th class="ax-table__th" scope="col">TARGET DATE</th>
+                <th class="ax-table__th" scope="col">VERIFIED DATE</th>
+                <th class="ax-table__th" scope="col">VERIFIER</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">DEFECT COUNT</th>
+                <th class="ax-table__th" scope="col">EFFECTIVENESS STATUS</th>
+                <th class="ax-table__th" scope="col">NOTES</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for voe in voe_checkpoints %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ voe.get_milestone_display }}
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-sm);">
+                  {{ voe.target_date }}
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-sm);">
+                  {{ voe.verified_date|default:"Pending Inspection" }}
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-xs);">
+                  {{ voe.verifier.username|default:"—" }}
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-bold);{% if voe.defect_count_in_period > 0 %}color:var(--ax-danger-500);{% else %}color:var(--ax-success-500);{% endif %}">
+                  {{ voe.defect_count_in_period }}
+                </td>
+                <td class="ax-table__td">
+                  {% if voe.verified_date %}
+                    {% if voe.is_effective %}
+                      <span class="ax-badge ax-badge--success">Effective (0 Recurrence)</span>
+                    {% else %}
+                      <span class="ax-badge ax-badge--danger">Defect Recurred</span>
+                    {% endif %}
+                  {% else %}
+                    <span class="ax-badge ax-badge--neutral">Awaiting Milestone</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                  {{ voe.notes|default:"—" }}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  VoE checkpoints will be automatically instantiated upon reaching D7 Prevention.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ ADVANCE DISCIPLINE MODAL ════════════════ -->
+  <div class="ax-modal-backdrop" x-show="openAdvanceModal" x-cloak style="display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;">
+    <div class="ax-card" style="width:100%;max-width:680px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);" @click.outside="openAdvanceModal = false">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Discipline Stage Gate</span>
+          <h2 class="ax-card__title">Advance 8D Discipline Stage</h2>
+          <p class="ax-card__subtitle">Current: {{ capa.get_current_discipline_display }}</p>
+        </div>
+      </div>
+      <form method="post" action="{% url 'capa:advance' capa_id=capa.id %}">
+        {% csrf_token %}
+        <div class="ax-card__body">
+          <div style="margin-bottom:var(--ax-space-4);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Select Target Discipline Stage
+            </label>
+            <select name="target_discipline" x-model="targetDiscipline" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              <option value="">-- Choose Stage --</option>
+              {% for code, label in disciplines_order %}
+                <option value="{{ code }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- D3 Fields -->
+          <div x-show="targetDiscipline === 'D3_CONTAINMENT'" style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D3 Containment Action (ICA)
+            </label>
+            <textarea name="d3_containment_action" rows="3" class="ax-form-control" placeholder="Quarantine warehouse stock, 100% sorting gate..." style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">{{ capa.d3_containment_action }}</textarea>
+          </div>
+
+          <!-- D4 Fields -->
+          <div x-show="targetDiscipline === 'D4_ROOT_CAUSE'" style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D4 Confirmed Root Cause Summary
+            </label>
+            <textarea name="d4_root_cause_summary" rows="2" class="ax-form-control" placeholder="Root cause summary..." style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">{{ capa.d4_root_cause_summary }}</textarea>
+
+            <div style="margin-top:var(--ax-space-2);">
+              <label style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                5-Why Entries (Why ? Answer)
+              </label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-2);margin-bottom:4px;">
+                <input type="text" name="why_question[]" placeholder="Why did flash occur?" class="ax-form-control" style="padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                <input type="text" name="why_answer[]" placeholder="Clamp pressure fell below 180 bar" class="ax-form-control" style="padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-2);margin-bottom:4px;">
+                <input type="text" name="why_question[]" placeholder="Why did clamp pressure fall?" class="ax-form-control" style="padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                <input type="text" name="why_answer[]" placeholder="Hydraulic proportional valve seal failed" class="ax-form-control" style="padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-2);">
+                <input type="text" name="why_question[]" placeholder="Why did valve seal fail?" class="ax-form-control" style="padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                <input type="text" name="why_answer[]" placeholder="Preventive maintenance interval exceeded 5000h" class="ax-form-control" style="padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              </div>
+            </div>
+          </div>
+
+          <!-- D5 Fields -->
+          <div x-show="targetDiscipline === 'D5_PCA_CHOSEN'" style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D5 Permanent Corrective Actions (PCA)
+            </label>
+            <textarea name="d5_permanent_corrective_actions" rows="3" class="ax-form-control" placeholder="Install automated hydraulic pressure interlock and replace proportional valve..." style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">{{ capa.d5_permanent_corrective_actions }}</textarea>
+          </div>
+
+          <!-- D6 Fields -->
+          <div x-show="targetDiscipline === 'D6_PCA_IMPLEMENTED'" style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D6 Validation Results
+            </label>
+            <textarea name="d6_validation_results" rows="3" class="ax-form-control" placeholder="Zero flash across 500 trial parts run over 2 production shifts..." style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">{{ capa.d6_validation_results }}</textarea>
+          </div>
+
+          <!-- D7 Fields -->
+          <div x-show="targetDiscipline === 'D7_PREVENTION'" style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D7 Preventive Actions
+            </label>
+            <textarea name="d7_preventive_actions" rows="2" class="ax-form-control" placeholder="Updated PM schedule and standardized clamp pressure alarms across all IMM machines..." style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">{{ capa.d7_preventive_actions }}</textarea>
+            
+            <div style="display:flex;gap:var(--ax-space-4);margin-top:var(--ax-space-2);">
+              <label style="display:flex;align-items:center;gap:var(--ax-space-1);font-size:var(--ax-text-sm);">
+                <input type="checkbox" name="fmea_updated" value="1" {% if capa.fmea_updated %}checked{% endif %}>
+                Process FMEA Updated
+              </label>
+              <label style="display:flex;align-items:center;gap:var(--ax-space-1);font-size:var(--ax-text-sm);">
+                <input type="checkbox" name="control_plan_updated" value="1" {% if capa.control_plan_updated %}checked{% endif %}>
+                Control Plan Updated
+              </label>
+            </div>
+          </div>
+
+          <!-- D8 Fields -->
+          <div x-show="targetDiscipline === 'D8_CLOSED'" style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D8 Team Recognition &amp; Closure Notes
+            </label>
+            <textarea name="d8_closure_notes" rows="3" class="ax-form-control" placeholder="Recognized maintenance and tooling engineers for rapid root-cause resolution..." style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">{{ capa.d8_closure_notes }}</textarea>
+          </div>
+        </div>
+
+        <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);padding:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="openAdvanceModal = false">
+            Cancel
+          </button>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Save &amp; Advance
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ════════════════ SUBMIT VOE CHECKPOINT MODAL ════════════════ -->
+  <div class="ax-modal-backdrop" x-show="openVoeModal" x-cloak style="display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;">
+    <div class="ax-card" style="width:100%;max-width:520px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);" @click.outside="openVoeModal = false">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Effectiveness Verification</span>
+          <h2 class="ax-card__title">Record VoE Checkpoint</h2>
+          <p class="ax-card__subtitle">Submit defect recurrence inspection count for {{ capa.capa_number }}</p>
+        </div>
+      </div>
+      <form method="post" action="{% url 'capa:voe_submit' capa_id=capa.id %}">
+        {% csrf_token %}
+        <div class="ax-card__body">
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Milestone Checkpoint
+            </label>
+            <select name="milestone" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              {% for code, label in voe_milestone_choices %}
+                <option value="{{ code }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Defect Count in Monitored Period
+            </label>
+            <input type="number" name="defect_count" min="0" value="0" required class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            <p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:2px;">Must be 0 to qualify as Effective.</p>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Inspection Notes / Evidence
+            </label>
+            <textarea name="notes" rows="2" class="ax-form-control" placeholder="10,000 parts sampled in warehouse with 0 defect recurrence..." style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);"></textarea>
+          </div>
+        </div>
+
+        <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);padding:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="openVoeModal = false">
+            Cancel
+          </button>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Submit Verification
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

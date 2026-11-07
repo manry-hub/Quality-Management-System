@@ -16,5 +16,8 @@ urlpatterns = [
     path("ncr/", include("apps.ncr.urls", namespace="ncr")),
     path("mrb/", include("apps.mrb.urls", namespace="mrb")),
     path("traceability/", include("apps.traceability.urls", namespace="traceability")),
+    path("spc/", include("apps.spc.urls", namespace="spc")),
+    path("capa/", include("apps.capa.urls", namespace="capa")),
+    path("metrology/", include("apps.metrology.urls", namespace="metrology")),
     path("api/v1/integrations/", include("apps.integrations.urls", namespace="integrations")),
 ]
