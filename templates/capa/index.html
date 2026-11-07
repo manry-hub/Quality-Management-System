@@ -1,0 +1,256 @@
+{% extends "base_qms.html" %}
+
+{% block title %}8D Problem Solving &amp; CAPA{% endblock %}
+
+{% block content %}
+<div x-data="{ openCreateModal: false }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">8D Problem Solving &amp; CAPA</h1>
+        <p class="ax-page-head__subtitle">IATF 16949 §10.2 Systematic Root Cause Elimination, Ishikawa 6M, 5-Why &amp; 30/60/90-Day VoE</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openCreateModal = true">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+            <path d="M12 5v14" /><path d="M5 12h14" />
+          </svg>
+          Initiate 8D CAPA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ METRICS SUMMARY ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Total 8D Cases</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ total_capas }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Registered corrective action dossiers</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-warning-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-warning-500);">Investigation / Active (D1–D6)</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-warning-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ open_count|add:in_progress_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Containment &amp; root-cause stage</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-accent);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-accent);">Under VoE Tracking</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-accent);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ under_voe_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">30/60/90-Day recurrence verification</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-success-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-success-500);">Verified Closed (D8)</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-success-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ closed_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Effectiveness confirmed zero recurrence</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ FILTER PILLS ════════════════ -->
+  <div style="display:flex;gap:var(--ax-space-2);margin-bottom:var(--ax-space-4);flex-wrap:wrap;">
+    <a href="{% url 'capa:index' %}" class="ax-btn {% if not status_filter %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      All CAPAs ({{ total_capas }})
+    </a>
+    <a href="{% url 'capa:index' %}?status=OPEN" class="ax-btn {% if status_filter == 'OPEN' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Open ({{ open_count }})
+    </a>
+    <a href="{% url 'capa:index' %}?status=IN_PROGRESS" class="ax-btn {% if status_filter == 'IN_PROGRESS' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      In Progress ({{ in_progress_count }})
+    </a>
+    <a href="{% url 'capa:index' %}?status=UNDER_VOE" class="ax-btn {% if status_filter == 'UNDER_VOE' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Under VoE ({{ under_voe_count }})
+    </a>
+    <a href="{% url 'capa:index' %}?status=CLOSED" class="ax-btn {% if status_filter == 'CLOSED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Closed ({{ closed_count }})
+    </a>
+  </div>
+
+  <!-- ════════════════ CAPA TABLE ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="8D CAPA Register">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Dossier Register</span>
+          <h2 class="ax-card__title">8D Corrective Action Records</h2>
+          <p class="ax-card__subtitle">Cross-functional team problem solving adhering to AIAG &amp; VDA root-cause guidelines</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">CAPA NUMBER</th>
+                <th class="ax-table__th" scope="col">TITLE &amp; DESCRIPTION</th>
+                <th class="ax-table__th" scope="col">NCR LINK</th>
+                <th class="ax-table__th" scope="col">CURRENT DISCIPLINE</th>
+                <th class="ax-table__th" scope="col">LEADER / CHAMPION</th>
+                <th class="ax-table__th" scope="col">STATUS</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for capa in capas %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ capa.capa_number }}
+                </td>
+                <td class="ax-table__td">
+                  <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ capa.title }}</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);max-width:320px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">
+                    {{ capa.d2_problem_statement }}
+                  </div>
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                  {% if capa.ncr %}
+                    <a href="{% url 'ncr:index' %}" style="color:var(--ax-accent);text-decoration:underline;">
+                      {{ capa.ncr.ncr_number }}
+                    </a>
+                  {% else %}
+                    <span style="color:var(--ax-text-subtle);">Direct Issue</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td">
+                  <span class="ax-badge" style="background:var(--ax-bg-subtle);color:var(--ax-text-strong);border:1px solid var(--ax-border);">
+                    {{ capa.get_current_discipline_display }}
+                  </span>
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-xs);">
+                  <div>Leader: <strong>{{ capa.leader.username }}</strong></div>
+                  <div style="color:var(--ax-text-subtle);">Champion: {{ capa.champion.username }}</div>
+                </td>
+                <td class="ax-table__td">
+                  {% if capa.status == 'CLOSED' %}
+                    <span class="ax-badge ax-badge--success">Closed</span>
+                  {% elif capa.status == 'UNDER_VOE' %}
+                    <span class="ax-badge ax-badge--accent" style="background:#1e5885;color:#ffffff;">Under VoE</span>
+                  {% elif capa.status == 'IN_PROGRESS' %}
+                    <span class="ax-badge ax-badge--warning">In Progress</span>
+                  {% else %}
+                    <span class="ax-badge ax-badge--neutral">Open</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  <a href="{% url 'capa:detail' capa_id=capa.id %}" class="ax-btn ax-btn--primary ax-btn--xs ax-btn--pill">
+                    Open 8D Wizard →
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  No 8D CAPA records found.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ INITIATE 8D MODAL ════════════════ -->
+  <div class="ax-modal-backdrop" x-show="openCreateModal" x-cloak style="display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;">
+    <div class="ax-card" style="width:100%;max-width:640px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);" @click.outside="openCreateModal = false">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">D1 &amp; D2 Initiation</span>
+          <h2 class="ax-card__title">Initiate 8D Problem Solving Dossier</h2>
+          <p class="ax-card__subtitle">Establish team leadership and formulate 5W2H problem statement</p>
+        </div>
+      </div>
+      <form method="post" action="{% url 'capa:create' %}">
+        {% csrf_token %}
+        <div class="ax-card__body">
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              CAPA Title
+            </label>
+            <input type="text" name="title" required placeholder="e.g. Excessive Gate Flash on Front Bumper Fascia"
+                   class="ax-form-control" style="width:100%;padding:var(--ax-space-2) var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-bottom:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                D1 Champion (Executive Sponsor)
+              </label>
+              <select name="champion_id" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                {% for u in users %}
+                  <option value="{{ u.id }}">{{ u.username }} ({{ u.department|default:"QA" }})</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                D1 Leader (Facilitator)
+              </label>
+              <select name="leader_id" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                {% for u in users %}
+                  <option value="{{ u.id }}">{{ u.username }} ({{ u.department|default:"QA" }})</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Originating Non-Conformance Report (Optional)
+            </label>
+            <select name="ncr_id" class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              <option value="">-- None / Standalone CAPA --</option>
+              {% for n in ncrs %}
+                <option value="{{ n.id }}">{{ n.ncr_number }} — {{ n.defect_description|truncatechars:50 }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D1 Team Members (One per line: Name: Role)
+            </label>
+            <textarea name="team_members" rows="2" placeholder="John Doe: Tooling Lead&#10;Alice Smith: Process Engineer" class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);"></textarea>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              D2 Problem Statement (5W2H Description)
+            </label>
+            <textarea name="d2_problem_statement" rows="3" required placeholder="Who detected it? What is defect? Where in mold cavity? When did it start? How many parts affected?" class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);"></textarea>
+          </div>
+        </div>
+
+        <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);padding:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="openCreateModal = false">
+            Cancel
+          </button>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Create 8D Dossier
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

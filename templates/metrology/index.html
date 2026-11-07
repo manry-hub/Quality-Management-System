@@ -1,0 +1,388 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Metrology &amp; Gauge Governance{% endblock %}
+
+{% block content %}
+<div x-data="{ openCalModal: false, selectedGaugeId: null, selectedGaugeDeviceId: '', openMsaModal: false }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Metrology &amp; Gauge Calibration Registry</h1>
+        <p class="ax-page-head__subtitle">IATF 16949 §7.1.5 Measurement Systems, Traceable Calibration Lockout &amp; AIAG MSA 4th Ed Gauge R&amp;R</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openMsaModal = true">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+            <path d="M12 5v14" /><path d="M5 12h14" />
+          </svg>
+          New ANOVA Gauge R&amp;R Study
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ METRICS SUMMARY ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Total Measurement Assets</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ total_gauges }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Calipers, micrometers, CMMs &amp; analyzers</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-success-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-success-500);">Active / In Calibration</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-success-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ active_gauges }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Authorized for floor production inspection</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="{% if locked_out_gauges > 0 %}border-left: 3px solid var(--ax-danger-500);{% else %}border-left: 3px solid var(--ax-border);{% endif %}">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="{% if locked_out_gauges > 0 %}color:var(--ax-danger-500);{% else %}color:var(--ax-text-subtle);{% endif %}">
+          Locked Out / Overdue
+        </span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);{% if locked_out_gauges > 0 %}color:var(--ax-danger-500);{% else %}color:var(--ax-text-strong);{% endif %}margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ locked_out_gauges }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">
+          {% if locked_out_gauges > 0 %}
+            <span style="color:var(--ax-danger-500);font-weight:bold;">▲ Automated floor lockout enforced</span>
+          {% else %}
+            No overdue calibration lockouts
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-warning-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-warning-500);">Due Within 30 Days</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-warning-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ expiring_soon }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Calibration recall window open</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ FILTER CHIPS ════════════════ -->
+  <div style="display:flex;gap:var(--ax-space-2);margin-bottom:var(--ax-space-4);flex-wrap:wrap;">
+    <a href="{% url 'metrology:index' %}" class="ax-btn {% if not status_filter %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      All Gauges ({{ total_gauges }})
+    </a>
+    <a href="{% url 'metrology:index' %}?status=ACTIVE" class="ax-btn {% if status_filter == 'ACTIVE' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Active ({{ active_gauges }})
+    </a>
+    <a href="{% url 'metrology:index' %}?status=OVERDUE" class="ax-btn {% if status_filter == 'OVERDUE' %}ax-btn--danger{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Overdue Lockouts ({{ locked_out_gauges }})
+    </a>
+  </div>
+
+  <!-- ════════════════ GAUGE INVENTORY TABLE ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <section class="ax-card ax-col--12" role="region" aria-label="Gauge Inventory">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Equipment Register</span>
+          <h2 class="ax-card__title">Measurement Devices &amp; Calibrated Standards</h2>
+          <p class="ax-card__subtitle">Automated inspection lockouts prevent data submission from uncalibrated instruments</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">DEVICE ID</th>
+                <th class="ax-table__th" scope="col">INSTRUMENT NAME &amp; TYPE</th>
+                <th class="ax-table__th" scope="col">LOCATION</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">RESOLUTION (mm)</th>
+                <th class="ax-table__th" scope="col">LAST CALIBRATION</th>
+                <th class="ax-table__th" scope="col">NEXT CAL DUE</th>
+                <th class="ax-table__th" scope="col">STATUS</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for g in gauges %}
+              <tr class="ax-table__row" style="{% if g.status == 'OVERDUE' %}background:rgba(220,38,38,0.03);{% endif %}">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ g.device_id }}
+                </td>
+                <td class="ax-table__td">
+                  <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ g.name }}</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ g.get_gauge_type_display }} · S/N: {{ g.serial_number }}</div>
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-sm);">{{ g.location }}</td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:var(--ax-text-sm);">
+                  {{ g.resolution_mm }} mm
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                  {{ g.last_calibration_date }}
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);{% if g.status == 'OVERDUE' %}color:var(--ax-danger-500);{% endif %}">
+                  {{ g.next_calibration_due }}
+                </td>
+                <td class="ax-table__td">
+                  {% if g.status == 'ACTIVE' %}
+                    <span class="ax-badge ax-badge--success">Active</span>
+                  {% elif g.status == 'OVERDUE' %}
+                    <span class="ax-badge ax-badge--danger">Locked Out (Overdue)</span>
+                  {% else %}
+                    <span class="ax-badge ax-badge--neutral">Out of Service</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--xs ax-btn--pill"
+                          @click="selectedGaugeId = '{{ g.id }}'; selectedGaugeDeviceId = '{{ g.device_id }}'; openCalModal = true">
+                    Record Calibration
+                  </button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  No gauges matching the filter criteria.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ AIAG MSA STUDIES TABLE ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="AIAG MSA Studies">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Measurement Systems Analysis (MSA)</span>
+          <h2 class="ax-card__title">AIAG MSA 4th Edition ANOVA Gauge R&amp;R Studies</h2>
+          <p class="ax-card__subtitle">Repeatability (EV), Reproducibility (AV), %GRR and Number of Distinct Categories (ndc)</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">STUDY #</th>
+                <th class="ax-table__th" scope="col">GAUGE</th>
+                <th class="ax-table__th" scope="col">PART &amp; CTQ CHARACTERISTIC</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">TOLERANCE</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">%GRR</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">NDC</th>
+                <th class="ax-table__th" scope="col">ACCEPTANCE</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for study in msa_studies %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ study.study_number }}
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                  {{ study.gauge.device_id }} ({{ study.gauge.name }})
+                </td>
+                <td class="ax-table__td">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">{{ study.part.part_number }}</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ study.characteristic_name }}</div>
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:var(--ax-text-sm);">
+                  {{ study.tolerance }} mm
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-bold);
+                  {% if study.grr_percent and study.grr_percent <= 10.0 %}color:var(--ax-success-500);
+                  {% elif study.grr_percent and study.grr_percent <= 30.0 %}color:var(--ax-warning-500);
+                  {% else %}color:var(--ax-danger-500);{% endif %}">
+                  {{ study.grr_percent|default:"—" }}%
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-semibold);">
+                  {{ study.ndc|default:"—" }}
+                </td>
+                <td class="ax-table__td">
+                  {% if study.acceptance_status == 'ACCEPTABLE' %}
+                    <span class="ax-badge ax-badge--success">Acceptable (&le;10%)</span>
+                  {% elif study.acceptance_status == 'MARGINAL' %}
+                    <span class="ax-badge ax-badge--warning">Marginal (10-30%)</span>
+                  {% else %}
+                    <span class="ax-badge ax-badge--danger">Unacceptable (&gt;30%)</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  <a href="{% url 'metrology:msa_detail' study_id=study.id %}" class="ax-btn ax-btn--primary ax-btn--xs ax-btn--pill">
+                    View ANOVA Report →
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  No Gauge R&amp;R studies registered yet.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ RECORD CALIBRATION MODAL ════════════════ -->
+  <div class="ax-modal-backdrop" x-show="openCalModal" x-cloak style="display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;">
+    <div class="ax-card" style="width:100%;max-width:580px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);" @click.outside="openCalModal = false">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">ISO 17025 Traceability</span>
+          <h2 class="ax-card__title">Record Calibration Certificate</h2>
+          <p class="ax-card__subtitle">Device: <strong x-text="selectedGaugeDeviceId"></strong> · Clears active measurement lockout</p>
+        </div>
+      </div>
+      <form method="post" :action="'/metrology/gauge/' + selectedGaugeId + '/calibration/'">
+        {% csrf_token %}
+        <div class="ax-card__body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-bottom:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Certificate Number
+              </label>
+              <input type="text" name="certificate_number" required placeholder="e.g. CAL-2026-NIST-8841" class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Calibrated By (Lab / Tech)
+              </label>
+              <input type="text" name="calibrated_by" required placeholder="e.g. Mitutoyo Calibration Center" class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-bottom:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Calibration Date
+              </label>
+              <input type="date" name="calibration_date" required class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Next Due Date
+              </label>
+              <input type="date" name="next_calibration_due" required class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-bottom:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                As-Found Condition
+              </label>
+              <select name="as_found_condition" class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                <option value="IN_TOLERANCE">In Tolerance</option>
+                <option value="OUT_OF_TOLERANCE">Out of Tolerance</option>
+                <option value="ADJUSTED">Adjusted to Tolerance</option>
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Measurement Uncertainty (mm)
+              </label>
+              <input type="number" step="0.0001" name="uncertainty_budget_mm" value="0.0020" class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Calibration Notes / Standard Standards Used
+            </label>
+            <textarea name="notes" rows="2" placeholder="e.g. Traceable to NIST Gauge Block Set Grade 0 S/N 4402" class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);"></textarea>
+          </div>
+        </div>
+
+        <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);padding:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="openCalModal = false">
+            Cancel
+          </button>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Save Certificate &amp; Clear Lockout
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ════════════════ CREATE MSA STUDY MODAL ════════════════ -->
+  <div class="ax-modal-backdrop" x-show="openMsaModal" x-cloak style="display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;">
+    <div class="ax-card" style="width:100%;max-width:540px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);" @click.outside="openMsaModal = false">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">AIAG MSA 4th Edition</span>
+          <h2 class="ax-card__title">Initiate ANOVA Gauge R&amp;R Study</h2>
+          <p class="ax-card__subtitle">Standard 10 Parts &times; 3 Operators &times; 3 Trials Study Matrix</p>
+        </div>
+      </div>
+      <form method="post" action="{% url 'metrology:msa_create' %}">
+        {% csrf_token %}
+        <div class="ax-card__body">
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Select Gauge / Instrument
+            </label>
+            <select name="gauge_id" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              {% for g in gauges %}
+                <option value="{{ g.id }}">{{ g.device_id }} — {{ g.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Select Part / Component
+            </label>
+            <select name="part_id" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+              {% for p in parts %}
+                <option value="{{ p.id }}">{{ p.part_number }} — {{ p.part_name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              CTQ Characteristic Name
+            </label>
+            <input type="text" name="characteristic_name" value="Wall Thickness (Dimension A)" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Specification Tolerance (USL - LSL in mm)
+            </label>
+            <input type="number" step="0.001" name="tolerance" value="0.200" required class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+          </div>
+        </div>
+
+        <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);padding:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="openMsaModal = false">
+            Cancel
+          </button>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Generate &amp; Run ANOVA Study
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
