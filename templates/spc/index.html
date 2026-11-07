@@ -1,0 +1,390 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Statistical Process Control (SPC){% endblock %}
+
+{% block content %}
+<div x-data="{ openSubgroupModal: false, selectedChartId: '{{ selected_chart.id|default:'' }}' }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Statistical Process Control (SPC)</h1>
+        <p class="ax-page-head__subtitle">Shewhart Control Charts, Nelson Rules 1–8 Anomaly Detection &amp; ISO 21747 Process Capability · IATF 16949 §9.1.1.2</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        {% if selected_chart %}
+        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openSubgroupModal = true">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+            <path d="M12 5v14" /><path d="M5 12h14" />
+          </svg>
+          Record Subgroup (n={{ selected_chart.subgroup_size }})
+        </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ CHART SELECTOR PILLS ════════════════ -->
+  <div style="display:flex;gap:var(--ax-space-2);margin-bottom:var(--ax-space-4);flex-wrap:wrap;align-items:center;">
+    <span style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-bold);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:0.05em;margin-right:var(--ax-space-2);">
+      Active Charts:
+    </span>
+    {% for chart in charts %}
+      <a href="{% url 'spc:chart_detail' chart_id=chart.id %}"
+         class="ax-btn {% if selected_chart and selected_chart.id == chart.id %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+        {{ chart.part.part_number }} · {{ chart.characteristic_name }}
+      </a>
+    {% empty %}
+      <span style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">No active SPC control charts registered.</span>
+    {% endfor %}
+  </div>
+
+  {% if selected_chart %}
+  <!-- ════════════════ METRICS SUMMARY ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <!-- Specification & Limits -->
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Nominal &amp; Tolerance</span>
+        <div style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ selected_chart.nominal }} <span style="font-size:var(--ax-text-sm);font-weight:normal;color:var(--ax-text-subtle);">{{ selected_chart.unit_of_measure }}</span>
+        </div>
+        <div style="display:flex;gap:var(--ax-space-4);margin-top:var(--ax-space-2);font-size:var(--ax-text-xs);" class="ax-mono">
+          <span>LSL: <strong>{{ selected_chart.lsl }}</strong></span>
+          <span>USL: <strong>{{ selected_chart.usl }}</strong></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Short-Term Capability Cp & Cpk -->
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-accent);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-accent);">Capability (Short-Term)</span>
+        <div style="display:flex;align-items:baseline;gap:var(--ax-space-3);margin-top:var(--ax-space-2);">
+          <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-accent);" class="ax-mono">
+            C<sub>pk</sub> {{ selected_chart.cpk|default:"—" }}
+          </div>
+          <div style="font-size:var(--ax-text-sm);color:var(--ax-text-subtle);" class="ax-mono">
+            C<sub>p</sub> {{ selected_chart.cp|default:"—" }}
+          </div>
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">
+          {% if selected_chart.cpk and selected_chart.cpk >= 1.67 %}
+            <span style="color:var(--ax-success-500);font-weight:var(--ax-weight-semibold);">● World-Class Process</span>
+          {% elif selected_chart.cpk and selected_chart.cpk >= 1.33 %}
+            <span style="color:var(--ax-accent);font-weight:var(--ax-weight-semibold);">● Capable (Automotive Req)</span>
+          {% elif selected_chart.cpk %}
+            <span style="color:var(--ax-danger-500);font-weight:var(--ax-weight-semibold);">▲ Incapable (Action Req)</span>
+          {% else %}
+            Accumulating subgroups...
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- Long-Term Performance Pp & Ppk -->
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Performance (Overall)</span>
+        <div style="display:flex;align-items:baseline;gap:var(--ax-space-3);margin-top:var(--ax-space-2);">
+          <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);" class="ax-mono">
+            P<sub>pk</sub> {{ selected_chart.ppk|default:"—" }}
+          </div>
+          <div style="font-size:var(--ax-text-sm);color:var(--ax-text-subtle);" class="ax-mono">
+            P<sub>p</sub> {{ selected_chart.pp|default:"—" }}
+          </div>
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Overall variation across all pools</p>
+      </div>
+    </div>
+
+    <!-- Nelson Anomaly Alerts -->
+    <div class="ax-card ax-col--3" style="{% if nelson_violations_count > 0 %}border-left: 3px solid var(--ax-danger-500);{% else %}border-left: 3px solid var(--ax-success-500);{% endif %}">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="{% if nelson_violations_count > 0 %}color:var(--ax-danger-500);{% else %}color:var(--ax-success-500);{% endif %}">
+          Nelson Rules Breaches
+        </span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);{% if nelson_violations_count > 0 %}color:var(--ax-danger-500);{% else %}color:var(--ax-success-500);{% endif %}margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ nelson_violations_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">
+          {% if nelson_violations_count > 0 %}
+            Special cause variation detected
+          {% else %}
+            Process in statistical control
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ CHARTS SECTION ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <!-- Shewhart X-bar SVG Chart Card -->
+    <section class="ax-card ax-col--8" role="region" aria-label="Shewhart Control Chart">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Real-Time Control Chart</span>
+          <h2 class="ax-card__title">Shewhart X̄ Chart with Automated Nelson Rules</h2>
+          <p class="ax-card__subtitle">Subgroup sample size n={{ selected_chart.subgroup_size }} · Center Line: {{ selected_chart.center_line|default:"Calculating" }} · UCL: {{ selected_chart.ucl|default:"—" }} · LCL: {{ selected_chart.lcl|default:"—" }}</p>
+        </div>
+      </div>
+      <div class="ax-card__body">
+        {% if subgroups %}
+          <div id="spc-chart-container" style="width:100%;height:320px;position:relative;">
+            <svg viewBox="0 0 760 300" style="width:100%;height:100%;overflow:visible;font-family:var(--ax-font-mono, monospace);" id="spc-svg">
+              <!-- Grid background lines -->
+              <rect x="50" y="20" width="690" height="240" fill="var(--ax-bg-subtle, #f8fafc)" stroke="var(--ax-border)" stroke-width="1" rx="4" />
+
+              <!-- Tolerance & Control Limit Guide Lines -->
+              <!-- USL Line (Red) -->
+              <line x1="50" y1="35" x2="740" y2="35" stroke="var(--ax-danger-500, #dc2626)" stroke-dasharray="4 4" stroke-width="1.5" />
+              <text x="745" y="38" font-size="10" fill="var(--ax-danger-500, #dc2626)">USL {{ selected_chart.usl }}</text>
+
+              <!-- UCL Line (Gold/Warning) -->
+              <line x1="50" y1="70" x2="740" y2="70" stroke="var(--ax-warning-500, #d97706)" stroke-dasharray="3 3" stroke-width="1.5" />
+              <text x="745" y="73" font-size="10" fill="var(--ax-warning-500, #d97706)">UCL {{ selected_chart.ucl|default:"" }}</text>
+
+              <!-- Center Line (Blue #1e5885) -->
+              <line x1="50" y1="140" x2="740" y2="140" stroke="#1e5885" stroke-width="1.75" />
+              <text x="745" y="143" font-size="10" fill="#1e5885" font-weight="bold">CL {{ selected_chart.center_line|default:"" }}</text>
+
+              <!-- LCL Line (Gold/Warning) -->
+              <line x1="50" y1="210" x2="740" y2="210" stroke="var(--ax-warning-500, #d97706)" stroke-dasharray="3 3" stroke-width="1.5" />
+              <text x="745" y="213" font-size="10" fill="var(--ax-warning-500, #d97706)">LCL {{ selected_chart.lcl|default:"" }}</text>
+
+              <!-- LSL Line (Red) -->
+              <line x1="50" y1="245" x2="740" y2="245" stroke="var(--ax-danger-500, #dc2626)" stroke-dasharray="4 4" stroke-width="1.5" />
+              <text x="745" y="248" font-size="10" fill="var(--ax-danger-500, #dc2626)">LSL {{ selected_chart.lsl }}</text>
+
+              <!-- Dynamic Subgroup Means Polyline & Points -->
+              <g id="spc-series-group"></g>
+            </svg>
+          </div>
+        {% else %}
+          <div style="padding:var(--ax-space-8);text-align:center;color:var(--ax-text-subtle);">
+            No subgroup data available. Click "Record Subgroup" to start SPC monitoring.
+          </div>
+        {% endif %}
+      </div>
+    </section>
+
+    <!-- Gaussian Capability Bell Curve Card -->
+    <section class="ax-card ax-col--4" role="region" aria-label="Gaussian Capability Distribution">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Distribution vs Tolerances</span>
+          <h2 class="ax-card__title">ISO 21747 Bell Curve</h2>
+          <p class="ax-card__subtitle">Normal probability density function</p>
+        </div>
+      </div>
+      <div class="ax-card__body">
+        <div style="width:100%;height:320px;display:flex;align-items:center;justify-content:center;">
+          <svg viewBox="0 0 340 280" style="width:100%;height:100%;overflow:visible;font-family:var(--ax-font-mono, monospace);">
+            <rect x="10" y="20" width="320" height="220" fill="var(--ax-bg-subtle, #f8fafc)" stroke="var(--ax-border)" stroke-width="1" rx="4" />
+            
+            <!-- Specification limits -->
+            <line x1="60" y1="20" x2="60" y2="240" stroke="var(--ax-danger-500)" stroke-dasharray="3 3" stroke-width="1.5" />
+            <text x="60" y="255" font-size="9" text-anchor="middle" fill="var(--ax-danger-500)">LSL</text>
+
+            <line x1="280" y1="20" x2="280" y2="240" stroke="var(--ax-danger-500)" stroke-dasharray="3 3" stroke-width="1.5" />
+            <text x="280" y="255" font-size="9" text-anchor="middle" fill="var(--ax-danger-500)">USL</text>
+
+            <line x1="170" y1="20" x2="170" y2="240" stroke="#1e5885" stroke-dasharray="2 2" stroke-width="1.5" />
+            <text x="170" y="255" font-size="9" text-anchor="middle" fill="#1e5885">CL</text>
+
+            <!-- Bell Curve Path -->
+            <path d="M 40,230 Q 110,230 140,140 Q 170,40 200,140 Q 230,230 300,230" fill="none" stroke="#1e5885" stroke-width="2.5" />
+            <!-- Shaded area -->
+            <path d="M 40,230 Q 110,230 140,140 Q 170,40 200,140 Q 230,230 300,230 Z" fill="#1e5885" fill-opacity="0.1" />
+          </svg>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ RECENT SUBGROUPS TABLE ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="Subgroups History">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Telemetry Log</span>
+          <h2 class="ax-card__title">Recent Subgroup Inspections</h2>
+          <p class="ax-card__subtitle">Showing latest {{ subgroups|length }} subgroups with individual sample measurements</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">SUBGROUP #</th>
+                <th class="ax-table__th" scope="col">TIMESTAMP</th>
+                <th class="ax-table__th" scope="col">SAMPLES (x₁...xₙ)</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">MEAN (X̄)</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">RANGE (R)</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">STD DEV (s)</th>
+                <th class="ax-table__th" scope="col">NELSON RULES STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sg in subgroups %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);">
+                  SG-{{ sg.subgroup_number }}
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                  {{ sg.created_at|date:"Y-m-d H:i:s" }}
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                  [{{ sg.sample_values|join:", " }}]
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);">
+                  {{ sg.mean }}
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono">
+                  {{ sg.range_val }}
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono">
+                  {{ sg.std_dev }}
+                </td>
+                <td class="ax-table__td">
+                  {% if sg.nelson_rules_violated %}
+                    {% for rule in sg.nelson_rules_violated %}
+                      <span class="ax-badge ax-badge--danger" style="margin-right:2px;">
+                        Rule #{{ rule }}
+                      </span>
+                    {% endfor %}
+                  {% else %}
+                    <span class="ax-badge ax-badge--success">In Control</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  No subgroups recorded yet.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ RECORD SUBGROUP MODAL ════════════════ -->
+  <div class="ax-modal-backdrop" x-show="openSubgroupModal" x-cloak style="display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;">
+    <div class="ax-card" style="width:100%;max-width:540px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);" @click.outside="openSubgroupModal = false">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Data Entry</span>
+          <h2 class="ax-card__title">Record Subgroup Samples</h2>
+          <p class="ax-card__subtitle">Chart: {{ selected_chart.characteristic_name }} (n={{ selected_chart.subgroup_size }})</p>
+        </div>
+      </div>
+      <form method="post" action="{% url 'spc:record_subgroup' %}">
+        {% csrf_token %}
+        <input type="hidden" name="chart_id" value="{{ selected_chart.id }}">
+        
+        <div class="ax-card__body">
+          <div style="margin-bottom:var(--ax-space-4);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Subgroup Measurements (enter {{ selected_chart.subgroup_size }} values separated by space or comma)
+            </label>
+            <input type="text" name="sample_values" required
+                   placeholder="e.g. 12.51, 12.49, 12.50, 12.52, 12.51"
+                   class="ax-form-control ax-mono"
+                   style="width:100%;padding:var(--ax-space-2) var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            <p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-1);">
+              Nominal: {{ selected_chart.nominal }} · LSL: {{ selected_chart.lsl }} · USL: {{ selected_chart.usl }}
+            </p>
+          </div>
+        </div>
+
+        <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);padding:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="openSubgroupModal = false">
+            Cancel
+          </button>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Submit &amp; Evaluate Nelson Rules
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% endif %}
+</div>
+
+<!-- ════════════════ DYNAMIC SVG SCRIPT ════════════════ -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  try {
+    const rawData = {{ chart_data_json|safe }};
+    if (!rawData.means || rawData.means.length === 0) return;
+
+    const group = document.getElementById("spc-series-group");
+    if (!group) return;
+
+    const n = rawData.means.length;
+    const xStart = 65;
+    const xEnd = 725;
+    const xStep = n > 1 ? (xEnd - xStart) / (n - 1) : 0;
+
+    // Determine Y range based on USL, LSL, and data
+    const minVal = Math.min(rawData.lsl, ...rawData.means) - 0.02;
+    const maxVal = Math.max(rawData.usl, ...rawData.means) + 0.02;
+    const yRange = (maxVal - minVal) || 1;
+
+    function toY(val) {
+      // SVG Y: 20 is top, 260 is bottom
+      const norm = (val - minVal) / yRange;
+      return 260 - norm * 240;
+    }
+
+    let points = [];
+    for (let i = 0; i < n; i++) {
+      const cx = n === 1 ? (xStart + xEnd) / 2 : xStart + i * xStep;
+      const cy = toY(rawData.means[i]);
+      points.push(`${cx},${cy}`);
+
+      // Check if violated
+      const isViolated = rawData.violations && rawData.violations.some(v => v.x === i);
+
+      const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle.setAttribute("cx", cx);
+      circle.setAttribute("cy", cy);
+      circle.setAttribute("r", isViolated ? "5.5" : "3.5");
+      circle.setAttribute("fill", isViolated ? "#dc2626" : "#1e5885");
+      circle.setAttribute("stroke", "#ffffff");
+      circle.setAttribute("stroke-width", "1.5");
+      group.appendChild(circle);
+
+      // Label
+      const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+      txt.setAttribute("x", cx);
+      txt.setAttribute("y", cy - 8);
+      txt.setAttribute("font-size", "9");
+      txt.setAttribute("text-anchor", "middle");
+      txt.setAttribute("fill", isViolated ? "#dc2626" : "var(--ax-text-subtle, #64748b)");
+      txt.textContent = rawData.means[i].toFixed(3);
+      group.appendChild(txt);
+    }
+
+    if (points.length > 1) {
+      const polyline = document.createElementNS("http://www.w3.org/2000/svg", "polyline");
+      polyline.setAttribute("points", points.join(" "));
+      polyline.setAttribute("fill", "none");
+      polyline.setAttribute("stroke", "#1e5885");
+      polyline.setAttribute("stroke-width", "2");
+      group.insertBefore(polyline, group.firstChild);
+    }
+  } catch (e) {
+    console.error("SPC Chart Rendering error:", e);
+  }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,222 @@
+{% extends "base_qms.html" %}
+
+{% block title %}ANOVA Gauge R&amp;R: {{ study.study_number }}{% endblock %}
+
+{% block content %}
+<div>
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <div style="display:flex;align-items:center;gap:var(--ax-space-3);margin-top:var(--ax-space-1);">
+          <h1 class="ax-page-head__title">{{ study.study_number }}: ANOVA Gauge R&amp;R</h1>
+          {% if study.acceptance_status == 'ACCEPTABLE' %}
+            <span class="ax-badge ax-badge--success">Acceptable (&le;10% GRR)</span>
+          {% elif study.acceptance_status == 'MARGINAL' %}
+            <span class="ax-badge ax-badge--warning">Marginal (10-30% GRR)</span>
+          {% else %}
+            <span class="ax-badge ax-badge--danger">Unacceptable (&gt;30% GRR)</span>
+          {% endif %}
+        </div>
+        <p class="ax-page-head__subtitle">
+          Gauge: <strong>{{ study.gauge.device_id }} ({{ study.gauge.name }})</strong> · Part: <strong>{{ study.part.part_number }}</strong> · Characteristic: <strong>{{ study.characteristic_name }}</strong> · Tolerance: <strong>{{ study.tolerance }} mm</strong>
+        </p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <a href="{% url 'metrology:index' %}" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill">
+          ← Back to Registry
+        </a>
+        <form method="post" action="{% url 'metrology:msa_calculate' study_id=study.id %}" style="display:inline;">
+          {% csrf_token %}
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Recalculate ANOVA
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ ANOVA VARIANCE METRICS GRID ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <!-- %GRR Card -->
+    <div class="ax-card ax-col--3" style="{% if study.grr_percent and study.grr_percent <= 10.0 %}border-left: 3px solid var(--ax-success-500);{% elif study.grr_percent and study.grr_percent <= 30.0 %}border-left: 3px solid var(--ax-warning-500);{% else %}border-left: 3px solid var(--ax-danger-500);{% endif %}">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Gauge R&amp;R (%GRR)</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);margin-top:var(--ax-space-2);
+          {% if study.grr_percent and study.grr_percent <= 10.0 %}color:var(--ax-success-500);{% elif study.grr_percent and study.grr_percent <= 30.0 %}color:var(--ax-warning-500);{% else %}color:var(--ax-danger-500);{% endif %}" class="ax-mono">
+          {{ study.grr_percent|default:"—" }}%
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Total measurement system variation / TV</p>
+      </div>
+    </div>
+
+    <!-- NDC Card -->
+    <div class="ax-card ax-col--3" style="{% if study.ndc and study.ndc >= 5.0 %}border-left: 3px solid var(--ax-success-500);{% else %}border-left: 3px solid var(--ax-danger-500);{% endif %}">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Distinct Categories (ndc)</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);margin-top:var(--ax-space-2);color:var(--ax-text-strong);" class="ax-mono">
+          {{ study.ndc|default:"—" }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">
+          {% if study.ndc and study.ndc >= 5.0 %}
+            <span style="color:var(--ax-success-500);font-weight:bold;">● Adequate resolution (&ge; 5)</span>
+          {% else %}
+            <span style="color:var(--ax-danger-500);font-weight:bold;">▲ Inadequate (&lt; 5)</span>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <!-- Repeatability EV Card -->
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Repeatability (EV)</span>
+        <div style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ study.repeatability_ev|default:"—" }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Equipment variation (gauge internal error)</p>
+      </div>
+    </div>
+
+    <!-- Reproducibility AV Card -->
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Reproducibility (AV)</span>
+        <div style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ study.reproducibility_av|default:"—" }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Appraiser variation (operator bias)</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ VARIANCE ANALYSIS BREAKDOWN ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <section class="ax-card ax-col--6" role="region" aria-label="Variance Components">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">ANOVA Two-Way Decomposition</span>
+          <h2 class="ax-card__title">Standard Deviation Components</h2>
+        </div>
+      </div>
+      <div class="ax-card__body">
+        <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+          <div style="display:flex;justify-content:space-between;padding:var(--ax-space-2) 0;border-bottom:1px solid var(--ax-border);">
+            <span style="color:var(--ax-text-subtle);">Repeatability (Equipment Variation - EV)</span>
+            <span class="ax-mono" style="font-weight:var(--ax-weight-bold);">{{ study.repeatability_ev }} mm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:var(--ax-space-2) 0;border-bottom:1px solid var(--ax-border);">
+            <span style="color:var(--ax-text-subtle);">Reproducibility (Appraiser Variation - AV)</span>
+            <span class="ax-mono" style="font-weight:var(--ax-weight-bold);">{{ study.reproducibility_av }} mm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:var(--ax-space-2) 0;border-bottom:1px solid var(--ax-border);">
+            <span style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">Combined Gauge R&amp;R (GRR = &radic;(EV&sup2; + AV&sup2;))</span>
+            <span class="ax-mono" style="font-weight:var(--ax-weight-bold);color:#1e5885;">{{ study.grr }} mm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:var(--ax-space-2) 0;border-bottom:1px solid var(--ax-border);">
+            <span style="color:var(--ax-text-subtle);">Part-to-Part Variation (PV)</span>
+            <span class="ax-mono" style="font-weight:var(--ax-weight-bold);">{{ study.part_variation_pv }} mm</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:var(--ax-space-2) 0;">
+            <span style="color:var(--ax-text-strong);font-weight:var(--ax-weight-bold);">Total Variation (TV = &radic;(GRR&sup2; + PV&sup2;))</span>
+            <span class="ax-mono" style="font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);">{{ study.total_variation_tv }} mm</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ax-card ax-col--6" role="region" aria-label="AIAG Criteria Assessment">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">AIAG MSA 4th Edition Standards</span>
+          <h2 class="ax-card__title">Acceptance Conformance Summary</h2>
+        </div>
+      </div>
+      <div class="ax-card__body">
+        <div style="padding:var(--ax-space-3);border-radius:var(--ax-radius-sm);margin-bottom:var(--ax-space-3);
+          {% if study.acceptance_status == 'ACCEPTABLE' %}background:rgba(34,197,94,0.1);border-left:4px solid var(--ax-success-500);
+          {% elif study.acceptance_status == 'MARGINAL' %}background:rgba(234,179,8,0.1);border-left:4px solid var(--ax-warning-500);
+          {% else %}background:rgba(239,68,68,0.1);border-left:4px solid var(--ax-danger-500);{% endif %}">
+          <h4 style="margin:0 0 var(--ax-space-1) 0;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-bold);">
+            Status: {{ study.get_acceptance_status_display }}
+          </h4>
+          <p style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-strong);line-height:1.4;">
+            {% if study.acceptance_status == 'ACCEPTABLE' %}
+              The measurement system is fully capable. %GRR &le; 10% and ndc &ge; 5. Suitable for automotive injection molding CTQ characteristic verification and statistical process control.
+            {% elif study.acceptance_status == 'MARGINAL' %}
+              The measurement system is marginally acceptable (10% &lt; %GRR &le; 30%). May be acceptable based upon the importance of the application, cost of measurement device, or repair cost. Customer concession or supervisor review advised.
+            {% else %}
+              The measurement system is UNACCEPTABLE (%GRR &gt; 30% or ndc &lt; 4). Measurement system cannot reliably distinguish process variation. Instrument must be repaired, recalibrated, or replaced.
+            {% endif %}
+          </p>
+        </div>
+
+        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);line-height:1.5;">
+          <div>• Study matrix: {{ study.part_count }} parts &times; {{ study.operator_count }} operators &times; {{ study.trial_count }} trials ({{ study.raw_data|length|default:10|stringformat:"d" }} &times; 3 &times; 3 = 90 total data points).</div>
+          <div>• Analysis method: Two-Way Analysis of Variance (ANOVA) with interaction evaluation.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ RAW 3D DATA MATRIX TABLE ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="Raw Study Trials">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Inspection Matrix</span>
+          <h2 class="ax-card__title">Trials Data Matrix (Parts &times; Operators &times; Trials)</h2>
+          <p class="ax-card__subtitle">Showing recorded measurements for each operator and part across 3 trials</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">PART #</th>
+                <th class="ax-table__th" scope="col">OPERATOR</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">TRIAL 1</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">TRIAL 2</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">TRIAL 3</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">CELL MEAN</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">CELL RANGE</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in raw_matrix %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);">
+                  Part #{{ row.part }}
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-sm);">
+                  {{ row.operator }}
+                </td>
+                {% for t in row.trials %}
+                  <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:var(--ax-text-xs);">
+                    {{ t }}
+                  </td>
+                {% endfor %}
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ row.mean }}
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:var(--ax-text-xs);">
+                  {{ row.range }}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  No trial data recorded.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

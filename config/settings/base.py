@@ -50,6 +50,9 @@ LOCAL_APPS = [
     "apps.ncr.apps.NcrConfig",
     "apps.mrb.apps.MrbConfig",
     "apps.traceability.apps.TraceabilityConfig",
+    "apps.spc.apps.SpcConfig",
+    "apps.capa.apps.CapaConfig",
+    "apps.metrology.apps.MetrologyConfig",
     "apps.integrations.apps.IntegrationsConfig",
 ]
 
