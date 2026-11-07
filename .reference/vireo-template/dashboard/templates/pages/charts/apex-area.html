@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Area Charts</h1>
+              <p class="ax-page-head__subtitle">ApexCharts area family — basic, gradient, stacked, spline and negative variants, all on the live Aurora palette.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="https://apexcharts.com/docs/chart-types/area-chart/" target="_blank" rel="noopener">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5"/><path d="M3 16h5v5"/><path d="M3 21l5 -5"/></svg>
+                <span class="ax-btn__label">Docs</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export all</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19l4 -6l4 2l4 -5l4 4l0 5l-16 0"/><path d="M4 12l3 -4l4 2l5 -6l4 4"/></svg>
+                <span class="ax-btn__label">New chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── BASIC AREA (single tint) — hero, 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Basic area chart of monthly revenue"
+                   x-data="{ tab: 'chart' }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Basic · single tint</span>
+                <h2 class="ax-card__title">Monthly Revenue</h2>
+                <p class="ax-card__subtitle">12-month trend with a flat 12% area fill on the accent colour</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="tablist" aria-label="View mode">
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='chart' }" @click="tab='chart'" :aria-selected="tab==='chart'" role="tab">Chart</button>
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='table' }" @click="tab='table'" :aria-selected="tab==='table'" role="tab">Table</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div x-show="tab==='chart'">
+                <div
+                  data-ax-chart="apex"
+                  data-ax-chart-type="area"
+                  data-ax-chart-height="330"
+                  data-ax-chart-legend="none"
+                  data-ax-chart-accent="true"
+                  data-ax-chart-series='[{"name":"Revenue","data":[42100,48300,45200,53400,57100,55600,62400,60200,68900,72300,70100,74820]}]'
+                  aria-label="Area chart of monthly revenue, headline $748.2K, up 12.4%">
+                </div>
+              </div>
+              <div x-show="tab==='table'" x-cloak class="ax-table-wrap">
+                <table class="ax-table ax-table--compact">
+                  <caption class="ax-visually-hidden">Monthly revenue, Jul to Jun</caption>
+                  <thead class="ax-table__head"><tr><th class="ax-table__th" scope="col">Month</th><th class="ax-table__th ax-table__th--num" scope="col">Revenue</th></tr></thead>
+                  <tbody>
+                    <tr class="ax-table__row"><td class="ax-table__td">Jul</td><td class="ax-table__td ax-table__td--num">$42,100</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Aug</td><td class="ax-table__td ax-table__td--num">$48,300</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Sep</td><td class="ax-table__td ax-table__td--num">$45,200</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Oct</td><td class="ax-table__td ax-table__td--num">$53,400</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Nov</td><td class="ax-table__td ax-table__td--num">$57,100</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Dec</td><td class="ax-table__td ax-table__td--num">$55,600</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Jan</td><td class="ax-table__td ax-table__td--num">$62,400</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Feb</td><td class="ax-table__td ax-table__td--num">$60,200</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Mar</td><td class="ax-table__td ax-table__td--num">$68,900</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Apr</td><td class="ax-table__td ax-table__td--num">$72,300</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">May</td><td class="ax-table__td ax-table__td--num">$70,100</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Jun</td><td class="ax-table__td ax-table__td--num">$74,820</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── AT-A-GLANCE rail — 4 col ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Area chart usage notes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">When to use area</h2>
+                <p class="ax-card__subtitle">Quick reference</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19l4 -6l4 2l4 -5l4 4l0 5l-16 0"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Show volume over time</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">The filled area emphasises the magnitude of a single trending metric.</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M20 18v3"/><path d="M16 16v5"/><path d="M12 13v8"/><path d="M8 16v5"/><path d="M4 18v3"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Stack parts of a whole</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Stacked areas read composition without losing the total.</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12c.5 -1.5 2 -4 4 -4c3 0 3 6 6 6c2 0 3.5 -2.5 4 -4"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Smooth the noise</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Spline curves soften jagged sampling for a calmer read.</div></div>
+              </div>
+              <div class="ax-divider" style="margin:var(--ax-space-1) 0;"></div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Recommended fill opacity</span>
+                <span class="ax-badge ax-badge--soft ax-badge--pill ax-num">8–14%</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── GRADIENT AREA — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Gradient area chart of payouts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Gradient fill</span>
+                <h2 class="ax-card__title">Payout Volume</h2>
+                <p class="ax-card__subtitle">Vertical gradient fade from accent to transparent</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Payout chart options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-area-gradient" aria-label="Gradient area chart of weekly payout volume"></div>
+            </div>
+          </section>
+
+          <!-- ───── SPLINE AREA — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Spline area chart of active subscriptions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Smooth · spline</span>
+                <h2 class="ax-card__title">Active Subscriptions</h2>
+                <p class="ax-card__subtitle">Two metrics, smoothed curve, soft tint</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Pro</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Team</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-area-spline" aria-label="Spline area chart of Pro versus Team subscriptions"></div>
+            </div>
+          </section>
+
+          <!-- ───── STACKED AREA — 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Stacked area chart of revenue by channel">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Stacked · parts of a whole</span>
+                <h2 class="ax-card__title">Revenue by Channel</h2>
+                <p class="ax-card__subtitle">Direct, organic, referral and paid stacked to the monthly total</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Mode">
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">Stacked</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">100%</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);flex-wrap:wrap;">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Direct</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Organic</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Referral</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Paid</small></span>
+              </div>
+              <div
+                data-ax-chart="apex"
+                data-ax-chart-type="area"
+                data-ax-chart-height="320"
+                data-ax-chart-stacked="true"
+                data-ax-chart-legend="none"
+                data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"Direct","data":[16200,18400,17100,20300,22100,21400,24600]},{"name":"Organic","data":[11400,12600,13200,14100,15600,16200,17800]},{"name":"Referral","data":[5400,6100,5800,6600,7200,7000,7900]},{"name":"Paid","data":[3100,3400,3300,3900,4200,4000,4600]}]'
+                aria-label="Stacked area chart of revenue by acquisition channel">
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── NEGATIVE AREA — 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Area chart with negative values for net cash flow">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Negative values</span>
+                <h2 class="ax-card__title">Net Cash Flow</h2>
+                <p class="ax-card__subtitle">Inflow above, outflow below zero</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-area-negative" aria-label="Area chart of net cash flow crossing the zero baseline"></div>
+              <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-3);">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Net this quarter</span>
+                <b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-md);">+$18,940</b>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // Gradient area — accent → transparent vertical fade
+    const grad = document.getElementById('ax-area-gradient');
+    if (grad) renderChart(grad, 'area', [
+      { name: 'Payouts', data: [9.8, 11.2, 10.4, 13.1, 12.6, 15.4, 14.8, 17.2, 16.9, 19.4] },
+    ], {
+      height: 300, legend: 'none', accent: true,
+      apex: {
+        stroke: { width: 2.5, curve: 'smooth' },
+        fill: { type: 'gradient', gradient: { shadeIntensity: 1, opacityFrom: 0.42, opacityTo: 0.02, stops: [0, 92, 100] } },
+        xaxis: { categories: ['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10'] },
+        yaxis: { labels: { formatter: (v) => '$' + v.toFixed(1) + 'K' } },
+        tooltip: { y: { formatter: (v) => '$' + v.toFixed(1) + 'K' } },
+      },
+    });
+
+    // Spline area — two smoothed series
+    const spline = document.getElementById('ax-area-spline');
+    if (spline) renderChart(spline, 'area', [
+      { name: 'Pro',  data: [1240, 1310, 1280, 1420, 1510, 1480, 1620, 1710] },
+      { name: 'Team', data: [620, 680, 710, 760, 840, 880, 960, 1040] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet')],
+        stroke: { width: 2.5, curve: 'smooth' },
+        fill: { type: 'solid', opacity: 0.1 },
+        xaxis: { categories: ['Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'] },
+      },
+    });
+
+    // Negative area — values crossing the zero baseline
+    const neg = document.getElementById('ax-area-negative');
+    if (neg) renderChart(neg, 'area', [
+      { name: 'Net flow', data: [4.2, -2.1, 6.4, 3.8, -1.6, 5.1, -3.2, 7.4, 4.6] },
+    ], {
+      height: 260, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-emerald')],
+        stroke: { width: 2.5, curve: 'straight' },
+        fill: { type: 'solid', opacity: 0.14 },
+        xaxis: { categories: ['Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8','Wk9'] },
+        yaxis: { labels: { formatter: (v) => (v > 0 ? '+' : '') + '$' + v.toFixed(0) + 'K' } },
+        annotations: { yaxis: [{ y: 0, borderColor: cv('--ax-border-strong'), strokeDashArray: 4 }] },
+        tooltip: { y: { formatter: (v) => (v >= 0 ? '+' : '−') + '$' + Math.abs(v).toFixed(1) + 'K' } },
+      },
+    });
+  </script>
+{% endblock %}

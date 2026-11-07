@@ -1,0 +1,269 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axMailSettings()"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">Manage your account, signature, filters and away messages.</p>
+          <div class="ax-apphead__actions">
+            <a class="ax-btn ax-btn--ghost" href="/apps/email/">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+              <span class="ax-btn__label">Back to inbox</span>
+            </a>
+            <button type="button" class="ax-btn ax-btn--primary" @click="save()" :aria-busy="saving">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+              <span class="ax-btn__label" x-text="saving ? 'Saving…' : 'Save changes'"></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- toast -->
+        <div x-show="toast" x-transition x-cloak style="position:fixed;bottom:24px;right:24px;z-index:60;">
+          <div class="ax-cluster" style="gap:var(--ax-space-2);padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-lg);">
+            <span style="color:var(--ax-viz-emerald);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+            <span style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Settings saved successfully</span>
+          </div>
+        </div>
+
+        <div class="ax-dash-grid">
+          <!-- ───── TAB RAIL ───── -->
+          <aside class="ax-col--3" role="tablist" aria-label="Settings sections" aria-orientation="vertical">
+            <div class="ax-card">
+              <nav class="ax-card__body" style="display:flex;flex-direction:column;gap:2px;padding:var(--ax-space-3);">
+                <template x-for="t in tabs" :key="t.id">
+                  <button type="button" role="tab" :aria-selected="tab === t.id ? 'true' : 'false'"
+                          @click="tab = t.id"
+                          class="ax-list__row"
+                          :style="tab === t.id ? 'background:var(--ax-accent-wash);box-shadow:inset 2px 0 0 var(--ax-accent);' : 'background:transparent;'"
+                          style="width:100%;border:0;border-radius:var(--ax-radius-md);text-align:start;cursor:pointer;">
+                    <span class="ax-list__leading" :style="tab === t.id ? 'color:var(--ax-accent);' : 'color:var(--ax-text-muted);'" x-html="t.icon"></span>
+                    <span class="ax-list__content"><span class="ax-list__title" :style="tab === t.id ? 'color:var(--ax-text-strong);font-weight:600;' : ''" x-text="t.name"></span></span>
+                  </button>
+                </template>
+              </nav>
+            </div>
+          </aside>
+
+          <!-- ───── PANELS ───── -->
+          <div class="ax-col--9" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- ░░ ACCOUNT ░░ -->
+            <template x-if="tab === 'account'">
+              <section class="ax-card" role="tabpanel" aria-label="Account">
+                <div class="ax-card__header"><div class="ax-card__titles"><span class="ax-card__eyebrow">Account</span><h2 class="ax-card__title">Profile &amp; addresses</h2><p class="ax-card__subtitle">How you appear on outgoing mail.</p></div></div>
+                <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;">
+                    <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-accent) 20%,transparent);color:var(--ax-accent);"><b style="font-size:var(--ax-text-lg);">JA</b></span>
+                    <div>
+                      <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm">Change photo</button>
+                      <p style="margin:var(--ax-space-2) 0 0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">JPG or PNG, up to 2 MB.</p>
+                    </div>
+                  </div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-5);">
+                    <div class="ax-field">
+                      <label class="ax-label" for="display-name">Display name</label>
+                      <input id="display-name" type="text" class="ax-input" value="Jawad Ahbab">
+                      <span class="ax-help">Shown to recipients in the “From” line.</span>
+                    </div>
+                    <div class="ax-field">
+                      <label class="ax-label" for="reply-to">Reply-to address</label>
+                      <input id="reply-to" type="email" class="ax-input" value="jawad@vireo.app">
+                    </div>
+                    <div class="ax-field">
+                      <label class="ax-label" for="default-from">Default sending address</label>
+                      <select id="default-from" class="ax-select">
+                        <option>jawad@vireo.app</option>
+                        <option>support@vireo.app</option>
+                        <option>billing@vireo.app</option>
+                      </select>
+                    </div>
+                    <div class="ax-field">
+                      <label class="ax-label" for="lang">Language &amp; region</label>
+                      <select id="lang" class="ax-select">
+                        <option>English (United States)</option>
+                        <option>English (United Kingdom)</option>
+                        <option>Français</option>
+                        <option>Deutsch</option>
+                      </select>
+                    </div>
+                  </div>
+                  <hr class="ax-divider">
+                  <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);">
+                      <div><div style="font-weight:500;color:var(--ax-text-strong);">Conversation view</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Group replies into a single thread.</div></div>
+                      <input type="checkbox" class="ax-switch" role="switch" checked aria-label="Conversation view">
+                    </div>
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);">
+                      <div><div style="font-weight:500;color:var(--ax-text-strong);">Show snippets</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Preview the first line beside each subject.</div></div>
+                      <input type="checkbox" class="ax-switch" role="switch" checked aria-label="Show snippets">
+                    </div>
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);">
+                      <div><div style="font-weight:500;color:var(--ax-text-strong);">Send &amp; archive</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Show a button to archive when you reply.</div></div>
+                      <input type="checkbox" class="ax-switch" role="switch" aria-label="Send and archive">
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </template>
+
+            <!-- ░░ SIGNATURE ░░ -->
+            <template x-if="tab === 'signature'">
+              <section class="ax-card" role="tabpanel" aria-label="Signature">
+                <div class="ax-card__header"><div class="ax-card__titles"><span class="ax-card__eyebrow">Signature</span><h2 class="ax-card__title">Email signature</h2><p class="ax-card__subtitle">Appended to the bottom of every message you send.</p></div></div>
+                <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                  <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);">
+                    <div><div style="font-weight:500;color:var(--ax-text-strong);">Enable signature</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Insert automatically on new emails.</div></div>
+                    <input type="checkbox" class="ax-switch" role="switch" checked aria-label="Enable signature">
+                  </div>
+                  <!-- rich toolbar -->
+                  <div>
+                    <div role="toolbar" aria-label="Signature formatting" class="ax-cluster" style="gap:2px;padding:var(--ax-space-1);border:1px solid var(--ax-border);border-bottom:0;border-radius:var(--ax-radius-sm) var(--ax-radius-sm) 0 0;background:var(--ax-surface-subtle);flex-wrap:wrap;">
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bold"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"/><path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"/></svg></button>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Italic"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5l6 0"/><path d="M7 19l6 0"/><path d="M14 5l-4 14"/></svg></button>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Link"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6 -6"/><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"/><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"/></svg></button>
+                      <span aria-hidden="true" style="width:1px;height:20px;background:var(--ax-border);margin-inline:6px;"></span>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Insert image"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"/><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-16a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"/><path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5"/><path d="M14 14l1 -1a3 5 0 0 1 3 0l2 2"/></svg></button>
+                    </div>
+                    <div contenteditable="true" aria-multiline="true" aria-label="Signature content" style="min-height:130px;padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:0 0 var(--ax-radius-sm) var(--ax-radius-sm);background:var(--ax-surface);line-height:1.6;font-size:var(--ax-text-sm);outline:none;">
+                      <b style="color:var(--ax-text-strong);">Jawad Ahbab</b><br>
+                      <span style="color:var(--ax-text-muted);">Product Lead · Vireo</span><br>
+                      <span style="color:var(--ax-text-subtle);">+1 (415) 555-0142 · </span><span style="color:var(--ax-accent);">vireo.app</span>
+                    </div>
+                  </div>
+                  <label class="ax-check"><input type="checkbox" class="ax-checkbox" checked><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Insert signature before quoted text in replies</span></label>
+                </div>
+              </section>
+            </template>
+
+            <!-- ░░ FILTERS ░░ -->
+            <template x-if="tab === 'filters'">
+              <section class="ax-card" role="tabpanel" aria-label="Filters">
+                <div class="ax-card__header">
+                  <div class="ax-card__titles"><span class="ax-card__eyebrow">Rules</span><h2 class="ax-card__title">Filters &amp; rules</h2><p class="ax-card__subtitle">When a message arrives, apply these actions in order.</p></div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="rules.push({when:'From', match:'', action:'Apply label', enabled:true})">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                    <span class="ax-btn__label">New rule</span>
+                  </button>
+                </div>
+                <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="(r,i) in rules" :key="i">
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                      <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:34px;">If</span>
+                      <select class="ax-select ax-select--sm" x-model="r.when" style="width:120px;flex:0 0 auto;"><option>From</option><option>To</option><option>Subject</option><option>Has words</option></select>
+                      <input type="text" class="ax-input ax-input--sm" placeholder="contains…" x-model="r.match" style="flex:1 1 160px;min-width:120px;">
+                      <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">then</span>
+                      <select class="ax-select ax-select--sm" x-model="r.action" style="width:150px;flex:0 0 auto;"><option>Apply label</option><option>Archive</option><option>Mark as read</option><option>Star</option><option>Forward to…</option><option>Delete</option></select>
+                      <span style="flex:1 1 auto;"></span>
+                      <input type="checkbox" class="ax-switch ax-switch--sm" role="switch" x-model="r.enabled" :aria-label="`Enable rule ${i+1}`">
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="rules.splice(i,1)" aria-label="Delete rule"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+                    </div>
+                  </template>
+                  <p x-show="rules.length === 0" style="text-align:center;color:var(--ax-text-subtle);font-size:var(--ax-text-sm);padding:var(--ax-space-6);">No rules yet — create one to automate your inbox.</p>
+                </div>
+              </section>
+            </template>
+
+            <!-- ░░ LABELS ░░ -->
+            <template x-if="tab === 'labels'">
+              <section class="ax-card" role="tabpanel" aria-label="Labels">
+                <div class="ax-card__header"><div class="ax-card__titles"><span class="ax-card__eyebrow">Labels</span><h2 class="ax-card__title">Labels &amp; colors</h2></div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="labels.push({name:'New label', color:'#38BDF8'})"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg><span class="ax-btn__label">Add label</span></button>
+                </div>
+                <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                  <template x-for="(l,i) in labels" :key="i">
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                      <i :style="`width:14px;height:14px;border-radius:4px;background:${l.color};flex:0 0 auto;`"></i>
+                      <input type="text" class="ax-input ax-input--sm" x-model="l.name" style="flex:1 1 auto;" :aria-label="`Label ${i+1} name`">
+                      <div class="ax-cluster" style="gap:5px;flex:0 0 auto;">
+                        <template x-for="c in palette" :key="c">
+                          <button type="button" @click="l.color = c" :aria-label="`Set color ${c}`" :aria-pressed="l.color === c"
+                                  :style="`width:18px;height:18px;border-radius:5px;background:${c};border:0;cursor:pointer;box-shadow:${l.color===c ? '0 0 0 2px var(--ax-surface-solid),0 0 0 4px '+c : 'none'};`"></button>
+                        </template>
+                      </div>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="labels.splice(i,1)" aria-label="Delete label"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+                    </div>
+                  </template>
+                </div>
+              </section>
+            </template>
+
+            <!-- ░░ VACATION ░░ -->
+            <template x-if="tab === 'vacation'">
+              <section class="ax-card" role="tabpanel" aria-label="Vacation responder">
+                <div class="ax-card__header"><div class="ax-card__titles"><span class="ax-card__eyebrow">Away</span><h2 class="ax-card__title">Vacation responder</h2><p class="ax-card__subtitle">Auto-reply to incoming mail while you're away.</p></div>
+                  <input type="checkbox" class="ax-switch" role="switch" x-model="vacationOn" aria-label="Enable vacation responder">
+                </div>
+                <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);" :style="!vacationOn && 'opacity:.5;pointer-events:none;'">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-5);">
+                    <div class="ax-field"><label class="ax-label" for="vac-start">First day</label><input id="vac-start" type="date" class="ax-input" value="2026-07-01"></div>
+                    <div class="ax-field"><label class="ax-label" for="vac-end">Last day</label><input id="vac-end" type="date" class="ax-input" value="2026-07-14"></div>
+                  </div>
+                  <div class="ax-field"><label class="ax-label" for="vac-subject">Subject</label><input id="vac-subject" type="text" class="ax-input" value="Out of office until July 14"></div>
+                  <div class="ax-field">
+                    <label class="ax-label" for="vac-msg">Message</label>
+                    <textarea id="vac-msg" class="ax-textarea" rows="5">Thanks for your email. I'm away until July 14 with limited access to mail. For anything urgent, please reach Priya Nair at priya@vireo.app. I'll respond when I'm back.</textarea>
+                  </div>
+                  <label class="ax-check"><input type="checkbox" class="ax-checkbox" checked><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Only send to people in my contacts</span></label>
+                </div>
+              </section>
+            </template>
+
+            <!-- ░░ NOTIFICATIONS ░░ -->
+            <template x-if="tab === 'notifications'">
+              <section class="ax-card" role="tabpanel" aria-label="Notifications">
+                <div class="ax-card__header"><div class="ax-card__titles"><span class="ax-card__eyebrow">Alerts</span><h2 class="ax-card__title">Notifications</h2></div></div>
+                <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                  <template x-for="n in notifs" :key="n.label">
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);">
+                      <div><div style="font-weight:500;color:var(--ax-text-strong);" x-text="n.label"></div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="n.desc"></div></div>
+                      <input type="checkbox" class="ax-switch" role="switch" :checked="n.on" :aria-label="n.label">
+                    </div>
+                  </template>
+                </div>
+              </section>
+            </template>
+
+          </div>
+        </div>
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axMailSettings() {
+      const ic = (p) => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+      return {
+        tab:'account', saving:false, toast:false, vacationOn:true,
+        tabs:[
+          {id:'account', name:'Account', icon: ic('<path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>')},
+          {id:'signature', name:'Signature', icon: ic('<path d="M20 7l-3 -3l-11 11l-1 4l4 -1z"/><path d="M3 21h18"/>')},
+          {id:'filters', name:'Filters & rules', icon: ic('<path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345z"/>')},
+          {id:'labels', name:'Labels', icon: ic('<path d="M7.859 6h-2.834a2 2 0 0 0 -1.985 2.265l.5 4a2 2 0 0 0 1.985 1.735h2.834"/><path d="M11 6h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a1 1 0 0 1 -1 -1v-10a1 1 0 0 1 1 -1"/>')},
+          {id:'vacation', name:'Vacation responder', icon: ic('<path d="M3 21l18 0"/><path d="M9 21v-4a3 3 0 0 1 6 0v4"/><path d="M12 4l0 5"/><path d="M5 9l14 0l-1 -3a2 2 0 0 0 -2 -1.5h-8a2 2 0 0 0 -2 1.5z"/>')},
+          {id:'notifications', name:'Notifications', icon: ic('<path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/>')},
+        ],
+        rules:[
+          {when:'From', match:'@stripe.com', action:'Apply label', enabled:true},
+          {when:'Subject', match:'invoice', action:'Star', enabled:true},
+          {when:'From', match:'newsletter@', action:'Archive', enabled:false},
+        ],
+        labels:[
+          {name:'Finance', color:'#34D399'},
+          {name:'Clients', color:'#38BDF8'},
+          {name:'Personal', color:'#A78BFA'},
+          {name:'Receipts', color:'#FBBF24'},
+        ],
+        palette:['#34D399','#38BDF8','#A78BFA','#F472B6','#FBBF24','#FB7185'],
+        notifs:[
+          {label:'New mail desktop alerts', desc:'Notify me when a new message arrives.', on:true},
+          {label:'Important only', desc:'Limit alerts to messages marked important.', on:false},
+          {label:'Mention sounds', desc:'Play a sound when I am @-mentioned.', on:true},
+          {label:'Daily digest', desc:'Email me a summary at 8:00 AM.', on:true},
+        ],
+        save() { this.saving = true; setTimeout(()=>{ this.saving=false; this.toast=true; setTimeout(()=>this.toast=false, 3000); }, 700); },
+      };
+    }
+  </script>
+{% endblock %}

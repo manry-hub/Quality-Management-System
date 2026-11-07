@@ -1,0 +1,301 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axEvents()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Events</h1>
+              <p class="ax-page-head__subtitle">Workshops, releases and team meetups — RSVP and add them to your calendar.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">Subscribe</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="createOpen=true">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Create event</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Featured next-up event (full width) ───── -->
+          <section class="ax-card ax-card--accent-edge ax-col--12" role="region" aria-label="Next up event">
+            <div class="ax-card__body" style="display:flex;gap:var(--ax-space-6);align-items:center;flex-wrap:wrap;">
+              <div style="flex:0 0 auto;display:grid;place-items:center;width:92px;height:92px;border-radius:var(--ax-radius-lg);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 12px 26px -12px rgba(var(--ax-accent-rgb),.7);">
+                <span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;line-height:1;">02</span>
+                <span style="font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.08em;opacity:.9;">Jul</span>
+              </div>
+              <div style="flex:1 1 320px;min-width:0;">
+                <div class="ax-cluster" style="gap:var(--ax-space-2);margin-bottom:var(--ax-space-2);">
+                  <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill">Next up</span>
+                  <span class="ax-badge ax-badge--outline ax-badge--sm">Product</span>
+                </div>
+                <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Aurora 2.4 Launch Webinar</h2>
+                <div class="ax-cluster" style="gap:var(--ax-space-4);margin-top:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-muted);flex-wrap:wrap;">
+                  <span class="ax-cluster" style="gap:var(--ax-space-1);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 3"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg><span class="ax-num">15:00 – 16:00 BST</span></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-1);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/></svg>Online · Zoom</span></span>
+                </div>
+              </div>
+              <div style="flex:0 0 auto;display:flex;flex-direction:column;gap:var(--ax-space-3);align-items:flex-end;">
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <div class="ax-avatar-group">
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">ML</span></span>
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">DO</span></span>
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle ax-avatar__overflow">+212</span>
+                  </div>
+                </div>
+                <div class="ax-segment" role="radiogroup" aria-label="RSVP to Aurora 2.4 Launch Webinar">
+                  <button type="button" class="ax-segment__option" :class="featuredRsvp==='going' && 'is-active'" :aria-checked="featuredRsvp==='going'" role="radio" @click="setFeatured('going')" aria-label="RSVP Going to Aurora 2.4 Launch Webinar">Going</button>
+                  <button type="button" class="ax-segment__option" :class="featuredRsvp==='maybe' && 'is-active'" :aria-checked="featuredRsvp==='maybe'" role="radio" @click="setFeatured('maybe')" aria-label="RSVP Maybe to Aurora 2.4 Launch Webinar">Maybe</button>
+                  <button type="button" class="ax-segment__option" :class="featuredRsvp==='no' && 'is-active'" :aria-checked="featuredRsvp==='no'" role="radio" @click="setFeatured('no')" aria-label="RSVP Can't go to Aurora 2.4 Launch Webinar">Can't go</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Events list column ───── -->
+          <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- Toolbar -->
+            <section class="ax-card" role="region" aria-label="Event filters">
+              <div class="ax-card__body" style="display:flex;gap:var(--ax-space-3);align-items:center;flex-wrap:wrap;">
+                <form role="search" class="ax-input-group" aria-label="Search events" style="flex:1 1 220px;height:38px;min-width:180px;" @submit.prevent>
+                  <span class="ax-input-group__addon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                  <input type="search" class="ax-input" x-model="search" placeholder="Search events…" aria-label="Search events" autocomplete="off">
+                </form>
+                <div class="ax-segment" role="radiogroup" aria-label="Time filter">
+                  <button type="button" class="ax-segment__option" :class="filter==='upcoming' && 'is-active'" :aria-checked="filter==='upcoming'" role="radio" @click="filter='upcoming'">Upcoming</button>
+                  <button type="button" class="ax-segment__option" :class="filter==='past' && 'is-active'" :aria-checked="filter==='past'" role="radio" @click="filter='past'">Past</button>
+                  <button type="button" class="ax-segment__option" :class="filter==='all' && 'is-active'" :aria-checked="filter==='all'" role="radio" @click="filter='all'">All</button>
+                </div>
+                <div class="ax-segment" role="radiogroup" aria-label="View mode">
+                  <button type="button" class="ax-segment__option" :class="view==='cards' && 'is-active'" :aria-checked="view==='cards'" role="radio" @click="view='cards'" aria-label="Card view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg></button>
+                  <button type="button" class="ax-segment__option" :class="view==='list' && 'is-active'" :aria-checked="view==='list'" role="radio" @click="view='list'" aria-label="List view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11"/><path d="M9 12h11"/><path d="M9 18h11"/><path d="M5 6v.01"/><path d="M5 12v.01"/><path d="M5 18v.01"/></svg></button>
+                </div>
+              </div>
+            </section>
+
+            <!-- Category chips -->
+            <div class="ax-cluster" style="gap:var(--ax-space-2);" role="group" aria-label="Category filter">
+              <template x-for="c in categories" :key="c">
+                <button type="button" class="ax-badge ax-badge--filter ax-badge--pill" :class="cat===c && 'is-selected'" :aria-pressed="cat===c" @click="cat=c" x-text="c"></button>
+              </template>
+            </div>
+
+            <!-- CARD VIEW -->
+            <div x-show="view==='cards'" class="ax-grid" style="grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--ax-space-5);">
+              <template x-for="e in shown" :key="e.id">
+                <article class="ax-card ax-card--interactive" role="region" :aria-label="e.title" style="margin:0;">
+                  <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);height:100%;">
+                    <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;">
+                      <div style="flex:0 0 auto;display:grid;place-items:center;width:54px;height:54px;border-radius:var(--ax-radius-md);border:1px solid var(--ax-border);background:var(--ax-surface-subtle);">
+                        <span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:700;line-height:1;color:var(--ax-text-strong);" x-text="e.day"></span>
+                        <span style="font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);" x-text="e.month"></span>
+                      </div>
+                      <span class="ax-badge ax-badge--soft ax-badge--pill" :class="e.tagClass" x-text="e.category"></span>
+                    </div>
+                    <div style="flex:1 1 auto;">
+                      <h3 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-md);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);line-height:1.3;" x-text="e.title"></h3>
+                      <div class="ax-cluster" style="gap:var(--ax-space-1);margin-top:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-muted);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 3"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg><span class="ax-num" x-text="e.time"></span></div>
+                      <div class="ax-cluster" style="gap:var(--ax-space-1);margin-top:4px;font-size:var(--ax-text-xs);color:var(--ax-text-muted);">
+                        <template x-if="e.online"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/></svg></template>
+                        <template x-if="!e.online"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg></template>
+                        <span x-text="e.location"></span>
+                      </div>
+                    </div>
+                    <div class="ax-cluster" style="justify-content:space-between;align-items:center;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-1);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg><span class="ax-num" x-text="e.attendees + rsvpBump(e.id)"></span> going</span>
+                      <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" :style="`background:color-mix(in oklab,${e.tint} 18%,transparent);color:${e.tint};`"><span class="ax-avatar__initials" x-text="e.hostInitials"></span></span>
+                    </div>
+                    <div class="ax-segment" role="radiogroup" :aria-label="'RSVP to ' + e.title" style="width:100%;">
+                      <button type="button" class="ax-segment__option" style="flex:1;" :class="rsvp[e.id]==='going' && 'is-active'" :aria-checked="rsvp[e.id]==='going'" role="radio" @click="setRsvp(e.id,'going')" :aria-label="'RSVP Going to ' + e.title">Going</button>
+                      <button type="button" class="ax-segment__option" style="flex:1;" :class="rsvp[e.id]==='maybe' && 'is-active'" :aria-checked="rsvp[e.id]==='maybe'" role="radio" @click="setRsvp(e.id,'maybe')" :aria-label="'RSVP Maybe to ' + e.title">Maybe</button>
+                      <button type="button" class="ax-segment__option" style="flex:1;" :class="rsvp[e.id]==='no' && 'is-active'" :aria-checked="rsvp[e.id]==='no'" role="radio" @click="setRsvp(e.id,'no')" :aria-label="'RSVP Can\'t go to ' + e.title">Can't</button>
+                    </div>
+                  </div>
+                </article>
+              </template>
+            </div>
+
+            <!-- LIST VIEW -->
+            <section class="ax-card" x-show="view==='list'" x-cloak role="region" aria-label="Events list">
+              <div class="ax-table-wrap">
+                <table class="ax-table ax-table--hover">
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col">Date</th>
+                      <th class="ax-table__th" scope="col">Event</th>
+                      <th class="ax-table__th" scope="col">Location</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Going</th>
+                      <th class="ax-table__th" scope="col">RSVP</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="e in shown" :key="'r'+e.id">
+                      <tr class="ax-table__row">
+                        <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);white-space:nowrap;"><b style="color:var(--ax-text-strong);" x-text="e.day"></b> <span x-text="e.month"></span></td>
+                        <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="e.title"></div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="e.time"></div></td>
+                        <td class="ax-table__td" style="color:var(--ax-text-muted);" x-text="e.location"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" x-text="e.attendees + rsvpBump(e.id)"></td>
+                        <td class="ax-table__td">
+                          <div class="ax-segment" role="radiogroup" :aria-label="'RSVP to ' + e.title">
+                            <button type="button" class="ax-segment__option" :class="rsvp[e.id]==='going' && 'is-active'" :aria-checked="rsvp[e.id]==='going'" role="radio" @click="setRsvp(e.id,'going')" aria-label="Going">Going</button>
+                            <button type="button" class="ax-segment__option" :class="rsvp[e.id]==='maybe' && 'is-active'" :aria-checked="rsvp[e.id]==='maybe'" role="radio" @click="setRsvp(e.id,'maybe')" aria-label="Maybe">Maybe</button>
+                          </div>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+
+            <!-- filtered-empty -->
+            <section class="ax-card" x-show="shown.length===0" x-cloak role="region" aria-label="No events">
+              <div class="ax-card__body" style="padding-block:var(--ax-space-9);text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-4);">
+                <span aria-hidden="true" style="display:grid;place-items:center;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 50% 40%, var(--ax-accent-wash), transparent 70%);"><svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="var(--ax-text-muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M10 16l4 0" stroke="var(--ax-accent)"/></svg></span>
+                <div><h3 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-md);color:var(--ax-text-strong);">No events match these filters</h3><p style="margin:var(--ax-space-2) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Try a different category or time range.</p></div>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="clearFilters()"><span class="ax-btn__label">Clear filters</span></button>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───── Calendar mini + this week rail ───── -->
+          <div class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <section class="ax-card" role="region" aria-label="Mini calendar — July 2026">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">July 2026</h2></div>
+                <div class="ax-card__actions">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Previous month"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Next month"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;">
+                  <template x-for="d in ['M','T','W','T','F','S','S']" :key="'dh'+d+Math.random()">
+                    <span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);font-weight:var(--ax-weight-semibold);padding-block:4px;" x-text="d"></span>
+                  </template>
+                  <template x-for="cell in calendar" :key="cell.key">
+                    <button type="button" class="ax-num" :disabled="!cell.day"
+                      style="aspect-ratio:1;display:grid;place-items:center;border:0;border-radius:var(--ax-radius-sm);background:transparent;cursor:pointer;font-size:var(--ax-text-xs);position:relative;"
+                      :style="cell.today ? 'background:var(--ax-accent);color:var(--ax-on-accent);font-weight:600;' : (cell.event ? 'color:var(--ax-text-strong);font-weight:600;' : 'color:var(--ax-text-muted);')"
+                      :aria-label="cell.day ? ('July ' + cell.day + (cell.event ? ', has events' : '')) : 'empty'">
+                      <span x-text="cell.day"></span>
+                      <span x-show="cell.event && !cell.today" style="position:absolute;bottom:3px;width:4px;height:4px;border-radius:50%;background:var(--ax-accent);"></span>
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </section>
+
+            <section class="ax-card" role="region" aria-label="RSVP summary">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Your RSVPs</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);text-align:center;">
+                <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-viz-emerald);" x-text="counts.going"></div><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Going</small></div>
+                <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-viz-amber);" x-text="counts.maybe"></div><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Maybe</small></div>
+                <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-text-subtle);" x-text="counts.no"></div><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Declined</small></div>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- ════ CREATE EVENT MODAL (simulated submit) ════ -->
+        <div class="ax-modal ax-modal--centered" x-show="createOpen" x-cloak @keydown.escape.window="createOpen=false" style="z-index:60;">
+          <div class="ax-modal__backdrop" @click="createOpen=false"></div>
+          <div class="ax-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="ev-modal-title" x-trap.inert.noscroll="createOpen">
+            <div class="ax-modal__header">
+              <h2 class="ax-modal__title" id="ev-modal-title">Create event</h2>
+              <button type="button" class="ax-modal__close" @click="createOpen=false" aria-label="Close dialog"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <form @submit.prevent="createEvent()">
+              <div class="ax-modal__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div x-show="created" x-cloak class="ax-alert ax-alert--success" role="status" style="padding:var(--ax-space-3) var(--ax-space-4);">
+                  <svg class="ax-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                  <div class="ax-alert__content"><p class="ax-alert__message">Event created — invitations sent to your team.</p></div>
+                </div>
+                <div class="ax-field"><label class="ax-label" for="ev-title">Title</label><input id="ev-title" class="ax-input" x-model="form.title" placeholder="e.g. Design critique" required></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+                  <div class="ax-field"><label class="ax-label" for="ev-date">Date</label><input id="ev-date" type="date" class="ax-input" x-model="form.date" required></div>
+                  <div class="ax-field"><label class="ax-label" for="ev-time">Start</label><input id="ev-time" type="time" class="ax-input" x-model="form.time" required></div>
+                </div>
+                <div class="ax-field"><label class="ax-label" for="ev-loc">Location</label><input id="ev-loc" class="ax-input" x-model="form.location" placeholder="Online or a place"></div>
+                <div class="ax-field"><label class="ax-label" for="ev-cat">Category</label>
+                  <select id="ev-cat" class="ax-select" x-model="form.category"><option>Product</option><option>Engineering</option><option>Design</option><option>Community</option></select>
+                </div>
+              </div>
+              <div class="ax-modal__footer">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="createOpen=false"><span class="ax-btn__label">Cancel</span></button>
+                <button type="submit" class="ax-btn ax-btn--primary" :class="creating && 'is-loading'" :aria-busy="creating"><span class="ax-btn__spinner" aria-hidden="true"></span><span class="ax-btn__label">Create event</span></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axEvents() {
+      const cls = { Product:'ax-badge--accent', Engineering:'ax-badge--info', Design:'ax-badge--success', Community:'ax-badge--warning' };
+      const events = [
+        { id:'e1', day:'02', month:'Jul', title:'Aurora 2.4 Launch Webinar', time:'15:00 – 16:00', location:'Online · Zoom', online:true, category:'Product', attendees:214, host:'Mara Lindqvist', hostInitials:'ML', tint:'var(--ax-viz-cyan)', when:'upcoming' },
+        { id:'e2', day:'05', month:'Jul', title:'Design Systems Critique', time:'11:00 – 12:30', location:'Studio B, London', online:false, category:'Design', attendees:18, host:'Devon Okafor', hostInitials:'DO', tint:'var(--ax-viz-violet)', when:'upcoming' },
+        { id:'e3', day:'09', month:'Jul', title:'Performance Engineering AMA', time:'17:00 – 18:00', location:'Online · Meet', online:true, category:'Engineering', attendees:96, host:'Priya Nair', hostInitials:'PN', tint:'var(--ax-viz-emerald)', when:'upcoming' },
+        { id:'e4', day:'12', month:'Jul', title:'Community Meetup — Berlin', time:'19:00 – 22:00', location:'Factory Berlin', online:false, category:'Community', attendees:140, host:'Tomás Herrera', hostInitials:'TH', tint:'var(--ax-viz-amber)', when:'upcoming' },
+        { id:'e5', day:'18', month:'Jul', title:'Accessibility Workshop', time:'14:00 – 16:00', location:'Online · Zoom', online:true, category:'Design', attendees:54, host:'Lena Brandt', hostInitials:'LB', tint:'var(--ax-viz-pink)', when:'upcoming' },
+        { id:'e6', day:'21', month:'Jun', title:'Q2 Roadmap Review', time:'10:00 – 11:00', location:'HQ · Room 4', online:false, category:'Product', attendees:32, host:'Henry Whitlock', hostInitials:'HW', tint:'var(--ax-viz-cyan)', when:'past' },
+        { id:'e7', day:'14', month:'Jun', title:'Charts Deep-Dive', time:'16:00 – 17:00', location:'Online · Meet', online:true, category:'Engineering', attendees:72, host:'Ava Sutton', hostInitials:'AS', tint:'var(--ax-viz-emerald)', when:'past' },
+      ].map(e => ({ ...e, tagClass: cls[e.category] }));
+
+      let savedRsvp = {};
+      try { Object.keys(localStorage).forEach(k => { if (k.startsWith('ax:events:rsvp:')) savedRsvp[k.replace('ax:events:rsvp:','')] = localStorage.getItem(k); }); } catch (e) {}
+
+      return {
+        events, view:'cards', filter:'upcoming', cat:'All', search:'',
+        rsvp: savedRsvp, featuredRsvp: savedRsvp['e1'] || '',
+        createOpen:false, creating:false, created:false,
+        form:{ title:'', date:'', time:'', location:'', category:'Product' },
+        categories:['All','Product','Engineering','Design','Community'],
+        get shown() {
+          return this.events.filter(e =>
+            (this.filter==='all' || e.when===this.filter) &&
+            (this.cat==='All' || e.category===this.cat) &&
+            (!this.search.trim() || e.title.toLowerCase().includes(this.search.toLowerCase()))
+          );
+        },
+        get counts() {
+          const v = Object.values(this.rsvp);
+          return { going: v.filter(x=>x==='going').length, maybe: v.filter(x=>x==='maybe').length, no: v.filter(x=>x==='no').length };
+        },
+        rsvpBump(id) { return this.rsvp[id]==='going' ? 1 : 0; },
+        setRsvp(id, v) {
+          this.rsvp[id] = this.rsvp[id]===v ? '' : v;
+          try { if (this.rsvp[id]) localStorage.setItem('ax:events:rsvp:'+id, this.rsvp[id]); else localStorage.removeItem('ax:events:rsvp:'+id); } catch(e){}
+        },
+        setFeatured(v) { this.featuredRsvp = this.featuredRsvp===v ? '' : v; this.setRsvp('e1', this.featuredRsvp || ''); },
+        clearFilters() { this.filter='all'; this.cat='All'; this.search=''; },
+        createEvent() {
+          this.creating = true;
+          setTimeout(() => { this.creating=false; this.created=true; setTimeout(()=>{ this.createOpen=false; this.created=false; this.form={title:'',date:'',time:'',location:'',category:'Product'}; }, 1400); }, 700);
+        },
+        get calendar() {
+          const eventDays = { 2:true, 5:true, 9:true, 12:true, 18:true, 21:true };
+          const firstDow = 2; // Jul 1 2026 is a Wednesday -> index 2 (Mon=0)
+          const cells = [];
+          for (let i=0;i<firstDow;i++) cells.push({ key:'b'+i, day:'', event:false, today:false });
+          for (let d=1; d<=31; d++) cells.push({ key:'d'+d, day:d, event:!!eventDays[d], today:d===2 });
+          return cells;
+        },
+      };
+    }
+  </script>
+{% endblock %}

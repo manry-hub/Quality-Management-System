@@ -1,0 +1,74 @@
+{% extends 'pages/auth/_standalone.html' %}
+
+{# error/500 — faithful port of src/html/error/500.html
+   Standalone off-app status page (no sidebar/header). Same DOM/classes/ARIA,
+   same demo copy. Reference hrefs converted to clean Django routes
+   (# -> /x/, index -> /). #}
+
+{% block auth_body %}
+  <div style="position:fixed;top:var(--ax-space-5);right:var(--ax-space-6);z-index:5;display:flex;gap:var(--ax-space-2);align-items:center;" x-data="{}">
+    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Toggle color theme"
+            @click="document.documentElement.setAttribute('data-ax-theme', document.documentElement.getAttribute('data-ax-theme')==='dark' ? 'light' : 'dark')">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg>
+    </button>
+    <a class="ax-btn ax-btn--ghost ax-btn--sm" href="/">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+      <span class="ax-btn__label">Back to dashboard</span>
+    </a>
+  </div>
+
+  <main class="ax-center" id="ax-main" style="position:relative;z-index:1;width:100%;padding:var(--ax-space-6);">
+    <div style="width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--ax-space-6);">
+
+      <a href="/" aria-label="Vireo home" style="display:inline-flex;align-items:center;gap:var(--ax-space-3);text-decoration:none;">
+        <span aria-hidden="true" style="display:inline-grid;place-items:center;width:40px;height:40px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);">
+          <svg viewBox="0 0 32 32" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+        </span>
+        <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-lg);color:var(--ax-text-strong);letter-spacing:.01em;">Vireo</span>
+      </a>
+
+      <!-- thin-line illustration: tools / wrench (highlight tinted danger per single-highlight rule) -->
+      <div aria-hidden="true" style="position:relative;display:grid;place-items:center;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 50% 40%, color-mix(in oklab, var(--ax-danger-500) 14%, transparent), transparent 70%);">
+        <span style="position:absolute;inset:0;border-radius:50%;border:1px dashed var(--ax-border-strong);"></span>
+        <svg viewBox="0 0 24 24" width="70" height="70" fill="none" stroke="var(--ax-text-muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 21h4l13 -13a1.5 1.5 0 0 0 -4 -4l-13 13v4"/><path d="M14.5 5.5l4 4"/><path d="M12 8l-5 -5l-4 4l5 5" stroke="var(--ax-danger-500)"/><path d="M7 8l-1.5 1.5"/><path d="M16 12l5 5l-4 4l-5 -5"/><path d="M16 17l-1.5 1.5"/>
+        </svg>
+      </div>
+
+      <div>
+        <h1 style="margin:0;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+          <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;font-size:var(--ax-text-4xl);line-height:1;color:var(--ax-text-strong);letter-spacing:.04em;">500</span>
+          <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">Something went wrong</span>
+        </h1>
+        <p style="margin:var(--ax-space-4) auto 0;max-width:44ch;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.55;">
+          An unexpected error occurred on our side — not yours. Our team has been notified. Try again in a moment, or head back home.
+        </p>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:var(--ax-space-3);justify-content:center;">
+        <button type="button" class="ax-btn ax-btn--primary" onclick="window.location.reload()">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+          <span class="ax-btn__label">Retry</span>
+        </button>
+        <a class="ax-btn ax-btn--secondary" href="/">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>
+          <span class="ax-btn__label">Go home</span>
+        </a>
+      </div>
+
+      <!-- error reference id (copy-on-click) -->
+      <div x-data="{ ref:'ERR-5XX-9F3A21C', copied:false, copy(){ navigator.clipboard?.writeText(this.ref).then(()=>{this.copied=true; setTimeout(()=>this.copied=false,1600)}) } }"
+           style="display:flex;align-items:center;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-subtle);">
+        <span>Reference ID</span>
+        <button type="button" @click="copy()" class="ax-num"
+                style="display:inline-flex;align-items:center;gap:var(--ax-space-2);font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);padding:4px var(--ax-space-3);cursor:pointer;"
+                :aria-label="copied ? 'Reference ID copied' : 'Copy reference ID ERR-5XX-9F3A21C'">
+          <span x-text="ref">ERR-5XX-9F3A21C</span>
+          <svg x-show="!copied" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
+          <svg x-show="copied" x-cloak viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--ax-success-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+        </button>
+        <span x-show="copied" x-cloak aria-live="polite" style="color:var(--ax-success-500);">Copied</span>
+      </div>
+    </div>
+  </main>
+{% endblock %}

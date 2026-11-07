@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Form Layouts</h1>
+              <p class="ax-page-head__subtitle">Vertical, horizontal, inline, 12-col grid &amp; card-sectioned patterns — one form, six arrangements.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/forms/elements/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+                <span class="ax-btn__label">Elements</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Vertical (default) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Vertical layout">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pattern 01</span>
+                <h2 class="ax-card__title">Vertical</h2>
+                <p class="ax-card__subtitle">Labels above controls — the default stack.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-field">
+                <label class="ax-label" for="lv-name">Display name <span class="ax-field__required" aria-hidden="true">*</span></label>
+                <input id="lv-name" type="text" class="ax-input" value="Northwind Labs">
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="lv-email">Reply-to email</label>
+                <input id="lv-email" type="email" class="ax-input" value="hello@northwind.io">
+                <span class="ax-help">Bounces are routed to this inbox.</span>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="lv-bio">About</label>
+                <textarea id="lv-bio" class="ax-textarea" rows="3">Independent product studio shipping calm software since 2019.</textarea>
+              </div>
+              <div class="ax-cluster" style="justify-content:flex-end;gap:var(--ax-space-3);">
+                <button type="button" class="ax-btn ax-btn--ghost"><span class="ax-btn__label">Cancel</span></button>
+                <button type="button" class="ax-btn ax-btn--primary"><span class="ax-btn__label">Save</span></button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Horizontal ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Horizontal layout">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pattern 02</span>
+                <h2 class="ax-card__title">Horizontal</h2>
+                <p class="ax-card__subtitle">Label column (4/12) beside the control.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--ax-space-4);align-items:center;">
+                <label class="ax-label" for="lh-org" style="text-align:start;">Organisation</label>
+                <input id="lh-org" type="text" class="ax-input" value="Acme Inc.">
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--ax-space-4);align-items:center;">
+                <label class="ax-label" for="lh-role">Role</label>
+                <select id="lh-role" class="ax-select">
+                  <option>Owner</option><option selected>Administrator</option><option>Member</option>
+                </select>
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--ax-space-4);align-items:start;">
+                <label class="ax-label" for="lh-seats" style="padding-top:10px;">Seats</label>
+                <div>
+                  <div class="ax-input-group" style="max-width:140px;">
+                    <span class="ax-input-group__addon" aria-hidden="true">#</span>
+                    <input id="lh-seats" type="text" class="ax-input ax-num" value="25" inputmode="numeric" style="font-family:var(--ax-font-mono);">
+                  </div>
+                  <span class="ax-help" style="display:block;margin-top:var(--ax-space-2);">17 of 25 seats are in use.</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--ax-space-4);align-items:center;">
+                <span class="ax-label">SSO enforced</span>
+                <input type="checkbox" role="switch" class="ax-switch" checked aria-label="SSO enforced">
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Inline (filter bar) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Inline filter layout">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pattern 03</span>
+                <h2 class="ax-card__title">Inline</h2>
+                <p class="ax-card__subtitle">Compact controls on one line — ideal for filter bars.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <form class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-end;" @submit.prevent>
+                <div class="ax-field" style="flex:1 1 240px;min-width:200px;">
+                  <label class="ax-label" for="li-search">Search</label>
+                  <div class="ax-field__control">
+                    <span class="ax-field__affix ax-field__affix--leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                    <input id="li-search" type="search" class="ax-input ax-input--with-leading-icon ax-input--sm" placeholder="Invoices, customers…">
+                  </div>
+                </div>
+                <div class="ax-field" style="flex:0 0 160px;">
+                  <label class="ax-label" for="li-status">Status</label>
+                  <select id="li-status" class="ax-select ax-select--sm"><option>All</option><option>Paid</option><option>Overdue</option><option>Draft</option></select>
+                </div>
+                <div class="ax-field" style="flex:0 0 160px;">
+                  <label class="ax-label" for="li-range">Period</label>
+                  <select id="li-range" class="ax-select ax-select--sm"><option>Last 7 days</option><option selected>Last 30 days</option><option>This quarter</option></select>
+                </div>
+                <label class="ax-check" style="display:flex;gap:var(--ax-space-2);align-items:center;height:32px;">
+                  <input type="checkbox" class="ax-checkbox">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);white-space:nowrap;">Only mine</span>
+                </label>
+                <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm"><span class="ax-btn__label">Apply</span></button>
+                <button type="reset" class="ax-btn ax-btn--ghost ax-btn--sm"><span class="ax-btn__label">Clear</span></button>
+              </form>
+            </div>
+          </section>
+
+          <!-- ───── 12-col grid (address) ───── -->
+          <section class="ax-card ax-col--7" role="region" aria-label="Grid layout">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pattern 04</span>
+                <h2 class="ax-card__title">12-Column Grid</h2>
+                <p class="ax-card__subtitle">The canonical address form: 6+6, then 6+3+3.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--ax-space-4);">
+                <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="lg-name">Full name <span class="ax-field__required" aria-hidden="true">*</span></label><input id="lg-name" type="text" class="ax-input" value="Amelia Hart" autocomplete="name"></div>
+                <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="lg-l1">Address line 1 <span class="ax-field__required" aria-hidden="true">*</span></label><input id="lg-l1" type="text" class="ax-input" value="1208 Marlowe Ave" autocomplete="address-line1"></div>
+                <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="lg-l2">Address line 2</label><input id="lg-l2" type="text" class="ax-input" placeholder="Apartment, suite, etc." autocomplete="address-line2"></div>
+                <div class="ax-field" style="grid-column:span 6;"><label class="ax-label" for="lg-city">City <span class="ax-field__required" aria-hidden="true">*</span></label><input id="lg-city" type="text" class="ax-input" value="Portland" autocomplete="address-level2"></div>
+                <div class="ax-field" style="grid-column:span 3;"><label class="ax-label" for="lg-state">State</label><input id="lg-state" type="text" class="ax-input" value="OR" autocomplete="address-level1"></div>
+                <div class="ax-field" style="grid-column:span 3;"><label class="ax-label" for="lg-zip">ZIP <span class="ax-field__required" aria-hidden="true">*</span></label><input id="lg-zip" type="text" class="ax-input ax-num" value="97201" inputmode="numeric" autocomplete="postal-code" style="font-family:var(--ax-font-mono);"></div>
+                <div class="ax-field" style="grid-column:span 8;"><label class="ax-label" for="lg-country">Country <span class="ax-field__required" aria-hidden="true">*</span></label><select id="lg-country" class="ax-select"><option selected>United States</option><option>Canada</option><option>United Kingdom</option></select></div>
+                <div class="ax-field" style="grid-column:span 4;"><label class="ax-label" for="lg-phone">Phone</label><input id="lg-phone" type="tel" class="ax-input ax-num" value="(503) 555-0148" autocomplete="tel" style="font-family:var(--ax-font-mono);"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Two-column page (fields + sticky help) ───── -->
+          <section class="ax-card ax-col--5" role="region" aria-label="Two-column with help rail">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pattern 05</span>
+                <h2 class="ax-card__title">Fields + Help Rail</h2>
+                <p class="ax-card__subtitle">Form on the left, contextual help docked alongside.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-field">
+                <label class="ax-label" for="lt-key">API key name</label>
+                <input id="lt-key" type="text" class="ax-input" value="production-server">
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="lt-scope">Scope</label>
+                <select id="lt-scope" class="ax-select"><option>Read-only</option><option selected>Read &amp; write</option><option>Full access</option></select>
+              </div>
+              <div class="ax-alert ax-alert--info ax-alert--inline" role="note">
+                <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></span>
+                <div class="ax-alert__content"><p class="ax-alert__message">Keys are shown once at creation. Store them in your secrets manager — we never display them again.</p></div>
+              </div>
+              <button type="button" class="ax-btn ax-btn--primary ax-btn--block"><span class="ax-btn__label">Generate key</span></button>
+            </div>
+          </section>
+
+          <!-- ───── Sectioned (fieldset) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Sectioned layout">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pattern 06</span>
+                <h2 class="ax-card__title">Card-Sectioned</h2>
+                <p class="ax-card__subtitle">Fieldsets separated by hairlines, with a sticky action bar.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" x-data="{ dirty:true }">
+              <!-- Section: Profile -->
+              <fieldset style="border:0;padding:0;margin:0 0 var(--ax-space-6);">
+                <legend style="font-family:var(--ax-font-display);font-weight:600;color:var(--ax-text-strong);font-size:var(--ax-text-md);padding:0;margin-bottom:var(--ax-space-1);">Profile</legend>
+                <p style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin:0 0 var(--ax-space-4);">Public details shown on your team page.</p>
+                <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;"><label class="ax-label" for="ls-first">First name</label><input id="ls-first" type="text" class="ax-input" value="Tomás"></div>
+                  <div class="ax-field" style="grid-column:span 6;"><label class="ax-label" for="ls-last">Last name</label><input id="ls-last" type="text" class="ax-input" value="Herrera"></div>
+                  <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="ls-title">Job title</label><input id="ls-title" type="text" class="ax-input" value="Head of Product"></div>
+                </div>
+              </fieldset>
+              <hr class="ax-divider" style="margin:0 0 var(--ax-space-6);">
+              <!-- Section: Preferences -->
+              <fieldset style="border:0;padding:0;margin:0 0 var(--ax-space-6);">
+                <legend style="font-family:var(--ax-font-display);font-weight:600;color:var(--ax-text-strong);font-size:var(--ax-text-md);padding:0;margin-bottom:var(--ax-space-1);">Preferences</legend>
+                <p style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin:0 0 var(--ax-space-4);">How the product behaves for you.</p>
+                <div style="display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 4;"><label class="ax-label" for="ls-lang">Language</label><select id="ls-lang" class="ax-select"><option>English (US)</option><option>Español</option><option>Deutsch</option></select></div>
+                  <div class="ax-field" style="grid-column:span 4;"><label class="ax-label" for="ls-week">Week starts on</label><select id="ls-week" class="ax-select"><option>Sunday</option><option selected>Monday</option></select></div>
+                  <div class="ax-field" style="grid-column:span 4;"><label class="ax-label" for="ls-fmt">Date format</label><select id="ls-fmt" class="ax-select"><option>MM/DD/YYYY</option><option selected>DD MMM YYYY</option><option>YYYY-MM-DD</option></select></div>
+                </div>
+              </fieldset>
+              <!-- Sticky action bar -->
+              <div style="position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-3);margin:0 calc(-1 * var(--ax-space-6)) calc(-1 * var(--ax-space-6));padding:var(--ax-space-4) var(--ax-space-6);background:var(--ax-surface);border-top:1px solid var(--ax-border);box-shadow:var(--ax-shadow-sm);border-radius:0 0 var(--ax-radius-xl) var(--ax-radius-xl);">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-show="dirty"><i style="width:7px;height:7px;border-radius:50%;background:var(--ax-warning-500);"></i>Unsaved changes</span>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);margin-inline-start:auto;">
+                  <button type="button" class="ax-btn ax-btn--ghost" @click="dirty=false"><span class="ax-btn__label">Discard</span></button>
+                  <button type="button" class="ax-btn ax-btn--secondary"><span class="ax-btn__label">Save draft</span></button>
+                  <button type="button" class="ax-btn ax-btn--primary" @click="dirty=false"><span class="ax-btn__label">Save changes</span></button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}

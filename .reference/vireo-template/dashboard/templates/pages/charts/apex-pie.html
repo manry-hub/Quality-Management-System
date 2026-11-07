@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Pie &amp; Donut Charts</h1>
+              <p class="ax-page-head__subtitle">ApexCharts circular family — basic pie, donut with a centre total, gradient, semi-circle and monochrome variants.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="https://apexcharts.com/docs/chart-types/pie-donut/" target="_blank" rel="noopener">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5"/><path d="M3 16h5v5"/><path d="M3 21l5 -5"/></svg>
+                <span class="ax-btn__label">Docs</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export all</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.2a9 9 0 1 0 10.8 10.8a1 1 0 0 0 -1 -1h-6.8a2 2 0 0 1 -2 -2v-7a.9 .9 0 0 0 -1 -.8"/><path d="M15 3.5a9 9 0 0 1 5.5 5.5h-4.5a1 1 0 0 1 -1 -1v-4.5"/></svg>
+                <span class="ax-btn__label">New chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── DONUT WITH CENTRE TOTAL — hero, 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Donut chart of revenue by product category"
+                   x-data="{ tab: 'chart' }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Donut · centre total</span>
+                <h2 class="ax-card__title">Revenue by Category</h2>
+                <p class="ax-card__subtitle">Six categories with the headline total in the ring</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="tablist" aria-label="View mode">
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='chart' }" @click="tab='chart'" :aria-selected="tab==='chart'" role="tab">Chart</button>
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='table' }" @click="tab='table'" :aria-selected="tab==='table'" role="tab">Table</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-grid" x-show="tab==='chart'" style="grid-template-columns:1.1fr 1fr;gap:var(--ax-space-5);align-items:center;">
+                <div id="ax-pie-donut" aria-label="Donut chart of revenue by category, total $1.21M"></div>
+                <ul class="ax-list ax-list--compact">
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);display:inline-block;"></i></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Lighting</span></span>
+                    <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$386K</span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Desk</span></span>
+                    <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$290K</span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);display:inline-block;"></i></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Drinkware</span></span>
+                    <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$218K</span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);display:inline-block;"></i></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Storage</span></span>
+                    <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$133K</span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Stationery</span></span>
+                    <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$109K</span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;border-bottom:0;">
+                    <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-emerald);display:inline-block;"></i></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Tech</span></span>
+                    <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$72K</span>
+                  </li>
+                </ul>
+              </div>
+              <div x-show="tab==='table'" x-cloak class="ax-table-wrap">
+                <table class="ax-table ax-table--compact">
+                  <caption class="ax-visually-hidden">Revenue by product category</caption>
+                  <thead class="ax-table__head"><tr><th class="ax-table__th" scope="col">Category</th><th class="ax-table__th ax-table__th--num" scope="col">Revenue</th><th class="ax-table__th ax-table__th--num" scope="col">Share</th></tr></thead>
+                  <tbody>
+                    <tr class="ax-table__row"><td class="ax-table__td">Lighting</td><td class="ax-table__td ax-table__td--num">$386K</td><td class="ax-table__td ax-table__td--num">32%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Desk</td><td class="ax-table__td ax-table__td--num">$290K</td><td class="ax-table__td ax-table__td--num">24%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Drinkware</td><td class="ax-table__td ax-table__td--num">$218K</td><td class="ax-table__td ax-table__td--num">18%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Storage</td><td class="ax-table__td ax-table__td--num">$133K</td><td class="ax-table__td ax-table__td--num">11%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Stationery</td><td class="ax-table__td ax-table__td--num">$109K</td><td class="ax-table__td ax-table__td--num">9%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Tech</td><td class="ax-table__td ax-table__td--num">$72K</td><td class="ax-table__td ax-table__td--num">6%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── BASIC PIE — 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Basic pie chart of traffic sources">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Basic pie</span>
+                <h2 class="ax-card__title">Traffic Sources</h2>
+                <p class="ax-card__subtitle">Share of sessions</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-pie-basic" aria-label="Pie chart of traffic sources: direct, organic, referral, social, email, paid"></div>
+            </div>
+          </section>
+
+          <!-- ───── SEMI-CIRCLE (GRADIENT) DONUT — 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Semi-circle donut of storage usage">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Semi-circle · gradient</span>
+                <h2 class="ax-card__title">Storage Used</h2>
+                <p class="ax-card__subtitle">180° gauge-style donut</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-pie-semi" aria-label="Semi-circle donut of storage usage by type"></div>
+              <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-2);">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Used of 512 GB</span>
+                <b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-md);">348 GB</b>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── GRADIENT PIE — 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Gradient pie chart of plan distribution">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Gradient fill</span>
+                <h2 class="ax-card__title">Plan Mix</h2>
+                <p class="ax-card__subtitle">Accounts by tier</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-pie-gradient" aria-label="Gradient pie chart of accounts by plan tier"></div>
+            </div>
+          </section>
+
+          <!-- ───── MONOCHROME DONUT — 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Monochrome donut of device breakdown">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Monochrome</span>
+                <h2 class="ax-card__title">Sessions by Device</h2>
+                <p class="ax-card__subtitle">Single-hue accent ramp</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-pie-mono" aria-label="Monochrome donut of sessions by device"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Desktop</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">58%</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:color-mix(in oklab,var(--ax-accent) 62%,transparent);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Mobile</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">34%</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:color-mix(in oklab,var(--ax-accent) 32%,transparent);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Tablet</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">8%</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── PATTERNED / NOTES rail — 4 col ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Pie chart guidance">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Pie vs. donut</h2>
+                <p class="ax-card__subtitle">Quick guidance</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v5m4 4h5"/><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Keep slices few</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Five or six categories max — more and the eye gives up.</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Donut for a headline</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">The hole is prime space for the total or a KPI.</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/><path d="M14 4m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/><path d="M4 14m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Monochrome for ranked parts</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">An accent ramp reads order without six hues.</div></div>
+              </div>
+              <div class="ax-divider" style="margin:var(--ax-space-1) 0;"></div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Largest category</span>
+                <span class="ax-badge ax-badge--soft ax-badge--pill ax-num">Lighting · 32%</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const SERIES = [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber'), cv('--ax-viz-emerald')];
+
+    // Donut with centre total
+    const donut = document.getElementById('ax-pie-donut');
+    if (donut) renderChart(donut, 'donut', [386, 290, 218, 133, 109, 72], {
+      height: 300, legend: 'none',
+      apex: {
+        labels: ['Lighting','Desk','Drinkware','Storage','Stationery','Tech'],
+        colors: SERIES,
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '70%', labels: {
+          show: true,
+          name: { fontFamily: cv('--ax-font-sans') },
+          value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600, formatter: (v) => '$' + v + 'K' },
+          total: { show: true, label: 'Total', fontFamily: cv('--ax-font-sans'), formatter: () => '$1.21M' },
+        } } } },
+        tooltip: { y: { formatter: (v) => '$' + v + 'K' } },
+      },
+    });
+
+    // Basic pie — traffic sources
+    const pie = document.getElementById('ax-pie-basic');
+    if (pie) renderChart(pie, 'pie', [38, 27, 14, 9, 7, 5], {
+      height: 300, legend: 'none',
+      apex: {
+        labels: ['Direct','Organic','Referral','Social','Email','Paid'],
+        colors: SERIES,
+        stroke: { width: 0 },
+        tooltip: { y: { formatter: (v) => v + '%' } },
+      },
+    });
+
+    // Semi-circle gradient donut — storage
+    const semi = document.getElementById('ax-pie-semi');
+    if (semi) renderChart(semi, 'donut', [196, 92, 60, 164], {
+      height: 240, legend: 'none',
+      apex: {
+        labels: ['Media','Documents','Backups','Free'],
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-border')],
+        stroke: { width: 0 },
+        fill: { type: 'gradient', gradient: { shade: 'dark', shadeIntensity: 0.4, opacityFrom: 1, opacityTo: 0.9 } },
+        plotOptions: { pie: {
+          startAngle: -90, endAngle: 90, offsetY: 10,
+          donut: { size: '68%', labels: {
+            show: true,
+            name: { offsetY: -8, fontFamily: cv('--ax-font-sans') },
+            value: { offsetY: -2, fontFamily: cv('--ax-font-mono'), fontWeight: 600, formatter: (v) => v + ' GB' },
+            total: { show: true, label: 'Used', fontFamily: cv('--ax-font-sans'), formatter: () => '348 GB' },
+          } },
+        } },
+        tooltip: { y: { formatter: (v) => v + ' GB' } },
+      },
+    });
+
+    // Gradient pie — plan mix
+    const grad = document.getElementById('ax-pie-gradient');
+    if (grad) renderChart(grad, 'pie', [1840, 980, 540, 220], {
+      height: 300, legend: 'none',
+      apex: {
+        labels: ['Starter','Pro','Team','Enterprise'],
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink')],
+        stroke: { width: 0 },
+        fill: { type: 'gradient', gradient: { shade: 'dark', shadeIntensity: 0.45, opacityFrom: 1, opacityTo: 0.88 } },
+        tooltip: { y: { formatter: (v) => v.toLocaleString() + ' accounts' } },
+      },
+    });
+
+    // Monochrome donut — device, single-hue accent ramp
+    const mono = document.getElementById('ax-pie-mono');
+    if (mono) renderChart(mono, 'donut', [58, 34, 8], {
+      height: 230, legend: 'none',
+      apex: {
+        labels: ['Desktop','Mobile','Tablet'],
+        colors: [
+          cv('--ax-accent'),
+          'color-mix(in oklab, ' + cv('--ax-accent') + ' 62%, transparent)',
+          'color-mix(in oklab, ' + cv('--ax-accent') + ' 32%, transparent)',
+        ],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: {
+          show: true,
+          name: { fontFamily: cv('--ax-font-sans') },
+          value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600, formatter: (v) => v + '%' },
+          total: { show: true, label: 'Sessions', fontFamily: cv('--ax-font-sans'), formatter: () => '54.2K' },
+        } } } },
+        tooltip: { y: { formatter: (v) => v + '%' } },
+      },
+    });
+  </script>
+{% endblock %}

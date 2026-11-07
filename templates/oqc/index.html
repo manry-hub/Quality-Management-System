@@ -1,0 +1,183 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Outgoing Quality Control (OQC){% endblock %}
+
+{% block content %}
+<div class="row gy-4 mb-4">
+    <div class="col-12 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h4 class="mb-1 text-primary-light fw-bold">Outgoing QC &amp; Shipping Quality Clearance</h4>
+            <p class="text-secondary-light mb-0">ISO 2859-1 Level II Normal Inspection &bull; Zero Defect (c=0) Gating &bull; CoC Release</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success-subtle text-success-main font-monospace px-3 py-2">
+                <i class="ri-shield-check-fill me-1"></i> ZERO DEFECT (c=0) MANDATE
+            </span>
+            <span class="badge bg-primary-subtle text-primary-600 font-monospace px-3 py-2">
+                <i class="ri-barcode-box-line me-1"></i> 2D DATAMATRIX AUDIT
+            </span>
+        </div>
+    </div>
+
+    <!-- 3 KPI Summary Cards -->
+    <div class="col-md-4">
+        <div class="card radius-12 p-20 border-0 shadow-sm bg-base">
+            <span class="text-xs fw-semibold text-secondary-light">TOTAL PALLETS AUDITED</span>
+            <h3 class="fw-bold text-primary-light my-1">{{ total_count }}</h3>
+            <span class="text-xs text-secondary-light">Finished goods packaging units</span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card radius-12 p-20 border-0 shadow-sm bg-base">
+            <span class="text-xs fw-semibold text-success-main">RELEASED FOR SHIPMENT</span>
+            <h3 class="fw-bold text-success-main my-1">{{ released_count }}</h3>
+            <span class="text-xs text-secondary-light">Certified with CoC released to WMS</span>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card radius-12 p-20 border-0 shadow-sm bg-base">
+            <span class="text-xs fw-semibold text-danger-main">REJECTED / QUARANTINED</span>
+            <h3 class="fw-bold text-danger-main my-1">{{ rejected_count }}</h3>
+            <span class="text-xs text-secondary-light">Blocked from Delivery Order picking</span>
+        </div>
+    </div>
+</div>
+
+<!-- OQC Pallet Clearance Ledger -->
+<div class="row">
+    <div class="col-12">
+        <div class="card radius-12 border-0 shadow-sm p-20 bg-base">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-sm">
+                    <thead class="bg-neutral-100 text-secondary-light font-monospace">
+                        <tr>
+                            <th class="py-12 px-16">PALLET BARCODE</th>
+                            <th class="py-12 px-16">PART DETAILS</th>
+                            <th class="py-12 px-16">LOT SIZE</th>
+                            <th class="py-12 px-16">SAMPLE (ISO 2859-1)</th>
+                            <th class="py-12 px-16">DEFECTS (c=0)</th>
+                            <th class="py-12 px-16">PACKAGING AUDIT</th>
+                            <th class="py-12 px-16">STATUS</th>
+                            <th class="py-12 px-16 text-end">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for insp in inspections %}
+                        <tr>
+                            <td class="py-12 px-16 fw-semibold text-primary-light font-monospace">{{ insp.pallet_barcode }}</td>
+                            <td class="py-12 px-16">
+                                <span class="fw-semibold text-primary-light d-block">{{ insp.part.part_number }}</span>
+                                <span class="text-xs text-secondary-light">{{ insp.part.part_name }} ({{ insp.part.drawing_revision }})</span>
+                            </td>
+                            <td class="py-12 px-16 font-monospace">{{ insp.batch_quantity }} pcs</td>
+                            <td class="py-12 px-16 font-monospace text-primary-600 fw-semibold">{{ insp.sample_size }} pcs</td>
+                            <td class="py-12 px-16 font-monospace">
+                                {% if insp.defects_found > 0 %}
+                                <span class="badge bg-danger-subtle text-danger-main">{{ insp.defects_found }} NG</span>
+                                {% else %}
+                                <span class="badge bg-success-subtle text-success-main">0 DEFECTS</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-12 px-16 text-xs">
+                                {% if insp.packaging_box_intact and insp.esd_bag_sealed and insp.desiccant_present and insp.datamatrix_verified %}
+                                <span class="text-success-main"><i class="ri-checkbox-circle-fill me-1"></i>Box &bull; ESD &bull; Desiccant OK</span>
+                                {% else %}
+                                <span class="text-danger-main"><i class="ri-close-circle-fill me-1"></i>Packaging Incomplete</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-12 px-16">
+                                {% if insp.status == 'RELEASED_FOR_SHIPMENT' %}
+                                <span class="badge bg-success-subtle text-success-main font-monospace">RELEASED</span>
+                                {% elif insp.status == 'REJECTED' %}
+                                <span class="badge bg-danger-subtle text-danger-main font-monospace">REJECTED</span>
+                                {% else %}
+                                <span class="badge bg-warning-subtle text-warning-main font-monospace">PENDING</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-12 px-16 text-end">
+                                {% if insp.status == 'PENDING' %}
+                                <button type="button" class="btn btn-sm btn-primary-600 radius-6 px-16" data-bs-toggle="modal" data-bs-target="#releaseModal{{ insp.id }}">
+                                    <i class="ri-shield-check-line me-1"></i> Audit &amp; Release
+                                </button>
+                                {% elif insp.coc_number %}
+                                <a href="{% url 'oqc:view_coc' insp.id %}" target="_blank" class="btn btn-sm btn-outline-success radius-6 px-12">
+                                    <i class="ri-file-text-line me-1"></i> View CoC
+                                </a>
+                                {% else %}
+                                <span class="text-xs text-secondary-light font-monospace">Quarantined</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                        <!-- Modal for Pallet Release -->
+                        <div class="modal fade" id="releaseModal{{ insp.id }}" tabindex="-1" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content radius-12 p-16">
+                                    <div class="modal-header border-0 pb-0">
+                                        <h5 class="modal-title fw-bold text-primary-light">OQC Shipping Clearance &mdash; {{ insp.pallet_barcode }}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <form method="POST" action="{% url 'oqc:release' insp.id %}">
+                                        {% csrf_token %}
+                                        <div class="modal-body">
+                                            <div class="alert alert-neutral bg-neutral-100 border-0 radius-8 mb-16 text-xs text-secondary-light">
+                                                <strong>ISO 2859-1 Level II Plan:</strong> Inspect exactly <code>{{ insp.sample_size }} pcs</code> out of {{ insp.batch_quantity }} pcs. Criteria: <strong>Ac = 0, Re = 1</strong>. Any single defect rejects the entire batch.
+                                            </div>
+
+                                            <div class="mb-16">
+                                                <label class="form-label text-sm fw-semibold text-primary-light">Defects Count Found</label>
+                                                <input type="number" min="0" name="defects_found" class="form-control radius-8 font-monospace" value="0" required>
+                                                <div class="form-text text-xs">Enter 0 for conforming parts. Any count &gt; 0 will automatically reject the pallet.</div>
+                                            </div>
+
+                                            <div class="mb-16">
+                                                <label class="form-label text-sm fw-semibold text-primary-light mb-8">Mandatory Packaging Audit Checklist</label>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" name="box_intact" id="box{{ insp.id }}" checked>
+                                                    <label class="form-check-label text-sm text-secondary-light" for="box{{ insp.id }}">
+                                                        Corrugated outer box structurally intact and sealed
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" name="esd_sealed" id="esd{{ insp.id }}" checked>
+                                                    <label class="form-check-label text-sm text-secondary-light" for="esd{{ insp.id }}">
+                                                        Anti-static ESD bag hermetically sealed
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-2">
+                                                    <input class="form-check-input" type="checkbox" name="desiccant" id="desiccant{{ insp.id }}" checked>
+                                                    <label class="form-check-label text-sm text-secondary-light" for="desiccant{{ insp.id }}">
+                                                        Moisture desiccant pouch present
+                                                    </label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" name="datamatrix" id="dm{{ insp.id }}" checked>
+                                                    <label class="form-check-label text-sm text-secondary-light" for="dm{{ insp.id }}">
+                                                        2D DataMatrix barcode scannable &amp; matched to ERP Delivery Order
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer border-0 pt-0">
+                                            <button type="button" class="btn btn-outline-secondary radius-8" data-bs-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-success-600 radius-8">Generate CoC &amp; Release to WMS</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="text-center py-32 text-secondary-light">
+                                <i class="ri-shield-line text-3xl d-block mb-2"></i>
+                                No outgoing pallets in queue.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

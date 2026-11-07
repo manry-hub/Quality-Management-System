@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Scrollspy</h1>
+              <p class="ax-page-head__subtitle">A sticky table-of-contents that tracks scroll position with an IntersectionObserver — the active section lights up and links scroll smoothly into view.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+                <span class="ax-btn__label">On this page</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid"
+          x-data="{
+            active: 'introduction',
+            sections: ['introduction','installation','tokens','components','charts','accessibility'],
+            io: null,
+            init() {
+              this.io = new IntersectionObserver((entries) => {
+                entries.forEach((e) => { if (e.isIntersecting) this.active = e.target.id; });
+              }, { root: this.$refs.scroller, rootMargin: '0px 0px -65% 0px', threshold: 0 });
+              this.$nextTick(() => this.sections.forEach((id) => {
+                const el = document.getElementById(id); if (el) this.io.observe(el);
+              }));
+            },
+            go(id) {
+              this.active = id;
+              const el = document.getElementById(id);
+              el && el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+            }
+          }" x-init="init()">
+
+          <!-- Sticky TOC -->
+          <aside class="ax-card ax-col--4" role="region" aria-label="On this page navigation" style="position:sticky;top:calc(var(--ax-header-h) + var(--ax-space-6));align-self:start;">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Contents</span>
+                <h2 class="ax-card__title">On this page</h2>
+                <p class="ax-card__subtitle">Tracks the section in view as you scroll the panel.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav aria-label="Section navigation">
+                <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:2px;border-inline-start:2px solid var(--ax-border);">
+                  <template x-for="id in sections" :key="id">
+                    <li>
+                      <a href="#" @click.prevent="go(id)"
+                        :aria-current="active===id ? 'true' : false"
+                        :style="active===id
+                          ? 'color:var(--ax-accent);background:var(--ax-accent-wash);box-shadow:inset 2px 0 0 var(--ax-accent);font-weight:var(--ax-weight-semibold);'
+                          : 'color:var(--ax-text-muted);'"
+                        style="display:block;padding:var(--ax-space-2) var(--ax-space-3);margin-inline-start:-2px;font-size:var(--ax-text-sm);text-decoration:none;border-radius:0 var(--ax-radius-sm) var(--ax-radius-sm) 0;text-transform:capitalize;transition:color var(--ax-motion-fast) var(--ax-ease-standard),background var(--ax-motion-fast) var(--ax-ease-standard);"
+                        x-text="id"></a>
+                    </li>
+                  </template>
+                </ul>
+              </nav>
+              <div class="ax-divider" style="margin-block:var(--ax-space-4);"></div>
+              <p style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                Reading <b style="color:var(--ax-text);text-transform:capitalize;" x-text="active"></b> ·
+                <span class="ax-num" x-text="sections.indexOf(active)+1"></span> of <span class="ax-num" x-text="sections.length"></span>
+              </p>
+            </div>
+          </aside>
+
+          <!-- Scrollable content -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Scrollspy content">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Documentation</span>
+                <h2 class="ax-card__title">Getting started with Vireo</h2>
+                <p class="ax-card__subtitle">Scroll inside this panel — the contents rail follows along.</p>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill" x-text="active.charAt(0).toUpperCase()+active.slice(1)"></span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div x-ref="scroller" class="ax-scroll-y" style="max-block-size:62vh;padding-inline-end:var(--ax-space-3);">
+
+                <section id="introduction" style="scroll-margin-top:var(--ax-space-4);padding-block:var(--ax-space-3) var(--ax-space-6);">
+                  <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Introduction</h3>
+                  <p style="margin:0 0 var(--ax-space-3);line-height:1.7;color:var(--ax-text-muted);">Vireo is a premium admin template that ships nine framework editions from one design system. Every surface is defined as a role token, so light, dark and twelve accent presets all retheme without touching component code.</p>
+                  <p style="margin:0;line-height:1.7;color:var(--ax-text-muted);">This guide walks through installing the kit, the token layers, the component vocabulary, charts, and the accessibility guarantees baked in.</p>
+                </section>
+                <div class="ax-divider"></div>
+
+                <section id="installation" style="scroll-margin-top:var(--ax-space-4);padding-block:var(--ax-space-6);">
+                  <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Installation</h3>
+                  <p style="margin:0 0 var(--ax-space-3);line-height:1.7;color:var(--ax-text-muted);">Clone the repository and install dependencies. The HTML edition is powered by Vite, Tailwind v4 and Alpine.js.</p>
+                  <pre style="margin:0;padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text);overflow-x:auto;" class="ax-scroll-x"><code><span style="color:var(--ax-text-subtle);"># install &amp; run</span>
+npm install
+npm run dev</code></pre>
+                </section>
+                <div class="ax-divider"></div>
+
+                <section id="tokens" style="scroll-margin-top:var(--ax-space-4);padding-block:var(--ax-space-6);">
+                  <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Tokens</h3>
+                  <p style="margin:0 0 var(--ax-space-3);line-height:1.7;color:var(--ax-text-muted);">Three layers compose the system: raw scales, semantic role tokens, and recipe gradients. Pages only ever reference the role layer.</p>
+                  <ul style="margin:0;padding-inline-start:1.2em;display:flex;flex-direction:column;gap:var(--ax-space-2);color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">
+                    <li><code class="ax-code">--ax-surface</code> — glass panel background</li>
+                    <li><code class="ax-code">--ax-text-muted</code> — secondary copy</li>
+                    <li><code class="ax-code">--ax-accent</code> — the live accent, one of twelve</li>
+                    <li><code class="ax-code">--ax-viz-cyan</code> — constant chart color</li>
+                  </ul>
+                </section>
+                <div class="ax-divider"></div>
+
+                <section id="components" style="scroll-margin-top:var(--ax-space-4);padding-block:var(--ax-space-6);">
+                  <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Components</h3>
+                  <p style="margin:0 0 var(--ax-space-3);line-height:1.7;color:var(--ax-text-muted);">Over sixty BEM-named blocks cover buttons, cards, tables, forms, navigation and overlays. Compose pages from these primitives — never invent new classes.</p>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                    <button type="button" class="ax-btn ax-btn--primary ax-btn--sm"><span class="ax-btn__label">Button</span></button>
+                    <span class="ax-badge ax-badge--soft ax-badge--success">Badge</span>
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">AX</span></span>
+                  </div>
+                </section>
+                <div class="ax-divider"></div>
+
+                <section id="charts" style="scroll-margin-top:var(--ax-space-4);padding-block:var(--ax-space-6);">
+                  <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Charts</h3>
+                  <p style="margin:0 0 var(--ax-space-3);line-height:1.7;color:var(--ax-text-muted);">ApexCharts renders through a single wrapper that reads colors from CSS variables, so every chart re-themes live alongside the rest of the UI.</p>
+                  <div data-ax-chart="apex" data-ax-chart-type="area" data-ax-chart-height="180" data-ax-chart-legend="none" data-ax-chart-accent="true"
+                    data-ax-chart-series='[{"name":"Revenue","data":[42,48,45,53,57,55,62,60,69,72,70,75]}]'
+                    aria-label="Area chart of monthly revenue trending upward"></div>
+                </section>
+                <div class="ax-divider"></div>
+
+                <section id="accessibility" style="scroll-margin-top:var(--ax-space-4);padding-block:var(--ax-space-6) var(--ax-space-3);">
+                  <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Accessibility</h3>
+                  <p style="margin:0 0 var(--ax-space-3);line-height:1.7;color:var(--ax-text-muted);">One H1 per page, landmark regions, labelled icon buttons, visible focus rings and reduced-motion fallbacks ship by default. This scrollspy itself respects <code class="ax-code">prefers-reduced-motion</code> by switching to instant scrolling.</p>
+                  <div class="ax-alert ax-alert--success ax-alert--accent-edge">
+                    <span class="ax-alert__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                    <div class="ax-alert__content"><p class="ax-alert__message" style="margin:0;">You've reached the end — the last item stays active.</p></div>
+                  </div>
+                </section>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

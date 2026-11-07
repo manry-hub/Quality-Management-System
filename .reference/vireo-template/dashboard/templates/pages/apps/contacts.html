@@ -1,0 +1,308 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axContacts()"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status"><span class="ax-num" x-text="contacts.length"></span> people across teams, clients and vendors.</p>
+          <div class="ax-apphead__actions">
+            <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+              <span class="ax-btn__label">Export</span>
+            </button>
+            <button type="button" class="ax-btn ax-btn--primary" @click="addOpen = true">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+              <span class="ax-btn__label">Add contact</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="ax-dash-grid">
+          <!-- ───── TOOLBAR ───── -->
+          <div class="ax-card ax-col--12 ax-card--compact" role="region" aria-label="Contacts toolbar">
+            <div class="ax-card__body" style="display:flex;align-items:center;gap:var(--ax-space-3);flex-wrap:wrap;">
+              <div class="ax-field__control" style="flex:1 1 280px;min-width:200px;">
+                <span class="ax-field__affix ax-field__affix--leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                <input type="search" class="ax-input ax-input--sm ax-input--with-leading-icon" placeholder="Search by name, company or email…" x-model="q" aria-label="Search contacts">
+              </div>
+              <div class="ax-segment" role="tablist" aria-label="Filter by group">
+                <template x-for="g in ['All','Team','Clients','Vendors','Favorites']" :key="g">
+                  <button type="button" role="tab" class="ax-segment__option" :aria-checked="group === g" @click="group = g" x-text="g"></button>
+                </template>
+              </div>
+              <span style="flex:1 1 auto;"></span>
+              <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort contacts" style="width:150px;">
+                <option value="name">Name A–Z</option>
+                <option value="company">Company</option>
+                <option value="recent">Recently added</option>
+              </select>
+              <div class="ax-segment" role="group" aria-label="View mode">
+                <button type="button" class="ax-segment__option ax-btn--icon" :aria-checked="view === 'grid'" @click="view = 'grid'" aria-label="Grid view"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg></button>
+                <button type="button" class="ax-segment__option ax-btn--icon" :aria-checked="view === 'list'" @click="view = 'list'" aria-label="List view"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── GRID VIEW ───── -->
+          <template x-if="view === 'grid'">
+            <div class="ax-col--12" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:var(--ax-space-6);">
+              <template x-for="c in filtered" :key="c.id">
+                <article class="ax-card ax-card--interactive" @click="select(c.id)" :class="detail === c.id && 'is-selected'"
+                         style="cursor:pointer;text-align:center;" role="button" tabindex="0" @keydown.enter="select(c.id)" :aria-label="`Open ${c.name}`">
+                  <div class="ax-card__body" style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);position:relative;">
+                    <button type="button" @click.stop="c.fav = !c.fav" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="c.fav ? 'Unfavorite' : 'Favorite'" :aria-pressed="c.fav" style="position:absolute;top:0;inset-inline-end:0;" :style="c.fav ? 'color:var(--ax-viz-amber);' : ''">
+                      <svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="c.fav ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                    </button>
+                    <span style="position:relative;">
+                      <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" :style="`background:color-mix(in oklab,${c.color} 18%,transparent);color:${c.color};`"><b style="font-size:var(--ax-text-lg);" x-text="c.initials"></b></span>
+                      <span class="ax-avatar__status" :class="`ax-avatar__status--${c.presence}`" style="inset-block-end:2px;inset-inline-end:2px;box-shadow:0 0 0 2px var(--ax-surface-solid);"></span>
+                    </span>
+                    <div style="min-width:0;width:100%;">
+                      <div class="ax-text-truncate" style="font-weight:600;color:var(--ax-text-strong);" x-text="c.name"></div>
+                      <div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="`${c.role} · ${c.company}`"></div>
+                    </div>
+                    <span class="ax-badge ax-badge--soft ax-badge--sm ax-badge--pill" :style="`color:${c.groupColor};`"><span class="ax-badge__dot" :style="`background:${c.groupColor};`"></span><span x-text="c.tag"></span></span>
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-1);">
+                      <a class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" :href="`mailto:${c.email}`" @click.stop aria-label="Email"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></a>
+                      <a class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" :href="`tel:${c.phone}`" @click.stop aria-label="Call"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></a>
+                      <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" @click.stop="select(c.id)" aria-label="View details"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                    </div>
+                  </div>
+                </article>
+              </template>
+            </div>
+          </template>
+
+          <!-- ───── LIST VIEW ───── -->
+          <template x-if="view === 'list'">
+            <section class="ax-card ax-col--12" role="region" aria-label="Contacts list">
+              <div class="ax-table-wrap">
+                <table class="ax-table ax-table--hover">
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col">Name</th>
+                      <th class="ax-table__th" scope="col">Company</th>
+                      <th class="ax-table__th" scope="col">Email</th>
+                      <th class="ax-table__th" scope="col">Phone</th>
+                      <th class="ax-table__th" scope="col">Group</th>
+                      <th class="ax-table__th" scope="col"><span class="ax-visually-hidden">Actions</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="c in filtered" :key="c.id">
+                      <tr class="ax-table__row" @click="select(c.id)" :class="detail === c.id && 'is-selected'" style="cursor:pointer;">
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                            <span style="position:relative;flex:0 0 auto;">
+                              <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${c.color} 18%,transparent);color:${c.color};`"><b style="font-size:10px;" x-text="c.initials"></b></span>
+                              <span class="ax-avatar__status" :class="`ax-avatar__status--${c.presence}`"></span>
+                            </span>
+                            <div style="min-width:0;"><div style="font-weight:500;color:var(--ax-text-strong);" x-text="c.name"></div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="c.role"></div></div>
+                          </div>
+                        </td>
+                        <td class="ax-table__td" style="color:var(--ax-text-muted);" x-text="c.company"></td>
+                        <td class="ax-table__td"><a class="ax-link ax-num" :href="`mailto:${c.email}`" @click.stop style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);" x-text="c.email"></a></td>
+                        <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);font-size:var(--ax-text-xs);" x-text="c.phone"></td>
+                        <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--sm ax-badge--pill" :style="`color:${c.groupColor};`"><span class="ax-badge__dot" :style="`background:${c.groupColor};`"></span><span x-text="c.tag"></span></span></td>
+                        <td class="ax-table__td" style="text-align:end;">
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click.stop="c.fav = !c.fav" :style="c.fav ? 'color:var(--ax-viz-amber);' : ''" :aria-label="c.fav ? 'Unfavorite' : 'Favorite'"><svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="c.fav ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></button>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          </template>
+
+          <p x-show="filtered.length === 0" class="ax-col--12" style="text-align:center;color:var(--ax-text-subtle);padding:var(--ax-space-10);">No contacts match your search.</p>
+        </div>
+
+        <!-- ════════════════ DETAIL DRAWER ════════════════ -->
+        <div x-show="detail" x-cloak @keydown.escape.window="detail = null">
+          <div class="ax-backdrop" x-show="detail" x-transition.opacity @click="detail = null" style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);"></div>
+          <aside x-show="detail" x-transition:enter="ax-drawer-enter" role="dialog" aria-modal="true" :aria-label="active ? active.name : 'Contact'"
+                 class="ax-scroll-y"
+                 style="position:fixed;inset-block:0;inset-inline-end:0;width:min(420px,100vw);z-index:51;background:var(--ax-surface-solid);border-inline-start:1px solid var(--ax-border);box-shadow:var(--ax-shadow-lg);display:flex;flex-direction:column;">
+            <template x-if="active">
+              <div style="display:flex;flex-direction:column;min-height:0;">
+                <!-- drawer header -->
+                <div style="padding:var(--ax-space-4) var(--ax-space-5);border-bottom:1px solid var(--ax-border);display:flex;align-items:center;justify-content:space-between;">
+                  <b style="color:var(--ax-text-strong);">Contact details</b>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="detail = null" aria-label="Close"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                </div>
+
+                <div style="padding:var(--ax-space-6);display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                  <!-- identity -->
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);text-align:center;">
+                    <span style="position:relative;">
+                      <span class="ax-avatar ax-avatar--2xl ax-avatar--squircle" :style="`background:color-mix(in oklab,${active.color} 18%,transparent);color:${active.color};`"><b style="font-size:var(--ax-text-2xl);" x-text="active.initials"></b></span>
+                      <span class="ax-avatar__status" :class="`ax-avatar__status--${active.presence}`" style="inset-block-end:6px;inset-inline-end:6px;box-shadow:0 0 0 2px var(--ax-surface-solid);"></span>
+                    </span>
+                    <div><div style="font-weight:700;font-size:var(--ax-text-lg);color:var(--ax-text-strong);" x-text="active.name"></div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="`${active.role} · ${active.company}`"></div></div>
+                    <span class="ax-badge ax-badge--soft ax-badge--sm ax-badge--pill" :style="`color:${active.groupColor};`"><span class="ax-badge__dot" :style="`background:${active.groupColor};`"></span><span x-text="active.tag"></span></span>
+                  </div>
+
+                  <!-- quick actions -->
+                  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--ax-space-2);">
+                    <a class="ax-btn ax-btn--secondary ax-btn--sm" :href="`mailto:${active.email}`" style="flex-direction:column;height:auto;padding:var(--ax-space-3) 0;gap:4px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg><span style="font-size:var(--ax-text-2xs);">Email</span></a>
+                    <a class="ax-btn ax-btn--secondary ax-btn--sm" :href="`tel:${active.phone}`" style="flex-direction:column;height:auto;padding:var(--ax-space-3) 0;gap:4px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg><span style="font-size:var(--ax-text-2xs);">Call</span></a>
+                    <a class="ax-btn ax-btn--secondary ax-btn--sm" href="/apps/chat/" style="flex-direction:column;height:auto;padding:var(--ax-space-3) 0;gap:4px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z"/></svg><span style="font-size:var(--ax-text-2xs);">Chat</span></a>
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="active.fav = !active.fav" :style="active.fav ? 'color:var(--ax-viz-amber);' : ''" style="flex-direction:column;height:auto;padding:var(--ax-space-3) 0;gap:4px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="active.fav ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg><span style="font-size:var(--ax-text-2xs);">Favorite</span></button>
+                  </div>
+
+                  <hr class="ax-divider">
+
+                  <!-- contact info -->
+                  <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-fill-hover);color:var(--ax-text-muted);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></span>
+                      <div style="min-width:0;"><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Email</div><a class="ax-link ax-num" :href="`mailto:${active.email}`" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);" x-text="active.email"></a></div>
+                    </div>
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-fill-hover);color:var(--ax-text-muted);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span>
+                      <div style="min-width:0;"><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Phone</div><a class="ax-link ax-num" :href="`tel:${active.phone}`" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);" x-text="active.phone"></a></div>
+                    </div>
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-fill-hover);color:var(--ax-text-muted);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg></span>
+                      <div style="min-width:0;"><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Location</div><span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="active.location"></span></div>
+                    </div>
+                  </div>
+
+                  <!-- tags -->
+                  <div>
+                    <div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--ax-space-2);">Tags</div>
+                    <div class="ax-cluster" style="gap:6px;">
+                      <template x-for="t in active.tags" :key="t">
+                        <span class="ax-badge ax-badge--soft ax-badge--sm" style="border-radius:var(--ax-radius-xs);" x-text="t"></span>
+                      </template>
+                    </div>
+                  </div>
+
+                  <!-- notes -->
+                  <div>
+                    <div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--ax-space-2);">Notes</div>
+                    <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.6;" x-text="active.notes"></p>
+                  </div>
+
+                  <hr class="ax-divider">
+
+                  <!-- recent activity -->
+                  <div>
+                    <div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--ax-space-3);">Recent activity</div>
+                    <ul class="ax-timeline">
+                      <li class="ax-timeline__item ax-timeline__item--success"><span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></span><div class="ax-timeline__content"><p class="ax-timeline__title">Replied to your email</p><span class="ax-timeline__time">2h ago</span></div></li>
+                      <li class="ax-timeline__item"><span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span><div class="ax-timeline__content"><p class="ax-timeline__title">Call · 14 min</p><span class="ax-timeline__time">Yesterday</span></div></li>
+                      <li class="ax-timeline__item"><span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span><div class="ax-timeline__content"><p class="ax-timeline__title">Added to <span style="color:var(--ax-text);">Q3 retainer</span></p><span class="ax-timeline__time">Apr 22</span></div></li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div style="margin-top:auto;padding:var(--ax-space-4) var(--ax-space-6);border-top:1px solid var(--ax-border);display:flex;gap:var(--ax-space-2);">
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--block"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg><span class="ax-btn__label">Edit</span></button>
+                  <button type="button" class="ax-btn ax-btn--soft-danger ax-btn--icon" aria-label="Delete contact"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+                </div>
+              </div>
+            </template>
+          </aside>
+        </div>
+
+        <!-- ════════════════ ADD CONTACT MODAL ════════════════ -->
+        <div x-show="addOpen" x-cloak @keydown.escape.window="addOpen = false">
+          <div class="ax-backdrop" x-show="addOpen" x-transition.opacity @click="addOpen = false" style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);"></div>
+          <div x-show="addOpen" x-transition role="dialog" aria-modal="true" aria-label="Add contact"
+               style="position:fixed;inset:0;z-index:51;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+            <form class="ax-card" @submit.prevent="saveContact()" @click.stop style="width:min(480px,100%);max-height:90vh;overflow:auto;">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Add contact</h2></div>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="addOpen = false" aria-label="Close"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-field">
+                  <label class="ax-label" for="nc-name">Full name <span class="ax-field__required" aria-hidden="true">*</span></label>
+                  <input id="nc-name" type="text" class="ax-input" x-model="form.name" :class="errors.name && 'is-invalid'" :aria-invalid="errors.name ? 'true':'false'" placeholder="Jane Cooper">
+                  <span class="ax-field__message ax-field__message--error" x-show="errors.name" x-text="errors.name"></span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                  <div class="ax-field"><label class="ax-label" for="nc-role">Role</label><input id="nc-role" type="text" class="ax-input" x-model="form.role" placeholder="Designer"></div>
+                  <div class="ax-field"><label class="ax-label" for="nc-company">Company</label><input id="nc-company" type="text" class="ax-input" x-model="form.company" placeholder="Acme Inc."></div>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="nc-email">Email <span class="ax-field__required" aria-hidden="true">*</span></label>
+                  <input id="nc-email" type="email" class="ax-input" x-model="form.email" :class="errors.email && 'is-invalid'" :aria-invalid="errors.email ? 'true':'false'" placeholder="jane@acme.com">
+                  <span class="ax-field__message ax-field__message--error" x-show="errors.email" x-text="errors.email"></span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                  <div class="ax-field"><label class="ax-label" for="nc-phone">Phone</label><input id="nc-phone" type="tel" class="ax-input" x-model="form.phone" placeholder="+1 (555) 000-0000"></div>
+                  <div class="ax-field"><label class="ax-label" for="nc-group">Group</label><select id="nc-group" class="ax-select" x-model="form.tag"><option>Team</option><option>Clients</option><option>Vendors</option></select></div>
+                </div>
+              </div>
+              <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-2);border-top:1px solid var(--ax-border);">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="addOpen = false">Cancel</button>
+                <button type="submit" class="ax-btn ax-btn--primary">Save contact</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <style>
+          .ax-drawer-enter { animation: ax-drawer-in var(--ax-motion-base) var(--ax-ease-standard); }
+          @keyframes ax-drawer-in { from { transform: translateX(100%); } to { transform: translateX(0); } }
+          [dir="rtl"] @keyframes ax-drawer-in { from { transform: translateX(-100%); } }
+          @media (prefers-reduced-motion: reduce) { .ax-drawer-enter { animation: none; } }
+        </style>
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axContacts() {
+      return {
+        view:'grid', group:'All', sort:'name', q:'', detail:null, addOpen:false,
+        form:{ name:'', role:'', company:'', email:'', phone:'', tag:'Team' },
+        errors:{},
+        contacts:[
+          { id:1, name:'Maya Lindqvist', role:'CFO', company:'Northwind', initials:'ML', color:'#34D399', presence:'online', tag:'Clients', groupColor:'#38BDF8', email:'maya.l@northwind.co', phone:'+1 (415) 555-0188', location:'San Francisco, CA', fav:true, tags:['Decision maker','Finance','VIP'], notes:'Primary finance contact on the Q3 retainer. Prefers morning calls (PT).' },
+          { id:2, name:'Devon Okafor', role:'Engineering Lead', company:'Vireo', initials:'DO', color:'#38BDF8', presence:'online', tag:'Team', groupColor:'#34D399', email:'devon@vireo.app', phone:'+1 (628) 555-0143', location:'Remote · Lagos', fav:false, tags:['Frontend','On-call'], notes:'Owns the design-system migration. Reach via chat for anything urgent.' },
+          { id:3, name:'Tomás Herrera', role:'Account Director', company:'Brightline', initials:'TH', color:'#A78BFA', presence:'away', tag:'Clients', groupColor:'#38BDF8', email:'tomas@brightline.io', phone:'+34 612 55 01 77', location:'Madrid, ES', fav:true, tags:['Contract','Renewal Q3'], notes:'Negotiating the SLA window. Follow up Friday on section 4.2.' },
+          { id:4, name:'Priya Nair', role:'Data Analyst', company:'Vireo', initials:'PN', color:'#FBBF24', presence:'away', tag:'Team', groupColor:'#34D399', email:'priya@vireo.app', phone:'+91 98765 43210', location:'Bengaluru, IN', fav:false, tags:['Analytics','Reporting'], notes:'Sends the weekly digest every Monday at 8 AM.' },
+          { id:5, name:'Lena Brandt', role:'Brand Designer', company:'Studioform', initials:'LB', color:'#F472B6', presence:'offline', tag:'Vendors', groupColor:'#FBBF24', email:'lena@studioform.de', phone:'+49 30 5550 0199', location:'Berlin, DE', fav:false, tags:['Illustration','Contract'], notes:'Delivering empty-state illustrations. Invoices via Receipts label.' },
+          { id:6, name:'Daniel Cho', role:'Product Manager', company:'Loop', initials:'DC', color:'#FB7185', presence:'offline', tag:'Clients', groupColor:'#38BDF8', email:'daniel@loop.com', phone:'+1 (212) 555-0166', location:'New York, NY', fav:false, tags:['Roadmap'], notes:'Casual contact — usually catches up over lunch.' },
+          { id:7, name:'Ava Sutton', role:'Marketing Lead', company:'Vireo', initials:'AS', color:'#34D399', presence:'online', tag:'Team', groupColor:'#34D399', email:'ava@vireo.app', phone:'+1 (310) 555-0120', location:'Los Angeles, CA', fav:true, tags:['Campaigns','Email'], notes:'Owns the launch campaign going live at noon.' },
+          { id:8, name:'Henry Whitlock', role:'Procurement', company:'Crate & Co', initials:'HW', color:'#38BDF8', presence:'offline', tag:'Vendors', groupColor:'#FBBF24', email:'henry@crateco.com', phone:'+44 20 7946 0102', location:'London, UK', fav:false, tags:['Hardware','Supplier'], notes:'Supplies office hardware. Net-30 terms.' },
+        ],
+        get filtered() {
+          let list = [...this.contacts];
+          if (this.group === 'Favorites') list = list.filter(c => c.fav);
+          else if (this.group !== 'All') list = list.filter(c => c.tag === this.group);
+          if (this.q.trim()) { const s = this.q.toLowerCase(); list = list.filter(c => (c.name + c.company + c.email).toLowerCase().includes(s)); }
+          if (this.sort === 'name') list.sort((a,b) => a.name.localeCompare(b.name));
+          if (this.sort === 'company') list.sort((a,b) => a.company.localeCompare(b.company));
+          if (this.sort === 'recent') list.sort((a,b) => b.id - a.id);
+          return list;
+        },
+        get active() { return this.detail ? this.contacts.find(c => c.id === this.detail) : null; },
+        select(id) { this.detail = id; },
+        saveContact() {
+          this.errors = {};
+          if (!this.form.name.trim()) this.errors.name = 'Name is required.';
+          if (!this.form.email.trim()) this.errors.email = 'Email is required.';
+          else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email)) this.errors.email = 'Enter a valid email address.';
+          if (Object.keys(this.errors).length) return;
+          const colors = ['#34D399','#38BDF8','#A78BFA','#F472B6','#FBBF24','#FB7185'];
+          const gc = this.form.tag === 'Team' ? '#34D399' : (this.form.tag === 'Vendors' ? '#FBBF24' : '#38BDF8');
+          this.contacts.unshift({
+            id: Date.now(), name:this.form.name, role:this.form.role||'—', company:this.form.company||'—',
+            initials:this.form.name.trim().split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase(),
+            color: colors[Math.floor(Math.random()*colors.length)], presence:'offline',
+            tag:this.form.tag, groupColor:gc, email:this.form.email, phone:this.form.phone||'—',
+            location:'—', fav:false, tags:[this.form.tag], notes:'Newly added contact.'
+          });
+          this.addOpen = false;
+          this.form = { name:'', role:'', company:'', email:'', phone:'', tag:'Team' };
+        },
+      };
+    }
+  </script>
+{% endblock %}

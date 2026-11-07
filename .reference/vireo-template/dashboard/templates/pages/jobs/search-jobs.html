@@ -1,0 +1,345 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axSearchJobs()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Search Jobs</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">1,284</span> open roles across <span class="ax-num">312</span> companies — updated <span class="ax-num">14m</span> ago.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg>
+                <span class="ax-btn__label">Saved jobs</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a5 5 0 1 0 0 10a5 5 0 0 0 0 -10"/><path d="M21 21l-6 -6"/><path d="M5 10h10"/></svg>
+                <span class="ax-btn__label">Create job alert</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ SEARCH BAR ════════════════ -->
+        <section class="ax-card" role="search" aria-label="Job search" style="margin-bottom:var(--ax-space-6);">
+          <div class="ax-card__body" style="display:grid;grid-template-columns:2fr 1.4fr auto;gap:var(--ax-space-3);align-items:end;">
+            <div class="ax-field" style="margin:0;">
+              <label class="ax-label" for="sj-keyword">Job title, skill or company</label>
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/><path d="M12 12l0 .01"/><path d="M3 13a20 20 0 0 0 18 0"/></svg>
+                <input id="sj-keyword" type="search" class="ax-input" placeholder="e.g. Senior Frontend Engineer, React, Figma…" x-model.debounce.200ms="q" @input="page=1" style="padding-inline-start:38px;" aria-label="Search keyword">
+              </div>
+            </div>
+            <div class="ax-field" style="margin:0;">
+              <label class="ax-label" for="sj-loc">Location</label>
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
+                <input id="sj-loc" type="text" class="ax-input" placeholder="City, country or Remote" x-model.debounce.200ms="loc" @input="page=1" style="padding-inline-start:38px;" aria-label="Location">
+              </div>
+            </div>
+            <button type="button" class="ax-btn ax-btn--primary" style="height:42px;" @click="page=1">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a5 5 0 1 0 0 10a5 5 0 0 0 0 -10"/><path d="M21 21l-6 -6"/></svg>
+              <span class="ax-btn__label">Search</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ════════════════ LAYOUT: FILTERS RAIL + RESULTS ════════════════ -->
+        <div style="display:grid;grid-template-columns:280px minmax(0,1fr);gap:var(--ax-space-6);align-items:start;" class="ax-jobs-split">
+
+          <!-- ───── FILTERS SIDEBAR ───── -->
+          <aside class="ax-card" role="region" aria-label="Filters" style="position:sticky;top:var(--ax-space-4);">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Filters</h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="reset()">Reset</button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- Employment type -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Employment type</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="t in types" :key="t.id">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-3);">
+                        <input type="checkbox" class="ax-checkbox" :value="t.id" x-model="fType" @change="page=1">
+                        <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="t.label"></span>
+                      </span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="t.count"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Location mode -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Work mode</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="m in modes" :key="m.id">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-3);">
+                        <input type="checkbox" class="ax-checkbox" :value="m.id" x-model="fMode" @change="page=1">
+                        <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="m.label"></span>
+                      </span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="m.count"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Salary range -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <legend class="ax-label" style="padding:0;margin:0;">Min. salary</legend>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);">$<span x-text="salaryK"></span>K</b>
+                </div>
+                <input type="range" class="ax-range ax-range--native" min="40" max="240" step="10" x-model.number="salaryK" @input="page=1" aria-label="Minimum salary in thousands" style="width:100%;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-top:6px;">
+                  <small class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">$40K</small>
+                  <small class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">$240K+</small>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Experience level -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Experience level</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="lv in levels" :key="lv">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;min-height:auto;cursor:pointer;">
+                      <input type="radio" name="sj-level" class="ax-radio" :value="lv" x-model="fLevel" @change="page=1">
+                      <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="lv"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Posted within -->
+              <div class="ax-field" style="margin:0;">
+                <label class="ax-label" for="sj-posted">Posted within</label>
+                <select id="sj-posted" class="ax-select ax-select--sm" x-model="fPosted" @change="page=1">
+                  <option value="">Any time</option>
+                  <option value="1">Last 24 hours</option>
+                  <option value="3">Last 3 days</option>
+                  <option value="7">Last week</option>
+                  <option value="30">Last month</option>
+                </select>
+              </div>
+            </div>
+          </aside>
+
+          <!-- ───── RESULTS COLUMN ───── -->
+          <div style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+            <!-- result toolbar -->
+            <section class="ax-card" role="region" aria-label="Results toolbar">
+              <div class="ax-card__body" style="display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;padding-block:var(--ax-space-4);">
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+                  <b class="ax-num" style="color:var(--ax-text-strong);" x-text="filtered().length"></b> jobs match
+                  <span x-show="activeChips().length" x-cloak>·</span>
+                  <template x-for="c in activeChips()" :key="c.k">
+                    <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill ax-badge--sm" style="margin-inline-start:6px;">
+                      <span x-text="c.label"></span>
+                      <button type="button" @click="c.clear()" aria-label="Remove filter" style="background:none;border:0;cursor:pointer;color:inherit;display:inline-flex;padding:0;margin-inline-start:4px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                    </span>
+                  </template>
+                </p>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <label class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Sort
+                    <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort jobs" style="min-width:150px;">
+                      <option value="relevance">Most relevant</option>
+                      <option value="recent">Newest first</option>
+                      <option value="salary">Highest salary</option>
+                      <option value="applicants">Fewest applicants</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <!-- result cards -->
+            <template x-for="j in paged()" :key="j.id">
+              <article class="ax-card ax-card--interactive" role="region" :aria-label="j.title + ' at ' + j.company">
+                <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;align-items:flex-start;">
+                    <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" :style="`background:color-mix(in oklab,${j.c} 18%,transparent);color:${j.c};font-weight:700;flex:0 0 auto;`"><b style="font-size:var(--ax-text-md);" x-text="j.mark"></b></span>
+                    <div style="flex:1 1 auto;min-width:0;">
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:space-between;align-items:flex-start;flex-wrap:nowrap;">
+                        <div style="min-width:0;">
+                          <a href="/jobs/job-details/" class="ax-text-truncate" style="display:block;font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);text-decoration:none;" x-text="j.title"></a>
+                          <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:2px;">
+                            <span style="font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-medium);" x-text="j.company"></span>
+                            <span x-show="j.verified" x-cloak style="color:var(--ax-viz-cyan);display:inline-flex;" title="Verified employer"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                          </div>
+                        </div>
+                        <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="j.saved = !j.saved" :aria-pressed="j.saved.toString()" :aria-label="j.saved ? 'Remove from saved' : 'Save job'" :style="j.saved ? 'color:var(--ax-accent);' : ''">
+                          <svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="j.saved ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg>
+                        </button>
+                      </div>
+
+                      <!-- meta row -->
+                      <div class="ax-cluster" style="gap:var(--ax-space-4);margin-top:var(--ax-space-3);row-gap:var(--ax-space-2);">
+                        <span class="ax-cluster" style="gap:6px;font-size:var(--ax-text-sm);color:var(--ax-text-muted);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg><span x-text="j.location"></span></span>
+                        <span class="ax-cluster" style="gap:6px;font-size:var(--ax-text-sm);color:var(--ax-text-muted);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/></svg><span x-text="j.typeLabel"></span></span>
+                        <span class="ax-cluster ax-num" style="gap:6px;font-size:var(--ax-text-sm);color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg><span x-text="j.salary"></span></span>
+                      </div>
+
+                      <!-- description -->
+                      <p style="margin:var(--ax-space-3) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.55;" x-text="j.summary"></p>
+
+                      <!-- skills + footer -->
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-4);">
+                        <template x-for="s in j.skills" :key="s">
+                          <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="s"></span>
+                        </template>
+                      </div>
+
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);justify-content:space-between;margin-top:var(--ax-space-4);padding-top:var(--ax-space-4);border-top:1px solid var(--ax-border);flex-wrap:wrap;">
+                        <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                          <span class="ax-cluster ax-num" style="gap:6px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg><span x-text="j.posted"></span></span>
+                          <span class="ax-cluster ax-num" style="gap:6px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1"/><path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M17 10h2a2 2 0 0 1 2 2v1"/><path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M3 13v-1a2 2 0 0 1 2 -2h2"/></svg><span x-text="j.applicants + ' applicants'"></span></span>
+                          <span x-show="j.urgent" x-cloak class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill ax-badge--sm"><span class="ax-badge__dot"></span>Urgent</span>
+                        </div>
+                        <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                          <a href="/jobs/job-details/" class="ax-btn ax-btn--secondary ax-btn--sm">View</a>
+                          <button type="button" class="ax-btn ax-btn--primary ax-btn--sm" @click="apply(j)">Apply now</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </template>
+
+            <!-- empty -->
+            <div x-show="!filtered().length" x-cloak class="ax-card">
+              <div class="ax-card__body" style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+                <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/></svg></span>
+                <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No jobs found</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Try widening your filters or broadening the search location.</p>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="reset()">Clear all filters</button>
+              </div>
+            </div>
+
+            <!-- pagination -->
+            <div class="ax-card" x-show="filtered().length" x-cloak>
+              <div class="ax-card__body" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);padding-block:var(--ax-space-4);">
+                <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                  Showing <span x-text="rangeStart()"></span>–<span x-text="rangeEnd()"></span> of <span x-text="filtered().length"></span>
+                </span>
+                <nav class="ax-pagination" aria-label="Pagination">
+                  <button type="button" class="ax-pagination__prev" :disabled="page===1" :aria-disabled="(page===1).toString()" @click="page=Math.max(1,page-1)" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                  <ul class="ax-pagination__pages">
+                    <template x-for="p in pageList()" :key="p">
+                      <li>
+                        <template x-if="p === '…'"><span class="ax-pagination__ellipsis">…</span></template>
+                        <template x-if="p !== '…'"><button type="button" class="ax-pagination__page" :class="{'is-active': page===p}" :aria-current="page===p ? 'page' : null" @click="page=p" x-text="p"></button></template>
+                      </li>
+                    </template>
+                  </ul>
+                  <button type="button" class="ax-pagination__next" :disabled="page===totalPages()" :aria-disabled="(page===totalPages()).toString()" @click="page=Math.min(totalPages(),page+1)" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- apply confirmation toast -->
+        <div x-show="toast" x-cloak x-transition.opacity role="status" aria-live="polite" style="position:fixed;inset-block-end:var(--ax-space-6);inset-inline-end:var(--ax-space-6);z-index:60;">
+          <div class="ax-card" style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-4);box-shadow:var(--ax-shadow-md);">
+            <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;"><path d="M5 12l5 5l10 -10"/></svg></span>
+            <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Application started</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="toast"></div></div>
+          </div>
+        </div>
+
+        <style>
+          @media (max-width: 1024px){ .ax-jobs-split{ grid-template-columns:1fr !important; } .ax-jobs-split > aside{ position:static !important; } }
+        </style>
+
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axSearchJobs(){
+      const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+      return {
+        q:'', loc:'', sort:'relevance', page:1, perPage:6,
+        salaryK:40, fLevel:'', fPosted:'', fType:[], fMode:[], toast:'',
+        types:[
+          { id:'full', label:'Full-time', count:842 },
+          { id:'contract', label:'Contract', count:214 },
+          { id:'part', label:'Part-time', count:128 },
+          { id:'intern', label:'Internship', count:64 },
+          { id:'freelance', label:'Freelance', count:36 },
+        ],
+        modes:[
+          { id:'remote', label:'Remote', count:512 },
+          { id:'hybrid', label:'Hybrid', count:438 },
+          { id:'onsite', label:'On-site', count:334 },
+        ],
+        levels:['Any level','Junior','Mid-level','Senior','Lead / Staff'],
+        rows:[
+          { id:'j01', title:'Senior Frontend Engineer', company:'Northwind Labs', mark:'NW', c:C.cyan, verified:true, location:'Remote · EU', mode:'remote', type:'full', typeLabel:'Full-time', level:'Senior', salaryMin:120, salary:'$120K – $150K', summary:'Own the design-system layer of our analytics platform. You will ship accessible React + TypeScript UI and partner closely with product design on the Aurora refresh.', skills:['React','TypeScript','Design Systems','GraphQL'], posted:'2 days ago', postedDays:2, applicants:48, urgent:false, saved:false },
+          { id:'j02', title:'Product Designer', company:'Studioform', mark:'SF', c:C.violet, verified:true, location:'London, UK · Hybrid', mode:'hybrid', type:'full', typeLabel:'Full-time', level:'Mid-level', salaryMin:78, salary:'£62K – £78K', summary:'Shape end-to-end flows for a B2B SaaS suite. Strong systems thinking, comfortable in Figma, and able to move from research insight to shipped pixels.', skills:['Figma','Prototyping','UX Research','Design Ops'], posted:'5 hours ago', postedDays:0, applicants:21, urgent:true, saved:true },
+          { id:'j03', title:'DevOps Engineer', company:'Loop Robotics', mark:'LR', c:C.emerald, verified:false, location:'Remote · Global', mode:'remote', type:'contract', typeLabel:'Contract', level:'Senior', salaryMin:140, salary:'$140K – $170K', summary:'Run our multi-region Kubernetes estate and tighten the deploy pipeline. We value pragmatic automation, clean Terraform, and calm incident response.', skills:['Kubernetes','Terraform','AWS','Go'], posted:'1 day ago', postedDays:1, applicants:33, urgent:false, saved:false },
+          { id:'j04', title:'Account Executive', company:'Brightline Capital', mark:'BC', c:C.amber, verified:true, location:'New York, US · On-site', mode:'onsite', type:'full', typeLabel:'Full-time', level:'Mid-level', salaryMin:95, salary:'$95K + commission', summary:'Drive net-new revenue across mid-market fintech accounts. You will own the full cycle from discovery to close, backed by a strong SDR pod.', skills:['SaaS Sales','Salesforce','Negotiation'], posted:'3 days ago', postedDays:3, applicants:64, urgent:false, saved:false },
+          { id:'j05', title:'Staff Data Scientist', company:'Meridian Health', mark:'MH', c:C.pink, verified:true, location:'Remote · US', mode:'remote', type:'full', typeLabel:'Full-time', level:'Lead / Staff', salaryMin:185, salary:'$185K – $220K', summary:'Lead modelling for clinical-risk prediction. You will mentor a small team, own experiment design, and translate ambiguous problems into shipped models.', skills:['Python','ML','Causal Inference','SQL'], posted:'6 hours ago', postedDays:0, applicants:12, urgent:true, saved:false },
+          { id:'j06', title:'Marketing Manager', company:'Pulse Media', mark:'PM', c:C.violet, verified:false, location:'Berlin, DE · Hybrid', mode:'hybrid', type:'full', typeLabel:'Full-time', level:'Mid-level', salaryMin:64, salary:'€58K – €72K', summary:'Own demand generation across paid, lifecycle, and content. Data-driven, fluent in attribution, and excited to build a category-defining brand voice.', skills:['Growth','SEO','Lifecycle','Analytics'], posted:'4 days ago', postedDays:4, applicants:41, urgent:false, saved:false },
+          { id:'j07', title:'Backend Engineer (Go)', company:'Clearbox', mark:'CB', c:C.cyan, verified:true, location:'Remote · EU', mode:'remote', type:'full', typeLabel:'Full-time', level:'Mid-level', salaryMin:90, salary:'$90K – $115K', summary:'Build the event-driven core of our automation engine. Clean APIs, thoughtful tests, and an appetite for distributed-systems problems.', skills:['Go','PostgreSQL','gRPC','Kafka'], posted:'2 days ago', postedDays:2, applicants:29, urgent:false, saved:false },
+          { id:'j08', title:'UX Research Intern', company:'Crate & Co', mark:'CC', c:C.amber, verified:false, location:'Amsterdam, NL · On-site', mode:'onsite', type:'intern', typeLabel:'Internship', level:'Junior', salaryMin:42, salary:'€2,400 / mo', summary:'Support discovery research for our checkout team — recruiting, moderating sessions, and synthesising findings into crisp, actionable insight.', skills:['Interviews','Synthesis','Figma'], posted:'1 week ago', postedDays:7, applicants:88, urgent:false, saved:false },
+          { id:'j09', title:'Engineering Manager', company:'Ridgeline Energy', mark:'RE', c:C.pink, verified:true, location:'Remote · US', mode:'remote', type:'full', typeLabel:'Full-time', level:'Lead / Staff', salaryMin:200, salary:'$200K – $240K', summary:'Grow and steward two product squads building grid-optimisation software. People-first leader who still loves architecture conversations.', skills:['Leadership','Architecture','Hiring'], posted:'3 days ago', postedDays:3, applicants:18, urgent:false, saved:true },
+          { id:'j10', title:'Customer Success Lead', company:'Harbor Freight Co', mark:'HF', c:C.emerald, verified:false, location:'Remote · UK', mode:'remote', type:'contract', typeLabel:'Contract', level:'Senior', salaryMin:85, salary:'£70K – £85K', summary:'Own retention and expansion for our top-tier accounts. Build playbooks, run QBRs, and be the trusted voice of the customer internally.', skills:['CS Strategy','Onboarding','Renewals'], posted:'5 days ago', postedDays:5, applicants:52, urgent:false, saved:false },
+        ],
+        reset(){ this.q=''; this.loc=''; this.salaryK=40; this.fLevel=''; this.fPosted=''; this.fType=[]; this.fMode=[]; this.sort='relevance'; this.page=1; },
+        activeChips(){
+          const out=[];
+          if(this.salaryK>40) out.push({ k:'sal', label:'$'+this.salaryK+'K+', clear:()=>{ this.salaryK=40; this.page=1; } });
+          if(this.fLevel && this.fLevel!=='Any level') out.push({ k:'lvl', label:this.fLevel, clear:()=>{ this.fLevel=''; this.page=1; } });
+          this.fType.forEach(id=>{ const t=this.types.find(x=>x.id===id); if(t) out.push({ k:'t'+id, label:t.label, clear:()=>{ this.fType=this.fType.filter(x=>x!==id); this.page=1; } }); });
+          this.fMode.forEach(id=>{ const m=this.modes.find(x=>x.id===id); if(m) out.push({ k:'m'+id, label:m.label, clear:()=>{ this.fMode=this.fMode.filter(x=>x!==id); this.page=1; } }); });
+          if(this.fPosted) out.push({ k:'pp', label:'≤ '+this.fPosted+'d', clear:()=>{ this.fPosted=''; this.page=1; } });
+          return out;
+        },
+        filtered(){
+          const t=this.q.trim().toLowerCase(), l=this.loc.trim().toLowerCase();
+          let r=this.rows.filter(x=>{
+            if(t && !(x.title.toLowerCase().includes(t) || x.company.toLowerCase().includes(t) || x.skills.join(' ').toLowerCase().includes(t))) return false;
+            if(l && !x.location.toLowerCase().includes(l)) return false;
+            if(this.fType.length && !this.fType.includes(x.type)) return false;
+            if(this.fMode.length && !this.fMode.includes(x.mode)) return false;
+            if(this.salaryK>40 && x.salaryMin<this.salaryK) return false;
+            if(this.fLevel && this.fLevel!=='Any level' && x.level!==this.fLevel) return false;
+            if(this.fPosted && x.postedDays>Number(this.fPosted)) return false;
+            return true;
+          });
+          if(this.sort==='recent') return [...r].sort((a,b)=>a.postedDays-b.postedDays);
+          if(this.sort==='salary') return [...r].sort((a,b)=>b.salaryMin-a.salaryMin);
+          if(this.sort==='applicants') return [...r].sort((a,b)=>a.applicants-b.applicants);
+          return r;
+        },
+        totalPages(){ return Math.max(1, Math.ceil(this.filtered().length/this.perPage)); },
+        paged(){ if(this.page>this.totalPages()) this.page=this.totalPages(); const s=(this.page-1)*this.perPage; return this.filtered().slice(s,s+this.perPage); },
+        rangeStart(){ return this.filtered().length ? (this.page-1)*this.perPage+1 : 0; },
+        rangeEnd(){ return Math.min(this.page*this.perPage, this.filtered().length); },
+        pageList(){ const tp=this.totalPages(),p=this.page,out=[]; if(tp<=7){ for(let i=1;i<=tp;i++) out.push(i); return out; } out.push(1); if(p>3) out.push('…'); for(let i=Math.max(2,p-1);i<=Math.min(tp-1,p+1);i++) out.push(i); if(p<tp-2) out.push('…'); out.push(tp); return out; },
+        apply(j){ this.toast = j.title + ' · ' + j.company; clearTimeout(this._t); this._t=setTimeout(()=>this.toast='', 2600); },
+      };
+    }
+  </script>
+{% endblock %}

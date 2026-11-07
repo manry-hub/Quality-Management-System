@@ -1,0 +1,304 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Plant Quality Dashboard{% endblock %}
+
+{% block content %}
+<div class="row gy-4 mb-4">
+    <!-- Breadcrumb & Plant Status -->
+    <div class="col-12 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h4 class="mb-1 text-primary-light fw-bold">Plant Quality & Andon Overview</h4>
+            <p class="text-secondary-light mb-0">IATF 16949:2016 Real-Time Injection Molding Surveillance</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <a href="{% url 'iqc:index' %}" class="btn btn-primary-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">
+                <i class="ri-inbox-archive-line"></i> IQC Receiving
+            </a>
+            <a href="{% url 'ipqc:index' %}" class="btn btn-warning-600 radius-8 px-20 py-11 text-white d-flex align-items-center gap-2">
+                <i class="ri-dashboard-2-line"></i> IPQC Machines
+            </a>
+            <a href="{% url 'oqc:index' %}" class="btn btn-success-600 radius-8 px-20 py-11 d-flex align-items-center gap-2">
+                <i class="ri-shield-check-line"></i> OQC Clearance
+            </a>
+        </div>
+    </div>
+
+    <!-- 4 KPI Cards -->
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card radius-12 border-0 shadow-sm p-20 h-100 bg-base">
+            <div class="d-flex align-items-center justify-content-between mb-12">
+                <span class="text-sm fw-semibold text-secondary-light">INCOMING QC (IQC)</span>
+                <span class="w-40-px h-40-px bg-primary-50 text-primary-600 rounded-circle d-flex justify-content-center align-items-center">
+                    <i class="ri-inbox-archive-line text-xl"></i>
+                </span>
+            </div>
+            <h3 class="mb-2 fw-bold text-primary-light">{{ iqc_accepted }} / {{ iqc_total }} <span class="text-sm fw-normal text-secondary-light">Lots</span></h3>
+            <div class="d-flex align-items-center justify-content-between">
+                <span class="badge bg-success-subtle text-success-main font-monospace">
+                    {{ iqc_rate }}% Accepted
+                </span>
+                <span class="text-xs text-secondary-light">{{ iqc_pending }} Pending dock tests</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card radius-12 border-0 shadow-sm p-20 h-100 bg-base">
+            <div class="d-flex align-items-center justify-content-between mb-12">
+                <span class="text-sm fw-semibold text-secondary-light">IPQC HARD GATING</span>
+                <span class="w-40-px h-40-px bg-info-50 text-info-600 rounded-circle d-flex justify-content-center align-items-center">
+                    <i class="ri-cpu-line text-xl"></i>
+                </span>
+            </div>
+            <h3 class="mb-2 fw-bold text-primary-light">{{ ipqc_fai_approved }} <span class="text-sm fw-normal text-secondary-light">FAI Released</span></h3>
+            <div class="d-flex align-items-center justify-content-between">
+                <span class="badge bg-info-subtle text-info-main font-monospace">
+                    {{ active_machines_count }} Active IMMs
+                </span>
+                <span class="text-xs text-secondary-light">{{ ipqc_fai_pending }} Awaiting FAI sign-off</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card radius-12 border-0 shadow-sm p-20 h-100 bg-base">
+            <div class="d-flex align-items-center justify-content-between mb-12">
+                <span class="text-sm fw-semibold text-secondary-light">OUTGOING QC (c=0)</span>
+                <span class="w-40-px h-40-px bg-success-50 text-success-600 rounded-circle d-flex justify-content-center align-items-center">
+                    <i class="ri-checkbox-circle-line text-xl"></i>
+                </span>
+            </div>
+            <h3 class="mb-2 fw-bold text-primary-light">{{ oqc_released }} / {{ oqc_total }} <span class="text-sm fw-normal text-secondary-light">Pallets</span></h3>
+            <div class="d-flex align-items-center justify-content-between">
+                <span class="badge bg-success-subtle text-success-main font-monospace">
+                    {{ oqc_compliance_rate }}% CoC Released
+                </span>
+                <span class="text-xs text-secondary-light">{{ oqc_pending }} In inspection</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xxl-3 col-sm-6">
+        <div class="card radius-12 border-0 shadow-sm p-20 h-100 bg-base">
+            <div class="d-flex align-items-center justify-content-between mb-12">
+                <span class="text-sm fw-semibold text-secondary-light">PLANT ANDON STATUS</span>
+                {% if andon_alerts > 0 %}
+                <span class="w-40-px h-40-px bg-danger-50 text-danger-600 rounded-circle d-flex justify-content-center align-items-center">
+                    <i class="ri-alarm-warning-line text-xl animate-pulse"></i>
+                </span>
+                {% else %}
+                <span class="w-40-px h-40-px bg-success-50 text-success-600 rounded-circle d-flex justify-content-center align-items-center">
+                    <i class="ri-shield-check-line text-xl"></i>
+                </span>
+                {% endif %}
+            </div>
+            {% if andon_alerts > 0 %}
+            <h3 class="mb-2 fw-bold text-danger-main">{{ andon_alerts }} <span class="text-sm fw-normal">Drift Alert(s)</span></h3>
+            <div class="d-flex align-items-center justify-content-between">
+                <span class="badge bg-danger-subtle text-danger-main font-monospace">
+                    LINE STOP ACTIVE
+                </span>
+                <span class="text-xs text-danger-main">Cushion &gt; &plusmn;0.5mm</span>
+            </div>
+            {% else %}
+            <h3 class="mb-2 fw-bold text-success-main">NORMAL <span class="text-sm fw-normal text-secondary-light">All Lines</span></h3>
+            <div class="d-flex align-items-center justify-content-between">
+                <span class="badge bg-success-subtle text-success-main font-monospace">
+                    ZERO DEVIATIONS
+                </span>
+                <span class="text-xs text-secondary-light">Window &plusmn;0.5mm OK</span>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Real-Time Telemetry Monitor (ApexCharts) -->
+<div class="row gy-4 mb-4">
+    <div class="col-xxl-8 col-lg-7">
+        <div class="card radius-12 border-0 shadow-sm p-20 bg-base h-100">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-20">
+                <div>
+                    <h6 class="mb-1 text-primary-light fw-bold">Live Injection Telemetry — Screw Cushion Monitoring</h6>
+                    <p class="text-xs text-secondary-light mb-0">Pre-aggregated edge cycle metrics: Nominal 5.0mm &plusmn; 0.5mm window limit</p>
+                </div>
+                <span class="badge bg-primary-subtle text-primary-600 font-monospace">
+                    3-Shot Drift Gating Active
+                </span>
+            </div>
+            <div id="cushionChart" style="min-height: 280px;"></div>
+        </div>
+    </div>
+
+    <!-- Quick Operational Actions -->
+    <div class="col-xxl-4 col-lg-5">
+        <div class="card radius-12 border-0 shadow-sm p-20 bg-base h-100">
+            <h6 class="mb-16 text-primary-light fw-bold">Operational Shortcuts</h6>
+            <div class="d-flex flex-column gap-3">
+                <div class="p-16 radius-8 bg-neutral-100 border border-neutral-200">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-semibold text-primary-light">IQC Dock Intake</span>
+                        <a href="{% url 'iqc:index' %}" class="btn btn-sm btn-outline-primary radius-6">Inspect</a>
+                    </div>
+                    <p class="text-xs text-secondary-light mb-0">Verify incoming resin CoA (moisture &le; 0.02%, MFI 18&plusmn;2 g/10min) and release to WMS Available stock.</p>
+                </div>
+
+                <div class="p-16 radius-8 bg-neutral-100 border border-neutral-200">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-semibold text-primary-light">IPQC First-Piece FAI</span>
+                        <a href="{% url 'ipqc:index' %}" class="btn btn-sm btn-outline-warning radius-6">Review</a>
+                    </div>
+                    <p class="text-xs text-secondary-light mb-0">Cryptographic HMAC-SHA256 FAI sign-off dispatching hard release token to MES in &lt; 200ms.</p>
+                </div>
+
+                <div class="p-16 radius-8 bg-neutral-100 border border-neutral-200">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="fw-semibold text-primary-light">OQC Shipping Release</span>
+                        <a href="{% url 'oqc:index' %}" class="btn btn-sm btn-outline-success radius-6">Release</a>
+                    </div>
+                    <p class="text-xs text-secondary-light mb-0">Enforce ISO 2859-1 Level II c=0 acceptance sampling and generate tamper-evident PDF CoC.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 21 CFR Part 11 Audit Trail Feed -->
+<div class="row">
+    <div class="col-12">
+        <div class="card radius-12 border-0 shadow-sm p-20 bg-base">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-20">
+                <div>
+                    <h6 class="mb-1 text-primary-light fw-bold">21 CFR Part 11 Electronic Audit Log</h6>
+                    <p class="text-xs text-secondary-light mb-0">Append-only cryptographic SHA-256 Merkle hash chain records</p>
+                </div>
+                <a href="/admin/core/audittrailevent/" target="_blank" class="btn btn-sm btn-outline-secondary radius-8">
+                    View Full Audit Ledger
+                </a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 font-monospace text-sm">
+                    <thead class="bg-neutral-100 text-secondary-light">
+                        <tr>
+                            <th class="py-12 px-16">TIMESTAMP</th>
+                            <th class="py-12 px-16">USER / BADGE</th>
+                            <th class="py-12 px-16">ACTION</th>
+                            <th class="py-12 px-16">ENTITY</th>
+                            <th class="py-12 px-16">SIGNATURE MANIFESTATION</th>
+                            <th class="py-12 px-16">SHA-256 HASH</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in audit_events %}
+                        <tr>
+                            <td class="py-12 px-16 text-nowrap">{{ event.timestamp|date:"Y-m-d H:i:s" }}</td>
+                            <td class="py-12 px-16">
+                                <span class="badge bg-neutral-200 text-primary-light">
+                                    {{ event.badge_number|default:"SYSTEM" }}
+                                </span>
+                            </td>
+                            <td class="py-12 px-16">
+                                {% if event.action_type == 'QA_RELEASE' %}
+                                <span class="badge bg-success-subtle text-success-main">{{ event.action_type }}</span>
+                                {% elif event.action_type == 'QA_HOLD' %}
+                                <span class="badge bg-danger-subtle text-danger-main">{{ event.action_type }}</span>
+                                {% elif event.action_type == 'DISPOSITION' %}
+                                <span class="badge bg-warning-subtle text-warning-main">{{ event.action_type }}</span>
+                                {% else %}
+                                <span class="badge bg-primary-subtle text-primary-600">{{ event.action_type }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-12 px-16 font-monospace">{{ event.entity_type }}</td>
+                            <td class="py-12 px-16 text-truncate" style="max-width: 250px;">
+                                {{ event.signature_manifestation }}
+                            </td>
+                            <td class="py-12 px-16">
+                                <span class="text-xs text-secondary-light" title="{{ event.record_hash }}">
+                                    {{ event.record_hash|slice:":12" }}...
+                                </span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center py-24 text-secondary-light">No audit events logged yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    var shotLabels = {{ shot_labels_json|safe }};
+    var cushionData = {{ cushion_values_json|safe }};
+    var uslData = {{ usl_line_json|safe }};
+    var lslData = {{ lsl_line_json|safe }};
+    var nominalData = {{ nominal_line_json|safe }};
+
+    var options = {
+        series: [
+            {
+                name: 'Measured Screw Cushion',
+                type: 'line',
+                data: cushionData
+            },
+            {
+                name: 'USL (+0.5mm)',
+                type: 'line',
+                data: uslData
+            },
+            {
+                name: 'Nominal (5.0mm)',
+                type: 'line',
+                data: nominalData
+            },
+            {
+                name: 'LSL (-0.5mm)',
+                type: 'line',
+                data: lslData
+            }
+        ],
+        chart: {
+            height: 280,
+            type: 'line',
+            toolbar: { show: false },
+            zoom: { enabled: false }
+        },
+        colors: ['#0284c7', '#dc2626', '#16a34a', '#dc2626'],
+        stroke: {
+            width: [3, 2, 2, 2],
+            curve: ['smooth', 'straight', 'straight', 'straight'],
+            dashArray: [0, 5, 2, 5]
+        },
+        markers: {
+            size: [5, 0, 0, 0]
+        },
+        xaxis: {
+            categories: shotLabels,
+            title: { text: 'Injection Shot Sequence' }
+        },
+        yaxis: {
+            title: { text: 'Cushion (mm)' },
+            min: 4.0,
+            max: 6.0
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right'
+        },
+        grid: {
+            borderColor: '#f1f5f9'
+        }
+    };
+
+    var chart = new ApexCharts(document.querySelector("#cushionChart"), options);
+    chart.render();
+});
+</script>
+{% endblock %}

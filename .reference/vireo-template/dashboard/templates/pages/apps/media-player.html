@@ -1,0 +1,514 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axMedia()"
+        @keydown.window.prevent.space="toggle()"
+        @keydown.window.arrow-right="seekBy(5)"
+        @keydown.window.arrow-left="seekBy(-5)"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">Your library — 248 tracks across 7 playlists, 18.4 hours of audio.</p>
+          <div class="ax-apphead__actions">
+            <div class="ax-input-group ax-input-group--pill" style="width:260px;max-width:40vw;">
+              <span class="ax-input-group__addon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+              </span>
+              <input type="search" class="ax-input" placeholder="Search library" aria-label="Search library" x-model="q">
+            </div>
+            <button type="button" class="ax-btn ax-btn--primary">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+              <span class="ax-btn__label">Add media</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ════════════════ TWO-PANE WORKSPACE: library rail + stage ════════════════ -->
+        <div class="ax-mp">
+
+          <!-- ───── LIBRARY RAIL ───── -->
+          <aside class="ax-card ax-mp__rail" role="region" aria-label="Library navigation">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);height:100%;">
+
+              <!-- smart views -->
+              <nav aria-label="Library">
+                <ul style="display:flex;flex-direction:column;gap:2px;">
+                  <template x-for="v in views" :key="v.id">
+                    <li>
+                      <button type="button" class="ax-mp__nav" :class="{ 'is-active': view === v.id }" @click="view = v.id">
+                        <span class="ax-mp__nav-ico" x-html="v.icon" aria-hidden="true"></span>
+                        <span class="ax-mp__nav-label" x-text="v.label"></span>
+                        <span class="ax-num ax-mp__nav-count" x-text="v.count"></span>
+                      </button>
+                    </li>
+                  </template>
+                </ul>
+              </nav>
+
+              <div class="ax-divider" role="separator"></div>
+
+              <!-- playlists -->
+              <div style="flex:1 1 auto;min-height:0;display:flex;flex-direction:column;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <p class="ax-mp__rail-label">Playlists</p>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="New playlist">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  </button>
+                </div>
+                <ul style="display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex:1 1 auto;min-height:0;">
+                  <template x-for="p in playlists" :key="p.id">
+                    <li>
+                      <button type="button" class="ax-mp__nav" :class="{ 'is-active': view === p.id }" @click="view = p.id">
+                        <span class="ax-mp__nav-dot" :style="`background:${p.color}`" aria-hidden="true"></span>
+                        <span class="ax-mp__nav-label ax-truncate" x-text="p.label"></span>
+                        <span class="ax-num ax-mp__nav-count" x-text="p.count"></span>
+                      </button>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <!-- mini storage / device foot -->
+              <div class="ax-mp__device">
+                <span class="ax-mp__device-ico" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10"/><path d="M7 20h10"/><path d="M9 16v4"/><path d="M15 16v4"/></svg>
+                </span>
+                <div style="min-width:0;flex:1 1 auto;">
+                  <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Studio iMac</div>
+                  <div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Playing on this device</div>
+                </div>
+                <span class="ax-mp__device-pulse" aria-hidden="true"></span>
+              </div>
+            </div>
+          </aside>
+
+          <!-- ───── STAGE: now-playing + queue ───── -->
+          <div class="ax-mp__stage">
+
+            <!-- now-playing card -->
+            <section class="ax-card ax-mp__now" role="region" aria-label="Now playing">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+                <div class="ax-mp__now-grid">
+                  <!-- cover art (the single saturated element) -->
+                  <div class="ax-mp__cover" :style="`background:linear-gradient(${current.angle}deg, ${current.c1}, ${current.c2})`">
+                    <span class="ax-mp__cover-shine" aria-hidden="true"></span>
+                    <svg class="ax-mp__cover-glyph" :class="{ 'is-spinning': playing }" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M13 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M9 17v-13h10v13"/><path d="M9 8h10"/></svg>
+                    <span class="ax-mp__cover-badge ax-num" aria-hidden="true">FLAC · 24-bit</span>
+                  </div>
+
+                  <!-- track meta + transport -->
+                  <div class="ax-mp__now-main">
+                    <div>
+                      <span class="ax-card__eyebrow" x-text="current.album"></span>
+                      <h2 class="ax-mp__now-title" x-text="current.title"></h2>
+                      <p class="ax-mp__now-artist" x-text="current.artist"></p>
+                    </div>
+
+                    <!-- scrubber -->
+                    <div class="ax-mp__scrub" role="group" aria-label="Seek">
+                      <span class="ax-num ax-mp__time" x-text="fmt(position)"></span>
+                      <button type="button" class="ax-mp__bar" @click="scrub($event)" :aria-label="'Seek. Elapsed ' + fmt(position) + ' of ' + fmt(current.dur)">
+                        <span class="ax-mp__bar-track">
+                          <span class="ax-mp__bar-buffer" :style="`width:${buffered}%`" aria-hidden="true"></span>
+                          <span class="ax-mp__bar-fill" :style="`width:${pct}%`" aria-hidden="true"></span>
+                          <span class="ax-mp__bar-knob" :style="`left:${pct}%`" aria-hidden="true"></span>
+                        </span>
+                      </button>
+                      <span class="ax-num ax-mp__time" x-text="'-' + fmt(current.dur - position)"></span>
+                    </div>
+
+                    <!-- transport -->
+                    <div class="ax-mp__transport">
+                      <button type="button" class="ax-mp__ctl" :class="{ 'is-on': shuffle }" @click="shuffle = !shuffle" :aria-pressed="shuffle" aria-label="Shuffle">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 4l3 3l-3 3"/><path d="M18 20l3 -3l-3 -3"/><path d="M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5"/><path d="M21 7h-5a4.978 4.978 0 0 0 -3 1m-4 8a4.984 4.984 0 0 1 -3 1h-3"/></svg>
+                      </button>
+                      <button type="button" class="ax-mp__ctl" @click="prev()" aria-label="Previous track">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19.496 4.136l-12 7a1 1 0 0 0 0 1.728l12 7a1 1 0 0 0 1.504 -.864v-14a1 1 0 0 0 -1.504 -.864z"/><path d="M4 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/></svg>
+                      </button>
+                      <button type="button" class="ax-mp__play" @click="toggle()" :aria-label="playing ? 'Pause' : 'Play'">
+                        <svg x-show="!playing" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"/></svg>
+                        <svg x-show="playing" x-cloak viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/><path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/></svg>
+                      </button>
+                      <button type="button" class="ax-mp__ctl" @click="next()" aria-label="Next track">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 5v14a1 1 0 0 0 1.504 .864l12 -7a1 1 0 0 0 0 -1.728l-12 -7a1 1 0 0 0 -1.504 .864z"/><path d="M20 4a1 1 0 0 1 .993 .883l.007 .117v14a1 1 0 0 1 -1.993 .117l-.007 -.117v-14a1 1 0 0 1 1 -1z"/></svg>
+                      </button>
+                      <button type="button" class="ax-mp__ctl" :class="{ 'is-on': repeat !== 'off' }" @click="cycleRepeat()" :aria-pressed="repeat !== 'off'" :aria-label="'Repeat: ' + repeat">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12v-3a3 3 0 0 1 3 -3h13m-3 -3l3 3l-3 3"/><path d="M20 12v3a3 3 0 0 1 -3 3h-13m3 3l-3 -3l3 -3"/></svg>
+                        <span x-show="repeat === 'one'" x-cloak class="ax-mp__ctl-badge ax-num" aria-hidden="true">1</span>
+                      </button>
+                    </div>
+
+                    <!-- secondary row: favorite + volume + extras -->
+                    <div class="ax-mp__sub">
+                      <button type="button" class="ax-mp__chip" :class="{ 'is-fav': current.fav }" @click="current.fav = !current.fav" :aria-pressed="current.fav" :aria-label="current.fav ? 'Remove from favorites' : 'Add to favorites'">
+                        <svg viewBox="0 0 24 24" :fill="current.fav ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>
+                      </button>
+
+                      <div class="ax-mp__vol">
+                        <button type="button" class="ax-mp__chip" @click="muted = !muted" :aria-pressed="muted" :aria-label="muted ? 'Unmute' : 'Mute'">
+                          <svg x-show="!muted" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a5 5 0 0 1 0 8"/><path d="M17.7 5a9 9 0 0 1 0 14"/><path d="M6 15h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l3.5 -4.5a.8 .8 0 0 1 1.5 .5v14a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5"/></svg>
+                          <svg x-show="muted" x-cloak viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a5 5 0 0 1 1.912 4.934m-1.377 2.602a5 5 0 0 1 -.535 .464"/><path d="M9.069 5.054l.431 -.554a.8 .8 0 0 1 1.5 .5v2m0 4v8a.8 .8 0 0 1 -1.5 .5l-3.5 -4.5h-2a1 1 0 0 1 -1 -1v-4a1 1 0 0 1 1 -1h2l1.294 -1.664"/><path d="M3 3l18 18"/></svg>
+                        </button>
+                        <input type="range" class="ax-range--native ax-mp__vol-range" min="0" max="100" x-model.number="volume" @input="muted = false" aria-label="Volume">
+                        <span class="ax-num ax-mp__vol-val" x-text="(muted ? 0 : volume) + '%'"></span>
+                      </div>
+
+                      <span style="flex:1 1 auto;"></span>
+
+                      <button type="button" class="ax-mp__chip" aria-label="Connect a device">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10"/><path d="M7 20h10"/><path d="M9 16v4"/><path d="M15 16v4"/></svg>
+                      </button>
+                      <button type="button" class="ax-mp__chip" aria-label="Open full screen">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4l4 0l0 4"/><path d="M14 10l6 -6"/><path d="M8 20l-4 0l0 -4"/><path d="M4 20l6 -6"/><path d="M16 20l4 0l0 -4"/><path d="M14 14l6 6"/><path d="M8 4l-4 0l0 4"/><path d="M4 4l6 6"/></svg>
+                      </button>
+                    </div>
+
+                    <!-- visualizer strip -->
+                    <div class="ax-mp__viz" :class="{ 'is-live': playing }" role="img" aria-label="Audio visualizer" aria-hidden="true">
+                      <template x-for="n in 28" :key="n">
+                        <span class="ax-mp__viz-bar" :style="`--ax-i:${n}`"></span>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- queue / playlist -->
+            <section class="ax-card ax-mp__queue" role="region" aria-label="Up next queue">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Up next</span>
+                  <h3 class="ax-card__title">Focus Flow</h3>
+                  <p class="ax-card__subtitle"><span class="ax-num" x-text="tracks.length"></span> tracks · 1 hr 14 min</p>
+                </div>
+                <div class="ax-card__actions">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="shuffle = !shuffle" :aria-pressed="shuffle">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 4l3 3l-3 3"/><path d="M18 20l3 -3l-3 -3"/><path d="M3 7h3a5 5 0 0 1 5 5a5 5 0 0 0 5 5h5"/><path d="M21 7h-5a4.978 4.978 0 0 0 -3 1m-4 8a4.984 4.984 0 0 1 -3 1h-3"/></svg>
+                    <span class="ax-btn__label">Shuffle</span>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Queue options">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <ul class="ax-mp__list" role="list">
+                <template x-for="(t, i) in queue" :key="t.id">
+                  <li class="ax-mp__track" :class="{ 'is-active': i === index }" @dblclick="play(i)">
+                    <!-- index / equalizer / play affordance -->
+                    <span class="ax-mp__track-idx">
+                      <span class="ax-num ax-mp__track-num" x-show="!(i === index)" x-text="String(i + 1).padStart(2,'0')"></span>
+                      <span class="ax-mp__eq" :class="{ 'is-paused': !playing }" x-show="i === index" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+                      <button type="button" class="ax-mp__track-play" @click="i === index ? toggle() : play(i)" :aria-label="i === index ? (playing ? 'Pause' : 'Play') : ('Play ' + t.title)">
+                        <svg x-show="!(i === index && playing)" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 4v16a1 1 0 0 0 1.524 .852l13 -8a1 1 0 0 0 0 -1.704l-13 -8a1 1 0 0 0 -1.524 .852z"/></svg>
+                        <svg x-show="i === index && playing" x-cloak viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/><path d="M17 4h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h2a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2z"/></svg>
+                      </button>
+                    </span>
+
+                    <!-- cover swatch -->
+                    <span class="ax-mp__track-art" :style="`background:linear-gradient(${t.angle}deg, ${t.c1}, ${t.c2})`" aria-hidden="true"></span>
+
+                    <!-- title + artist -->
+                    <span class="ax-mp__track-meta">
+                      <span class="ax-mp__track-title ax-truncate" x-text="t.title"></span>
+                      <span class="ax-mp__track-artist ax-truncate" x-text="t.artist"></span>
+                    </span>
+
+                    <!-- album (hidden on small) -->
+                    <span class="ax-mp__track-album ax-truncate" x-text="t.album"></span>
+
+                    <!-- favorite -->
+                    <button type="button" class="ax-mp__track-fav" :class="{ 'is-fav': t.fav }" @click="t.fav = !t.fav" :aria-pressed="t.fav" :aria-label="t.fav ? 'Unfavorite ' + t.title : 'Favorite ' + t.title">
+                      <svg viewBox="0 0 24 24" :fill="t.fav ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>
+                    </button>
+
+                    <!-- duration -->
+                    <span class="ax-num ax-mp__track-dur" x-text="fmt(t.dur)"></span>
+
+                    <!-- overflow -->
+                    <button type="button" class="ax-mp__track-more" aria-label="Track options">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg>
+                    </button>
+                  </li>
+                </template>
+              </ul>
+
+              <div class="ax-card__footer">
+                <a class="ax-link" href="#">Open full queue
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="vertical-align:-2px;margin-inline-start:2px;"><path d="M5 12l14 0"/><path d="M13 18l6 -6l-6 -6"/></svg>
+                </a>
+              </div>
+            </section>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE-LOCAL LAYOUT (composed from role tokens only) ════════════════ -->
+        <style>
+          .ax-mp { display:grid; grid-template-columns:248px minmax(0,1fr); gap:var(--ax-space-6); align-items:start; }
+          @media (max-width:1100px){ .ax-mp { grid-template-columns:1fr; } }
+
+          /* rail */
+          .ax-mp__rail { position:sticky; top:var(--ax-space-6); min-height:560px; }
+          @media (max-width:1100px){ .ax-mp__rail { position:static; min-height:0; } }
+          .ax-mp__rail-label { font-size:var(--ax-text-2xs); font-weight:var(--ax-weight-semibold); letter-spacing:.08em; text-transform:uppercase; color:var(--ax-text-subtle); }
+          .ax-mp__nav { display:flex; align-items:center; gap:var(--ax-space-3); width:100%; padding:8px 10px; border:0; background:transparent; border-radius:var(--ax-radius-md); color:var(--ax-text-muted); cursor:pointer; text-align:start; transition:background var(--ax-motion-fast), color var(--ax-motion-fast); }
+          .ax-mp__nav:hover { background:var(--ax-fill-hover); color:var(--ax-text-strong); }
+          .ax-mp__nav.is-active { background:var(--ax-accent-wash); color:var(--ax-text-strong); box-shadow:inset 0 0 0 1px var(--ax-glass-hi); }
+          .ax-mp__nav.is-active .ax-mp__nav-ico { color:var(--ax-accent); }
+          .ax-mp__nav-ico { display:inline-flex; flex:0 0 auto; color:var(--ax-text-subtle); }
+          .ax-mp__nav-ico svg { width:18px; height:18px; }
+          .ax-mp__nav-dot { width:9px; height:9px; flex:0 0 auto; border-radius:3px; }
+          .ax-mp__nav-label { flex:1 1 auto; min-width:0; font-size:var(--ax-text-sm); font-weight:var(--ax-weight-medium); }
+          .ax-mp__nav-count { flex:0 0 auto; font-size:var(--ax-text-xs); color:var(--ax-text-subtle); }
+          .ax-mp__device { display:flex; align-items:center; gap:var(--ax-space-3); padding:var(--ax-space-3); border-radius:var(--ax-radius-md); background:var(--ax-surface-subtle); border:1px solid var(--ax-border); }
+          .ax-mp__device-ico { display:inline-flex; flex:0 0 auto; color:var(--ax-accent); }
+          .ax-mp__device-pulse { width:8px; height:8px; flex:0 0 auto; border-radius:50%; background:var(--ax-accent); box-shadow:0 0 0 0 var(--ax-accent-wash); animation:ax-mp-pulse 2s var(--ax-ease-standard) infinite; }
+          @keyframes ax-mp-pulse { 0%{ box-shadow:0 0 0 0 var(--ax-accent-wash); } 70%{ box-shadow:0 0 0 7px transparent; } 100%{ box-shadow:0 0 0 0 transparent; } }
+
+          /* stage */
+          .ax-mp__stage { display:flex; flex-direction:column; gap:var(--ax-space-6); min-width:0; }
+
+          /* now-playing */
+          .ax-mp__now-grid { display:grid; grid-template-columns:248px minmax(0,1fr); gap:var(--ax-space-6); align-items:start; }
+          @media (max-width:760px){ .ax-mp__now-grid { grid-template-columns:1fr; } }
+          .ax-mp__cover { position:relative; aspect-ratio:1/1; border-radius:var(--ax-radius-lg); overflow:hidden; box-shadow:var(--ax-shadow-md); display:flex; align-items:center; justify-content:center; }
+          .ax-mp__cover-shine { position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.22), transparent 42%); pointer-events:none; }
+          .ax-mp__cover-glyph { width:64px; height:64px; opacity:.92; }
+          .ax-mp__cover-glyph.is-spinning { animation:ax-mp-spin 9s linear infinite; transform-origin:center; }
+          @keyframes ax-mp-spin { to { transform:rotate(360deg); } }
+          .ax-mp__cover-badge { position:absolute; left:var(--ax-space-3); bottom:var(--ax-space-3); padding:3px 8px; font-size:var(--ax-text-2xs); font-family:var(--ax-font-mono); letter-spacing:.04em; color:#fff; background:rgba(0,0,0,.34); border-radius:var(--ax-radius-pill); backdrop-filter:blur(6px); }
+          .ax-mp__now-main { display:flex; flex-direction:column; gap:var(--ax-space-5); min-width:0; }
+          .ax-mp__now-title { font-family:var(--ax-font-display); font-size:var(--ax-text-2xl); font-weight:700; line-height:1.1; letter-spacing:-.01em; color:var(--ax-text-strong); margin-top:4px; }
+          .ax-mp__now-artist { font-size:var(--ax-text-md); color:var(--ax-text-muted); margin-top:4px; }
+
+          /* scrubber */
+          .ax-mp__scrub { display:flex; align-items:center; gap:var(--ax-space-3); }
+          .ax-mp__time { flex:0 0 auto; font-family:var(--ax-font-mono); font-size:var(--ax-text-xs); color:var(--ax-text-subtle); min-width:4ch; }
+          .ax-mp__bar { flex:1 1 auto; border:0; background:transparent; padding:8px 0; cursor:pointer; display:block; }
+          .ax-mp__bar-track { position:relative; display:block; height:5px; border-radius:var(--ax-radius-pill); background:var(--ax-fill-hover); overflow:visible; }
+          .ax-mp__bar-buffer { position:absolute; inset-block:0; inset-inline-start:0; border-radius:inherit; background:var(--ax-border-strong); }
+          .ax-mp__bar-fill { position:absolute; inset-block:0; inset-inline-start:0; border-radius:inherit; background:var(--ax-gradient-accent); }
+          .ax-mp__bar-knob { position:absolute; top:50%; width:13px; height:13px; transform:translate(-50%,-50%); border-radius:50%; background:var(--ax-surface-solid); border:2px solid var(--ax-accent); box-shadow:var(--ax-shadow-sm); opacity:0; transition:opacity var(--ax-motion-fast); }
+          .ax-mp__bar:hover .ax-mp__bar-knob, .ax-mp__bar:focus-visible .ax-mp__bar-knob { opacity:1; }
+          .ax-mp__bar:focus-visible { outline:none; }
+          .ax-mp__bar:focus-visible .ax-mp__bar-track { box-shadow:0 0 0 2px var(--ax-canvas), 0 0 0 4px var(--ax-focus-ring); }
+
+          /* transport */
+          .ax-mp__transport { display:flex; align-items:center; justify-content:center; gap:var(--ax-space-3); }
+          .ax-mp__ctl { position:relative; display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; border:0; border-radius:50%; background:transparent; color:var(--ax-text-muted); cursor:pointer; transition:background var(--ax-motion-fast), color var(--ax-motion-fast); }
+          .ax-mp__ctl svg { width:22px; height:22px; }
+          .ax-mp__ctl:hover { background:var(--ax-fill-hover); color:var(--ax-text-strong); }
+          .ax-mp__ctl.is-on { color:var(--ax-accent); }
+          .ax-mp__ctl-badge { position:absolute; top:6px; right:6px; min-width:13px; height:13px; padding:0 3px; display:inline-flex; align-items:center; justify-content:center; font-size:9px; font-family:var(--ax-font-mono); font-weight:600; color:var(--ax-on-accent); background:var(--ax-accent); border-radius:var(--ax-radius-pill); }
+          .ax-mp__play { display:inline-flex; align-items:center; justify-content:center; width:58px; height:58px; flex:0 0 auto; border:0; border-radius:50%; background:var(--ax-gradient-accent); color:var(--ax-on-accent); cursor:pointer; box-shadow:0 12px 26px -10px rgba(var(--ax-accent-rgb),.75); transition:transform var(--ax-motion-fast); }
+          .ax-mp__play:hover { transform:scale(1.04); }
+          .ax-mp__play:active { transform:scale(.97); }
+          .ax-mp__play svg { width:26px; height:26px; }
+
+          /* sub row */
+          .ax-mp__sub { display:flex; align-items:center; gap:var(--ax-space-2); flex-wrap:wrap; }
+          .ax-mp__chip { display:inline-flex; align-items:center; justify-content:center; width:38px; height:38px; flex:0 0 auto; border:1px solid var(--ax-border); border-radius:var(--ax-radius-sm); background:var(--ax-surface-subtle); color:var(--ax-text-muted); cursor:pointer; transition:background var(--ax-motion-fast), color var(--ax-motion-fast), border-color var(--ax-motion-fast); }
+          .ax-mp__chip svg { width:19px; height:19px; }
+          .ax-mp__chip:hover { color:var(--ax-text-strong); border-color:var(--ax-border-strong); }
+          .ax-mp__chip.is-fav { color:var(--ax-accent); border-color:var(--ax-accent); background:var(--ax-accent-wash); }
+          .ax-mp__vol { display:flex; align-items:center; gap:var(--ax-space-2); }
+          .ax-mp__vol-range { width:108px; }
+          .ax-mp__vol-val { font-family:var(--ax-font-mono); font-size:var(--ax-text-xs); color:var(--ax-text-subtle); min-width:4ch; }
+
+          /* visualizer */
+          .ax-mp__viz { display:flex; align-items:flex-end; gap:3px; height:36px; padding-top:var(--ax-space-2); }
+          .ax-mp__viz-bar { flex:1 1 0; min-width:2px; height:18%; border-radius:var(--ax-radius-pill); background:color-mix(in oklab, var(--ax-accent) 38%, transparent); transition:height var(--ax-motion-fast); }
+          .ax-mp__viz.is-live .ax-mp__viz-bar { background:var(--ax-accent); animation:ax-mp-eq 1100ms var(--ax-ease-standard) infinite; animation-delay:calc(var(--ax-i) * -70ms); }
+          @keyframes ax-mp-eq { 0%,100%{ height:18%; } 20%{ height:88%; } 45%{ height:34%; } 65%{ height:100%; } 82%{ height:50%; } }
+
+          /* queue list */
+          .ax-mp__list { list-style:none; margin:0; padding:0; }
+          .ax-mp__track { position:relative; display:grid; grid-template-columns:34px 40px minmax(0,1.6fr) minmax(0,1fr) 38px 5ch 32px; align-items:center; gap:var(--ax-space-3); padding:8px var(--ax-space-5); border-top:1px solid var(--ax-border); transition:background var(--ax-motion-fast); }
+          .ax-mp__track:first-child { border-top:0; }
+          .ax-mp__track:hover { background:var(--ax-fill-hover); }
+          .ax-mp__track.is-active { background:var(--ax-accent-wash); }
+          .ax-mp__track.is-active::before { content:""; position:absolute; inset-inline-start:0; inset-block:6px; width:2px; border-radius:var(--ax-radius-pill); background:var(--ax-accent); }
+          .ax-mp__track-idx { position:relative; display:inline-flex; align-items:center; justify-content:center; width:34px; height:34px; }
+          .ax-mp__track-num { font-family:var(--ax-font-mono); font-size:var(--ax-text-xs); color:var(--ax-text-subtle); }
+          .ax-mp__track.is-active .ax-mp__track-num { color:var(--ax-accent); }
+          .ax-mp__track-play { position:absolute; inset:0; display:none; align-items:center; justify-content:center; border:0; background:transparent; color:var(--ax-text-strong); cursor:pointer; }
+          .ax-mp__track-play svg { width:16px; height:16px; }
+          .ax-mp__track:hover .ax-mp__track-num { display:none; }
+          .ax-mp__track:hover .ax-mp__eq { display:none; }
+          .ax-mp__track:hover .ax-mp__track-play { display:inline-flex; }
+          .ax-mp__track.is-active .ax-mp__track-play { color:var(--ax-accent); }
+          /* equalizer glyph for active row */
+          .ax-mp__eq { display:inline-flex; align-items:flex-end; gap:2px; height:15px; }
+          .ax-mp__eq i { width:2.5px; border-radius:1px; background:var(--ax-accent); animation:ax-mp-eqbar 900ms var(--ax-ease-standard) infinite; }
+          .ax-mp__eq i:nth-child(1){ height:40%; animation-delay:-200ms; }
+          .ax-mp__eq i:nth-child(2){ height:90%; animation-delay:-400ms; }
+          .ax-mp__eq i:nth-child(3){ height:55%; animation-delay:-100ms; }
+          .ax-mp__eq i:nth-child(4){ height:75%; animation-delay:-300ms; }
+          .ax-mp__eq.is-paused i { animation-play-state:paused; }
+          @keyframes ax-mp-eqbar { 0%,100%{ height:30%; } 50%{ height:100%; } }
+          .ax-mp__track-art { width:40px; height:40px; flex:0 0 auto; border-radius:var(--ax-radius-sm); position:relative; overflow:hidden; }
+          .ax-mp__track-art::after { content:""; position:absolute; inset:0; background:linear-gradient(135deg, rgba(255,255,255,.18), transparent 50%); }
+          .ax-mp__track-meta { min-width:0; display:flex; flex-direction:column; }
+          .ax-mp__track-title { font-size:var(--ax-text-sm); font-weight:var(--ax-weight-medium); color:var(--ax-text-strong); }
+          .ax-mp__track.is-active .ax-mp__track-title { color:var(--ax-accent); }
+          .ax-mp__track-artist { font-size:var(--ax-text-xs); color:var(--ax-text-subtle); }
+          .ax-mp__track-album { font-size:var(--ax-text-sm); color:var(--ax-text-muted); }
+          .ax-mp__track-fav { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border:0; background:transparent; color:var(--ax-text-subtle); cursor:pointer; opacity:0; transition:opacity var(--ax-motion-fast), color var(--ax-motion-fast); }
+          .ax-mp__track-fav svg { width:17px; height:17px; }
+          .ax-mp__track:hover .ax-mp__track-fav, .ax-mp__track-fav.is-fav { opacity:1; }
+          .ax-mp__track-fav:hover { color:var(--ax-text-strong); }
+          .ax-mp__track-fav.is-fav { color:var(--ax-accent); }
+          .ax-mp__track-dur { font-family:var(--ax-font-mono); font-size:var(--ax-text-xs); color:var(--ax-text-muted); text-align:end; }
+          .ax-mp__track-more { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border:0; background:transparent; color:var(--ax-text-subtle); cursor:pointer; opacity:0; transition:opacity var(--ax-motion-fast), color var(--ax-motion-fast); }
+          .ax-mp__track-more svg { width:18px; height:18px; }
+          .ax-mp__track:hover .ax-mp__track-more { opacity:1; }
+          .ax-mp__track-more:hover { color:var(--ax-text-strong); }
+          @media (max-width:680px){
+            .ax-mp__track { grid-template-columns:34px 40px minmax(0,1fr) 5ch 32px; }
+            .ax-mp__track-album { display:none; }
+            .ax-mp__track-fav { display:none; }
+          }
+
+          @media (prefers-reduced-motion: reduce){
+            .ax-mp__cover-glyph.is-spinning, .ax-mp__device-pulse, .ax-mp__viz-bar, .ax-mp__eq i { animation:none !important; }
+            .ax-mp__viz.is-live .ax-mp__viz-bar { height:52%; }
+          }
+        </style>
+
+        <script>
+          function axMedia(){
+            // data-viz role tokens — constant across all 12 accents
+            const C = {
+              accent:'var(--ax-accent)', cyan:'var(--ax-viz-cyan)', violet:'var(--ax-viz-violet)',
+              pink:'var(--ax-viz-pink)', amber:'var(--ax-viz-amber)', emerald:'var(--ax-viz-emerald)',
+            };
+            const ic = {
+              library:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M13 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M9 17v-13h10v13"/><path d="M9 8h10"/></svg>',
+              recent:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8l0 4l2 2"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>',
+              fav:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>',
+              radio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M5 6h13a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-13a1 1 0 0 1 -1 -1v-9.5l5 -2.5"/><path d="M7 12v.01"/></svg>',
+            };
+            return {
+              q:'', view:'library',
+              playing:true, index:0, position:74, buffered:42,
+              volume:72, muted:false, shuffle:false, repeat:'off',
+
+              views:[
+                { id:'library', label:'Library', icon:ic.library, count:248 },
+                { id:'recent', label:'Recently played', icon:ic.recent, count:32 },
+                { id:'favorites', label:'Favorites', icon:ic.fav, count:54 },
+                { id:'radio', label:'Stations', icon:ic.radio, count:12 },
+              ],
+              playlists:[
+                { id:'pl1', label:'Focus Flow', color:C.accent,  count:18 },
+                { id:'pl2', label:'Deep House Late', color:C.cyan, count:42 },
+                { id:'pl3', label:'Morning Acoustic', color:C.amber, count:24 },
+                { id:'pl4', label:'Synthwave Drive', color:C.violet, count:31 },
+                { id:'pl5', label:'Lo-Fi Study', color:C.pink,   count:60 },
+                { id:'pl6', label:'Jazz & Rain', color:C.emerald, count:19 },
+                { id:'pl7', label:'Workout 140 BPM', color:C.cyan, count:28 },
+              ],
+              tracks:[
+                { id:1,  title:'Verdigris Skyline', artist:'Aurora Lights', album:'Glass Atlas',      dur:271, angle:135, c1:C.accent,  c2:C.cyan,    fav:true  },
+                { id:2,  title:'Slow Tide',         artist:'Mara Vey',      album:'Northern Quiet',    dur:224, angle:160, c1:C.violet,  c2:C.pink,    fav:false },
+                { id:3,  title:'Paper Planes',      artist:'The Hollowells',album:'Field Notes',       dur:198, angle:120, c1:C.amber,   c2:C.accent,  fav:false },
+                { id:4,  title:'Midnight Drive',    artist:'Neon Foxes',    album:'Synthwave Drive',   dur:312, angle:200, c1:C.cyan,    c2:C.violet,  fav:true  },
+                { id:5,  title:'Warm Static',       artist:'Bloom Theory',  album:'Lo-Fi Study Vol. 3',dur:176, angle:145, c1:C.pink,    c2:C.amber,   fav:false },
+                { id:6,  title:'Coastline at Dawn', artist:'Saoirse Quinn', album:'Morning Acoustic',  dur:243, angle:110, c1:C.emerald, c2:C.cyan,    fav:false },
+                { id:7,  title:'Brass & Rain',      artist:'Otis Lane Trio',album:'Jazz & Rain',       dur:289, angle:170, c1:C.amber,   c2:C.pink,    fav:true  },
+                { id:8,  title:'Pulse Width',       artist:'Kade Moreno',   album:'Workout 140',       dur:205, angle:185, c1:C.cyan,    c2:C.emerald, fav:false },
+                { id:9,  title:'Glasshouse',        artist:'Aurora Lights', album:'Glass Atlas',       dur:258, angle:130, c1:C.accent,  c2:C.violet,  fav:false },
+                { id:10, title:'Quiet Surface',     artist:'Lena Brandt',   album:'Northern Quiet',    dur:231, angle:150, c1:C.violet,  c2:C.cyan,    fav:false },
+                { id:11, title:'Late Reply',        artist:'The Hollowells',album:'Field Notes',       dur:189, angle:140, c1:C.pink,    c2:C.accent,  fav:false },
+                { id:12, title:'Long Way Home',     artist:'Saoirse Quinn', album:'Morning Acoustic',  dur:266, angle:165, c1:C.amber,   c2:C.emerald, fav:true  },
+              ],
+
+              // queue follows shuffle as a derived ordering of tracks (deterministic demo)
+              get queue(){ return this.tracks; },
+              get current(){ return this.tracks[this.index] || {}; },
+              get pct(){ return this.current.dur ? Math.min(100, (this.position / this.current.dur) * 100) : 0; },
+
+              fmt(s){ s = Math.max(0, Math.round(s||0)); const m = Math.floor(s/60); const r = s%60; return m + ':' + String(r).padStart(2,'0'); },
+              toggle(){ this.playing = !this.playing; },
+              play(i){ this.index = i; this.position = 0; this.buffered = 30; this.playing = true; },
+              next(){ this.index = (this.index + 1) % this.tracks.length; this.position = 0; this.buffered = 30; this.playing = true; },
+              prev(){ if (this.position > 4){ this.position = 0; return; } this.index = (this.index - 1 + this.tracks.length) % this.tracks.length; this.position = 0; this.buffered = 30; },
+              cycleRepeat(){ this.repeat = this.repeat === 'off' ? 'all' : this.repeat === 'all' ? 'one' : 'off'; },
+              seekBy(d){ this.position = Math.max(0, Math.min(this.current.dur || 0, this.position + d)); if (this.position > this.buffered/100*(this.current.dur||1)) this.buffered = Math.min(100, this.pct + 14); },
+              scrub(e){ const r = e.currentTarget.getBoundingClientRect(); const ratio = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); this.position = Math.round(ratio * (this.current.dur || 0)); this.buffered = Math.min(100, Math.max(this.buffered, ratio*100 + 12)); },
+            };
+          }
+        </script>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axMedia(){
+            // data-viz role tokens — constant across all 12 accents
+            const C = {
+              accent:'var(--ax-accent)', cyan:'var(--ax-viz-cyan)', violet:'var(--ax-viz-violet)',
+              pink:'var(--ax-viz-pink)', amber:'var(--ax-viz-amber)', emerald:'var(--ax-viz-emerald)',
+            };
+            const ic = {
+              library:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M13 17a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M9 17v-13h10v13"/><path d="M9 8h10"/></svg>',
+              recent:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8l0 4l2 2"/><path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5"/></svg>',
+              fav:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>',
+              radio:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M5 6h13a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-13a1 1 0 0 1 -1 -1v-9.5l5 -2.5"/><path d="M7 12v.01"/></svg>',
+            };
+            return {
+              q:'', view:'library',
+              playing:true, index:0, position:74, buffered:42,
+              volume:72, muted:false, shuffle:false, repeat:'off',
+
+              views:[
+                { id:'library', label:'Library', icon:ic.library, count:248 },
+                { id:'recent', label:'Recently played', icon:ic.recent, count:32 },
+                { id:'favorites', label:'Favorites', icon:ic.fav, count:54 },
+                { id:'radio', label:'Stations', icon:ic.radio, count:12 },
+              ],
+              playlists:[
+                { id:'pl1', label:'Focus Flow', color:C.accent,  count:18 },
+                { id:'pl2', label:'Deep House Late', color:C.cyan, count:42 },
+                { id:'pl3', label:'Morning Acoustic', color:C.amber, count:24 },
+                { id:'pl4', label:'Synthwave Drive', color:C.violet, count:31 },
+                { id:'pl5', label:'Lo-Fi Study', color:C.pink,   count:60 },
+                { id:'pl6', label:'Jazz & Rain', color:C.emerald, count:19 },
+                { id:'pl7', label:'Workout 140 BPM', color:C.cyan, count:28 },
+              ],
+              tracks:[
+                { id:1,  title:'Verdigris Skyline', artist:'Aurora Lights', album:'Glass Atlas',      dur:271, angle:135, c1:C.accent,  c2:C.cyan,    fav:true  },
+                { id:2,  title:'Slow Tide',         artist:'Mara Vey',      album:'Northern Quiet',    dur:224, angle:160, c1:C.violet,  c2:C.pink,    fav:false },
+                { id:3,  title:'Paper Planes',      artist:'The Hollowells',album:'Field Notes',       dur:198, angle:120, c1:C.amber,   c2:C.accent,  fav:false },
+                { id:4,  title:'Midnight Drive',    artist:'Neon Foxes',    album:'Synthwave Drive',   dur:312, angle:200, c1:C.cyan,    c2:C.violet,  fav:true  },
+                { id:5,  title:'Warm Static',       artist:'Bloom Theory',  album:'Lo-Fi Study Vol. 3',dur:176, angle:145, c1:C.pink,    c2:C.amber,   fav:false },
+                { id:6,  title:'Coastline at Dawn', artist:'Saoirse Quinn', album:'Morning Acoustic',  dur:243, angle:110, c1:C.emerald, c2:C.cyan,    fav:false },
+                { id:7,  title:'Brass & Rain',      artist:'Otis Lane Trio',album:'Jazz & Rain',       dur:289, angle:170, c1:C.amber,   c2:C.pink,    fav:true  },
+                { id:8,  title:'Pulse Width',       artist:'Kade Moreno',   album:'Workout 140',       dur:205, angle:185, c1:C.cyan,    c2:C.emerald, fav:false },
+                { id:9,  title:'Glasshouse',        artist:'Aurora Lights', album:'Glass Atlas',       dur:258, angle:130, c1:C.accent,  c2:C.violet,  fav:false },
+                { id:10, title:'Quiet Surface',     artist:'Lena Brandt',   album:'Northern Quiet',    dur:231, angle:150, c1:C.violet,  c2:C.cyan,    fav:false },
+                { id:11, title:'Late Reply',        artist:'The Hollowells',album:'Field Notes',       dur:189, angle:140, c1:C.pink,    c2:C.accent,  fav:false },
+                { id:12, title:'Long Way Home',     artist:'Saoirse Quinn', album:'Morning Acoustic',  dur:266, angle:165, c1:C.amber,   c2:C.emerald, fav:true  },
+              ],
+
+              // queue follows shuffle as a derived ordering of tracks (deterministic demo)
+              get queue(){ return this.tracks; },
+              get current(){ return this.tracks[this.index] || {}; },
+              get pct(){ return this.current.dur ? Math.min(100, (this.position / this.current.dur) * 100) : 0; },
+
+              fmt(s){ s = Math.max(0, Math.round(s||0)); const m = Math.floor(s/60); const r = s%60; return m + ':' + String(r).padStart(2,'0'); },
+              toggle(){ this.playing = !this.playing; },
+              play(i){ this.index = i; this.position = 0; this.buffered = 30; this.playing = true; },
+              next(){ this.index = (this.index + 1) % this.tracks.length; this.position = 0; this.buffered = 30; this.playing = true; },
+              prev(){ if (this.position > 4){ this.position = 0; return; } this.index = (this.index - 1 + this.tracks.length) % this.tracks.length; this.position = 0; this.buffered = 30; },
+              cycleRepeat(){ this.repeat = this.repeat === 'off' ? 'all' : this.repeat === 'all' ? 'one' : 'off'; },
+              seekBy(d){ this.position = Math.max(0, Math.min(this.current.dur || 0, this.position + d)); if (this.position > this.buffered/100*(this.current.dur||1)) this.buffered = Math.min(100, this.pct + 14); },
+              scrub(e){ const r = e.currentTarget.getBoundingClientRect(); const ratio = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); this.position = Math.round(ratio * (this.current.dur || 0)); this.buffered = Math.min(100, Math.max(this.buffered, ratio*100 + 12)); },
+            };
+          }
+        </script>
+{% endblock %}

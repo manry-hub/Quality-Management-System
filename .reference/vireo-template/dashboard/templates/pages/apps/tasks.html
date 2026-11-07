@@ -1,0 +1,267 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axTasks()"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">All work across projects — <span class="ax-num">42</span> open, <span class="ax-num">3</span> overdue.</p>
+          <div class="ax-apphead__actions">
+            <button type="button" class="ax-btn ax-btn--ghost">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+              <span class="ax-btn__label">Export</span>
+            </button>
+            <button type="button" class="ax-btn ax-btn--primary">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+              <span class="ax-btn__label">New task</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Task list">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex:1 1 300px;">
+                <div style="position:relative;flex:1 1 220px;max-width:320px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input" placeholder="Search tasks…" x-model="q" style="padding-inline-start:36px;" aria-label="Search tasks">
+                </div>
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <select class="ax-select ax-select--sm" x-model="fStatus" aria-label="Filter by status" style="min-width:130px;">
+                  <option value="">All statuses</option>
+                  <option value="todo">To Do</option>
+                  <option value="progress">In Progress</option>
+                  <option value="blocked">Blocked</option>
+                  <option value="done">Done</option>
+                </select>
+                <select class="ax-select ax-select--sm" x-model="fPriority" aria-label="Filter by priority" style="min-width:130px;">
+                  <option value="">All priorities</option>
+                  <option value="urgent">Urgent</option>
+                  <option value="high">High</option>
+                  <option value="normal">Normal</option>
+                  <option value="low">Low</option>
+                </select>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l4 -4l4 4m-4 -4v14"/><path d="M21 15l-4 4l-4 -4m4 4v-14"/></svg>
+                  Sort
+                </button>
+              </div>
+            </div>
+
+            <!-- active filter chips -->
+            <div class="ax-cluster" style="gap:var(--ax-space-2);padding:0 var(--ax-space-5) var(--ax-space-3);flex-wrap:wrap;" x-show="fStatus || fPriority" x-cloak>
+              <template x-if="fStatus">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill">Status: <span x-text="fStatus" style="text-transform:capitalize;"></span><button type="button" class="ax-badge__remove" aria-label="Clear status filter" @click="fStatus=''"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-if="fPriority">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill">Priority: <span x-text="fPriority" style="text-transform:capitalize;"></span><button type="button" class="ax-badge__remove" aria-label="Clear priority filter" @click="fPriority=''"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="fStatus='';fPriority=''">Clear all</button>
+            </div>
+
+            <!-- bulk bar -->
+            <div x-show="selected.length" x-cloak
+              style="display:flex;align-items:center;gap:var(--ax-space-3);margin:0 var(--ax-space-5) var(--ax-space-3);padding:var(--ax-space-2) var(--ax-space-4);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);border-radius:var(--ax-radius-md);"
+              x-transition>
+              <b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-sm);"><span x-text="selected.length"></span> selected</b>
+              <span style="width:1px;height:18px;background:var(--ax-border-strong);"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Assign</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Set status</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Set priority</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="color:var(--ax-danger-500);">Delete</button>
+              <span style="flex:1 1 auto;"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Clear selection" @click="selected=[]"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+
+            <!-- table -->
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col" style="width:38px;">
+                      <input type="checkbox" class="ax-checkbox" aria-label="Select all" :checked="allShownSelected()" @change="toggleAll($event.target.checked)">
+                    </th>
+                    <th class="ax-table__th" scope="col">Task</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                    <th class="ax-table__th" scope="col">Priority</th>
+                    <th class="ax-table__th" scope="col">Assignee</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Due</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Updated</th>
+                    <th class="ax-table__th" scope="col" style="width:44px;"></th>
+                  </tr>
+                </thead>
+
+                <template x-for="group in groups" :key="group.id">
+                  <tbody x-show="visible(group.id).length">
+                    <!-- group header row -->
+                    <tr>
+                      <td class="ax-table__td" colspan="8" style="background:var(--ax-surface-subtle);">
+                        <span class="ax-cluster" style="gap:var(--ax-space-2);">
+                          <i style="width:9px;height:9px;border-radius:3px;" :style="`background:${group.color};`"></i>
+                          <b style="color:var(--ax-text-strong);font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.04em;" x-text="group.title"></b>
+                          <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="visible(group.id).length"></span>
+                        </span>
+                      </td>
+                    </tr>
+                    <!-- task rows -->
+                    <template x-for="t in visible(group.id)" :key="t.id">
+                      <tr class="ax-table__row" :class="{ 'is-selected': selected.includes(t.id) }" :style="selected.includes(t.id) ? 'background:var(--ax-accent-wash);' : ''">
+                        <td class="ax-table__td">
+                          <input type="checkbox" class="ax-checkbox" :value="t.id" x-model.number="selected" :aria-label="'Select ' + t.title">
+                        </td>
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                            <input type="checkbox" class="ax-checkbox" :checked="t.status==='done'" :aria-label="'Mark ' + t.title + ' done'">
+                            <div style="min-width:0;">
+                              <div style="font-weight:var(--ax-weight-medium);" :style="t.status==='done' ? 'color:var(--ax-text-subtle);text-decoration:line-through;' : 'color:var(--ax-text-strong);'" x-text="t.title"></div>
+                              <div class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                                <span x-text="t.project"></span>
+                                <span x-show="t.subtasks" class="ax-cluster ax-num" style="gap:3px;font-family:var(--ax-font-mono);">
+                                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8"/><path d="M14 19l2 2l4 -4"/><path d="M9 8h4"/><path d="M9 12h2"/></svg>
+                                  <span x-text="t.subtasks"></span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="ax-table__td">
+                          <span class="ax-badge ax-badge--soft ax-badge--pill" :class="statusTone(t.status)">
+                            <span class="ax-badge__dot"></span><span x-text="statusLabel(t.status)"></span>
+                          </span>
+                        </td>
+                        <td class="ax-table__td">
+                          <span class="ax-cluster" style="gap:6px;" :style="`color:${priorityColor(t.priority)};`">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;"><path d="M5 5a5 5 0 0 1 7 0a5 5 0 0 0 7 0v9a5 5 0 0 1 -7 0a5 5 0 0 0 -7 0v-9"/><path d="M5 21v-7"/></svg>
+                            <span style="font-size:var(--ax-text-sm);text-transform:capitalize;" x-text="t.priority"></span>
+                          </span>
+                        </td>
+                        <td class="ax-table__td">
+                          <template x-if="t.who">
+                            <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                              <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" :style="`background:color-mix(in oklab,${t.who.c} 20%,transparent);color:${t.who.c};font-weight:600;font-size:var(--ax-text-2xs);`" x-text="t.who.i"></span>
+                              <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="t.who.n"></span>
+                            </div>
+                          </template>
+                          <template x-if="!t.who"><span style="color:var(--ax-text-subtle);">—</span></template>
+                        </td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);" :style="dueStyle(t)">
+                          <span x-text="t.due || '—'"></span>
+                        </td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="t.updated"></td>
+                        <td class="ax-table__td">
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Actions for ' + t.title">
+                            <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                          </button>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </template>
+              </table>
+            </div>
+
+            <div class="ax-card__footer" style="display:flex;justify-content:space-between;align-items:center;">
+              <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Showing <span x-text="shownCount()"></span> of 11 tasks</span>
+              <div class="ax-cluster" style="gap:var(--ax-space-1);">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Previous page" disabled><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm">1</button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Next page"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <script>
+          function axTasks(){
+            return {
+              q:'', fStatus:'', fPriority:'', selected:[],
+              groups:[
+                { id:'overdue', title:'Overdue', color:'var(--ax-danger-500)' },
+                { id:'today', title:'Due today', color:'var(--ax-accent)' },
+                { id:'later', title:'Upcoming', color:'var(--ax-viz-cyan)' },
+                { id:'completed', title:'Completed', color:'var(--ax-viz-emerald)' },
+              ],
+              tasks:[
+                { id:1, group:'overdue', title:'Fix payment webhook retry loop', project:'Billing service', status:'blocked', priority:'urgent', due:'Jun 24', updated:'2h ago', subtasks:'1/3', who:{i:'DC',n:'Daniel Cho',c:'var(--ax-viz-emerald)'} },
+                { id:2, group:'overdue', title:'Migrate logging to OpenTelemetry', project:'Platform', status:'progress', priority:'high', due:'Jun 25', updated:'1d ago', subtasks:'', who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:3, group:'overdue', title:'Update privacy policy copy', project:'Legal', status:'todo', priority:'normal', due:'Jun 26', updated:'3d ago', subtasks:'', who:null },
+                { id:4, group:'today', title:'Review Q3 roadmap deck', project:'Strategy', status:'progress', priority:'high', due:'Today', updated:'25m ago', subtasks:'2/4', who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:5, group:'today', title:'Ship onboarding A/B test', project:'Growth', status:'progress', priority:'urgent', due:'Today', updated:'1h ago', subtasks:'', who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:6, group:'today', title:'Approve new icon set', project:'Design system', status:'todo', priority:'normal', due:'Today', updated:'4h ago', subtasks:'', who:{i:'LB',n:'Lena Brandt',c:'var(--ax-viz-pink)'} },
+                { id:7, group:'later', title:'Draft API v2 deprecation notice', project:'Developer rel', status:'todo', priority:'normal', due:'Jul 3', updated:'2d ago', subtasks:'0/5', who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:8, group:'later', title:'Refactor settings store', project:'Mobile app', status:'todo', priority:'low', due:'Jul 8', updated:'5d ago', subtasks:'', who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:9, group:'later', title:'Plan team offsite agenda', project:'People ops', status:'todo', priority:'low', due:'Jul 15', updated:'1w ago', subtasks:'', who:null },
+                { id:10, group:'completed', title:'Localize checkout for FR & DE', project:'Internationalization', status:'done', priority:'normal', due:'Jun 20', updated:'3d ago', subtasks:'6/6', who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:11, group:'completed', title:'Rotate production API keys', project:'Security', status:'done', priority:'high', due:'Jun 19', updated:'4d ago', subtasks:'', who:{i:'DC',n:'Daniel Cho',c:'var(--ax-viz-emerald)'} },
+              ],
+              match(t){
+                const term=this.q.trim().toLowerCase();
+                if(term && !(t.title.toLowerCase().includes(term) || t.project.toLowerCase().includes(term))) return false;
+                if(this.fStatus && t.status!==this.fStatus) return false;
+                if(this.fPriority && t.priority!==this.fPriority) return false;
+                return true;
+              },
+              visible(g){ return this.tasks.filter(t=>t.group===g && this.match(t)); },
+              shownCount(){ return this.tasks.filter(t=>this.match(t)).length; },
+              allShown(){ return this.tasks.filter(t=>this.match(t)).map(t=>t.id); },
+              allShownSelected(){ const a=this.allShown(); return a.length>0 && a.every(id=>this.selected.includes(id)); },
+              toggleAll(on){ this.selected = on ? this.allShown() : []; },
+              statusLabel(s){ return ({todo:'To Do',progress:'In Progress',blocked:'Blocked',done:'Done'})[s]; },
+              statusTone(s){ return ({todo:'ax-badge--neutral',progress:'ax-badge--info',blocked:'ax-badge--danger',done:'ax-badge--success'})[s]; },
+              priorityColor(p){ return ({urgent:'var(--ax-danger-500)',high:'var(--ax-warning-500)',normal:'var(--ax-text-muted)',low:'var(--ax-text-subtle)'})[p]; },
+              dueStyle(t){ if(t.group==='overdue') return 'color:var(--ax-danger-500);'; if(t.due==='Today') return 'color:var(--ax-accent);font-weight:600;'; return 'color:var(--ax-text-muted);'; },
+            };
+          }
+        </script>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axTasks(){
+            return {
+              q:'', fStatus:'', fPriority:'', selected:[],
+              groups:[
+                { id:'overdue', title:'Overdue', color:'var(--ax-danger-500)' },
+                { id:'today', title:'Due today', color:'var(--ax-accent)' },
+                { id:'later', title:'Upcoming', color:'var(--ax-viz-cyan)' },
+                { id:'completed', title:'Completed', color:'var(--ax-viz-emerald)' },
+              ],
+              tasks:[
+                { id:1, group:'overdue', title:'Fix payment webhook retry loop', project:'Billing service', status:'blocked', priority:'urgent', due:'Jun 24', updated:'2h ago', subtasks:'1/3', who:{i:'DC',n:'Daniel Cho',c:'var(--ax-viz-emerald)'} },
+                { id:2, group:'overdue', title:'Migrate logging to OpenTelemetry', project:'Platform', status:'progress', priority:'high', due:'Jun 25', updated:'1d ago', subtasks:'', who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:3, group:'overdue', title:'Update privacy policy copy', project:'Legal', status:'todo', priority:'normal', due:'Jun 26', updated:'3d ago', subtasks:'', who:null },
+                { id:4, group:'today', title:'Review Q3 roadmap deck', project:'Strategy', status:'progress', priority:'high', due:'Today', updated:'25m ago', subtasks:'2/4', who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:5, group:'today', title:'Ship onboarding A/B test', project:'Growth', status:'progress', priority:'urgent', due:'Today', updated:'1h ago', subtasks:'', who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:6, group:'today', title:'Approve new icon set', project:'Design system', status:'todo', priority:'normal', due:'Today', updated:'4h ago', subtasks:'', who:{i:'LB',n:'Lena Brandt',c:'var(--ax-viz-pink)'} },
+                { id:7, group:'later', title:'Draft API v2 deprecation notice', project:'Developer rel', status:'todo', priority:'normal', due:'Jul 3', updated:'2d ago', subtasks:'0/5', who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:8, group:'later', title:'Refactor settings store', project:'Mobile app', status:'todo', priority:'low', due:'Jul 8', updated:'5d ago', subtasks:'', who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:9, group:'later', title:'Plan team offsite agenda', project:'People ops', status:'todo', priority:'low', due:'Jul 15', updated:'1w ago', subtasks:'', who:null },
+                { id:10, group:'completed', title:'Localize checkout for FR & DE', project:'Internationalization', status:'done', priority:'normal', due:'Jun 20', updated:'3d ago', subtasks:'6/6', who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:11, group:'completed', title:'Rotate production API keys', project:'Security', status:'done', priority:'high', due:'Jun 19', updated:'4d ago', subtasks:'', who:{i:'DC',n:'Daniel Cho',c:'var(--ax-viz-emerald)'} },
+              ],
+              match(t){
+                const term=this.q.trim().toLowerCase();
+                if(term && !(t.title.toLowerCase().includes(term) || t.project.toLowerCase().includes(term))) return false;
+                if(this.fStatus && t.status!==this.fStatus) return false;
+                if(this.fPriority && t.priority!==this.fPriority) return false;
+                return true;
+              },
+              visible(g){ return this.tasks.filter(t=>t.group===g && this.match(t)); },
+              shownCount(){ return this.tasks.filter(t=>this.match(t)).length; },
+              allShown(){ return this.tasks.filter(t=>this.match(t)).map(t=>t.id); },
+              allShownSelected(){ const a=this.allShown(); return a.length>0 && a.every(id=>this.selected.includes(id)); },
+              toggleAll(on){ this.selected = on ? this.allShown() : []; },
+              statusLabel(s){ return ({todo:'To Do',progress:'In Progress',blocked:'Blocked',done:'Done'})[s]; },
+              statusTone(s){ return ({todo:'ax-badge--neutral',progress:'ax-badge--info',blocked:'ax-badge--danger',done:'ax-badge--success'})[s]; },
+              priorityColor(p){ return ({urgent:'var(--ax-danger-500)',high:'var(--ax-warning-500)',normal:'var(--ax-text-muted)',low:'var(--ax-text-subtle)'})[p]; },
+              dueStyle(t){ if(t.group==='overdue') return 'color:var(--ax-danger-500);'; if(t.due==='Today') return 'color:var(--ax-accent);font-weight:600;'; return 'color:var(--ax-text-muted);'; },
+            };
+          }
+        </script>
+{% endblock %}

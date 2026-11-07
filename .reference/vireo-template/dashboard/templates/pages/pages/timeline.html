@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{# Timeline — faithful re-expression of src/html/pages/timeline.html: a grouped
+   project activity timeline (sticky day labels, density toggle), a compact
+   release-history variant and a marker-state legend. Reference hrefs converted
+   to clean Django routes. #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Timeline</h1>
+              <p class="ax-page-head__subtitle">A reusable vertical chronological pattern — used in profiles, project overviews and activity logs.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">June 2026</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <a class="ax-btn ax-btn--ghost" href="/pages/activity-log/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 13h6"/><path d="M9 17h3"/></svg>
+                <span class="ax-btn__label">View activity log</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid" x-data="{ density:'comfortable' }">
+
+          <!-- ───── MAIN: Project timeline (grouped by day, sticky date labels) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Project activity timeline">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Atlas redesign · Sprint 14</span>
+                <h2 class="ax-card__title">Activity Timeline</h2>
+                <p class="ax-card__subtitle">Chronological feed grouped by day — newest first</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-segment" role="radiogroup" aria-label="Timeline density">
+                  <button type="button" class="ax-segment__option" :class="density==='compact' && 'is-active'" :aria-checked="density==='compact'" role="radio" @click="density='compact'">Compact</button>
+                  <button type="button" class="ax-segment__option" :class="density==='comfortable' && 'is-active'" :aria-checked="density==='comfortable'" role="radio" @click="density='comfortable'">Comfortable</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;" :style="density==='compact' && 'font-size:var(--ax-text-sm);'">
+
+              <!-- Day group: Today -->
+              <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) 0;background:var(--ax-surface);backdrop-filter:blur(6px);">
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill">Today</span>
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" class="ax-num">Fri, 27 Jun 2026</span>
+                <hr class="ax-divider" style="flex:1 1 auto;" aria-hidden="true">
+              </div>
+              <ol class="ax-timeline" style="margin:0;list-style:none;">
+                <li class="ax-timeline__item ax-timeline__item--success">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Mara Lindqvist</b> merged pull request <span style="color:var(--ax-accent);">#482 · Tokenize chart palette</span></p>
+                    <p style="margin:var(--ax-space-1) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">14 files changed across the charts module. CI green, deployed to <span class="ax-num">staging</span>.</p>
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-2);">
+                      <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--sm">+428 −96</span>
+                      <span class="ax-badge ax-badge--outline ax-badge--sm">charts</span>
+                    </div>
+                    <span class="ax-timeline__time ax-num">09:41</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8v10a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"/><path d="M9 6a3 3 0 0 1 6 0"/><path d="M8 9l8 0"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Devon Okafor</b> attached <span style="color:var(--ax-text);">empty-states-v3.fig</span> to the design review</p>
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-2);padding:var(--ax-space-2) var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);max-width:340px;flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/></svg></span>
+                      <div style="min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">empty-states-v3.fig</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">2.4 MB · Figma</div></div>
+                    </div>
+                    <span class="ax-timeline__time ax-num">08:12</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M9 18l-3 3v-3h-1a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-7z"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Priya Nair</b> commented on <span style="color:var(--ax-accent);">TSK-241</span></p>
+                    <blockquote style="margin:var(--ax-space-2) 0 0;padding:var(--ax-space-2) var(--ax-space-3);border-inline-start:2px solid var(--ax-border-strong);color:var(--ax-text-muted);font-size:var(--ax-text-sm);">"The spotlight cut-out feels great — can we soften the scrim by ~6% in light mode?"</blockquote>
+                    <span class="ax-timeline__time ax-num">07:55</span>
+                  </div>
+                </li>
+              </ol>
+
+              <!-- Day group: Yesterday -->
+              <div style="position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) 0;margin-top:var(--ax-space-4);background:var(--ax-surface);backdrop-filter:blur(6px);">
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Yesterday</span>
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" class="ax-num">Thu, 26 Jun 2026</span>
+                <hr class="ax-divider" style="flex:1 1 auto;" aria-hidden="true">
+              </div>
+              <ol class="ax-timeline" style="margin:0;list-style:none;">
+                <li class="ax-timeline__item ax-timeline__item--pending">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 3"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Release 2.4.0</b> is awaiting QA sign-off</p>
+                    <p style="margin:var(--ax-space-1) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">3 of 5 checks passed · 2 in progress</p>
+                    <div class="ax-progress ax-progress--sm" style="margin-top:var(--ax-space-2);max-width:280px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:60%;background:var(--ax-viz-amber);"></div></div></div>
+                    <span class="ax-timeline__time ax-num">18:30</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item ax-timeline__item--danger">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Nightly build</b> failed on <span style="color:var(--ax-text);">e2e-checkout</span></p>
+                    <p style="margin:var(--ax-space-1) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Timeout waiting for payment iframe — flake re-run queued.</p>
+                    <span class="ax-timeline__time ax-num">02:14</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Tomás Herrera</b> invited <span style="color:var(--ax-text);">2 reviewers</span> to the project</p>
+                    <div class="ax-avatar-group" style="margin-top:var(--ax-space-2);">
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">AS</span></span>
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><span class="ax-avatar__initials">LB</span></span>
+                    </div>
+                    <span class="ax-timeline__time ax-num">16:02</span>
+                  </div>
+                </li>
+              </ol>
+
+              <!-- end-of-feed marker -->
+              <div style="display:flex;align-items:center;gap:var(--ax-space-3);margin-top:var(--ax-space-4);color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">
+                <hr class="ax-divider" style="flex:1 1 auto;" aria-hidden="true">
+                <span>You've reached the start of this sprint</span>
+                <hr class="ax-divider" style="flex:1 1 auto;" aria-hidden="true">
+              </div>
+            </div>
+            <div class="ax-card__footer">
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm ax-btn--block">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12l7 7l7 -7"/></svg>
+                <span class="ax-btn__label">Load earlier activity</span>
+              </button>
+            </div>
+          </section>
+
+          <!-- ───── RAIL: compact timeline variant + legend ───── -->
+          <div class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- Compact release timeline -->
+            <section class="ax-card" role="region" aria-label="Release history">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Release History</h2>
+                  <p class="ax-card__subtitle">Compact variant</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <ol class="ax-timeline" style="margin:0;list-style:none;">
+                  <li class="ax-timeline__item ax-timeline__item--success">
+                    <span class="ax-timeline__marker" style="width:10px;height:10px;"></span>
+                    <div class="ax-timeline__content">
+                      <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">v2.4.0</b> — Aurora charts</p>
+                      <span class="ax-timeline__time ax-num">27 Jun</span>
+                    </div>
+                  </li>
+                  <li class="ax-timeline__item">
+                    <span class="ax-timeline__marker" style="width:10px;height:10px;color:var(--ax-text-subtle);"></span>
+                    <div class="ax-timeline__content">
+                      <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">v2.3.1</b> — Patch: focus rings</p>
+                      <span class="ax-timeline__time ax-num">19 Jun</span>
+                    </div>
+                  </li>
+                  <li class="ax-timeline__item">
+                    <span class="ax-timeline__marker" style="width:10px;height:10px;color:var(--ax-text-subtle);"></span>
+                    <div class="ax-timeline__content">
+                      <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">v2.3.0</b> — Nested menu</p>
+                      <span class="ax-timeline__time ax-num">11 Jun</span>
+                    </div>
+                  </li>
+                  <li class="ax-timeline__item">
+                    <span class="ax-timeline__marker" style="width:10px;height:10px;color:var(--ax-text-subtle);"></span>
+                    <div class="ax-timeline__content">
+                      <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">v2.2.0</b> — Command palette</p>
+                      <span class="ax-timeline__time ax-num">02 Jun</span>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+            </section>
+
+            <!-- Legend / status reference -->
+            <section class="ax-card" role="region" aria-label="Timeline status legend">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Marker States</h2>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                  <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Success</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Completed step or merge</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 3"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg></span>
+                  <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Pending</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Awaiting an action</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-red) 18%,transparent);color:var(--ax-viz-red);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></span>
+                  <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Failed</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">An error or rejection</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--xs" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/></svg></span>
+                  <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Now / Highlighted</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Accent dot for the live node</div></div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+{% endblock %}

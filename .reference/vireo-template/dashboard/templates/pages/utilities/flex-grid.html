@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{# utilities/flex-grid — faithful port of src/html/utilities/flex-grid.html.
+   Same DOM/classes/ARIA, same demo copy and Alpine helpers. Reference hrefs
+   converted to clean Django routes (# -> /x/). #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Flex &amp; grid</h1>
+              <p class="ax-page-head__subtitle">The 12-column <code class="ax-code">.ax-dash-grid</code> plus <code class="ax-code">.ax-cluster</code> / <code class="ax-code">.ax-stack</code> flex helpers — the only layout primitives you need.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/utilities/borders/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4h2a2 2 0 0 1 2 2v2"/><path d="M20 16v2a2 2 0 0 1 -2 2h-2"/><path d="M8 20h-2a2 2 0 0 1 -2 -2v-2"/><path d="M4 8v-2a2 2 0 0 1 2 -2h2"/></svg>
+                <span class="ax-btn__label">Borders</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/utilities/helpers/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h4l13 -13a1.5 1.5 0 0 0 -4 -4l-13 13v4"/><path d="M14.5 5.5l4 4"/><path d="M12 8l-5 -5l-4 4l5 5"/><path d="M7 8l-1.5 1.5"/><path d="M16 12l5 5l-4 4l-5 -5"/><path d="M16 17l-1.5 1.5"/></svg>
+                <span class="ax-btn__label">Helpers</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid"
+          x-data="{ flash:null, copy(v){ navigator.clipboard?.writeText(v); this.flash=v; setTimeout(()=>{ if(this.flash===v) this.flash=null; },1300); } }">
+
+          <!-- 12-col reference -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Twelve column grid spans">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-dash-grid · .ax-col--N</span>
+                <h2 class="ax-card__title">12-column spans</h2>
+                <p class="ax-card__subtitle">Every span that adds to 12. Auto-stacks to halves at 992px and full-width at 576px.</p>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">gutter · --ax-space-6</span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+              <template x-for="row in [[12],[6,6],[8,4],[4,4,4],[3,3,3,3],[5,7],[2,2,2,2,2,2]]" :key="row.join('-')">
+                <div class="ax-dash-grid" style="gap:var(--ax-space-2);">
+                  <template x-for="(n,idx) in row" :key="idx">
+                    <div :class="'ax-col--'+n" style="display:grid;place-items:center;height:42px;border-radius:var(--ax-radius-sm);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);color:var(--ax-accent);font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                      <span x-text="'ax-col--'+n"></span>
+                    </div>
+                  </template>
+                </div>
+              </template>
+            </div>
+            <div class="ax-card__footer">
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Resize the window to watch each row collapse responsively — no per-row media queries needed.</span>
+            </div>
+          </section>
+
+          <!-- Cluster -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Cluster flex helper">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-cluster</span>
+                <h2 class="ax-card__title">Inline cluster</h2>
+                <p class="ax-card__subtitle">Horizontal, wrapping, vertically-centered flow with a token gap. The workhorse of toolbars &amp; meta rows.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="padding:var(--ax-space-3);border:1px dashed var(--ax-border-strong);border-radius:var(--ax-radius-md);">
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill">Design</span>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Engineering</span>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Product</span>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Marketing</span>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Finance</span>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Operations</span>
+              </div>
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.ax-cluster--between + .ax-spacer</span>
+                <div class="ax-cluster ax-cluster--between" style="padding:var(--ax-space-3);border:1px dashed var(--ax-border-strong);border-radius:var(--ax-radius-md);">
+                  <b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Q2 report</b>
+                  <span class="ax-spacer"></span>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm"><span class="ax-btn__label">Edit</span></button>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm"><span class="ax-btn__label">Share</span></button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Stack -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Stack flex helper">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-stack</span>
+                <h2 class="ax-card__title">Vertical stack</h2>
+                <p class="ax-card__subtitle">Column flow with a consistent gap — perfect for form fields and list bodies.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-stack" style="--ax-gap:var(--ax-space-3);">
+                <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Two-factor auth</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>On</span>
+                </div>
+                <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Email digest</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Weekly</span>
+                </div>
+                <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Session timeout</span>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-strong);">30 min</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Flex alignment matrix -->
+          <section class="ax-card ax-col--7" role="region" aria-label="Flex alignment examples">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">justify-content</span>
+                <h2 class="ax-card__title">Distribution</h2>
+                <p class="ax-card__subtitle">Common flex justifications, composed inline with role tokens.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <template x-for="j in ['flex-start','center','flex-end','space-between','space-around','space-evenly']" :key="j">
+                <div>
+                  <code class="ax-code" style="font-size:var(--ax-text-2xs);" x-text="'justify-content: '+j"></code>
+                  <div :style="'display:flex;justify-content:'+j+';gap:var(--ax-space-2);margin-top:6px;padding:var(--ax-space-2);border-radius:var(--ax-radius-sm);background:var(--ax-surface-subtle);'">
+                    <i aria-hidden="true" style="width:30px;height:22px;border-radius:6px;background:var(--ax-accent);opacity:.85;"></i>
+                    <i aria-hidden="true" style="width:30px;height:22px;border-radius:6px;background:var(--ax-viz-cyan);opacity:.85;"></i>
+                    <i aria-hidden="true" style="width:30px;height:22px;border-radius:6px;background:var(--ax-viz-violet);opacity:.85;"></i>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </section>
+
+          <!-- Auto-fit grid -->
+          <section class="ax-card ax-col--5" role="region" aria-label="Responsive auto-fit grid">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">auto-fit · minmax</span>
+                <h2 class="ax-card__title">Card auto-grid</h2>
+                <p class="ax-card__subtitle">Tiles reflow by available width with no breakpoints.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:var(--ax-space-3);">
+                <template x-for="m in [
+                  ['Revenue','$748K','--ax-viz-cyan'],
+                  ['Orders','1,248','--ax-viz-violet'],
+                  ['AOV','$59.95','--ax-viz-pink'],
+                  ['Refunds','3.1%','--ax-viz-amber'],
+                  ['Sessions','54.2K','--ax-viz-emerald'],
+                  ['Bounce','38%','--ax-accent']
+                ]" :key="m[0]">
+                  <div style="padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                    <span style="display:block;font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="m[0]"></span>
+                    <b class="ax-num" :style="'font-family:var(--ax-font-mono);font-size:var(--ax-text-md);color:var('+m[2]+');'" x-text="m[1]"></b>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

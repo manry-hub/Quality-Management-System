@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{
+          side:'buy',
+          asset:'BTC',
+          pay:'USD',
+          amount:'1000.00',
+          step:1,
+          confirmed:false,
+          prices:{ BTC:67840.20, ETH:3512.00, SOL:184.20, ADA:0.452 },
+          symbols:{ BTC:'Bitcoin', ETH:'Ethereum', SOL:'Solana', ADA:'Cardano' },
+          get rate(){ return this.prices[this.asset]; },
+          get receive(){ const a=parseFloat(this.amount)||0; const fee=a*0.0049; return ((a-fee)/this.rate); },
+          get fee(){ return ((parseFloat(this.amount)||0)*0.0049); }
+        }">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Buy &amp; Sell</h1>
+              <p class="ax-page-head__subtitle">Instantly convert between cash and crypto at live market rates.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h2"/></svg>
+                <span class="ax-btn__label">Payment methods</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CRYPTO SUB-NAV ════════════════ -->
+        <nav class="ax-tabs ax-tabs--pill" aria-label="Crypto sections" style="margin-bottom:var(--ax-space-5);">
+          <div class="ax-tabs__list" role="tablist">
+            <a class="ax-tabs__tab" role="tab" href="/crypto/wallet/">Wallet</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/exchange/">Exchange</a>
+            <a class="ax-tabs__tab is-active" role="tab" aria-selected="true" aria-current="page" href="/crypto/buy-sell/">Buy &amp; Sell</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/marketcap/">Marketcap</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/transactions/">Transactions</a>
+          </div>
+        </nav>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── ORDER FORM (7) ───── -->
+          <section class="ax-card ax-col-form" role="region" aria-label="Buy or sell crypto">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- buy/sell toggle -->
+              <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Order side" style="width:100%;">
+                <button type="button" class="ax-btn ax-btn--block" role="radio" :aria-checked="side==='buy'" :class="{ 'is-selected': side==='buy' }" @click="side='buy';confirmed=false">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
+                  <span class="ax-btn__label">Buy</span>
+                </button>
+                <button type="button" class="ax-btn ax-btn--block" role="radio" :aria-checked="side==='sell'" :class="{ 'is-selected': side==='sell' }" @click="side='sell';confirmed=false">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l6 6l4 -4l8 8"/><path d="M14 17l7 0l0 -7"/></svg>
+                  <span class="ax-btn__label">Sell</span>
+                </button>
+              </div>
+
+              <form @submit.prevent="confirmed=true" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+                <!-- amount + pay-with -->
+                <div class="ax-field">
+                  <label class="ax-label" for="bs-amount" x-text="side==='buy' ? 'You pay' : 'You sell'"></label>
+                  <div style="display:flex;gap:var(--ax-space-3);align-items:stretch;">
+                    <div style="position:relative;flex:1 1 auto;">
+                      <input class="ax-input ax-input--lg ax-num" id="bs-amount" type="text" inputmode="decimal" x-model="amount" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xl);font-weight:600;">
+                    </div>
+                    <label class="ax-visually" for="bs-pay">Pay with</label>
+                    <select class="ax-select" id="bs-pay" x-model="pay" x-show="side==='buy'" style="flex:0 0 130px;font-weight:var(--ax-weight-medium);">
+                      <option value="USD">USD</option>
+                      <option value="EUR">EUR</option>
+                      <option value="GBP">GBP</option>
+                    </select>
+                    <select class="ax-select" x-show="side==='sell'" x-cloak style="flex:0 0 130px;font-weight:var(--ax-weight-medium);" aria-label="Asset to sell" x-model="asset">
+                      <option value="BTC">BTC</option>
+                      <option value="ETH">ETH</option>
+                      <option value="SOL">SOL</option>
+                      <option value="ADA">ADA</option>
+                    </select>
+                  </div>
+                  <!-- quick amounts -->
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-3);">
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="amount='100.00'">$100</button>
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="amount='500.00'">$500</button>
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="amount='1000.00'">$1,000</button>
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="amount='5000.00'">$5,000</button>
+                  </div>
+                </div>
+
+                <!-- swap glyph -->
+                <div style="display:flex;justify-content:center;margin-block:calc(-1 * var(--ax-space-3));position:relative;z-index:1;">
+                  <span aria-hidden="true" style="display:inline-flex;width:38px;height:38px;align-items:center;justify-content:center;border-radius:var(--ax-radius-pill);background:var(--ax-surface-raised);border:1px solid var(--ax-border);color:var(--ax-accent);box-shadow:var(--ax-shadow-sm);">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4l0 16"/><path d="M5 8l2 -4l2 4"/><path d="M17 4l0 16"/><path d="M15 16l2 4l2 -4"/></svg>
+                  </span>
+                </div>
+
+                <!-- receive asset -->
+                <div class="ax-field">
+                  <label class="ax-label" for="bs-asset" x-text="side==='buy' ? 'You receive' : 'You get'"></label>
+                  <div style="display:flex;gap:var(--ax-space-3);align-items:stretch;">
+                    <div style="position:relative;flex:1 1 auto;display:flex;align-items:center;padding:0 var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);min-height:54px;">
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);" x-text="side==='buy' ? receive.toFixed(6) : (receive*rate).toFixed(2)"></span>
+                    </div>
+                    <select class="ax-select" id="bs-asset" x-model="asset" x-show="side==='buy'" style="flex:0 0 168px;font-weight:var(--ax-weight-medium);">
+                      <option value="BTC">Bitcoin · BTC</option>
+                      <option value="ETH">Ethereum · ETH</option>
+                      <option value="SOL">Solana · SOL</option>
+                      <option value="ADA">Cardano · ADA</option>
+                    </select>
+                    <div class="ax-flex" x-show="side==='sell'" x-cloak style="flex:0 0 168px;align-items:center;padding:0 var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">USD</div>
+                  </div>
+                </div>
+
+                <!-- summary -->
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);padding:var(--ax-space-4);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <div class="ax-cluster" style="justify-content:space-between;">
+                    <span class="ax-cluster" style="gap:var(--ax-space-2);color:var(--ax-text-muted);font-size:var(--ax-text-sm);">
+                      Rate
+                      <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill" style="font-size:var(--ax-text-2xs);"><span class="ax-badge__dot"></span>Live</span>
+                    </span>
+                    <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">1 <span x-text="asset"></span> = $<span x-text="rate.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})"></span></b>
+                  </div>
+                  <div class="ax-cluster" style="justify-content:space-between;">
+                    <span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Vireo fee (0.49%)</span>
+                    <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$<span x-text="fee.toFixed(2)"></span></b>
+                  </div>
+                  <div class="ax-cluster" style="justify-content:space-between;">
+                    <span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Network fee</span>
+                    <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$1.20</b>
+                  </div>
+                  <div class="ax-divider" style="margin-block:var(--ax-space-1);"></div>
+                  <div class="ax-cluster" style="justify-content:space-between;">
+                    <span style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">Total</span>
+                    <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-md);">$<span x-text="((parseFloat(amount)||0)+1.20).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})"></span></b>
+                  </div>
+                </div>
+
+                <button type="submit" class="ax-btn ax-btn--block" :class="side==='buy' ? 'ax-btn--primary' : 'ax-btn--danger'">
+                  <span class="ax-btn__label" x-text="(side==='buy' ? 'Buy ' : 'Sell ') + symbols[asset]"></span>
+                </button>
+
+                <!-- confirmation -->
+                <div x-show="confirmed" x-transition x-cloak role="status"
+                  style="display:flex;gap:var(--ax-space-3);align-items:flex-start;padding:var(--ax-space-4);border-radius:var(--ax-radius-md);border:1px solid color-mix(in oklab,var(--ax-success-500) 40%,var(--ax-border));background:color-mix(in oklab,var(--ax-success-500) 8%,transparent);">
+                  <span style="color:var(--ax-viz-emerald);flex:0 0 auto;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                  <div>
+                    <b style="color:var(--ax-text-strong);display:block;">Order confirmed</b>
+                    <span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">
+                      <span x-text="side==='buy' ? 'Buying' : 'Selling'"></span>
+                      <span class="ax-num" x-text="side==='buy' ? receive.toFixed(6) : amount"></span>
+                      <span x-text="asset"></span> — settling to your wallet shortly.
+                    </span>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- ───── RIGHT RAIL: payment + recent orders (5) ───── -->
+          <div class="ax-col-rail" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- pay-with method -->
+            <section class="ax-card" role="region" aria-label="Payment method" x-data="{ method:'card' }">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Pay With</h2>
+                </div>
+                <a class="ax-btn ax-btn--link" href="#">Add new</a>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <label class="ax-cluster" :class="method==='card' && 'is-active'" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);cursor:pointer;" :style="method==='card' && 'border-color:var(--ax-accent);background:var(--ax-accent-wash)'">
+                  <input type="radio" class="ax-radio" name="pay-method" value="card" x-model="method" checked>
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10h18"/></svg></span>
+                  <span style="flex:1 1 auto;min-width:0;"><span style="display:block;font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Visa •••• 7045</span><span class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Expires 09/27</span></span>
+                </label>
+                <label class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);cursor:pointer;" :style="method==='bank' && 'border-color:var(--ax-accent);background:var(--ax-accent-wash)'">
+                  <input type="radio" class="ax-radio" name="pay-method" value="bank" x-model="method">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M3 10l18 0"/><path d="M5 6l7 -3l7 3"/><path d="M4 10l0 11"/><path d="M20 10l0 11"/><path d="M8 14l0 3"/><path d="M12 14l0 3"/><path d="M16 14l0 3"/></svg></span>
+                  <span style="flex:1 1 auto;min-width:0;"><span style="display:block;font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Bank transfer</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">1–2 business days · no fee</span></span>
+                </label>
+                <label class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);cursor:pointer;" :style="method==='balance' && 'border-color:var(--ax-accent);background:var(--ax-accent-wash)'">
+                  <input type="radio" class="ax-radio" name="pay-method" value="balance" x-model="method">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg></span>
+                  <span style="flex:1 1 auto;min-width:0;"><span style="display:block;font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Cash balance</span><span class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">$12,300.00 available</span></span>
+                </label>
+              </div>
+            </section>
+
+            <!-- recent orders -->
+            <section class="ax-card" role="region" aria-label="Recent orders">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Recent Orders</h2>
+                </div>
+                <a class="ax-btn ax-btn--link" href="/crypto/transactions/">All</a>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/></svg></span>
+                  <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Bought BTC</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Jun 27 · 06:10</div></div>
+                  <div style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">0.0250</div><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill" style="font-size:var(--ax-text-2xs);">Filled</span></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12l6 -9l6 9l-6 9l-6 -9"/><path d="M6 12l6 -3l6 3l-6 2l-6 -2"/></svg></span>
+                  <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Sold ETH</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Jun 26 · 19:42</div></div>
+                  <div style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">1.2000</div><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill" style="font-size:var(--ax-text-2xs);">Filled</span></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h12l4 -4h-12l-4 4"/><path d="M8 14l-4 -4h12l4 4"/><path d="M16 10l4 -4h-12l-4 4"/></svg></span>
+                  <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Bought SOL</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Jun 26 · 11:08</div></div>
+                  <div style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">12.500</div><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill" style="font-size:var(--ax-text-2xs);">Pending</span></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- trust note -->
+            <div class="ax-note" style="display:flex;gap:var(--ax-space-3);align-items:flex-start;padding:var(--ax-space-4);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);">
+              <span style="color:var(--ax-accent);flex:0 0 auto;"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M9 12l2 2l4 -4"/></svg></span>
+              <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Orders are protected by 256-bit encryption and processed at the live mid-market rate. Rates refresh every 15 seconds.</p>
+            </div>
+          </div>
+
+        </div>
+
+        <style>
+          .ax-dash-grid > * { grid-column: 1 / -1; }
+          @media (min-width: 1024px) {
+            .ax-dash-grid > .ax-col-form { grid-column: span 7; }
+            .ax-dash-grid > .ax-col-rail { grid-column: span 5; }
+          }
+        </style>
+      
+</div>
+{% endblock %}

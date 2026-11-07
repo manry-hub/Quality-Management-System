@@ -1,0 +1,318 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Sparklines</h1>
+              <p class="ax-page-head__subtitle">Dense KPI tiles, win/loss strips &amp; table-cell trends — all axis-free, all retheme live.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">Last 7 days</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Add tile</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── ROW 1: four hero KPI tiles, big number + area sparkline ───── -->
+          <div class="ax-card ax-col--3" role="region" aria-label="Revenue $748.2K up 12.4%">
+            <div class="ax-card__body">
+              <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div style="font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Revenue</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);line-height:1.1;margin-top:2px;">$748.2K</div>
+                </div>
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>12.4%</span>
+              </div>
+              <div id="sp-rev" style="margin-top:var(--ax-space-3);" aria-label="Revenue trend sparkline, upward"></div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-col--3" role="region" aria-label="Orders 1,248 up 8.1%">
+            <div class="ax-card__body">
+              <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div style="font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Orders</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);line-height:1.1;margin-top:2px;">1,248</div>
+                </div>
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>8.1%</span>
+              </div>
+              <div id="sp-ord" style="margin-top:var(--ax-space-3);" aria-label="Orders trend sparkline, upward"></div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-col--3" role="region" aria-label="Customers 3,920 down 3.1%">
+            <div class="ax-card__body">
+              <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div style="font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Customers</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);line-height:1.1;margin-top:2px;">3,920</div>
+                </div>
+                <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>3.1%</span>
+              </div>
+              <div id="sp-cus" style="margin-top:var(--ax-space-3);" aria-label="Customers trend sparkline, downward"></div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-col--3" role="region" aria-label="Average order value $59.95 up 2.6%">
+            <div class="ax-card__body">
+              <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;">
+                <div>
+                  <div style="font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Avg. order value</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);line-height:1.1;margin-top:2px;">$59.95</div>
+                </div>
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.6%</span>
+              </div>
+              <div id="sp-aov" style="margin-top:var(--ax-space-3);" aria-label="Average order value trend sparkline, upward"></div>
+            </div>
+          </div>
+
+          <!-- ───── ROW 2: six compact metric tiles, inline number + line spark ───── -->
+          <div class="ax-card ax-card--compact ax-col--2" role="region" aria-label="Sessions 54.2K">
+            <div class="ax-card__body" style="text-align:center;">
+              <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Sessions</div>
+              <div class="ax-num" style="font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin:2px 0 6px;">54.2K</div>
+              <div id="sp-sess"></div>
+            </div>
+          </div>
+          <div class="ax-card ax-card--compact ax-col--2" role="region" aria-label="Bounce rate 38%">
+            <div class="ax-card__body" style="text-align:center;">
+              <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Bounce</div>
+              <div class="ax-num" style="font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin:2px 0 6px;">38%</div>
+              <div id="sp-bounce"></div>
+            </div>
+          </div>
+          <div class="ax-card ax-card--compact ax-col--2" role="region" aria-label="Signups 312">
+            <div class="ax-card__body" style="text-align:center;">
+              <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Signups</div>
+              <div class="ax-num" style="font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin:2px 0 6px;">312</div>
+              <div id="sp-signup"></div>
+            </div>
+          </div>
+          <div class="ax-card ax-card--compact ax-col--2" role="region" aria-label="Tickets 47">
+            <div class="ax-card__body" style="text-align:center;">
+              <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Tickets</div>
+              <div class="ax-num" style="font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin:2px 0 6px;">47</div>
+              <div id="sp-tickets"></div>
+            </div>
+          </div>
+          <div class="ax-card ax-card--compact ax-col--2" role="region" aria-label="Refunds 1.2%">
+            <div class="ax-card__body" style="text-align:center;">
+              <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Refunds</div>
+              <div class="ax-num" style="font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin:2px 0 6px;">1.2%</div>
+              <div id="sp-refund"></div>
+            </div>
+          </div>
+          <div class="ax-card ax-card--compact ax-col--2" role="region" aria-label="Uptime 99.9%">
+            <div class="ax-card__body" style="text-align:center;">
+              <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Uptime</div>
+              <div class="ax-num" style="font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin:2px 0 6px;">99.9%</div>
+              <div id="sp-uptime"></div>
+            </div>
+          </div>
+
+          <!-- ───── ROW 3: variant showcase — line / area / bar / win-loss (4 × col-3) ───── -->
+          <section class="ax-card ax-col--3" role="region" aria-label="Line sparkline variant">
+            <div class="ax-card__body">
+              <span class="ax-badge ax-badge--soft ax-badge--pill" style="margin-bottom:var(--ax-space-3);">Line</span>
+              <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">CPU load · last 24h</div>
+              <div class="ax-num" style="font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-text-strong);">62%</div>
+              <div id="sp-var-line" style="margin-top:var(--ax-space-3);" aria-label="Line sparkline of CPU load"></div>
+            </div>
+          </section>
+          <section class="ax-card ax-col--3" role="region" aria-label="Area sparkline variant">
+            <div class="ax-card__body">
+              <span class="ax-badge ax-badge--soft ax-badge--pill" style="margin-bottom:var(--ax-space-3);">Area</span>
+              <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">Memory · last 24h</div>
+              <div class="ax-num" style="font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-text-strong);">7.4&nbsp;GB</div>
+              <div id="sp-var-area" style="margin-top:var(--ax-space-3);" aria-label="Area sparkline of memory usage"></div>
+            </div>
+          </section>
+          <section class="ax-card ax-col--3" role="region" aria-label="Bar sparkline variant">
+            <div class="ax-card__body">
+              <span class="ax-badge ax-badge--soft ax-badge--pill" style="margin-bottom:var(--ax-space-3);">Bar</span>
+              <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">Deploys · last 14d</div>
+              <div class="ax-num" style="font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-text-strong);">128</div>
+              <div id="sp-var-bar" style="margin-top:var(--ax-space-3);" aria-label="Bar sparkline of deploy counts"></div>
+            </div>
+          </section>
+          <section class="ax-card ax-col--3" role="region" aria-label="Win-loss sparkline variant">
+            <div class="ax-card__body">
+              <span class="ax-badge ax-badge--soft ax-badge--pill" style="margin-bottom:var(--ax-space-3);">Win / loss</span>
+              <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">SLA met · last 16d</div>
+              <div class="ax-num" style="font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-text-strong);">13&nbsp;<span style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);font-weight:500;">/ 16</span></div>
+              <div id="sp-var-winloss" style="margin-top:var(--ax-space-3);" aria-label="Win-loss sparkline of SLA results"></div>
+            </div>
+          </section>
+
+          <!-- ───── ROW 4: two wide panels — currency strip + per-product table sparks ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Currency balances with sparklines">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Balances</h2>
+                <p class="ax-card__subtitle">By currency · 30-day trend</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <b class="ax-num" style="width:34px;color:var(--ax-text-strong);">USD</b>
+                <div id="sp-cur-usd" style="flex:1 1 auto;min-width:0;" aria-label="USD balance sparkline"></div>
+                <span class="ax-num" style="color:var(--ax-text-strong);font-family:var(--ax-font-mono);">$48.2K</span>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <b class="ax-num" style="width:34px;color:var(--ax-text-strong);">GBP</b>
+                <div id="sp-cur-gbp" style="flex:1 1 auto;min-width:0;" aria-label="GBP balance sparkline"></div>
+                <span class="ax-num" style="color:var(--ax-text-strong);font-family:var(--ax-font-mono);">£21.5K</span>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <b class="ax-num" style="width:34px;color:var(--ax-text-strong);">EUR</b>
+                <div id="sp-cur-eur" style="flex:1 1 auto;min-width:0;" aria-label="EUR balance sparkline"></div>
+                <span class="ax-num" style="color:var(--ax-text-strong);font-family:var(--ax-font-mono);">€33.1K</span>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <b class="ax-num" style="width:34px;color:var(--ax-text-strong);">AUD</b>
+                <div id="sp-cur-aud" style="flex:1 1 auto;min-width:0;" aria-label="AUD balance sparkline"></div>
+                <span class="ax-num" style="color:var(--ax-text-strong);font-family:var(--ax-font-mono);">A$16.0K</span>
+              </div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--8" role="region" aria-label="Per-product performance table with cell sparklines">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Product Performance</h2>
+                <p class="ax-card__subtitle">Units sold · 12-week table-cell sparklines</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Product</th>
+                    <th class="ax-table__th" scope="col">Category</th>
+                    <th class="ax-table__th" scope="col">12-week trend</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Units</th>
+                    <th class="ax-table__th" scope="col">Δ</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Matte Ceramic Mug</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Drinkware</td>
+                    <td class="ax-table__td"><div id="sp-cell-1" style="width:140px;" aria-label="Mug units trend"></div></td>
+                    <td class="ax-table__td ax-table__td--num">540</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">+18%</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Grid Notebook A5</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Stationery</td>
+                    <td class="ax-table__td"><div id="sp-cell-2" style="width:140px;" aria-label="Notebook units trend"></div></td>
+                    <td class="ax-table__td ax-table__td--num">331</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">+9%</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Aperture Desk Lamp</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Lighting</td>
+                    <td class="ax-table__td"><div id="sp-cell-3" style="width:140px;" aria-label="Lamp units trend"></div></td>
+                    <td class="ax-table__td ax-table__td--num">212</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">−4%</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Felt Laptop Sleeve 14&quot;</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Tech accessories</td>
+                    <td class="ax-table__td"><div id="sp-cell-4" style="width:140px;" aria-label="Sleeve units trend"></div></td>
+                    <td class="ax-table__td ax-table__td--num">97</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">+6%</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Brass Task Light</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Lighting</td>
+                    <td class="ax-table__td"><div id="sp-cell-5" style="width:140px;" aria-label="Task light units trend"></div></td>
+                    <td class="ax-table__td ax-table__td--num">156</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">+12%</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    const spark = (id, type, data, color, h = 56, fillOpacity) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const apex = { colors: [color], stroke: { width: type === 'bar' ? 0 : 2, curve: 'smooth', lineCap: 'round' } };
+      if (type === 'area') apex.fill = { type: 'gradient', gradient: { opacityFrom: fillOpacity ?? 0.35, opacityTo: 0.02 } };
+      if (type === 'bar') apex.plotOptions = { bar: { columnWidth: '60%', borderRadius: 1 } };
+      renderChart(el, type, [{ name: 'v', data }], { height: h, sparkline: true, legend: 'none', apex });
+    };
+
+    // ── Hero KPI tiles (area, h64) ──
+    spark('sp-rev', 'area', [42, 48, 45, 53, 57, 55, 62, 60, 68, 72, 70, 76], cv('--ax-accent'), 64);
+    spark('sp-ord', 'area', [80, 92, 88, 101, 96, 110, 118, 124], cv('--ax-viz-cyan'), 64);
+    spark('sp-cus', 'area', [60, 58, 55, 57, 54, 52, 50, 49], cv('--ax-danger-500'), 64);
+    spark('sp-aov', 'area', [54, 55, 56, 55, 57, 58, 59, 60], cv('--ax-success-500'), 64);
+
+    // ── Compact metric tiles (line, h40) ──
+    spark('sp-sess', 'line', [38, 42, 40, 46, 48, 52, 54], cv('--ax-viz-cyan'), 40);
+    spark('sp-bounce', 'line', [44, 42, 43, 41, 40, 39, 38], cv('--ax-success-500'), 40);
+    spark('sp-signup', 'line', [18, 22, 20, 26, 28, 30, 31], cv('--ax-viz-violet'), 40);
+    spark('sp-tickets', 'line', [62, 58, 55, 51, 49, 48, 47], cv('--ax-success-500'), 40);
+    spark('sp-refund', 'line', [2.1, 1.9, 2.0, 1.6, 1.4, 1.3, 1.2], cv('--ax-success-500'), 40);
+    spark('sp-uptime', 'line', [99.6, 99.7, 99.5, 99.8, 99.9, 99.9, 99.9], cv('--ax-viz-emerald'), 40);
+
+    // ── Variant showcase ──
+    spark('sp-var-line', 'line', [48, 55, 51, 60, 58, 65, 62, 70, 66, 72], cv('--ax-accent'), 56);
+    spark('sp-var-area', 'area', [5.2, 5.8, 6.1, 5.9, 6.6, 7.0, 6.8, 7.2, 7.1, 7.4], cv('--ax-viz-violet'), 56);
+    spark('sp-var-bar', 'bar', [6, 9, 7, 11, 8, 12, 10, 14, 9, 13, 11, 15, 12, 16], cv('--ax-viz-cyan'), 56);
+
+    // ── Win / loss (diverging bar: +1 win = success, −1 loss = danger) ──
+    const wl = [1, 1, -1, 1, 1, 1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1];
+    const wlEl = document.getElementById('sp-var-winloss');
+    if (wlEl) {
+      renderChart(wlEl, 'bar', [{ name: 'SLA', data: wl }], {
+        height: 56, sparkline: true, legend: 'none',
+        apex: {
+          plotOptions: { bar: { columnWidth: '52%', borderRadius: 1, colors: { ranges: [
+            { from: -1, to: 0, color: cv('--ax-danger-500') },
+            { from: 0.0001, to: 1, color: cv('--ax-success-500') },
+          ] } } },
+          yaxis: { show: false },
+        },
+      });
+    }
+
+    // ── Currency balance strips (area, h36) ──
+    spark('sp-cur-usd', 'area', [40, 42, 41, 44, 46, 45, 47, 48], cv('--ax-success-500'), 36, 0.3);
+    spark('sp-cur-gbp', 'area', [24, 23, 22, 23, 22, 21.8, 21.6, 21.5], cv('--ax-danger-500'), 36, 0.3);
+    spark('sp-cur-eur', 'area', [28, 30, 29, 31, 32, 32.5, 33, 33.1], cv('--ax-viz-cyan'), 36, 0.3);
+    spark('sp-cur-aud', 'area', [14, 14.5, 15, 14.8, 15.4, 15.7, 15.9, 16.0], cv('--ax-viz-violet'), 36, 0.3);
+
+    // ── Table-cell sparklines (line, h32) ──
+    spark('sp-cell-1', 'line', [30, 34, 32, 38, 41, 39, 44, 46, 43, 48, 52, 54], cv('--ax-success-500'), 32);
+    spark('sp-cell-2', 'line', [24, 26, 25, 28, 27, 30, 29, 31, 30, 32, 33, 33], cv('--ax-success-500'), 32);
+    spark('sp-cell-3', 'line', [26, 25, 24, 23, 24, 22, 23, 21, 22, 21, 21, 21], cv('--ax-danger-500'), 32);
+    spark('sp-cell-4', 'line', [8, 9, 8, 9, 10, 9, 10, 9, 10, 9, 9.5, 9.7], cv('--ax-success-500'), 32);
+    spark('sp-cell-5', 'line', [11, 12, 13, 12, 13, 14, 13, 15, 14, 15, 15.5, 15.6], cv('--ax-success-500'), 32);
+  </script>
+{% endblock %}

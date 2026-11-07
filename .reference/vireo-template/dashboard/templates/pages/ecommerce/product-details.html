@@ -1,0 +1,349 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axProductDetails()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Aperture Desk Lamp</h1>
+              <p class="ax-page-head__subtitle">SKU <span class="ax-num">APG-0001</span> · Lighting · Last updated Jun 22, 2026.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/ecommerce/products/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+                <span class="ax-btn__label">Back to products</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/ecommerce/edit-product/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"/><path d="M16 5l3 3"/></svg>
+                <span class="ax-btn__label">Edit product</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── GALLERY (6) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Product gallery">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <!-- main image -->
+              <div style="position:relative;aspect-ratio:1/1;border-radius:var(--ax-radius-lg);overflow:hidden;display:flex;align-items:center;justify-content:center;" :style="`background:color-mix(in oklab,${active.color} 16%,var(--ax-surface-subtle));`">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:96px;height:96px;opacity:.5;" :style="`color:${active.color};`"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>
+                <span class="ax-badge ax-badge--danger ax-badge--solid" style="position:absolute;top:14px;inset-inline-start:14px;border-radius:var(--ax-radius-xs);">-19%</span>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" style="position:absolute;top:12px;inset-inline-end:12px;" aria-label="Open in lightbox">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 4l4 0l0 4"/><path d="M14 10l6 -6"/><path d="M8 20l-4 0l0 -4"/><path d="M4 20l6 -6"/></svg>
+                </button>
+              </div>
+              <!-- thumbnail strip -->
+              <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:var(--ax-space-2);">
+                <template x-for="(t,i) in thumbs" :key="i">
+                  <button type="button" @click="active=t" style="aspect-ratio:1/1;border-radius:var(--ax-radius-md);overflow:hidden;border:2px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;" :style="`background:color-mix(in oklab,${t.color} 16%,var(--ax-surface-subtle)); ${active.id===t.id ? 'border-color:var(--ax-accent);box-shadow:0 0 0 1px var(--ax-accent);' : ''}`" :aria-label="'View ' + t.alt" :aria-pressed="(active.id===t.id).toString()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:22px;height:22px;opacity:.6;" :style="`color:${t.color};`"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/></svg>
+                  </button>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── BUY BOX (6) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Purchase">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;">
+                  <div>
+                    <span style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);font-weight:var(--ax-weight-medium);">Aperture · Lighting</span>
+                    <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);line-height:1.2;margin-top:2px;">Aperture Desk Lamp</h2>
+                  </div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" :aria-pressed="wished.toString()" @click="wished=!wished" :aria-label="wished ? 'Remove from wishlist' : 'Add to wishlist'">
+                    <svg viewBox="0 0 24 24" :fill="wished ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;" :style="wished ? 'color:var(--ax-accent);' : ''"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>
+                  </button>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-3);">
+                  <span class="ax-rating" aria-label="4.7 out of 5">
+                    <template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="s<=5 ? (s<=4 ? 'ax-rating__star--full' : 'ax-rating__star--half') : ''" viewBox="0 0 24 24" :fill="s<=4 ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template>
+                  </span>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">4.7</span>
+                  <a href="#reviews" class="ax-link" style="font-size:var(--ax-text-sm);">128 reviews</a>
+                </div>
+              </div>
+
+              <!-- price -->
+              <div class="ax-cluster" style="gap:var(--ax-space-3);align-items:baseline;">
+                <span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);">$129.00</span>
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-md);color:var(--ax-text-subtle);text-decoration:line-through;">$159.00</span>
+                <span class="ax-badge ax-badge--danger ax-badge--soft" style="border-radius:var(--ax-radius-xs);">Save $30.00</span>
+              </div>
+
+              <!-- stock -->
+              <div>
+                <span class="ax-badge ax-badge--success ax-badge--soft" style="border-radius:var(--ax-radius-xs);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M5 12l5 5l10 -10"/></svg>In stock — <span class="ax-num">84</span> available</span>
+              </div>
+
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.6;">A precision-machined aluminium task lamp with stepless dimming, a magnetic articulating arm and a warm 2700K–4000K tunable LED. Built for focused desk work, it ships with a USB-C passthrough base.</p>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- color swatches -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <span class="ax-label">Finish</span>
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="colors.find(c=>c.id===color).name"></span>
+                </div>
+                <div role="radiogroup" aria-label="Finish" class="ax-cluster" style="gap:var(--ax-space-3);">
+                  <template x-for="c in colors" :key="c.id">
+                    <button type="button" role="radio" :aria-checked="(color===c.id).toString()" @click="color=c.id" :aria-label="c.name" style="width:32px;height:32px;border-radius:50%;border:2px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;" :style="`background:${c.hex}; box-shadow:0 0 0 1px var(--ax-border-strong); ${color===c.id ? 'outline:2px solid var(--ax-accent);outline-offset:2px;' : ''}`">
+                      <svg x-show="color===c.id" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;"><path d="M5 12l5 5l10 -10"/></svg>
+                    </button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- size pills -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <span class="ax-label">Reach</span>
+                </div>
+                <div role="radiogroup" aria-label="Reach" class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <template x-for="s in sizes" :key="s.id">
+                    <button type="button" role="radio" :aria-checked="(size===s.id).toString()" :aria-disabled="(!s.avail).toString()" @click="s.avail && (size=s.id)" :disabled="!s.avail" style="min-width:64px;padding:8px var(--ax-space-3);font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);border-radius:var(--ax-radius-sm);cursor:pointer;border:1px solid var(--ax-border);background:var(--ax-surface);" :style="!s.avail ? 'color:var(--ax-text-disabled);text-decoration:line-through;cursor:not-allowed;' : (size===s.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);color:var(--ax-accent);' : 'color:var(--ax-text);')" x-text="s.name"></button>
+                  </template>
+                </div>
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- qty + add to cart -->
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <div class="ax-cluster" style="gap:0;flex-wrap:nowrap;border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);overflow:hidden;">
+                  <button type="button" @click="qty=Math.max(1,qty-1)" :disabled="qty<=1" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--ax-surface);border:0;cursor:pointer;color:var(--ax-text);" aria-label="Decrease quantity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;"><path d="M5 12l14 0"/></svg></button>
+                  <input type="text" class="ax-num" inputmode="numeric" x-model.number="qty" style="width:48px;height:38px;text-align:center;border:0;border-inline:1px solid var(--ax-border);background:var(--ax-surface);font-family:var(--ax-font-mono);color:var(--ax-text-strong);" aria-label="Quantity">
+                  <button type="button" @click="qty=Math.min(84,qty+1)" :disabled="qty>=84" style="width:38px;height:38px;display:flex;align-items:center;justify-content:center;background:var(--ax-surface);border:0;cursor:pointer;color:var(--ax-text);" aria-label="Increase quantity"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></button>
+                </div>
+                <a href="/ecommerce/cart/" class="ax-btn ax-btn--primary ax-btn--block" @click="added=true" style="flex:1 1 auto;">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg>
+                  <span class="ax-btn__label">Add to cart</span>
+                </a>
+              </div>
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--block">Buy it now</button>
+              <p x-show="added" x-cloak x-transition style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);text-align:center;">Added <span class="ax-num" x-text="qty"></span> to your cart.</p>
+
+              <!-- meta -->
+              <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:var(--ax-space-3);font-size:var(--ax-text-sm);">
+                <div><span style="color:var(--ax-text-subtle);">SKU</span> <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);margin-inline-start:6px;">APG-0001</span></div>
+                <div><span style="color:var(--ax-text-subtle);">Category</span> <span style="color:var(--ax-text);margin-inline-start:6px;">Lighting</span></div>
+                <div><span style="color:var(--ax-text-subtle);">Vendor</span> <span style="color:var(--ax-text);margin-inline-start:6px;">Aperture Studio</span></div>
+                <div><span style="color:var(--ax-text-subtle);">Warranty</span> <span style="color:var(--ax-text);margin-inline-start:6px;">2 years</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── TABS (8) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Product information" x-data="{ tab:'desc' }">
+            <div class="ax-card__body">
+              <div class="ax-tabs">
+                <div class="ax-tabs__list" role="tablist" aria-label="Product details">
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="(tab==='desc').toString()" :class="tab==='desc' && 'is-active'" @click="tab='desc'">Description</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="(tab==='specs').toString()" :class="tab==='specs' && 'is-active'" @click="tab='specs'">Specifications</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="(tab==='reviews').toString()" :class="tab==='reviews' && 'is-active'" @click="tab='reviews'">Reviews <span class="ax-badge ax-badge--neutral ax-badge--soft ax-badge--sm ax-tabs__badge ax-num">128</span></button>
+                </div>
+
+                <!-- description -->
+                <div class="ax-tabs__panel" role="tabpanel" x-show="tab==='desc'">
+                  <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.7;">
+                    <p>The Aperture Desk Lamp pairs a precision aluminium body with a frictionless magnetic joint, letting you angle light exactly where you need it and have it hold. A stepless dimmer and tunable colour temperature take it from a crisp 4000K work light to a relaxed 2700K glow.</p>
+                    <ul style="display:flex;flex-direction:column;gap:var(--ax-space-2);padding-inline-start:var(--ax-space-5);">
+                      <li>Stepless dimming from 1% to 100% with memory recall</li>
+                      <li>Tunable white 2700K–4000K, CRI 95 for true colour</li>
+                      <li>Magnetic articulating arm with 270° rotation</li>
+                      <li>USB-C passthrough charging built into the base</li>
+                      <li>Flicker-free driver, rated for 25,000 hours</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <!-- specifications -->
+                <div class="ax-tabs__panel" role="tabpanel" x-show="tab==='specs'" x-cloak>
+                  <div class="ax-table-wrap">
+                    <table class="ax-table">
+                      <tbody>
+                        <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-muted);width:40%;">Material</td><td class="ax-table__td" style="color:var(--ax-text-strong);">Anodized aluminium, steel base</td></tr>
+                        <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-muted);">Light source</td><td class="ax-table__td" style="color:var(--ax-text-strong);">Integrated LED, 9W</td></tr>
+                        <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-muted);">Colour temperature</td><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">2700K – 4000K</td></tr>
+                        <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-muted);">Brightness</td><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">600 lm</td></tr>
+                        <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-muted);">Reach</td><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">48 cm</td></tr>
+                        <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-muted);">Weight</td><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">1.4 kg</td></tr>
+                        <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-muted);">In the box</td><td class="ax-table__td" style="color:var(--ax-text-strong);">Lamp, USB-C cable, quick-start guide</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- reviews -->
+                <div class="ax-tabs__panel" role="tabpanel" x-show="tab==='reviews'" x-cloak id="reviews">
+                  <div class="ax-dash-grid" style="gap:var(--ax-space-6);">
+                    <!-- aggregate -->
+                    <div class="ax-col--4">
+                      <div style="text-align:center;padding:var(--ax-space-4) 0;">
+                        <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-num-kpi);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);line-height:1;">4.7</div>
+                        <span class="ax-rating" style="justify-content:center;margin-top:var(--ax-space-2);" aria-hidden="true"><template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="s<=5 && 'ax-rating__star--full'" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span>
+                        <p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">Based on <span class="ax-num">128</span> reviews</p>
+                      </div>
+                      <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                        <template x-for="d in dist" :key="d.star">
+                          <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                            <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-muted);width:12px;" x-text="d.star"></span>
+                            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="width:12px;height:12px;color:var(--ax-warning-500);"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                            <div class="ax-progress ax-progress--xs" style="flex:1 1 auto;"><div class="ax-progress__track"><div class="ax-progress__fill" :style="`width:${d.pct}%;background:var(--ax-accent);`"></div></div></div>
+                            <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:28px;text-align:right;" x-text="d.n"></span>
+                          </div>
+                        </template>
+                      </div>
+                      <button type="button" class="ax-btn ax-btn--secondary ax-btn--block" style="margin-top:var(--ax-space-4);" @click="$dispatch('open-review')">Write a review</button>
+                    </div>
+
+                    <!-- review list -->
+                    <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <template x-for="r in reviews" :key="r.id">
+                        <article style="padding-bottom:var(--ax-space-4);border-bottom:1px solid var(--ax-border);">
+                          <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;margin-bottom:var(--ax-space-2);">
+                            <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.c} 20%,transparent);color:${r.c};font-weight:600;font-size:var(--ax-text-2xs);`" x-text="r.i"></span>
+                            <div style="flex:1 1 auto;min-width:0;">
+                              <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                                <b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="r.name"></b>
+                                <span x-show="r.verified" class="ax-badge ax-badge--success ax-badge--soft ax-badge--sm" style="border-radius:var(--ax-radius-xs);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:11px;height:11px;"><path d="M5 12l5 5l10 -10"/></svg>Verified</span>
+                              </div>
+                              <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="r.date"></span>
+                            </div>
+                            <span class="ax-rating ax-rating--sm" :aria-label="r.rating + ' out of 5'"><template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="s<=r.rating && 'ax-rating__star--full'" viewBox="0 0 24 24" :fill="s<=r.rating ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span>
+                          </div>
+                          <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.6;" x-text="r.body"></p>
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="margin-top:var(--ax-space-2);">
+                            <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg>
+                            Helpful (<span class="ax-num" x-text="r.helpful"></span>)
+                          </button>
+                        </article>
+                      </template>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── BUYER RAIL (4) ───── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <div class="ax-card" role="region" aria-label="Shipping and returns">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Shipping &amp; returns</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-4m-1 -8h11v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"/><path d="M3 9l4 0"/></svg></span>
+                  <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Free shipping over $75</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Arrives in 2–4 business days</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg></span>
+                  <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">30-day returns</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">No-questions-asked refund</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11.46 20.846a12 12 0 0 1 -7.96 -14.846a12 12 0 0 0 8.5 -3a12 12 0 0 0 8.5 3a12 12 0 0 1 -.09 7.06"/><path d="M15 19l2 2l4 -4"/></svg></span>
+                  <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">2-year warranty</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Covers parts &amp; the driver</div></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- related -->
+            <div class="ax-card" role="region" aria-label="Related products">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">You might also like</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <template x-for="rp in related" :key="rp.id">
+                  <a href="/ecommerce/product-details/" class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;text-decoration:none;">
+                    <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" :style="`background:color-mix(in oklab,${rp.color} 16%,var(--ax-surface-subtle));color:${rp.color};`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/></svg></span>
+                    <div style="flex:1 1 auto;min-width:0;">
+                      <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="rp.name"></div>
+                      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="rp.category"></div>
+                    </div>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="money(rp.price)"></span>
+                  </a>
+                </template>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- write review modal -->
+        <div x-data="{ open:false, sent:false, rating:0, hover:0 }" @open-review.window="open=true;sent=false" x-show="open" x-cloak
+             style="position:fixed;inset:0;z-index:var(--ax-z-modal,80);display:flex;align-items:center;justify-content:center;padding:var(--ax-space-5);">
+          <div style="position:absolute;inset:0;background:color-mix(in oklab,var(--ax-canvas) 70%,transparent);backdrop-filter:blur(4px);" @click="open=false"></div>
+          <div class="ax-card" style="position:relative;width:min(480px,100%);margin:0;" @keydown.escape.window="open=false" role="dialog" aria-modal="true" aria-label="Write a review">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Write a review</h2></div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="open=false" aria-label="Close"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <form class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);" @submit.prevent="sent=true">
+              <div x-show="sent" class="ax-alert ax-alert--success ax-alert--inline"><div class="ax-alert__content"><div class="ax-alert__message">Thanks! Your review has been submitted for moderation.</div></div></div>
+              <div class="ax-field">
+                <span class="ax-label">Your rating</span>
+                <span class="ax-rating ax-rating--lg ax-rating--input" role="radiogroup" aria-label="Rating">
+                  <template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="(hover||rating)>=s && 'is-selected'" @click="rating=s" @mouseenter="hover=s" @mouseleave="hover=0" viewBox="0 0 24 24" :fill="(hover||rating)>=s ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="cursor:pointer;" role="radio" :aria-checked="(rating===s).toString()" :aria-label="s + ' stars'"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template>
+                </span>
+              </div>
+              <div class="ax-field"><label class="ax-label" for="rev-title">Title</label><input id="rev-title" type="text" class="ax-input" placeholder="Sum up your experience"></div>
+              <div class="ax-field"><label class="ax-label" for="rev-body">Review</label><textarea id="rev-body" class="ax-textarea" placeholder="What did you like or dislike?"></textarea></div>
+              <div class="ax-cluster" style="justify-content:flex-end;gap:var(--ax-space-2);">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="open=false">Cancel</button>
+                <button type="submit" class="ax-btn ax-btn--primary">Submit review</button>
+              </div>
+            </form>
+          </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axProductDetails(){
+            return {
+              wished:false, qty:1, added:false, color:'graphite', size:'std',
+              thumbs:[
+                { id:1, color:'#38BDF8', alt:'Front view' },
+                { id:2, color:'#A78BFA', alt:'Side profile' },
+                { id:3, color:'#FBBF24', alt:'Base detail' },
+                { id:4, color:'#34D399', alt:'In use on desk' },
+                { id:5, color:'#F472B6', alt:'Packaging' },
+              ],
+              active:{ id:1, color:'#38BDF8', alt:'Front view' },
+              colors:[
+                { id:'graphite', name:'Graphite', hex:'#52514C' },
+                { id:'ivory', name:'Ivory', hex:'#E7E2D6' },
+                { id:'sage', name:'Sage', hex:'#7A8B6F' },
+                { id:'cobalt', name:'Cobalt', hex:'#3457B2' },
+              ],
+              sizes:[
+                { id:'compact', name:'40 cm', avail:true },
+                { id:'std', name:'48 cm', avail:true },
+                { id:'tall', name:'60 cm', avail:false },
+              ],
+              dist:[
+                { star:5, n:96, pct:75 },
+                { star:4, n:21, pct:16 },
+                { star:3, n:7, pct:5 },
+                { star:2, n:3, pct:2 },
+                { star:1, n:1, pct:1 },
+              ],
+              reviews:[
+                { id:1, name:'Camila Rossi', i:'CR', c:'#34D399', verified:true, date:'Jun 18, 2026', rating:5, helpful:24, body:'Beautifully built and the magnetic arm actually holds position — no drooping after a week of heavy use. The 2700K setting is lovely for evening work.' },
+                { id:2, name:'Henry Whitlock', i:'HW', c:'#A78BFA', verified:true, date:'Jun 9, 2026', rating:4, helpful:11, body:'Great light quality and the USB-C passthrough is a nice touch. Knocked a star because the dimmer is touch-only and occasionally misreads a swipe.' },
+                { id:3, name:'Priya Nair', i:'PN', c:'#FBBF24', verified:false, date:'May 30, 2026', rating:5, helpful:7, body:'Replaced two cheaper lamps with this one. The colour rendering is noticeably better — my desk photos look true to life now.' },
+              ],
+              related:[
+                { id:1, name:'Brass Task Light', category:'Lighting', price:182, color:'#A78BFA' },
+                { id:2, name:'Walnut Monitor Riser', category:'Desk', price:96, color:'#FBBF24' },
+                { id:3, name:'Cork Desk Mat', category:'Desk', price:38, color:'#38BDF8' },
+              ],
+              money(n){ return '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+            };
+          }
+        </script>
+{% endblock %}

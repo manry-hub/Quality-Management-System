@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axMasks()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Input masks</h1>
+              <p class="ax-page-head__subtitle">Guided entry for phone, card, currency, dates and identifiers — the mask guide is decorative, raw values submit.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/forms/validation/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2l4 -4"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>
+                <span class="ax-btn__label">Validation</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--primary" @click="save()" :aria-busy="saving">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                <span class="ax-btn__label" x-text="saving ? 'Saving…' : 'Submit'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- toast -->
+        <div x-show="toast" x-transition x-cloak style="position:fixed;bottom:24px;right:24px;z-index:60;">
+          <div class="ax-cluster" style="gap:var(--ax-space-2);padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-lg);">
+            <span style="color:var(--ax-viz-emerald);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+            <span style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Form submitted with masked values</span>
+          </div>
+        </div>
+
+        <form @submit.prevent="save()" class="ax-dash-grid">
+
+          <!-- ───── CONTACT MASKS ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Contact masks">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Contact</span>
+                <h2 class="ax-card__title">Phone &amp; identifiers</h2>
+                <p class="ax-card__subtitle">Separators are inserted automatically as you type.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-field">
+                <label class="ax-label" for="m-phone">Phone number</label>
+                <div class="ax-field__control">
+                  <span class="ax-field__affix ax-field__affix--leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span>
+                  <input id="m-phone" type="tel" inputmode="tel" class="ax-input ax-input--with-leading-icon ax-mono" placeholder="(000) 000-0000"
+                         x-model="phone" @input="phone=maskPhone($event.target.value)" autocomplete="tel" maxlength="14">
+                </div>
+                <span class="ax-help">US format · <span class="ax-mono">(000) 000-0000</span></span>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="m-ssn">Tax ID</label>
+                <input id="m-ssn" type="text" inputmode="numeric" class="ax-input ax-mono" placeholder="00-0000000"
+                       x-model="ein" @input="ein=maskEin($event.target.value)" maxlength="10">
+                <span class="ax-help">EIN · <span class="ax-mono">NN-NNNNNNN</span></span>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="m-ip">Server IP</label>
+                <input id="m-ip" type="text" inputmode="decimal" class="ax-input ax-mono" placeholder="000.000.000.000"
+                       x-model="ip" @input="ip=maskIp($event.target.value)" maxlength="15">
+                <span class="ax-help">IPv4 · four octets, dot-separated.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── PAYMENT MASKS ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Payment masks">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Payment</span>
+                <h2 class="ax-card__title">Card details</h2>
+                <p class="ax-card__subtitle">Brand glyph detected from the leading digits.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-field">
+                <label class="ax-label" for="m-card">Card number</label>
+                <div class="ax-input-group">
+                  <input id="m-card" type="text" inputmode="numeric" class="ax-input ax-mono" placeholder="0000 0000 0000 0000"
+                         x-model="card" @input="card=maskCard($event.target.value)" maxlength="19" autocomplete="cc-number" style="letter-spacing:.08em;">
+                  <span class="ax-input-group__addon" aria-hidden="true">
+                    <span x-text="cardBrand()" style="font-size:var(--ax-text-2xs);font-weight:600;text-transform:uppercase;letter-spacing:.04em;" :style="cardBrand()==='—' ? 'color:var(--ax-text-subtle);' : 'color:var(--ax-accent);'"></span>
+                  </span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                <div class="ax-field">
+                  <label class="ax-label" for="m-exp">Expiry</label>
+                  <input id="m-exp" type="text" inputmode="numeric" class="ax-input ax-mono" placeholder="MM / YY"
+                         x-model="exp" @input="exp=maskExp($event.target.value)" maxlength="7" autocomplete="cc-exp">
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="m-cvc">CVC</label>
+                  <input id="m-cvc" type="text" inputmode="numeric" class="ax-input ax-mono" placeholder="000"
+                         x-model="cvc" @input="cvc=$event.target.value.replace(/\D/g,'').slice(0,4)" maxlength="4" autocomplete="cc-csc">
+                  <span class="ax-help">Never stored or logged.</span>
+                </div>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="m-iban">IBAN</label>
+                <input id="m-iban" type="text" class="ax-input ax-mono" placeholder="DE00 0000 0000 0000 0000 00"
+                       x-model="iban" @input="iban=maskIban($event.target.value)" maxlength="29" style="text-transform:uppercase;">
+                <span class="ax-help">Grouped in fours · letters auto-uppercased.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── NUMBER & MONEY MASKS ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Number and currency masks">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Numeric</span>
+                <h2 class="ax-card__title">Currency &amp; percent</h2>
+                <p class="ax-card__subtitle">Thousands separators and fixed decimals.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-field">
+                <label class="ax-label" for="m-amount">Amount</label>
+                <div class="ax-input-group">
+                  <span class="ax-input-group__addon">$</span>
+                  <input id="m-amount" type="text" inputmode="decimal" class="ax-input ax-mono" placeholder="1,234.56"
+                         x-model="amount" @input="amount=maskMoney($event.target.value)" @blur="amount=blurMoney(amount)" style="text-align:end;">
+                  <span class="ax-input-group__addon">USD</span>
+                </div>
+                <span class="ax-help">Two decimals · grouped thousands.</span>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="m-pct">Discount</label>
+                <div class="ax-input-group">
+                  <input id="m-pct" type="text" inputmode="decimal" class="ax-input ax-mono" placeholder="00.0"
+                         x-model="pct" @input="pct=maskPct($event.target.value)" style="text-align:end;">
+                  <span class="ax-input-group__addon">%</span>
+                </div>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="m-weight">Net weight</label>
+                <div class="ax-input-group">
+                  <input id="m-weight" type="text" inputmode="decimal" class="ax-input ax-mono" placeholder="0.000"
+                         x-model="weight" @input="weight=$event.target.value.replace(/[^\d.]/g,'')" style="text-align:end;">
+                  <span class="ax-input-group__addon">kg</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── DATE & TIME MASKS ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Date and time masks">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Temporal</span>
+                <h2 class="ax-card__title">Date &amp; time</h2>
+                <p class="ax-card__subtitle">Typeable masks for ISO dates and clock values.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-field">
+                <label class="ax-label" for="m-date">Date</label>
+                <div class="ax-field__control">
+                  <span class="ax-field__affix ax-field__affix--leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg></span>
+                  <input id="m-date" type="text" inputmode="numeric" class="ax-input ax-input--with-leading-icon ax-mono" placeholder="YYYY-MM-DD"
+                         x-model="date" @input="date=maskDate($event.target.value)" maxlength="10">
+                </div>
+                <span class="ax-help">ISO 8601 · <span class="ax-mono">YYYY-MM-DD</span></span>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                <div class="ax-field">
+                  <label class="ax-label" for="m-time24">Time (24h)</label>
+                  <input id="m-time24" type="text" inputmode="numeric" class="ax-input ax-mono" placeholder="HH:MM"
+                         x-model="time24" @input="time24=maskTime($event.target.value)" maxlength="5">
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="m-time12">Time (12h)</label>
+                  <input id="m-time12" type="text" class="ax-input ax-mono" placeholder="hh:MM AM"
+                         x-model="time12" @input="time12=maskTime12($event.target.value)" maxlength="8">
+                </div>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="m-zip">ZIP+4</label>
+                <input id="m-zip" type="text" inputmode="numeric" class="ax-input ax-mono" placeholder="00000-0000"
+                       x-model="zip" @input="zip=maskZip($event.target.value)" maxlength="10" autocomplete="postal-code">
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── RAW VALUE READOUT ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Raw value readout">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Submitted payload</span>
+                <h2 class="ax-card__title">What the server receives</h2>
+                <p class="ax-card__subtitle">Masks are visual only — the unformatted value is what gets sent.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--ax-space-4);">
+                <template x-for="r in payload" :key="r.k">
+                  <div style="padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                    <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);" x-text="r.k"></div>
+                    <div class="ax-mono ax-truncate" style="margin-top:4px;color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="r.v() || '—'"></div>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
+
+        </form>
+
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+        <script>
+          function axMasks(){
+            const d=(s)=> (s||'').replace(/\D/g,'');
+            return {
+              saving:false, toast:false,
+              phone:'(503) 555-0142', ein:'82-1739204', ip:'192.168.1.24',
+              card:'4242 4242 4242 4242', exp:'08 / 27', cvc:'123', iban:'DE89 3704 0044 0532 0130 00',
+              amount:'1,299.00', pct:'12.5', weight:'2.4',
+              date:'2026-03-14', time24:'09:30', time12:'02:45 PM', zip:'97201-4021',
+              // ── mask helpers ──
+              maskPhone(v){ const n=d(v).slice(0,10); if(n.length<4) return n; if(n.length<7) return `(${n.slice(0,3)}) ${n.slice(3)}`; return `(${n.slice(0,3)}) ${n.slice(3,6)}-${n.slice(6)}`; },
+              maskEin(v){ const n=d(v).slice(0,9); return n.length<3 ? n : `${n.slice(0,2)}-${n.slice(2)}`; },
+              maskIp(v){ return v.replace(/[^\d.]/g,'').split('.').slice(0,4).map(o=>o.slice(0,3)).join('.'); },
+              maskCard(v){ return d(v).slice(0,16).replace(/(.{4})/g,'$1 ').trim(); },
+              maskExp(v){ const n=d(v).slice(0,4); return n.length<3 ? n : `${n.slice(0,2)} / ${n.slice(2)}`; },
+              maskIban(v){ return v.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,24).replace(/(.{4})/g,'$1 ').trim(); },
+              maskMoney(v){ let n=v.replace(/[^\d.]/g,''); const p=n.split('.'); let i=p[0].replace(/^0+(?=\d)/,'').replace(/\B(?=(\d{3})+(?!\d))/g,','); return p.length>1 ? i+'.'+p[1].slice(0,2) : i; },
+              blurMoney(v){ if(!v) return ''; const n=parseFloat(v.replace(/,/g,'')); return isNaN(n) ? '' : n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              maskPct(v){ let n=v.replace(/[^\d.]/g,''); const p=n.split('.'); let i=p[0].slice(0,3); return p.length>1 ? i+'.'+p[1].slice(0,1) : i; },
+              maskDate(v){ const n=d(v).slice(0,8); if(n.length<5) return n; if(n.length<7) return `${n.slice(0,4)}-${n.slice(4)}`; return `${n.slice(0,4)}-${n.slice(4,6)}-${n.slice(6)}`; },
+              maskTime(v){ const n=d(v).slice(0,4); return n.length<3 ? n : `${n.slice(0,2)}:${n.slice(2)}`; },
+              maskTime12(v){ let up=v.toUpperCase(); const ap=(up.match(/[AP]M?/)||[''])[0]; const n=d(v).slice(0,4); let t = n.length<3 ? n : `${n.slice(0,2)}:${n.slice(2)}`; return ap ? `${t} ${ap.startsWith('P')?'PM':'AM'}`.trim() : t; },
+              maskZip(v){ const n=d(v).slice(0,9); return n.length<6 ? n : `${n.slice(0,5)}-${n.slice(5)}`; },
+              cardBrand(){ const n=d(this.card); if(/^4/.test(n)) return 'Visa'; if(/^5[1-5]/.test(n)) return 'Mastercard'; if(/^3[47]/.test(n)) return 'Amex'; if(/^6/.test(n)) return 'Discover'; return '—'; },
+              get payload(){ return [
+                {k:'phone',v:()=>d(this.phone)},
+                {k:'card_number',v:()=>d(this.card)},
+                {k:'expiry',v:()=>d(this.exp)},
+                {k:'iban',v:()=>this.iban.replace(/\s/g,'')},
+                {k:'amount',v:()=>this.amount.replace(/,/g,'')},
+                {k:'discount_pct',v:()=>this.pct},
+                {k:'date',v:()=>this.date},
+                {k:'zip',v:()=>this.zip.replace('-','')},
+              ]; },
+              save(){ this.saving=true; setTimeout(()=>{ this.saving=false; this.toast=true; setTimeout(()=>this.toast=false,2600); },600); },
+            };
+          }
+        </script>
+{% endblock %}

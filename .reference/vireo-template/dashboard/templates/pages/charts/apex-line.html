@@ -1,0 +1,274 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Line Charts</h1>
+              <p class="ax-page-head__subtitle">ApexCharts line family — basic, multi-series, dashed comparison, stepline and annotated variants on the live palette.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="https://apexcharts.com/docs/chart-types/line-chart/" target="_blank" rel="noopener">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5"/><path d="M3 16h5v5"/><path d="M3 21l5 -5"/></svg>
+                <span class="ax-btn__label">Docs</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export all</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19l16 0"/><path d="M4 15l4 -6l4 2l4 -5l4 4"/></svg>
+                <span class="ax-btn__label">New chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── BASIC LINE WITH MARKERS — hero, 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Basic line chart of daily active users"
+                   x-data="{ tab: 'chart' }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Basic · with markers</span>
+                <h2 class="ax-card__title">Daily Active Users</h2>
+                <p class="ax-card__subtitle">Single trend with points revealed on hover</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="tablist" aria-label="View mode">
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='chart' }" @click="tab='chart'" :aria-selected="tab==='chart'" role="tab">Chart</button>
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='table' }" @click="tab='table'" :aria-selected="tab==='table'" role="tab">Table</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div x-show="tab==='chart'">
+                <div id="ax-line-basic" aria-label="Line chart of daily active users across two weeks"></div>
+              </div>
+              <div x-show="tab==='table'" x-cloak class="ax-table-wrap">
+                <table class="ax-table ax-table--compact">
+                  <caption class="ax-visually-hidden">Daily active users by day</caption>
+                  <thead class="ax-table__head"><tr><th class="ax-table__th" scope="col">Day</th><th class="ax-table__th ax-table__th--num" scope="col">Active users</th></tr></thead>
+                  <tbody>
+                    <tr class="ax-table__row"><td class="ax-table__td">Mon</td><td class="ax-table__td ax-table__td--num">8,420</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Tue</td><td class="ax-table__td ax-table__td--num">9,180</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Wed</td><td class="ax-table__td ax-table__td--num">8,940</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Thu</td><td class="ax-table__td ax-table__td--num">10,260</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Fri</td><td class="ax-table__td ax-table__td--num">11,540</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Sat</td><td class="ax-table__td ax-table__td--num">9,820</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Sun</td><td class="ax-table__td ax-table__td--num">8,610</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── STEPLINE — 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Stepline chart of subscription plan changes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Stepline</span>
+                <h2 class="ax-card__title">Plan Seats</h2>
+                <p class="ax-card__subtitle">Discrete step changes</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-line-step" aria-label="Stepline chart of active plan seats over time"></div>
+            </div>
+          </section>
+
+          <!-- ───── MULTI-SERIES LINE — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Multi-series line chart of revenue by region">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Multi-series</span>
+                <h2 class="ax-card__title">Revenue by Region</h2>
+                <p class="ax-card__subtitle">Three regions tracked monthly</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:wrap;">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Americas</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">EMEA</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">APAC</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-line-multi" aria-label="Multi-series line chart of revenue across Americas, EMEA and APAC"></div>
+            </div>
+          </section>
+
+          <!-- ───── DASHED COMPARISON LINE — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Dashed line chart comparing this year to last year">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Dashed comparison</span>
+                <h2 class="ax-card__title">This Year vs. Last</h2>
+                <p class="ax-card__subtitle">Solid current period, dashed prior period</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:14px;height:3px;border-radius:2px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">2025</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:14px;height:3px;border-radius:2px;background:repeating-linear-gradient(90deg,var(--ax-viz-cyan) 0 4px,transparent 4px 7px);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">2024</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-line-dashed" aria-label="Line chart comparing this year solid against last year dashed"></div>
+            </div>
+          </section>
+
+          <!-- ───── ANNOTATED LINE — 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Annotated line chart of server response time">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">With annotations</span>
+                <h2 class="ax-card__title">Response Time (p95)</h2>
+                <p class="ax-card__subtitle">SLA threshold and a deploy marker called out inline</p>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Within SLA</span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-line-annot" aria-label="Line chart of p95 response time with an SLA threshold line and a deploy annotation"></div>
+            </div>
+          </section>
+
+          <!-- ───── REFERENCE rail — 4 col ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Line chart guidance">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Curve cheatsheet</h2>
+                <p class="ax-card__subtitle">Pick the right stroke</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-list ax-list--compact">
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-badge ax-badge--soft ax-badge--pill ax-mono" style="font-size:var(--ax-text-2xs);">smooth</span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Spline</span><span class="ax-list__meta" style="font-size:var(--ax-text-xs);">Trends, sampled metrics</span></span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-badge ax-badge--soft ax-badge--pill ax-mono" style="font-size:var(--ax-text-2xs);">straight</span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Linear</span><span class="ax-list__meta" style="font-size:var(--ax-text-xs);">Exact point-to-point values</span></span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-badge ax-badge--soft ax-badge--pill ax-mono" style="font-size:var(--ax-text-2xs);">stepline</span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Step</span><span class="ax-list__meta" style="font-size:var(--ax-text-xs);">Discrete states, counts, tiers</span></span>
+                </li>
+              </ul>
+              <div class="ax-divider" style="margin:var(--ax-space-3) 0;"></div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Default stroke width</span>
+                <span class="ax-badge ax-badge--soft ax-badge--pill ax-num">2px</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // Basic line with markers
+    const basic = document.getElementById('ax-line-basic');
+    if (basic) renderChart(basic, 'line', [
+      { name: 'Active users', data: [8420, 9180, 8940, 10260, 11540, 9820, 8610] },
+    ], {
+      height: 330, legend: 'none', accent: true,
+      apex: {
+        stroke: { width: 2.5, curve: 'smooth' },
+        markers: { size: 0, hover: { size: 6 } },
+        xaxis: { categories: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] },
+      },
+    });
+
+    // Stepline
+    const step = document.getElementById('ax-line-step');
+    if (step) renderChart(step, 'line', [
+      { name: 'Seats', data: [40, 40, 55, 55, 55, 80, 80, 110] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-violet')],
+        stroke: { width: 2.5, curve: 'stepline' },
+        xaxis: { categories: ['Wk1','Wk2','Wk3','Wk4','Wk5','Wk6','Wk7','Wk8'] },
+      },
+    });
+
+    // Multi-series line
+    const multi = document.getElementById('ax-line-multi');
+    if (multi) renderChart(multi, 'line', [
+      { name: 'Americas', data: [62, 68, 65, 74, 80, 78, 86] },
+      { name: 'EMEA',     data: [41, 44, 46, 50, 54, 56, 61] },
+      { name: 'APAC',     data: [22, 26, 28, 31, 34, 38, 43] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet')],
+        stroke: { width: 2.5, curve: 'smooth' },
+        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun','Jul'] },
+        yaxis: { labels: { formatter: (v) => '$' + v + 'K' } },
+      },
+    });
+
+    // Dashed comparison line
+    const dashed = document.getElementById('ax-line-dashed');
+    if (dashed) renderChart(dashed, 'line', [
+      { name: '2025', data: [42, 48, 45, 53, 57, 55, 62] },
+      { name: '2024', data: [38, 41, 43, 47, 50, 53, 54] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan')],
+        stroke: { width: [2.5, 2], curve: 'smooth', dashArray: [0, 6] },
+        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun','Jul'] },
+        yaxis: { labels: { formatter: (v) => '$' + v + 'K' } },
+      },
+    });
+
+    // Annotated line — SLA threshold + deploy marker
+    const annot = document.getElementById('ax-line-annot');
+    if (annot) renderChart(annot, 'line', [
+      { name: 'p95 (ms)', data: [182, 176, 190, 168, 240, 198, 174, 162, 158, 166, 154, 149] },
+    ], {
+      height: 320, legend: 'none', accent: true,
+      apex: {
+        stroke: { width: 2.5, curve: 'smooth' },
+        markers: { size: 0, hover: { size: 6 } },
+        xaxis: { categories: ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'] },
+        yaxis: { labels: { formatter: (v) => v + 'ms' } },
+        annotations: {
+          yaxis: [{
+            y: 200,
+            borderColor: cv('--ax-danger-500'),
+            strokeDashArray: 5,
+            label: {
+              text: 'SLA 200ms',
+              style: { color: cv('--ax-on-accent'), background: cv('--ax-danger-500'), fontFamily: cv('--ax-font-sans'), fontSize: '11px' },
+            },
+          }],
+          xaxis: [{
+            x: 'Nov',
+            borderColor: cv('--ax-border-strong'),
+            strokeDashArray: 4,
+            label: {
+              text: 'v4.2 deploy',
+              orientation: 'horizontal',
+              style: { color: cv('--ax-text'), background: cv('--ax-surface-overlay'), fontFamily: cv('--ax-font-sans'), fontSize: '11px' },
+            },
+          }],
+        },
+        tooltip: { y: { formatter: (v) => v + ' ms' } },
+      },
+    });
+  </script>
+{% endblock %}

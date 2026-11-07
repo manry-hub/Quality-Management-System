@@ -1,0 +1,67 @@
+{% extends 'pages/auth/_standalone.html' %}
+
+{# error/401 — faithful port of src/html/error/401.html
+   Standalone off-app status page (no sidebar/header). Same DOM/classes/ARIA,
+   same demo copy. Reference hrefs converted to clean Django routes
+   (# -> /x/, index -> /). #}
+
+{% block auth_body %}
+  <div style="position:fixed;top:var(--ax-space-5);right:var(--ax-space-6);z-index:5;display:flex;gap:var(--ax-space-2);align-items:center;" x-data="{}">
+    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Toggle color theme"
+            @click="document.documentElement.setAttribute('data-ax-theme', document.documentElement.getAttribute('data-ax-theme')==='dark' ? 'light' : 'dark')">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg>
+    </button>
+    <a class="ax-btn ax-btn--ghost ax-btn--sm" href="/">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+      <span class="ax-btn__label">Back to dashboard</span>
+    </a>
+  </div>
+
+  <main class="ax-center" id="ax-main" style="position:relative;z-index:1;width:100%;padding:var(--ax-space-6);">
+    <div style="width:100%;max-width:520px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--ax-space-6);">
+
+      <a href="/" aria-label="Vireo home" style="display:inline-flex;align-items:center;gap:var(--ax-space-3);text-decoration:none;">
+        <span aria-hidden="true" style="display:inline-grid;place-items:center;width:40px;height:40px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);">
+          <svg viewBox="0 0 32 32" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+        </span>
+        <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-lg);color:var(--ax-text-strong);letter-spacing:.01em;">Vireo</span>
+      </a>
+
+      <!-- thin-line illustration: closed door + key (accent highlight on the key) -->
+      <div aria-hidden="true" style="position:relative;display:grid;place-items:center;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 50% 40%, var(--ax-accent-wash), transparent 70%);">
+        <span style="position:absolute;inset:0;border-radius:50%;border:1px dashed var(--ax-border-strong);"></span>
+        <svg viewBox="0 0 24 24" width="64" height="64" fill="none" stroke="var(--ax-text-muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="position:relative;left:-9px;">
+          <path d="M13 12v.01"/><path d="M3 21h18"/><path d="M5 21v-16a2 2 0 0 1 2 -2h6m4 10.5v7.5"/><path d="M21 7h-7m3 -3l-3 3l3 3"/>
+        </svg>
+        <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="var(--ax-accent)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;right:30px;bottom:38px;">
+          <path d="M16.555 3.843l3.602 3.602a2.877 2.877 0 0 1 0 4.069l-2.643 2.643a2.877 2.877 0 0 1 -4.069 0l-.301 -.301l-6.558 6.558a2 2 0 0 1 -1.239 .578l-.175 .008h-1.172a1 1 0 0 1 -.993 -.883l-.007 -.117v-1.172a2 2 0 0 1 .467 -1.284l.119 -.13l.414 -.414h2v-2h2v-2l2.144 -2.144l-.301 -.301a2.877 2.877 0 0 1 0 -4.069l2.643 -2.643a2.877 2.877 0 0 1 4.069 0"/><path d="M15 9h.01"/>
+        </svg>
+      </div>
+
+      <div>
+        <h1 style="margin:0;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+          <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;font-size:var(--ax-text-4xl);line-height:1;color:var(--ax-text-strong);letter-spacing:.04em;">401</span>
+          <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">Authentication required</span>
+        </h1>
+        <p style="margin:var(--ax-space-4) auto 0;max-width:42ch;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.55;">
+          You need to sign in to view this page. Your session may have expired — sign back in to pick up where you left off.
+        </p>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:var(--ax-space-3);justify-content:center;">
+        <a class="ax-btn ax-btn--primary" href="/auth/sign-in-basic/">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M21 12h-13l3 -3"/><path d="M11 15l-3 -3"/></svg>
+          <span class="ax-btn__label">Sign in</span>
+        </a>
+        <a class="ax-btn ax-btn--secondary" href="/">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>
+          <span class="ax-btn__label">Go home</span>
+        </a>
+      </div>
+
+      <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-subtle);">
+        Trouble signing in? <a class="ax-link" href="/auth/reset-password-basic/">Reset your password</a>
+      </p>
+    </div>
+  </main>
+{% endblock %}

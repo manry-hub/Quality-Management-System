@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axDataTable()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Data Table</h1>
+              <p class="ax-page-head__subtitle">A full-feature table — global search, sortable headers, per-page paging, row selection &amp; bulk actions — all client-side.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost" @click="exportCsv()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Add customer</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Customers data table">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Customers</h2>
+                <p class="ax-card__subtitle ax-num" style="font-family:var(--ax-font-mono);">
+                  <span x-text="filtered().length"></span> of <span x-text="rows.length"></span> records
+                </p>
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <div style="position:relative;flex:1 1 220px;max-width:320px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input ax-input--sm" placeholder="Search name, email, location…" x-model.debounce.200ms="q" @input="page=1" style="padding-inline-start:34px;padding-inline-end:30px;" aria-label="Search customers">
+                  <button type="button" x-show="q" x-cloak @click="q='';page=1" aria-label="Clear search" style="position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);display:inline-flex;color:var(--ax-text-subtle);background:none;border:0;cursor:pointer;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                </div>
+                <select class="ax-select ax-select--sm" x-model="fSegment" @change="page=1" aria-label="Filter by segment" style="min-width:140px;">
+                  <option value="">All segments</option>
+                  <option value="VIP">VIP</option>
+                  <option value="Returning">Returning</option>
+                  <option value="New">New</option>
+                  <option value="Wholesale">Wholesale</option>
+                  <option value="Churn-risk">Churn-risk</option>
+                </select>
+                <!-- column visibility -->
+                <div style="position:relative;" @click.outside="colMenu=false">
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="colMenu=!colMenu" :aria-expanded="colMenu.toString()" aria-label="Toggle column visibility">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v16h-6z"/><path d="M14 4h6v16h-6z"/></svg>
+                    <span class="ax-btn__label">Columns</span>
+                  </button>
+                  <div x-show="colMenu" x-cloak x-transition class="ax-dropdown" role="menu" style="position:absolute;inset-inline-end:0;top:calc(100% + 6px);z-index:30;min-width:190px;padding:var(--ax-space-2);">
+                    <template x-for="c in columns.filter(c=>c.toggle)" :key="c.id">
+                      <label class="ax-menu__item" style="cursor:pointer;gap:var(--ax-space-2);">
+                        <input type="checkbox" class="ax-checkbox" x-model="c.visible">
+                        <span x-text="c.label"></span>
+                      </label>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- bulk bar -->
+            <div x-show="selected.length" x-cloak x-transition
+              style="display:flex;align-items:center;gap:var(--ax-space-3);margin:0 var(--ax-space-5) var(--ax-space-3);padding:var(--ax-space-2) var(--ax-space-4);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);border-radius:var(--ax-radius-md);flex-wrap:wrap;">
+              <b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-sm);"><span x-text="selected.length"></span> selected</b>
+              <span style="width:1px;height:18px;background:var(--ax-border-strong);"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/><path d="M15 7l5 0"/></svg>
+                <span class="ax-btn__label">Email</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.859 6h-2.834a2.025 2.025 0 0 0 -2.025 2.025v9.95a2.025 2.025 0 0 0 2.025 2.025h9.95a2.025 2.025 0 0 0 2.025 -2.025v-2.834"/><path d="M17.999 4.999a3 3 0 0 1 0 4l-7.5 7.5l-4 1l1 -4l7.5 -7.5a3 3 0 0 1 4 0"/></svg>
+                <span class="ax-btn__label">Tag</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Export</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="color:var(--ax-danger-500);">Delete</button>
+              <span style="flex:1 1 auto;"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Clear selection" @click="selected=[]"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+
+            <!-- table -->
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover" style="min-width:780px;">
+                <caption class="ax-visually-hidden">Customers, sortable and searchable</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col" style="width:38px;"><input type="checkbox" class="ax-checkbox" aria-label="Select all rows on this page" :checked="allSelected()" :indeterminate.camel="someSelected()" @change="toggleAll($event.target.checked)"></th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('name')" @click="sortBy('name')">Customer <span x-html="sortGlyph('name')"></span></th>
+                    <th class="ax-table__th" scope="col" x-show="col('email')">Email</th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" x-show="col('segment')" :aria-sort="ariaSort('segment')" @click="sortBy('segment')">Segment <span x-html="sortGlyph('segment')"></span></th>
+                    <th class="ax-table__th" scope="col" x-show="col('location')">Location</th>
+                    <th class="ax-table__th ax-table__th--sortable ax-table__th--num" scope="col" :aria-sort="ariaSort('orders')" @click="sortBy('orders')">Orders <span x-html="sortGlyph('orders')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable ax-table__th--num" scope="col" :aria-sort="ariaSort('ltv')" @click="sortBy('ltv')">Lifetime <span x-html="sortGlyph('ltv')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" x-show="col('lastOrder')" :aria-sort="ariaSort('lastDays')" @click="sortBy('lastDays')">Last order <span x-html="sortGlyph('lastDays')"></span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="r in paged()" :key="r.id">
+                    <tr class="ax-table__row" :style="selected.includes(r.id) ? 'background:var(--ax-accent-wash);' : ''">
+                      <td class="ax-table__td"><input type="checkbox" class="ax-checkbox" :value="r.id" x-model="selected" :aria-label="'Select ' + r.name"></td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                          <span class="ax-avatar ax-avatar--sm" :style="`background:color-mix(in oklab,${r.c} 18%,var(--ax-surface-solid));color:${r.c};`"><span class="ax-avatar__initials" x-text="r.initials"></span></span>
+                          <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="r.name"></div>
+                        </div>
+                      </td>
+                      <td class="ax-table__td" x-show="col('email')" style="color:var(--ax-text-muted);" x-text="r.email"></td>
+                      <td class="ax-table__td" x-show="col('segment')"><span class="ax-badge ax-badge--soft" :class="segClass(r.segment)" x-text="r.segment"></span></td>
+                      <td class="ax-table__td" x-show="col('location')" style="color:var(--ax-text-muted);" x-text="r.location"></td>
+                      <td class="ax-table__td ax-table__td--num" x-text="r.orders"></td>
+                      <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);" x-text="money(r.ltv)"></td>
+                      <td class="ax-table__td" x-show="col('lastOrder')" style="color:var(--ax-text-muted);" x-text="r.lastOrder"></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- empty (filtered) -->
+            <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+              <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No matches</h3>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">No customers match your filters. Try widening them.</p>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="q='';fSegment='';page=1">Clear all</button>
+            </div>
+
+            <!-- footer / per-page + pagination -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                  Showing <span x-text="rangeStart()"></span>–<span x-text="rangeEnd()"></span> of <span x-text="filtered().length"></span>
+                </span>
+                <label class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">
+                  Rows
+                  <select class="ax-select ax-select--sm" x-model.number="perPage" @change="page=1" aria-label="Rows per page" style="min-width:72px;">
+                    <option :value="5">5</option>
+                    <option :value="10">10</option>
+                    <option :value="25">25</option>
+                    <option :value="50">50</option>
+                  </select>
+                </label>
+              </div>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" :disabled="page===1" :aria-disabled="(page===1).toString()" @click="page=Math.max(1,page-1)" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <template x-for="p in pageList()" :key="p">
+                    <li>
+                      <template x-if="p === '…'"><span class="ax-pagination__ellipsis">…</span></template>
+                      <template x-if="p !== '…'"><button type="button" class="ax-pagination__page" :class="{'is-active': page===p}" :aria-current="page===p ? 'page' : null" @click="page=p" x-text="p"></button></template>
+                    </li>
+                  </template>
+                </ul>
+                <button type="button" class="ax-pagination__next" :disabled="page===totalPages()" :aria-disabled="(page===totalPages()).toString()" @click="page=Math.min(totalPages(),page+1)" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+
+        <script>
+          function axDataTable(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',red:'var(--ax-viz-red)'};
+            return {
+              q:'', fSegment:'', page:1, perPage:10, sortKey:'ltv', sortDir:'desc',
+              selected:[], colMenu:false,
+              columns:[
+                { id:'name', label:'Customer', visible:true, toggle:false },
+                { id:'email', label:'Email', visible:true, toggle:true },
+                { id:'segment', label:'Segment', visible:true, toggle:true },
+                { id:'location', label:'Location', visible:true, toggle:true },
+                { id:'lastOrder', label:'Last order', visible:true, toggle:true },
+              ],
+              rows:[
+                { id:'cus_001', name:'Camila Rossi', initials:'CR', email:'camila.rossi@mailbox.test', segment:'VIP', orders:18, ltv:6180, location:'Lisbon', lastOrder:'3h ago', lastDays:0, c:C.cyan },
+                { id:'cus_007', name:'Olivia Penrose', initials:'OP', email:'o.penrose@meadowmail.test', segment:'VIP', orders:21, ltv:5980, location:'Bristol', lastOrder:'12h ago', lastDays:0, c:C.violet },
+                { id:'cus_004', name:'Erik Lindqvist', initials:'EL', email:'erik.l@ridgeline.test', segment:'Wholesale', orders:24, ltv:5240, location:'Malmö', lastOrder:'2d ago', lastDays:2, c:C.amber },
+                { id:'cus_012', name:'Nadia Haddad', initials:'NH', email:'nadia.h@harbor.test', segment:'VIP', orders:16, ltv:4720, location:'Marseille', lastOrder:'6h ago', lastDays:0, c:C.pink },
+                { id:'cus_011', name:'Yuki Tanaka', initials:'YT', email:'yuki.tanaka@brightmail.test', segment:'Returning', orders:11, ltv:2870, location:'Osaka', lastOrder:'10h ago', lastDays:0, c:C.emerald },
+                { id:'cus_005', name:'Sofia Marchetti', initials:'SM', email:'sofia.m@harbor.test', segment:'Returning', orders:9, ltv:2110, location:'Milan', lastOrder:'1d ago', lastDays:1, c:C.cyan },
+                { id:'cus_002', name:'Henry Whitlock', initials:'HW', email:'h.whitlock@postoak.test', segment:'Returning', orders:7, ltv:1840, location:'Leeds', lastOrder:'5h ago', lastDays:0, c:C.violet },
+                { id:'cus_008', name:'Rahul Menon', initials:'RM', email:'rahul.menon@northstreet.test', segment:'Returning', orders:6, ltv:1490, location:'Pune', lastOrder:'1d ago', lastDays:1, c:C.amber },
+                { id:'cus_009', name:'Greta Hoffmann', initials:'GH', email:'greta.h@postoak.test', segment:'Churn-risk', orders:4, ltv:640, location:'Hamburg', lastOrder:'30d ago', lastDays:30, c:C.red },
+                { id:'cus_010', name:'Mateo Alvarez', initials:'MA', email:'mateo.a@mailbox.test', segment:'New', orders:2, ltv:210, location:'Bogotá', lastOrder:'2d ago', lastDays:2, c:C.pink },
+                { id:'cus_003', name:'Aisha Bello', initials:'AB', email:'aisha.bello@brightmail.test', segment:'New', orders:1, ltv:80, location:'Lagos', lastOrder:'1d ago', lastDays:1, c:C.emerald },
+                { id:'cus_006', name:'Daniel Cho', initials:'DC', email:'d.cho@clearbox.test', segment:'New', orders:1, ltv:24, location:'Seoul', lastOrder:'3d ago', lastDays:3, c:C.cyan },
+              ],
+              money(v){ return '$' + v.toLocaleString('en-US'); },
+              segClass(s){ return { 'VIP':'ax-badge--accent','Wholesale':'ax-badge--info','Returning':'ax-badge--neutral','New':'ax-badge--success','Churn-risk':'ax-badge--danger' }[s] || 'ax-badge--neutral'; },
+              col(id){ const c=this.columns.find(c=>c.id===id); return !c || c.visible; },
+              filtered(){
+                const term=this.q.trim().toLowerCase();
+                let r=this.rows.filter(x=>{
+                  if(this.fSegment && x.segment!==this.fSegment) return false;
+                  if(term && !(x.name.toLowerCase().includes(term) || x.email.toLowerCase().includes(term) || x.location.toLowerCase().includes(term))) return false;
+                  return true;
+                });
+                const dir=this.sortDir==='asc'?1:-1;
+                r=[...r].sort((a,b)=>{
+                  const va=a[this.sortKey], vb=b[this.sortKey];
+                  if(typeof va==='number') return (va-vb)*dir;
+                  return String(va).localeCompare(String(vb))*dir;
+                });
+                return r;
+              },
+              totalPages(){ return Math.max(1, Math.ceil(this.filtered().length / this.perPage)); },
+              paged(){ if(this.page>this.totalPages()) this.page=this.totalPages(); const s=(this.page-1)*this.perPage; return this.filtered().slice(s, s+this.perPage); },
+              rangeStart(){ return this.filtered().length ? (this.page-1)*this.perPage + 1 : 0; },
+              rangeEnd(){ return Math.min(this.page*this.perPage, this.filtered().length); },
+              pageList(){
+                const tp=this.totalPages(), p=this.page, out=[];
+                if(tp<=7){ for(let i=1;i<=tp;i++) out.push(i); return out; }
+                out.push(1);
+                if(p>3) out.push('…');
+                for(let i=Math.max(2,p-1);i<=Math.min(tp-1,p+1);i++) out.push(i);
+                if(p<tp-2) out.push('…');
+                out.push(tp);
+                return out;
+              },
+              sortBy(k){ if(this.sortKey===k){ this.sortDir=this.sortDir==='asc'?'desc':'asc'; } else { this.sortKey=k; this.sortDir='asc'; } this.page=1; },
+              ariaSort(k){ return this.sortKey===k ? (this.sortDir==='asc'?'ascending':'descending') : 'none'; },
+              sortGlyph(k){
+                if(this.sortKey!==k) return '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.4;"><path d="M8 9l4 -4l4 4"/><path d="M16 15l-4 4l-4 -4"/></svg>';
+                return this.sortDir==='asc'
+                  ? '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>'
+                  : '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>';
+              },
+              allSelected(){ const ids=this.paged().map(r=>r.id); return ids.length>0 && ids.every(id=>this.selected.includes(id)); },
+              someSelected(){ const ids=this.paged().map(r=>r.id); const n=ids.filter(id=>this.selected.includes(id)).length; return n>0 && n<ids.length; },
+              toggleAll(on){ const ids=this.paged().map(r=>r.id); if(on){ this.selected=[...new Set([...this.selected, ...ids])]; } else { this.selected=this.selected.filter(id=>!ids.includes(id)); } },
+              exportCsv(){ /* demo only — no network */ },
+            };
+          }
+        </script>
+
+      
+</div>
+{% endblock %}

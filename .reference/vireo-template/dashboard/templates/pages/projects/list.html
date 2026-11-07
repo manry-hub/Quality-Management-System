@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{# Projects · List — faithful re-expression of src/html/projects/list.html. Search +
+   status pills + sort, card/list view toggle with progress rings, member stacks,
+   status badges and empty state (axProjectsList Alpine). #}
+
+{% block main %}
+      <div x-data="axProjectsList()">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Projects</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">42</span> active · <span class="ax-num">9</span> at risk · <span class="ax-num">81%</span> avg. team utilization.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <a class="ax-btn ax-btn--primary" href="/projects/create/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New project</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── TOOLBAR (12) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Filters">
+            <div class="ax-card__body" style="display:flex;gap:var(--ax-space-3);align-items:center;flex-wrap:wrap;">
+              <div style="position:relative;flex:1 1 220px;min-width:180px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                <input type="search" class="ax-input" placeholder="Search projects, leads…" x-model="q" style="padding-inline-start:35px;" aria-label="Search projects">
+              </div>
+              <!-- status filter pills -->
+              <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;">
+                <template x-for="s in statusFilters" :key="s.id">
+                  <button type="button" class="ax-btn ax-btn--sm ax-btn--pill" :class="status===s.id ? 'ax-btn--primary' : 'ax-btn--secondary'" @click="status=s.id">
+                    <span class="ax-btn__label" x-text="s.name"></span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);opacity:.7;margin-inline-start:4px;" x-text="s.count"></span>
+                  </button>
+                </template>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-2);margin-inline-start:auto;">
+                <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort projects" style="min-width:140px;">
+                  <option value="progress">Most progress</option>
+                  <option value="due">Due soonest</option>
+                  <option value="name">Name A–Z</option>
+                </select>
+                <div class="ax-segment" role="group" aria-label="View mode">
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='cards').toString()" @click="view='cards'" aria-label="Card view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></svg></button>
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='list').toString()" @click="view='list'" aria-label="List view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── CARDS VIEW (12) ───── -->
+          <div class="ax-col--12" x-show="view==='cards'">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:var(--ax-space-6);">
+              <template x-for="p in filtered()" :key="p.id">
+                <article class="ax-card ax-card--interactive" style="margin:0;display:flex;flex-direction:column;">
+                  <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);flex:1 1 auto;">
+                    <!-- header -->
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${p.c} 18%,transparent);color:${p.c};flex:none;`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-html="p.icon"></svg></span>
+                      <div style="flex:1 1 auto;min-width:0;">
+                        <a href="/projects/overview/" style="font-family:var(--ax-font-display);font-size:var(--ax-text-md);font-weight:600;color:var(--ax-text-strong);text-decoration:none;line-height:1.25;" x-text="p.name"></a>
+                        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="p.team + ' · ' + p.category"></div>
+                      </div>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Actions for ' + p.name"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></button>
+                    </div>
+                    <p class="ax-clamp-2" style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.55;flex:1 1 auto;" x-text="p.desc"></p>
+                    <!-- progress ring + status -->
+                    <div class="ax-cluster" style="gap:var(--ax-space-4);justify-content:space-between;">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                        <div style="position:relative;width:52px;height:52px;flex:none;">
+                          <svg viewBox="0 0 36 36" width="52" height="52" aria-hidden="true">
+                            <circle cx="18" cy="18" r="15.5" fill="none" stroke="var(--ax-surface-subtle)" stroke-width="3.4"/>
+                            <circle cx="18" cy="18" r="15.5" fill="none" :stroke="p.c" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="97.4" :stroke-dashoffset="97.4 - (97.4 * p.progress/100)" transform="rotate(-90 18 18)"/>
+                          </svg>
+                          <div style="position:absolute;inset:0;display:grid;place-items:center;"><b class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);font-weight:700;color:var(--ax-text-strong);" x-text="p.progress + '%'"></b></div>
+                        </div>
+                        <div>
+                          <span class="ax-badge ax-badge--soft ax-badge--pill" :class="p.statusBadge"><span class="ax-badge__dot"></span><span x-text="p.statusName"></span></span>
+                          <div class="ax-cluster" style="gap:4px;margin-top:6px;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg><span class="ax-num" style="font-family:var(--ax-font-mono);" x-text="'Due ' + p.due"></span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- footer: avatars + tasks -->
+                    <div class="ax-cluster" style="justify-content:space-between;padding-top:var(--ax-space-3);border-top:1px solid var(--ax-border);">
+                      <div style="display:flex;align-items:center;">
+                        <template x-for="(m, mi) in p.members" :key="mi">
+                          <span class="ax-avatar ax-avatar--xs" :style="`background:color-mix(in oklab,${m.c} 22%,transparent);color:${m.c};font-weight:600;border:2px solid var(--ax-surface);${mi>0 ? 'margin-inline-start:-8px;' : ''}`" x-text="m.i"></span>
+                        </template>
+                        <span x-show="p.extra>0" class="ax-avatar ax-avatar--xs" style="background:var(--ax-surface-subtle);color:var(--ax-text-muted);font-weight:600;border:2px solid var(--ax-surface);margin-inline-start:-8px;" x-text="'+' + p.extra"></span>
+                      </div>
+                      <span class="ax-cluster" style="gap:4px;color:var(--ax-text-muted);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3l8 -8"/><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"/></svg><span class="ax-num" style="font-family:var(--ax-font-mono);" x-text="p.tasksDone + '/' + p.tasksTotal"></span></span>
+                    </div>
+                  </div>
+                </article>
+              </template>
+            </div>
+          </div>
+
+          <!-- ───── LIST VIEW (12) ───── -->
+          <section class="ax-card ax-col--12" x-show="view==='list'" x-cloak role="region" aria-label="Projects list">
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Project</th>
+                    <th class="ax-table__th" scope="col">Lead</th>
+                    <th class="ax-table__th" scope="col">Progress</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Tasks</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Due</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="p in filtered()" :key="p.id">
+                    <tr class="ax-table__row">
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                          <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${p.c} 18%,transparent);color:${p.c};`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-html="p.icon"></svg></span>
+                          <div style="min-width:0;"><a href="/projects/overview/" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);text-decoration:none;" x-text="p.name"></a><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="p.category"></div></div>
+                        </div>
+                      </td>
+                      <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--xs" :style="`background:color-mix(in oklab,${p.c} 22%,transparent);color:${p.c};font-weight:600;`" x-text="p.members[0].i"></span><span style="color:var(--ax-text-muted);" x-text="p.lead"></span></div></td>
+                      <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><div class="ax-progress ax-progress--sm" style="min-width:96px;"><div class="ax-progress__track"><div class="ax-progress__fill" :style="`width:${p.progress}%;background:${p.c};`"></div></div></div><span class="ax-num" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);" x-text="p.progress + '%'"></span></div></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="p.tasksDone + ' / ' + p.tasksTotal"></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="p.due"></td>
+                      <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" :class="p.statusBadge"><span class="ax-badge__dot"></span><span x-text="p.statusName"></span></span></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- empty state -->
+          <div class="ax-col--12" x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+            <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 7a2 2 0 0 1 2 -2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/></svg></span>
+            <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No projects match</h3>
+            <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Adjust your search or status filter.</p>
+            <button type="button" class="ax-btn ax-btn--secondary" @click="q='';status='all'">Clear filters</button>
+          </div>
+        </div>
+
+      </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    function axProjectsList(){
+      const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',accent:'var(--ax-accent)'};
+      const I={
+        design:'<path d="M3 21v-4a4 4 0 1 1 4 4h-4"/><path d="M21 3a16 16 0 0 0 -12.8 10.2"/><path d="M21 3a16 16 0 0 1 -10.2 12.8"/><path d="M10.6 9a9 9 0 0 1 4.4 4.4"/>',
+        code:'<path d="M7 8l-4 4l4 4"/><path d="M17 8l4 4l-4 4"/><path d="M14 4l-4 16"/>',
+        data:'<path d="M4 6c0 1.657 3.582 3 8 3s8 -1.343 8 -3s-3.582 -3 -8 -3s-8 1.343 -8 3"/><path d="M4 6v6c0 1.657 3.582 3 8 3s8 -1.343 8 -3v-6"/><path d="M4 12v6c0 1.657 3.582 3 8 3s8 -1.343 8 -3v-6"/>',
+        card:'<path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/>',
+        megaphone:'<path d="M3 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M9 8h2l8 -3v15l-8 -3h-2"/><path d="M19 5a4 4 0 0 1 0 6"/>',
+      };
+      return {
+        q:'', status:'all', sort:'progress', view:'cards',
+        statusFilters:[
+          { id:'all', name:'All', count:42 },
+          { id:'ontrack', name:'On track', count:24 },
+          { id:'atrisk', name:'At risk', count:9 },
+          { id:'delayed', name:'Delayed', count:5 },
+          { id:'done', name:'Done', count:4 },
+        ],
+        projects:[
+          { id:1, name:'Aurora Redesign', category:'Design', team:'Design', lead:'Lena Brandt', desc:'Rebuild the component library on the role-token foundation and ship dark mode plus 12 accents.', progress:74, status:'ontrack', statusName:'On track', statusBadge:'ax-badge--success', due:'Jul 18', tasksDone:38, tasksTotal:52, c:C.accent, icon:I.design, members:[{i:'LB',c:C.accent},{i:'DO',c:C.cyan},{i:'PN',c:C.pink}], extra:3, _due:18 },
+          { id:2, name:'Mobile App v3', category:'Engineering', team:'Engineering', lead:'Devon Okafor', desc:'Full React Native rebuild with offline-first sync and a redesigned onboarding flow.', progress:48, status:'ontrack', statusName:'On track', statusBadge:'ax-badge--success', due:'Aug 12', tasksDone:61, tasksTotal:128, c:C.cyan, icon:I.code, members:[{i:'DO',c:C.cyan},{i:'TH',c:C.violet}], extra:5, _due:43 },
+          { id:3, name:'Billing Migration', category:'Platform', team:'Platform', lead:'Tomás Herrera', desc:'Move billing from Stripe to an in-house ledger without a single missed invoice.', progress:28, status:'atrisk', statusName:'At risk', statusBadge:'ax-badge--warning', due:'Jul 28', tasksDone:22, tasksTotal:96, c:C.violet, icon:I.card, members:[{i:'TH',c:C.violet},{i:'MR',c:C.amber}], extra:2, _due:28 },
+          { id:4, name:'Data Warehouse', category:'Analytics', team:'Analytics', lead:'Priya Nair', desc:'Stand up a Snowflake pipeline feeding the new analytics dashboards in near-real-time.', progress:12, status:'delayed', statusName:'Delayed', statusBadge:'ax-badge--danger', due:'Sep 02', tasksDone:9, tasksTotal:74, c:C.pink, icon:I.data, members:[{i:'PN',c:C.pink}], extra:3, _due:64 },
+          { id:5, name:'Brand Refresh', category:'Marketing', team:'Marketing', lead:'Ava Sutton', desc:'New logo, typography and a refreshed set of brand guidelines for launch.', progress:100, status:'done', statusName:'Done', statusBadge:'ax-badge--info', due:'Jun 10', tasksDone:44, tasksTotal:44, c:C.amber, icon:I.megaphone, members:[{i:'AS',c:C.amber},{i:'LB',c:C.accent}], extra:1, _due:-18 },
+          { id:6, name:'Search Revamp', category:'Engineering', team:'Engineering', lead:'Devon Okafor', desc:'Replace the legacy search with a typo-tolerant, sub-50ms index across all entities.', progress:56, status:'ontrack', statusName:'On track', statusBadge:'ax-badge--success', due:'Aug 04', tasksDone:34, tasksTotal:60, c:C.emerald, icon:I.code, members:[{i:'DO',c:C.cyan},{i:'TH',c:C.violet},{i:'MR',c:C.amber}], extra:2, _due:35 },
+          { id:7, name:'Onboarding Flow', category:'Product', team:'Product', lead:'Priya Nair', desc:'Cut time-to-value from 11 minutes to under 3 with a guided, skippable setup.', progress:33, status:'atrisk', statusName:'At risk', statusBadge:'ax-badge--warning', due:'Jul 22', tasksDone:14, tasksTotal:42, c:C.cyan, icon:I.design, members:[{i:'PN',c:C.pink},{i:'AS',c:C.amber}], extra:1, _due:22 },
+          { id:8, name:'Pricing Page', category:'Growth', team:'Growth', lead:'Marcus Reid', desc:'Rebuild the pricing page around buyer outcomes and add a transparent calculator.', progress:88, status:'ontrack', statusName:'On track', statusBadge:'ax-badge--success', due:'Jul 02', tasksDone:29, tasksTotal:33, c:C.violet, icon:I.megaphone, members:[{i:'MR',c:C.amber},{i:'LB',c:C.accent}], extra:0, _due:2 },
+        ],
+        filtered(){
+          const term=this.q.trim().toLowerCase();
+          let r=this.projects.filter(p=>{
+            if(this.status!=='all' && p.status!==this.status) return false;
+            if(term && !(p.name.toLowerCase().includes(term) || p.lead.toLowerCase().includes(term) || p.category.toLowerCase().includes(term))) return false;
+            return true;
+          });
+          const by={ progress:(a,b)=>b.progress-a.progress, due:(a,b)=>a._due-b._due, name:(a,b)=>a.name.localeCompare(b.name) };
+          return [...r].sort(by[this.sort]||by.progress);
+        },
+      };
+    }
+  </script>
+{% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Avatars</h1>
+              <p class="ax-page-head__subtitle">People &amp; entity portraits — six sizes, two shapes, status dots, stacks &amp; the initials-then-glyph fallback chain.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/pages/team/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 19a6 6 0 0 0 -12 0"/><path d="M16 11l2 2l4 -4"/><path d="M5 7a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>
+                <span class="ax-btn__label">Team</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Sizes -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Avatar sizes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Scale</span>
+                <h2 class="ax-card__title">Sizes</h2>
+                <p class="ax-card__subtitle">20 → 96px, initials scale with the diameter.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-wrap:wrap;gap:var(--ax-space-4);align-items:flex-end;">
+              <span class="ax-avatar ax-avatar--xs" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Ava Sutton"><span class="ax-avatar__initials">AS</span></span>
+              <span class="ax-avatar ax-avatar--sm" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Ava Sutton"><span class="ax-avatar__initials">AS</span></span>
+              <span class="ax-avatar ax-avatar--md" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Ava Sutton"><span class="ax-avatar__initials">AS</span></span>
+              <span class="ax-avatar ax-avatar--lg" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Ava Sutton"><span class="ax-avatar__initials">AS</span></span>
+              <span class="ax-avatar ax-avatar--xl" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Ava Sutton"><span class="ax-avatar__initials">AS</span></span>
+              <span class="ax-avatar ax-avatar--2xl" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Ava Sutton"><span class="ax-avatar__initials">AS</span></span>
+            </div>
+          </section>
+
+          <!-- Shapes -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Avatar shapes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Form</span>
+                <h2 class="ax-card__title">Shapes &amp; rings</h2>
+                <p class="ax-card__subtitle">Circle for people, squircle for orgs; ring &amp; selected states.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-wrap:wrap;gap:var(--ax-space-4);align-items:center;">
+              <span class="ax-avatar ax-avatar--lg" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);" role="img" aria-label="Lena Brandt"><span class="ax-avatar__initials">LB</span></span>
+              <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);" role="img" aria-label="Brightway Retail"><span class="ax-avatar__initials">BR</span></span>
+              <span class="ax-avatar ax-avatar--lg ax-avatar--ringed" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);" role="img" aria-label="Mei Lin"><span class="ax-avatar__initials">ML</span></span>
+              <span class="ax-avatar ax-avatar--lg ax-avatar--selected" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Marcus Reyes, selected"><span class="ax-avatar__initials">MR</span></span>
+            </div>
+          </section>
+
+          <!-- Fallback chain -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Avatar fallback chain">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Resilience</span>
+                <h2 class="ax-card__title">Fallback chain</h2>
+                <p class="ax-card__subtitle">Portrait → colored initials → neutral user glyph.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-wrap:wrap;gap:var(--ax-space-6);">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                <span class="ax-avatar ax-avatar--lg" role="img" aria-label="Tomás Herrera">
+                  <img class="ax-avatar__img" src="https://i.pravatar.cc/96?img=12" alt="" width="48" height="48" loading="lazy">
+                </span>
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Portrait</small>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                <span class="ax-avatar ax-avatar--lg" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);" role="img" aria-label="Priya Nair"><span class="ax-avatar__initials">PN</span></span>
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Initials</small>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                <span class="ax-avatar ax-avatar--lg" role="img" aria-label="Unknown user">
+                  <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+                </span>
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Glyph</small>
+              </div>
+            </div>
+          </section>
+
+          <!-- Status -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Avatar status dots">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Presence</span>
+                <h2 class="ax-card__title">Status dots</h2>
+                <p class="ax-card__subtitle">Online, away, busy &amp; offline, ringed to the surface.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-wrap:wrap;gap:var(--ax-space-6);">
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                <span class="ax-avatar ax-avatar--lg" style="background:var(--ax-accent-wash);color:var(--ax-accent);" role="img" aria-label="Ava Sutton, online"><span class="ax-avatar__initials">AS</span><span class="ax-avatar__status ax-avatar__status--online"></span></span>
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Online</small>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                <span class="ax-avatar ax-avatar--lg" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);" role="img" aria-label="Hana Yılmaz, away"><span class="ax-avatar__initials">HY</span><span class="ax-avatar__status ax-avatar__status--away"></span></span>
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Away</small>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                <span class="ax-avatar ax-avatar--lg" style="background:color-mix(in oklab,var(--ax-viz-red) 18%,transparent);color:var(--ax-viz-red);" role="img" aria-label="Tomás Herrera, busy"><span class="ax-avatar__initials">TH</span><span class="ax-avatar__status ax-avatar__status--busy"></span></span>
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Busy</small>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                <span class="ax-avatar ax-avatar--lg" style="background:var(--ax-fill-active);color:var(--ax-text-muted);" role="img" aria-label="Jonas Falk, offline"><span class="ax-avatar__initials">JF</span><span class="ax-avatar__status ax-avatar__status--offline"></span></span>
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Offline</small>
+              </div>
+            </div>
+          </section>
+
+          <!-- Groups / stacks -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Avatar groups and stacks">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Collections</span>
+                <h2 class="ax-card__title">Stacks &amp; overflow</h2>
+                <p class="ax-card__subtitle">Overlapping rows with a +N overflow chip.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-avatar-group" aria-label="Assigned: Ava, Marcus, Lena, Devon and 4 more">
+                <span class="ax-avatar ax-avatar--md" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><span class="ax-avatar__initials">AS</span></span>
+                <span class="ax-avatar ax-avatar--md" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">MR</span></span>
+                <span class="ax-avatar ax-avatar--md" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">LB</span></span>
+                <span class="ax-avatar ax-avatar--md" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><span class="ax-avatar__initials">DO</span></span>
+                <button type="button" class="ax-avatar ax-avatar--md ax-avatar__overflow" aria-label="4 more people">+4</button>
+              </div>
+              <div class="ax-avatar-group" aria-label="Reviewers, small">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><span class="ax-avatar__initials">PN</span></span>
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><span class="ax-avatar__initials">HY</span></span>
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><span class="ax-avatar__initials">ML</span></span>
+                <button type="button" class="ax-avatar ax-avatar--sm ax-avatar__overflow" aria-label="12 more people">+12</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- With name + meta -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Avatars with name and meta">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">In context</span>
+                <h2 class="ax-card__title">With name &amp; role</h2>
+                <p class="ax-card__subtitle">The list-row pattern used across the app.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-list ax-list--compact">
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading">
+                    <span class="ax-avatar ax-avatar--md" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><span class="ax-avatar__initials">AS</span><span class="ax-avatar__status ax-avatar__status--online"></span></span>
+                  </span>
+                  <span class="ax-list__content">
+                    <span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Ava Sutton</span>
+                    <span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Operations Lead</span>
+                  </span>
+                  <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill ax-badge--sm">Owner</span></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading">
+                    <span class="ax-avatar ax-avatar--md" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">MR</span><span class="ax-avatar__status ax-avatar__status--online"></span></span>
+                  </span>
+                  <span class="ax-list__content">
+                    <span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Marcus Reyes</span>
+                    <span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Engineering Manager</span>
+                  </span>
+                  <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill ax-badge--sm">Admin</span></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading">
+                    <span class="ax-avatar ax-avatar--md" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><span class="ax-avatar__initials">HY</span><span class="ax-avatar__status ax-avatar__status--away"></span></span>
+                  </span>
+                  <span class="ax-list__content">
+                    <span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Hana Yılmaz</span>
+                    <span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Marketing Manager</span>
+                  </span>
+                  <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill ax-badge--sm">Member</span></span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

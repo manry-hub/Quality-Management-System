@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{# utilities/borders — faithful port of src/html/utilities/borders.html.
+   Same DOM/classes/ARIA, same demo copy and Alpine helpers. Reference hrefs
+   converted to clean Django routes (# -> /x/). #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Borders &amp; radius</h1>
+              <p class="ax-page-head__subtitle">Hairline strokes, the six-step radius scale and divider helpers — the geometry that gives Aurora its soft-glass edges.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/utilities/spacing/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3l4 4l-14 14l-4 -4l14 -14"/><path d="M16 7l-1.5 -1.5"/><path d="M13 10l-1.5 -1.5"/><path d="M10 13l-1.5 -1.5"/><path d="M7 16l-1.5 -1.5"/></svg>
+                <span class="ax-btn__label">Spacing scale</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/utilities/flex-grid/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></svg>
+                <span class="ax-btn__label">Flex &amp; grid</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid"
+          x-data="{ flash:null, copy(v){ navigator.clipboard?.writeText(v); this.flash=v; setTimeout(()=>{ if(this.flash===v) this.flash=null; },1300); } }">
+
+          <!-- Radius scale -->
+          <section class="ax-card ax-col--7" role="region" aria-label="Radius scale">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">--ax-radius-*</span>
+                <h2 class="ax-card__title">Radius scale</h2>
+                <p class="ax-card__subtitle">From crisp checkboxes to fully-round pills. Click a tile to copy its token.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--ax-space-4);">
+              <template x-for="r in [
+                ['--ax-radius-xs','xs','8px','badges · checkboxes'],
+                ['--ax-radius-sm','sm','12px','small controls'],
+                ['--ax-radius-md','md','14px','buttons · inputs'],
+                ['--ax-radius-lg','lg','18px','media · plates'],
+                ['--ax-radius-xl','xl','24px','cards'],
+                ['--ax-radius-pill','pill','999px','pills · avatars']
+              ]" :key="r[0]">
+                <button type="button" @click="copy(r[0])"
+                  style="display:flex;flex-direction:column;gap:var(--ax-space-2);align-items:center;padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:transparent;cursor:pointer;"
+                  :aria-label="'Copy '+r[0]">
+                  <span aria-hidden="true" :style="'width:100%;height:54px;background:var(--ax-accent-wash);border:1.5px solid var(--ax-accent);border-radius:var('+r[0]+');'"></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);">
+                    <b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);" x-text="r[1]"></b>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="r[2]"></span>
+                  </span>
+                  <span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-align:center;" x-text="flash===r[0] ? 'Copied!' : r[3]"></span>
+                </button>
+              </template>
+            </div>
+          </section>
+
+          <!-- Border widths & color -->
+          <section class="ax-card ax-col--5" role="region" aria-label="Border widths and colors">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Stroke</span>
+                <h2 class="ax-card__title">Width &amp; color</h2>
+                <p class="ax-card__subtitle">Two stroke tokens cover 99% of cases.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <button type="button" @click="copy('--ax-border')"
+                  class="ax-cluster" style="justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-3);padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:transparent;cursor:pointer;width:100%;text-align:start;" aria-label="Copy --ax-border">
+                  <span><b style="display:block;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">1px hairline</b><span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">default card &amp; control edge</span></span>
+                  <code class="ax-code" style="background:transparent;padding:0;font-size:var(--ax-text-2xs);color:var(--ax-text-muted);" x-text="flash==='--ax-border' ? 'Copied!' : '--ax-border'"></code>
+                </button>
+                <button type="button" @click="copy('--ax-border-strong')"
+                  class="ax-cluster" style="justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-3);padding:var(--ax-space-4);border:1px solid var(--ax-border-strong);border-radius:var(--ax-radius-md);background:transparent;cursor:pointer;width:100%;text-align:start;" aria-label="Copy --ax-border-strong">
+                  <span><b style="display:block;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">1px strong</b><span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">dividers, focus, header rule</span></span>
+                  <code class="ax-code" style="background:transparent;padding:0;font-size:var(--ax-text-2xs);color:var(--ax-text-muted);" x-text="flash==='--ax-border-strong' ? 'Copied!' : '--ax-border-strong'"></code>
+                </button>
+              </div>
+              <hr class="ax-divider">
+              <span class="ax-eyebrow">Visible widths</span>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <template x-for="w in [1,1.5,2,3]" :key="w">
+                  <span style="display:flex;flex-direction:column;align-items:center;gap:6px;">
+                    <i aria-hidden="true" :style="'width:54px;height:40px;border-radius:var(--ax-radius-sm);border:'+w+'px solid var(--ax-accent);'"></i>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="w+'px'"></span>
+                  </span>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- Border styles -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Border styles">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">CSS</span>
+                <h2 class="ax-card__title">Border styles</h2>
+                <p class="ax-card__subtitle">Solid for structure; dashed for drop-zones &amp; placeholders.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--ax-space-4);">
+              <template x-for="st in [['solid','Structure'],['dashed','Dropzone'],['dotted','Hint']]" :key="st[0]">
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);align-items:center;">
+                  <span aria-hidden="true" :style="'width:100%;height:64px;border-radius:var(--ax-radius-md);border:2px '+st[0]+' var(--ax-border-strong);display:grid;place-items:center;color:var(--ax-text-subtle);'">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  </span>
+                  <code class="ax-code" x-text="st[0]"></code>
+                  <span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="st[1]"></span>
+                </div>
+              </template>
+            </div>
+          </section>
+
+          <!-- Dividers -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Divider helpers">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-divider</span>
+                <h2 class="ax-card__title">Dividers</h2>
+                <p class="ax-card__subtitle">Hairline separators in three flavors.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.ax-divider</span>
+                <hr class="ax-divider">
+              </div>
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.ax-divider--strong</span>
+                <hr class="ax-divider ax-divider--strong">
+              </div>
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.ax-divider--vertical</span>
+                <div class="ax-cluster" style="height:48px;gap:var(--ax-space-4);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Drafts</span>
+                  <span class="ax-divider ax-divider--vertical"></span>
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Scheduled</span>
+                  <span class="ax-divider ax-divider--vertical"></span>
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Published</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Composed edges -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Composed edge treatments">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">In context</span>
+                <h2 class="ax-card__title">Edge treatments in the wild</h2>
+                <p class="ax-card__subtitle">How radius + stroke + glass highlight combine on real surfaces.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--ax-space-4);">
+              <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-xl);padding:var(--ax-space-5);background:var(--ax-surface-subtle);box-shadow:inset 0 1px 0 var(--ax-glass-hi);">
+                <span class="ax-eyebrow" style="display:block;margin-bottom:6px;">Card · xl</span>
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">24px radius + hairline + top glass highlight.</p>
+              </div>
+              <div class="ax-card--accent-edge" style="position:relative;border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);padding:var(--ax-space-5);overflow:hidden;background:var(--ax-surface-subtle);">
+                <span class="ax-eyebrow" style="display:block;margin-bottom:6px;">Accent edge</span>
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Left accent bar marks the active item.</p>
+              </div>
+              <div style="border:2px dashed var(--ax-border-strong);border-radius:var(--ax-radius-lg);padding:var(--ax-space-5);display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;color:var(--ax-text-subtle);">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 18v-6"/><path d="M9 15l3 -3l3 3"/><path d="M4 15v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/></svg>
+                <span style="font-size:var(--ax-text-xs);">Drop files</span>
+              </div>
+              <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-pill);padding:var(--ax-space-3) var(--ax-space-5);display:flex;align-items:center;justify-content:center;gap:var(--ax-space-2);background:var(--ax-surface-subtle);">
+                <span class="ax-badge__dot" style="background:var(--ax-success-500);"></span>
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Pill · 999px</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

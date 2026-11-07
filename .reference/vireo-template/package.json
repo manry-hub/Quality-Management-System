@@ -1,0 +1,24 @@
+{
+  "name": "vireo-django",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Vireo — Django edition. Django templates + Tailwind v4 + Alpine.js. Asset build via Vite.",
+  "license": "LicenseRef-Envato-Regular",
+  "scripts": {
+    "dev": "vite build --watch --mode development",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.0",
+    "tailwindcss": "^4.1.0",
+    "vite": "^6.3.0"
+  },
+  "dependencies": {
+    "@alpinejs/collapse": "^3.14.0",
+    "@alpinejs/focus": "^3.14.0",
+    "alpinejs": "^3.14.0",
+    "apexcharts": "^4.4.0",
+    "leaflet": "^1.9.4"
+  }
+}

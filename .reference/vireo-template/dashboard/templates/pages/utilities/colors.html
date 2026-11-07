@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+
+{# utilities/colors — faithful port of src/html/utilities/colors.html.
+   Same DOM/classes/ARIA, same demo copy and Alpine helpers. Reference hrefs
+   converted to clean Django routes (# -> /x/). #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Color tokens</h1>
+              <p class="ax-page-head__subtitle">Every surface, text, status &amp; data-viz color is a role token — light, dark and all 12 accents retheme for free.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/utilities/spacing/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 3l4 4l-14 14l-4 -4l14 -14"/><path d="M16 7l-1.5 -1.5"/><path d="M13 10l-1.5 -1.5"/><path d="M10 13l-1.5 -1.5"/><path d="M7 16l-1.5 -1.5"/></svg>
+                <span class="ax-btn__label">Spacing scale</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--primary"
+                x-data="{ copied:false }"
+                @click="navigator.clipboard?.writeText('var(--ax-accent)'); copied=true; setTimeout(()=>copied=false,1400)">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
+                <span class="ax-btn__label" x-text="copied ? 'Copied!' : 'Copy --ax-accent'">Copy --ax-accent</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid"
+          x-data="{ copy(v){ navigator.clipboard?.writeText(v); this.flash=v; setTimeout(()=>{ if(this.flash===v) this.flash=null; },1300); }, flash:null }">
+
+          <!-- Surfaces & borders -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Surface and border tokens">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Foundation</span>
+                <h2 class="ax-card__title">Surfaces &amp; borders</h2>
+                <p class="ax-card__subtitle">The glass-stack the whole UI is layered on. Click a chip to copy its var.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ax-space-3);">
+              <template x-for="t in [
+                ['--ax-canvas','Canvas','page background'],
+                ['--ax-surface','Surface','glass card'],
+                ['--ax-surface-subtle','Subtle','table header / wells'],
+                ['--ax-surface-raised','Raised','header / sidebar'],
+                ['--ax-surface-overlay','Overlay','popover / modal'],
+                ['--ax-surface-solid','Solid','opaque fallback'],
+                ['--ax-border','Border','1px hairline'],
+                ['--ax-border-strong','Border strong','dividers / focus']
+              ]" :key="t[0]">
+                <button type="button" class="ax-cluster" @click="copy(t[0])"
+                  style="gap:var(--ax-space-3);flex-wrap:nowrap;text-align:start;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:transparent;cursor:pointer;width:100%;"
+                  :aria-label="'Copy ' + t[0]">
+                  <span aria-hidden="true" :style="'flex:0 0 auto;width:40px;height:40px;border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border-strong);background:var('+t[0]+');'"></span>
+                  <span style="min-width:0;">
+                    <span class="ax-truncate" style="display:block;font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="t[1]"></span>
+                    <code class="ax-code" style="background:transparent;padding:0;font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="flash===t[0] ? 'Copied!' : t[0]"></code>
+                  </span>
+                </button>
+              </template>
+            </div>
+          </section>
+
+          <!-- Text scale -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Text color tokens">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Foundation</span>
+                <h2 class="ax-card__title">Text colors</h2>
+                <p class="ax-card__subtitle">Five emphasis steps, each AA-legible on every surface.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+              <template x-for="t in [
+                ['--ax-text-strong','Text strong','Headings & key figures',700],
+                ['--ax-text','Text','Default body copy',500],
+                ['--ax-text-muted','Text muted','Secondary & captions',500],
+                ['--ax-text-subtle','Text subtle','Tertiary, idle icons',500],
+                ['--ax-text-disabled','Text disabled','Inert controls',500]
+              ]" :key="t[0]">
+                <button type="button" class="ax-cluster" @click="copy(t[0])"
+                  style="justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-4);padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:transparent;cursor:pointer;width:100%;text-align:start;"
+                  :aria-label="'Copy ' + t[0]">
+                  <span :style="'font-size:var(--ax-text-md);font-weight:'+t[3]+';color:var('+t[0]+');'" x-text="t[1]"></span>
+                  <span style="text-align:end;min-width:0;">
+                    <span class="ax-truncate" style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="t[2]"></span>
+                    <code class="ax-code" style="background:transparent;padding:0;font-size:var(--ax-text-2xs);color:var(--ax-text-muted);" x-text="flash===t[0] ? 'Copied!' : t[0]"></code>
+                  </span>
+                </button>
+              </template>
+            </div>
+          </section>
+
+          <!-- Status palette -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Status color tokens">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Semantic</span>
+                <h2 class="ax-card__title">Status palette</h2>
+                <p class="ax-card__subtitle">Success, warning, danger &amp; info — each ships a 50 wash, 200 mid &amp; 500 solid for tints, fills and badges.</p>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Color never the only signal — pair with ▲▼ &amp; glyphs</span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--ax-space-4);">
+              <template x-for="g in [
+                ['Success','--ax-success','check','Paid · Active · Up'],
+                ['Warning','--ax-warning','alert','Pending · Low stock'],
+                ['Danger','--ax-danger','x','Failed · Overdue · Down'],
+                ['Info','--ax-info','info','Note · Tip · Neutral']
+              ]" :key="g[0]">
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);overflow:hidden;">
+                  <div class="ax-cluster" :style="'gap:var(--ax-space-3);padding:var(--ax-space-4);background:var('+g[1]+'-50);'">
+                    <span aria-hidden="true" :style="'display:grid;place-items:center;width:34px;height:34px;border-radius:var(--ax-radius-md);background:var('+g[1]+'-500);color:#fff;'">
+                      <template x-if="g[2]==='check'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg></template>
+                      <template x-if="g[2]==='alert'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M3.5 17.5l7 -12a1.7 1.7 0 0 1 3 0l7 12a1.7 1.7 0 0 1 -1.5 2.5h-14a1.7 1.7 0 0 1 -1.5 -2.5"/></svg></template>
+                      <template x-if="g[2]==='x'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></template>
+                      <template x-if="g[2]==='info'"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></template>
+                    </span>
+                    <b :style="'color:var('+g[1]+'-500);font-weight:var(--ax-weight-semibold);'" x-text="g[0]"></b>
+                  </div>
+                  <div style="display:flex;">
+                    <button type="button" @click="copy(g[1]+'-50')" :style="'flex:1;height:36px;border:0;cursor:pointer;background:var('+g[1]+'-50);'" :aria-label="'Copy '+g[1]+'-50'"></button>
+                    <button type="button" @click="copy(g[1]+'-200')" :style="'flex:1;height:36px;border:0;cursor:pointer;background:var('+g[1]+'-200);'" :aria-label="'Copy '+g[1]+'-200'"></button>
+                    <button type="button" @click="copy(g[1]+'-500')" :style="'flex:1;height:36px;border:0;cursor:pointer;background:var('+g[1]+'-500);'" :aria-label="'Copy '+g[1]+'-500'"></button>
+                  </div>
+                  <p style="margin:0;padding:var(--ax-space-3) var(--ax-space-4);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="g[3]"></p>
+                </div>
+              </template>
+            </div>
+          </section>
+
+          <!-- Data-viz palette -->
+          <section class="ax-card ax-col--7" role="region" aria-label="Data visualization palette">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Constant across all 12 accents</span>
+                <h2 class="ax-card__title">Data-viz palette</h2>
+                <p class="ax-card__subtitle">The six categorical chart colors stay fixed so series keep their identity when the accent changes.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <template x-for="v in [
+                ['--ax-viz-cyan','Cyan','Series 1 / primary'],
+                ['--ax-viz-violet','Violet','Series 2'],
+                ['--ax-viz-pink','Pink','Series 3'],
+                ['--ax-viz-amber','Amber','Series 4'],
+                ['--ax-viz-emerald','Emerald','Series 5'],
+                ['--ax-viz-red','Red / rose','Series 6 / loss']
+              ]" :key="v[0]">
+                <button type="button" class="ax-cluster" @click="copy(v[0])"
+                  style="gap:var(--ax-space-3);flex-wrap:nowrap;justify-content:space-between;padding:var(--ax-space-2) var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:transparent;cursor:pointer;width:100%;text-align:start;"
+                  :aria-label="'Copy '+v[0]">
+                  <span class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                    <span aria-hidden="true" :style="'flex:0 0 auto;width:46px;height:26px;border-radius:var(--ax-radius-sm);background:var('+v[0]+');box-shadow:0 0 0 1px var(--ax-border-strong) inset;'"></span>
+                    <b style="color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);font-size:var(--ax-text-sm);" x-text="v[1]"></b>
+                  </span>
+                  <span style="text-align:end;">
+                    <span style="display:block;font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="v[2]"></span>
+                    <code class="ax-code" style="background:transparent;padding:0;font-size:var(--ax-text-2xs);color:var(--ax-text-muted);" x-text="flash===v[0] ? 'Copied!' : v[0]"></code>
+                  </span>
+                </button>
+              </template>
+              <!-- mini swatch ribbon doubling as a preview of a chart's series order -->
+              <div aria-hidden="true" style="display:flex;height:10px;border-radius:var(--ax-radius-pill);overflow:hidden;margin-top:var(--ax-space-2);">
+                <i style="flex:1;background:var(--ax-viz-cyan);"></i><i style="flex:1;background:var(--ax-viz-violet);"></i><i style="flex:1;background:var(--ax-viz-pink);"></i><i style="flex:1;background:var(--ax-viz-amber);"></i><i style="flex:1;background:var(--ax-viz-emerald);"></i><i style="flex:1;background:var(--ax-viz-red);"></i>
+              </div>
+            </div>
+          </section>
+
+          <!-- Accent ramp -->
+          <section class="ax-card ax-col--5" role="region" aria-label="Accent ramp">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Theme-aware</span>
+                <h2 class="ax-card__title">Accent ramp</h2>
+                <p class="ax-card__subtitle">Switch presets in the customizer — this whole ramp re-derives live.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div style="border-radius:var(--ax-radius-lg);overflow:hidden;border:1px solid var(--ax-border);">
+                <template x-for="n in [50,100,200,300,400,500,600,700,800,900]" :key="n">
+                  <button type="button" @click="copy('--ax-accent-'+n)"
+                    class="ax-cluster"
+                    :style="'width:100%;justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-2);height:34px;padding:0 var(--ax-space-4);border:0;cursor:pointer;text-align:start;background:var(--ax-accent-'+n+');color:'+(n>=400?'#fff':'var(--ax-text-strong)')+';'"
+                    :aria-label="'Copy --ax-accent-'+n">
+                    <span style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-medium);" x-text="'accent-'+n"></span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);opacity:.85;" x-text="flash==='--ax-accent-'+n ? 'Copied!' : n"></span>
+                  </button>
+                </template>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <span class="ax-badge ax-badge--solid ax-badge--accent ax-badge--pill">--ax-accent</span>
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill" style="background:var(--ax-accent-wash);">--ax-accent-wash</span>
+                <span class="ax-badge ax-badge--outline ax-badge--pill" style="color:var(--ax-link);">--ax-link</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Usage note -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Token usage guidance">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-alert ax-alert--accent ax-alert--accent-edge">
+                <svg class="ax-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25"/><path d="M7.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11.5 7.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M15.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                <div class="ax-alert__content">
+                  <p class="ax-alert__title">Never hard-code a hex</p>
+                  <p class="ax-alert__message">Reference a role token — <code class="ax-code">color:var(--ax-text-muted)</code>, <code class="ax-code">background:var(--ax-surface)</code>, <code class="ax-code">border-color:var(--ax-border)</code>. That single rule is what makes light, dark and all 12 accent presets work with zero per-component overrides.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

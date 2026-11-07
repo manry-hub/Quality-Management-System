@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Links</h1>
+              <p class="ax-page-head__subtitle">Anchor styles built on <code class="ax-code">.ax-link</code> — default, underline variants, with-icon, semantic &amp; muted. The hover color follows the live accent.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/typography/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h3l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg>
+                <span class="ax-btn__label">Typography</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Underline variants -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Underline variants">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Decoration</span>
+                <h2 class="ax-card__title">Underline variants</h2>
+                <p class="ax-card__subtitle">From underline-on-hover to always-on, dotted &amp; thick.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);font-size:var(--ax-text-md);">
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);">
+                <a class="ax-link" href="#">Underline on hover</a>
+                <code class="ax-code" style="flex:0 0 auto;">.ax-link</code>
+              </div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);">
+                <a class="ax-link" href="#" style="text-decoration:underline;text-underline-offset:2px;">Always underlined</a>
+                <code class="ax-code" style="flex:0 0 auto;">underline</code>
+              </div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);">
+                <a class="ax-link" href="#" style="text-decoration:underline dotted;text-underline-offset:3px;">Dotted underline</a>
+                <code class="ax-code" style="flex:0 0 auto;">dotted</code>
+              </div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);">
+                <a class="ax-link" href="#" style="text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:3px;">Thick underline</a>
+                <code class="ax-code" style="flex:0 0 auto;">2px</code>
+              </div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);">
+                <a class="ax-link" href="#" style="font-weight:var(--ax-weight-semibold);">Semibold, no underline</a>
+                <code class="ax-code" style="flex:0 0 auto;">600</code>
+              </div>
+            </div>
+          </section>
+
+          <!-- Tones -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Link tones">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Color</span>
+                <h2 class="ax-card__title">Tones</h2>
+                <p class="ax-card__subtitle">Accent, body, muted, semantic &amp; disabled.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-wrap:wrap;gap:var(--ax-space-3) var(--ax-space-5);font-size:var(--ax-text-md);">
+              <a class="ax-link" href="#">Accent link</a>
+              <a href="#" style="color:var(--ax-text);text-decoration:none;border-block-end:1px solid var(--ax-border-strong);">Body link</a>
+              <a href="#" style="color:var(--ax-text-muted);text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">Muted link</a>
+              <a href="#" style="color:var(--ax-success-500);text-decoration:none;font-weight:var(--ax-weight-medium);">Success</a>
+              <a href="#" style="color:var(--ax-danger-500);text-decoration:none;font-weight:var(--ax-weight-medium);">Danger</a>
+              <a href="#" style="color:var(--ax-info-500);text-decoration:none;font-weight:var(--ax-weight-medium);">Info</a>
+              <span aria-disabled="true" style="color:var(--ax-text-disabled);text-decoration:none;cursor:not-allowed;pointer-events:none;">Disabled link</span>
+            </div>
+          </section>
+
+          <!-- With icons -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Links with icons">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Affordance</span>
+                <h2 class="ax-card__title">With icons</h2>
+                <p class="ax-card__subtitle">Leading, trailing &amp; external — 16px glyphs aligned to the text.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);font-size:var(--ax-text-md);">
+              <a class="ax-link" href="#" style="display:inline-flex;align-items:center;gap:6px;align-self:flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                Download the report
+              </a>
+              <a class="ax-link" href="#" style="display:inline-flex;align-items:center;gap:6px;align-self:flex-start;">
+                Continue to billing
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>
+              </a>
+              <a class="ax-link" href="#" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;align-self:flex-start;">
+                Open documentation
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg>
+                <span class="visually-hidden">(opens in a new tab)</span>
+              </a>
+              <a class="ax-link" href="#" style="display:inline-flex;align-items:center;gap:6px;align-self:flex-start;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h6l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/></svg>
+                Browse all collections
+              </a>
+            </div>
+          </section>
+
+          <!-- Inline & quiet -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Inline and quiet links">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">In prose</span>
+                <h2 class="ax-card__title">Inline &amp; quiet</h2>
+                <p class="ax-card__subtitle">How links read inside running text vs. quiet UI affordances.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <p style="margin:0;font-size:var(--ax-text-md);line-height:1.7;color:var(--ax-text-muted);">
+                Your June invoice <a class="ax-link" href="#">INV-2025-0118</a> is ready. Review the
+                <a class="ax-link" href="#">line items</a> or update your
+                <a class="ax-link" href="#">payment method</a> before the renewal on Jun 30.
+              </p>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster" style="gap:var(--ax-space-5);">
+                <a class="ax-btn ax-btn--link" href="#">View all</a>
+                <a class="ax-btn ax-btn--link" href="#" style="display:inline-flex;align-items:center;gap:4px;">See report
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </a>
+                <a href="#" style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);text-decoration:none;" onmouseover="this.style.color='var(--ax-text)'" onmouseout="this.style.color='var(--ax-text-subtle)'">Dismiss</a>
+              </div>
+            </div>
+          </section>
+
+          <!-- Link list -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Navigational link list">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Navigation</span>
+                <h2 class="ax-card__title">Link list</h2>
+                <p class="ax-card__subtitle">Stacked actionable rows — each whole row is the link target.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-list ax-list--linked">
+                <li><a class="ax-list__row" href="#">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Recent activity</span><span class="ax-list__meta">What changed across your workspace today</span></span>
+                  <span class="ax-list__trailing"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></span>
+                </a></li>
+                <li><a class="ax-list__row" href="#">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"/><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Billing &amp; invoices</span><span class="ax-list__meta">Manage your plan, cards and receipts</span></span>
+                  <span class="ax-list__trailing"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></span>
+                </a></li>
+                <li><a class="ax-list__row" href="#">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Shipping zones</span><span class="ax-list__meta">Where Aperture Goods ships and at what rate</span></span>
+                  <span class="ax-list__trailing"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></span>
+                </a></li>
+              </ul>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

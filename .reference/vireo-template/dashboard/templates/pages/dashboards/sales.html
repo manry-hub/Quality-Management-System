@@ -1,0 +1,512 @@
+{% extends 'base.html' %}
+
+{# Sales dashboard — the default route ("/"). Faithful re-expression of
+   the HTML reference src/html/dashboards/sales.html (== index.html): KPI row,
+   Sales Statistics area chart, Total Balance plate, device donut, top products,
+   traffic source, recent transactions table, recent activity timeline. #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Sales</h1>
+              <p class="ax-page-head__subtitle">Here's how revenue is tracking — Jul 2025 to Jun 2026.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg>
+                <span class="ax-btn__label">Last 30 days</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New report</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW (4 × W-STAT) ───── -->
+          <!-- 1 · Total Revenue -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Revenue $748.2K, up 12.4%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>12.4%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Total Revenue</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$748.2K</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[6,9,8,16,19,23,28,30]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 · Total Customers -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Customers 3,920, down 3.1%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--down">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>3.1%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Total Customers</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">3,920</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Trend","data":[26,23,22,18,16,13,10,7]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 · Total Products -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Products 1,204, up 2.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/><path d="M16 5.25l-8 4.5"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.0%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Total Products</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">1,204</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[10,15,13,20,17,24,21,27]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 · Total Transactions -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Transactions 9,812, down 3.2%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2m4 -14h6m-6 4h6m-2 4h2"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--down">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>3.2%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Total Transactions</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">9,812</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[25,22,24,19,21,15,17,11]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO ROW: Sales Statistics (8) + Total Balance (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Sales Statistics">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Performance</span>
+                <h2 class="ax-card__title">Sales Statistics</h2>
+                <p class="ax-card__subtitle">Monthly revenue vs. previous period</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Date range">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">Week</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">Month</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">Year</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">This period</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Previous period</small></span>
+              </div>
+              <div
+                data-ax-chart="apex"
+                data-ax-chart-type="area"
+                data-ax-chart-height="320"
+                data-ax-chart-legend="none"
+                data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"This period","data":[42100,48300,45200,53400,57100,55600,62400,60200,68900,72300,70100,74820]},{"name":"Previous period","data":[38400,41200,43800,47100,50600,53200,54900,58300,61400,64800,67200,69500]}]'
+                aria-label="Area chart of monthly revenue versus the previous period">
+              </div>
+            </div>
+          </section>
+
+          <!-- Total Balance — gradient plate (W-BALANCE) -->
+          <section class="ax-card ax-card--balance ax-col--4" role="region" aria-label="Total Balance">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Total Balance</h2>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Currency">
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">USD</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">GBP</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">EUR</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <!-- gradient plate -->
+              <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-lg);padding:var(--ax-space-5);background:var(--ax-gradient-plate);box-shadow:var(--ax-shadow-md);color:#fff;min-height:172px;display:flex;flex-direction:column;">
+                <span aria-hidden="true" style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.18);filter:blur(6px);"></span>
+                <span aria-hidden="true" style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.12);"></span>
+                <div class="ax-cluster" style="justify-content:space-between;position:relative;">
+                  <b style="font-family:var(--ax-font-display);letter-spacing:.02em;color:inherit;">Vireo</b>
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.9;"><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h2"/><path d="M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2"/></svg>
+                </div>
+                <div style="margin-top:auto;position:relative;">
+                  <div style="font-size:var(--ax-text-xs);opacity:.85;">Available balance</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;line-height:1.1;letter-spacing:-.01em;">$48,210.00</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);letter-spacing:.12em;opacity:.92;margin-top:var(--ax-space-3);">4921&nbsp;&nbsp;••••&nbsp;&nbsp;••••&nbsp;&nbsp;7045</div>
+                </div>
+              </div>
+              <!-- send / request -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+                <button type="button" class="ax-btn ax-btn--solid ax-btn--block">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                  <span class="ax-btn__label">Send</span>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--block">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M18 13l-6 6"/><path d="M6 13l6 6"/></svg>
+                  <span class="ax-btn__label">Request</span>
+                </button>
+              </div>
+              <!-- income / profit / saved split -->
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);text-align:center;">
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Income</small><b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-md);">+$12,480</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Spend</small><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-md);">$5,210</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Saved</small><b class="ax-num" style="color:var(--ax-viz-cyan);font-size:var(--ax-text-md);">$7,270</b></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── SECONDARY ROW: Device donut (4) + Top Products (4) + Traffic (4) ───── -->
+          <!-- Session By Device — W-DONUT -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Session by device">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Session By Device</h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Device session options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-device-donut" aria-label="Donut chart of sessions by device: desktop 58%, mobile 34%, tablet 8%"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#38BDF8;display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Desktop</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">58%</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#A78BFA;display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Mobile</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">34%</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#F472B6;display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Tablet</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">8%</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Top Selling Products — W-TOPLIST -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Top selling products">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Top Selling Products</h2>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <!-- product row template: thumb + name/category + price + stock bar -->
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#38BDF8 18%,transparent);color:#38BDF8;">
+                  <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8v10a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"/><path d="M9 6a3 3 0 0 1 6 0"/><path d="M8 9l8 0"/></svg>
+                </span>
+                <div style="flex:1 1 auto;min-width:0;">
+                  <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Brass Task Light</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Lighting · 412 sold</div>
+                  <div class="ax-progress ax-progress--xs" style="margin-top:6px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:92%;"></div></div></div>
+                </div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">$182</div>
+              </div>
+
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#A78BFA 18%,transparent);color:#A78BFA;">
+                  <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8v10a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"/><path d="M9 6a3 3 0 0 1 6 0"/><path d="M8 9l8 0"/></svg>
+                </span>
+                <div style="flex:1 1 auto;min-width:0;">
+                  <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Aperture Desk Lamp</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Lighting · 356 sold</div>
+                  <div class="ax-progress ax-progress--xs" style="margin-top:6px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:78%;"></div></div></div>
+                </div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">$129</div>
+              </div>
+
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#F472B6 18%,transparent);color:#F472B6;">
+                  <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8v10a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"/><path d="M9 6a3 3 0 0 1 6 0"/><path d="M8 9l8 0"/></svg>
+                </span>
+                <div style="flex:1 1 auto;min-width:0;">
+                  <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Matte Ceramic Mug</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Drinkware · 298 sold</div>
+                  <div class="ax-progress ax-progress--xs" style="margin-top:6px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:64%;"></div></div></div>
+                </div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">$24</div>
+              </div>
+
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#FBBF24 18%,transparent);color:#FBBF24;">
+                  <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8v10a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"/><path d="M9 6a3 3 0 0 1 6 0"/><path d="M8 9l8 0"/></svg>
+                </span>
+                <div style="flex:1 1 auto;min-width:0;">
+                  <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Walnut Monitor Riser</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Desk · 241 sold</div>
+                  <div class="ax-progress ax-progress--xs" style="margin-top:6px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:52%;"></div></div></div>
+                </div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">$96</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Traffic Source — bar list (W-BREAKDOWN) -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Traffic source">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Traffic Source</h2>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Report</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Direct</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">38%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:38%;background:var(--ax-accent);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Organic search</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">27%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:27%;background:var(--ax-viz-cyan);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Referral</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">14%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:14%;background:var(--ax-viz-violet);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Social</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">9%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:9%;background:var(--ax-viz-pink);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Email</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">7%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:7%;background:var(--ax-viz-amber);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Paid</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">5%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:5%;background:var(--ax-viz-emerald);"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── BOTTOM ROW: Recent Transactions (8) + Recent Activity (4) ───── -->
+          <!-- Recent Transactions — W-TABLE -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Recent transactions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Transactions</h2>
+                <p class="ax-card__subtitle">Latest payments &amp; payouts</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Merchant</th>
+                    <th class="ax-table__th" scope="col">Category</th>
+                    <th class="ax-table__th" scope="col">Date</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Amount</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#34D399 18%,transparent);color:#34D399;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Camila Rossi</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Stripe</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Order payment</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 12</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$312.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Completed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#A78BFA 18%,transparent);color:#A78BFA;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v8"/><path d="M8 12h8"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Linear</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Subscription</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Software</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 11</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$84.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Completed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#34D399 18%,transparent);color:#34D399;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Henry Whitlock</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Stripe</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Order payment</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 12</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$129.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Completed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#FB7185 18%,transparent);color:#FB7185;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3"/><path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4"/><path d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0s3 -1.526 3 -2.598s-1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0s-3 1.526 -3 2.598"/><path d="M3 6v10c0 .888 .772 1.45 2 2"/><path d="M3 11c0 .888 .772 1.45 2 2"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Payroll — June</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Gusto</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Payroll</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 10</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$18,400.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Completed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#FBBF24 18%,transparent);color:#FBBF24;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14a3.5 3.5 0 0 0 5 0l4 -4a3.5 3.5 0 0 0 -5 -5l-.5 .5"/><path d="M14 10a3.5 3.5 0 0 0 -5 0l-4 4a3.5 3.5 0 0 0 5 5l.5 -.5"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Pulse Ads</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Google Ads</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Marketing</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 12</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$640.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Pending</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#FB7185 18%,transparent);color:#FB7185;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Daniel Cho</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Stripe</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Order payment</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 9</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">+$24.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill"><span class="ax-badge__dot"></span>Failed</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Recent Activity — W-FEED (timeline) -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Recent activity">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Activity</h2>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-timeline">
+                <li class="ax-timeline__item ax-timeline__item--success">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Devon Okafor</b> closed task <span style="color:var(--ax-accent);">TSK-241</span></p>
+                    <span class="ax-timeline__time">8m ago</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Lena Brandt</b> uploaded empty-state illustrations</p>
+                    <span class="ax-timeline__time">18m ago</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M4 18l10 -10l3 3l-10 10l-3 0l0 -3"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Tomás Herrera</b> moved deal to <span style="color:var(--ax-text);">Negotiation</span></p>
+                    <span class="ax-timeline__time">12m ago</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 13l2 2l4 -4"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Priya Nair</b> exported the weekly report</p>
+                    <span class="ax-timeline__time">1h ago</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-pink);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14l1 0a2 2 0 0 1 2 2a1 1 0 0 0 1 1h1a2 2 0 0 0 2 -2v-1a2 2 0 0 1 2 -2h1"/><path d="M5 8a4 4 0 0 1 4 -4h6a4 4 0 0 1 4 4v8a4 4 0 0 1 -4 4h-6a4 4 0 0 1 -4 -4z"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Ava Sutton</b> created invoice <span style="color:var(--ax-accent);">INV-2025-0118</span></p>
+                    <span class="ax-timeline__time">1d ago</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Responsive grid spans: 4-up KPIs / 8+4 hero / 4·4·4 / 8+4, collapsing -->
+        <!-- Sales page charts that need richer options than the data-attr auto-scanner
+             provides (donut labels + center total). Uses the shared wrapper so the
+             chart inherits the Aurora palette, dark mode + live re-theme on ax:change. -->
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+          const { renderChart } = window.Vireo.charts;
+          const el = document.getElementById('ax-device-donut');
+          if (el) {
+            const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+            renderChart(el, 'donut', [58, 34, 8], {
+              height: 230,
+              legend: 'none',
+              apex: {
+                labels: ['Desktop', 'Mobile', 'Tablet'],
+                colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink')],
+                stroke: { width: 0 },
+                plotOptions: {
+                  pie: {
+                    donut: {
+                      size: '72%',
+                      labels: {
+                        show: true,
+                        name: { fontFamily: cv('--ax-font-sans') },
+                        value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 },
+                        total: { show: true, label: 'Sessions', formatter: () => '54.2K' },
+                      },
+                    },
+                  },
+                },
+              },
+            });
+          }
+        </script>
+{% endblock %}

@@ -1,0 +1,434 @@
+<aside class="ax-sidebar" role="navigation" aria-label="Primary" x-data="axSidebar()" :data-collapsed="collapsed">
+  <!-- ===== BRAND (aligns to header height) ===== -->
+  <div class="ax-sidebar__brand">
+    <a class="ax-sidebar__logo" href="/" aria-label="Vireo home">
+      <span class="ax-sidebar__mark" aria-hidden="true">
+        <svg class="ax-icon" viewBox="0 0 32 32" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+      </span>
+      <span class="ax-sidebar__wordmark">VIREO</span>
+    </a>
+  </div>
+
+  <!-- ===== MENU FILTER (distinct from ⌘K) ===== -->
+  <div class="ax-sidebar__search">
+    <svg class="ax-icon ax-sidebar__search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+      <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" />
+    </svg>
+    <input type="search" class="ax-sidebar__filter" placeholder="Filter menu…" aria-label="Filter menu"
+           @input.debounce.120ms="filter($event.target.value)" @keydown.escape="clearFilter()" x-ref="filter" />
+    <button type="button" class="ax-sidebar__filter-clear" x-show="q" @click="clearFilter()" aria-label="Clear filter">
+      <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+    </button>
+  </div>
+
+  <!-- ===== NAV TREE (only scrolling zone) ===== -->
+  <nav class="ax-sidebar__nav" role="tree" aria-label="Main menu" @keydown="onTreeKey($event)" x-ref="tree">
+
+    <!-- ====================== MAIN ====================== -->
+    <p class="ax-sidebar__section" role="presentation">Main</p>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="true" data-ax-group="grp.dashboards" @click="toggle('grp.dashboards')" tabindex="0">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+          <path d="M5 4h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M5 16h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" /><path d="M15 12h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-6a1 1 0 0 1 1 -1" /><path d="M15 4h4a1 1 0 0 1 1 1v2a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1v-2a1 1 0 0 1 1 -1" />
+        </svg>
+        <span class="ax-nav__label">Dashboards</span>
+        <span class="ax-nav__badge ax-nav__badge--count">17</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/" tabindex="-1">
+          <span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Sales</span>
+        </a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/analytics/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Analytics</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/ecommerce/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">eCommerce</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/crm/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">CRM</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/projects/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Projects</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/finance/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Finance &amp; Banking</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/crypto/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Crypto</span><span class="ax-nav__badge ax-nav__badge--hot">Hot</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/nft/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">NFT Marketplace</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/jobs/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Jobs &amp; Recruitment</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/hr/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">HR &amp; Payroll</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/lms/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">LMS / Courses</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/stocks/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Stocks &amp; Trading</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/healthcare/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Healthcare</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/pos/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">POS &amp; Retail</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/social/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Social Media</span><span class="ax-nav__badge ax-nav__badge--new">New</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/school/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">School</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/podcast/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Podcast &amp; Media</span><span class="ax-nav__badge ax-nav__badge--new">New</span></a>
+      </div>
+    </div>
+
+    <!-- ====================== APPLICATIONS ====================== -->
+    <p class="ax-sidebar__section" role="presentation">Applications</p>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.apps" @click="toggle('grp.apps')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+          <path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" /><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" /><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4" /><path d="M14 7l6 0" /><path d="M17 4l0 6" />
+        </svg>
+        <span class="ax-nav__label">Web Apps</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/email/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Email</span><span class="ax-nav__badge ax-nav__badge--count">6</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/chat/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Chat</span><span class="ax-nav__badge ax-nav__badge--count">4</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/calendar/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Calendar</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/kanban/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Kanban Board</span><span class="ax-nav__badge ax-nav__badge--hot">Hot</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/todo/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">To-Do</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/tasks/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Task List View</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/file-manager/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">File Manager</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/gallery/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Gallery</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/contacts/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Contacts</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/notes/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Notes</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/apps/media-player/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Media Player</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/invoices/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Invoices</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.ecommerce" @click="toggle('grp.ecommerce')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+          <path d="M6.331 8h11.339a2 2 0 0 1 1.977 2.304l-1.255 8.152a3 3 0 0 1 -2.966 2.544h-6.852a3 3 0 0 1 -2.965 -2.544l-1.255 -8.152a2 2 0 0 1 1.977 -2.304" /><path d="M9 11v-5a3 3 0 0 1 6 0v5" />
+        </svg>
+        <span class="ax-nav__label">eCommerce</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/products/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Products</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/product-details/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Product Details</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/add-product/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Add Product</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/edit-product/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Edit Product</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/cart/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Cart</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/checkout/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Checkout</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/orders/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Orders</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/order-details/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Order Details</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/customers/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Customers</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/sellers/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Sellers / Vendors</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/invoices/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Invoices</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ecommerce/create-invoice/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Create Invoice</span></a>
+      </div>
+    </div>
+
+    <!-- ====================== MODULES ====================== -->
+    <p class="ax-sidebar__section" role="presentation">Modules</p>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.crm" @click="toggle('grp.crm')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" /><path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M17 10h2a2 2 0 0 1 2 2v1" /><path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M3 13v-1a2 2 0 0 1 2 -2h2" /></svg>
+        <span class="ax-nav__label">CRM</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/crm/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">CRM Dashboard</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crm/contacts/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Contacts</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crm/companies/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Companies</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crm/deals/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Deals</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crm/leads/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Leads</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.projects" @click="toggle('grp.projects')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 3h3l2 2h5a2 2 0 0 1 2 2v7a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2" /><path d="M17 16v2a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-9a2 2 0 0 1 2 -2h2" /></svg>
+        <span class="ax-nav__label">Projects</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/projects/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Projects Dashboard</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/projects/list/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Projects List</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/projects/overview/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Project Overview</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/projects/create/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Create Project</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.crypto" @click="toggle('grp.crypto')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8" /><path d="M8 6l0 12" /><path d="M8 12l6 0" /><path d="M9 3l0 3" /><path d="M13 3l0 3" /><path d="M9 18l0 3" /><path d="M13 18l0 3" /></svg>
+        <span class="ax-nav__label">Crypto</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/crypto/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Crypto Dashboard</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crypto/transactions/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Transactions</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crypto/exchange/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Currency Exchange</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crypto/buy-sell/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Buy &amp; Sell</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crypto/marketcap/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Marketcap</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/crypto/wallet/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Wallet</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.nft" @click="toggle('grp.nft')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5" /><path d="M10 12l-2 -2.2l.6 -1" /></svg>
+        <span class="ax-nav__label">NFT Marketplace</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/nft/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">NFT Dashboard</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/nft/marketplace/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Marketplace</span><span class="ax-nav__badge ax-nav__badge--new">New</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/nft/nft-details/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">NFT Details</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/nft/create-nft/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Create NFT</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/nft/wallet/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Wallet Integration</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/nft/live-auction/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Live Auction</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.jobs" @click="toggle('grp.jobs')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-9" /><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2" /></svg>
+        <span class="ax-nav__label">Jobs &amp; Recruitment</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/dashboards/jobs/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Jobs Dashboard</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/jobs/list/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Jobs List</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/jobs/job-details/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Job Details</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/jobs/job-post/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Job Post</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/jobs/search-jobs/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Search Jobs</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/jobs/search-company/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Search Company</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/jobs/search-candidate/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Search Candidate</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/jobs/candidate-details/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Candidate Details</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.blog" @click="toggle('grp.blog')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -12" /><path d="M7 8h10" /><path d="M7 12h10" /><path d="M7 16h10" /></svg>
+        <span class="ax-nav__label">Blog</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/blog/list/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Blog List</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/blog/blog-details/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Blog Details</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/blog/create/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Create Blog</span></a>
+      </div>
+    </div>
+
+    <!-- ====================== PAGES ====================== -->
+    <p class="ax-sidebar__section" role="presentation">Pages</p>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.pages" @click="toggle('grp.pages')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M15 3v4a1 1 0 0 0 1 1h4" /><path d="M18 17h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h4l5 5v7a2 2 0 0 1 -2 2" /><path d="M16 17v2a2 2 0 0 1 -2 2h-7a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2h2" /></svg>
+        <span class="ax-nav__label">Pages</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/profile/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Profile</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/profile-settings/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Profile Settings</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/pricing/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Pricing</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/faq/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">FAQ</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/testimonials/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Testimonials</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/timeline/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Timeline</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/team/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Team</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/landing/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Landing Page</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/search-results/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Search Results</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/terms/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Terms &amp; Conditions</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/privacy/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Privacy Policy</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/starter/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Empty (Starter) Page</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/tour/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Tour / Onboarding</span><span class="ax-nav__badge ax-nav__badge--new">New</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/notifications/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Notifications</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/sweet-alerts/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Sweet Alerts</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/nested-menu/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Nested Menu</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/activity-log/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Activity Log</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/events/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Events</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/support/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Support / Help Center</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/widgets/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Widgets Showcase</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/pages/billing/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Account / Billing</span></a>
+      </div>
+    </div>
+
+    <!-- Authentication (nested 2 levels) -->
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.auth" @click="toggle('grp.auth')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6" /><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0" /><path d="M8 11v-4a4 4 0 1 1 8 0v4" /></svg>
+        <span class="ax-nav__label">Authentication</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <!-- L2 collapsible sub-groups -->
+        <div class="ax-nav__group" data-ax-collapse>
+          <button type="button" class="ax-nav__item ax-nav__item--parent ax-nav__item--child" role="treeitem" aria-level="2" aria-expanded="false" data-ax-group="auth.sign-in" @click="toggle('auth.sign-in')" tabindex="-1">
+            <span class="ax-nav__label">Sign In</span>
+            <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+          </button>
+          <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/auth/sign-in-basic/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Basic</span></a>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/auth/sign-in-cover/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Cover</span></a>
+          </div>
+        </div>
+        <div class="ax-nav__group" data-ax-collapse>
+          <button type="button" class="ax-nav__item ax-nav__item--parent ax-nav__item--child" role="treeitem" aria-level="2" aria-expanded="false" data-ax-group="auth.sign-up" @click="toggle('auth.sign-up')" tabindex="-1">
+            <span class="ax-nav__label">Sign Up</span>
+            <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+          </button>
+          <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/auth/sign-up-basic/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Basic</span></a>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/auth/sign-up-cover/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Cover</span></a>
+          </div>
+        </div>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/auth/reset-password-basic/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Reset Password</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/auth/create-password-basic/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Create Password</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/auth/two-step-basic/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Two-Step Verification</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/auth/lock-screen-basic/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Lock Screen</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/auth/coming-soon/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Coming Soon</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/auth/maintenance/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Under Maintenance</span></a>
+      </div>
+    </div>
+
+    <!-- Error Pages -->
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.errors" @click="toggle('grp.errors')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0" /><path d="M12 16h.01" /></svg>
+        <span class="ax-nav__label">Error Pages</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/error/401/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">401 Unauthorized</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/error/403/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">403 Forbidden</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/error/404/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">404 Not Found</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/error/500/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">500 Server Error</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/error/503/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">503 Service Unavailable</span></a>
+      </div>
+    </div>
+
+    <!-- ====================== UI & FORMS ====================== -->
+    <p class="ax-sidebar__section" role="presentation">UI &amp; Forms</p>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.ui" @click="toggle('grp.ui')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 12l3 3l3 -3l-3 -3l-3 3" /><path d="M15 12l3 3l3 -3l-3 -3l-3 3" /><path d="M9 6l3 3l3 -3l-3 -3l-3 3" /><path d="M9 18l3 3l3 -3l-3 -3l-3 3" /></svg>
+        <span class="ax-nav__label">UI Components</span>
+        <span class="ax-nav__badge ax-nav__badge--count">40</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/accordions/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Accordions &amp; Collapse</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/alerts/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Alerts</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/avatars/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Avatars</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/badges/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Badges</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/buttons/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Buttons</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/cards/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Cards</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/carousel/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Carousel</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/dropdowns/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Dropdowns</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/modals/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Modals</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/tabs/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Navs &amp; Tabs</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/progress/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Progress</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/toasts/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Toasts</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/tooltips/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Tooltips</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/ui/typography/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Typography</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.forms" @click="toggle('grp.forms')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M12 3a3 3 0 0 0 -3 3v12a3 3 0 0 0 3 3" /><path d="M6 3a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3" /><path d="M13 7h7a1 1 0 0 1 1 1v8a1 1 0 0 1 -1 1h-7" /><path d="M5 7h-1a1 1 0 0 0 -1 1v8a1 1 0 0 0 1 1h1" /><path d="M17 12h.01" /><path d="M13 12h.01" /></svg>
+        <span class="ax-nav__label">Forms</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/elements/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Form Elements</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/floating-labels/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Floating Labels</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/select/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Form Select</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/file-upload/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">File Uploads</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/pickers/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Date &amp; Time Pickers</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/wizard/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Form Wizard</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/validation/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Form Validation</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/forms/editor/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Editor</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.tables" @click="toggle('grp.tables')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-14" /><path d="M3 10h18" /><path d="M10 3v18" /></svg>
+        <span class="ax-nav__label">Tables</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/tables/basic/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Basic Tables</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/tables/data-tables/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Data Tables</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/tables/gridjs/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Grid.js Tables</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/tables/editable/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Editable Tables</span><span class="ax-nav__badge ax-nav__badge--new">New</span></a>
+      </div>
+    </div>
+
+    <!-- Charts (nested 2 levels) -->
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.charts" @click="toggle('grp.charts')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 3v18h18" /><path d="M20 18v3" /><path d="M16 16v5" /><path d="M12 13v8" /><path d="M8 16v5" /><path d="M3 11c6 0 5 -5 9 -5s3 5 9 5" /></svg>
+        <span class="ax-nav__label">Charts</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <div class="ax-nav__group" data-ax-collapse>
+          <button type="button" class="ax-nav__item ax-nav__item--parent ax-nav__item--child" role="treeitem" aria-level="2" aria-expanded="false" data-ax-group="charts.apex" @click="toggle('charts.apex')" tabindex="-1">
+            <span class="ax-nav__label">ApexCharts</span>
+            <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+          </button>
+          <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/charts/apex-line/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Line</span></a>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/charts/apex-area/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Area</span></a>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/charts/apex-bar/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Bar &amp; Column</span></a>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/charts/apex-pie/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Pie &amp; Donut</span></a>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/charts/apex-mixed/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Mixed &amp; Advanced</span></a>
+            <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="3" href="/charts/apex-financial/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Financial</span></a>
+          </div>
+        </div>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/charts/chartjs/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Chart.js</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/charts/echarts/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">ECharts</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/charts/sparklines/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Sparklines &amp; KPI</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.maps" @click="toggle('grp.maps')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 7l6 -3l6 3l6 -3v13l-6 3l-6 -3l-6 3v-13" /><path d="M9 4v13" /><path d="M15 7v13" /></svg>
+        <span class="ax-nav__label">Maps</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/maps/google/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Google Maps</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/maps/leaflet/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Leaflet Maps</span></a>
+      </div>
+    </div>
+
+    <div class="ax-nav__group" data-ax-collapse>
+      <button type="button" class="ax-nav__item ax-nav__item--parent" role="treeitem" aria-level="1" aria-expanded="false" data-ax-group="grp.icons" @click="toggle('grp.icons')" tabindex="-1">
+        <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 6.5a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0" /><path d="M2.5 21h8l-4 -7l-4 7" /><path d="M14 3l7 7" /><path d="M14 10l7 -7" /><path d="M14 14h7v7h-7l0 -7" /></svg>
+        <span class="ax-nav__label">Icons</span>
+        <svg class="ax-nav__caret ax-icon--directional" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l6 6l-6 6" /></svg>
+      </button>
+      <div class="ax-nav__children" role="group" data-ax-collapse-panel hidden>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/icons/tabler/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Tabler Icons</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/icons/line/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Line / Feather Icons</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/icons/solid/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Solid Icons</span></a>
+        <a class="ax-nav__item ax-nav__item--child" role="treeitem" aria-level="2" href="/icons/brands/" tabindex="-1"><span class="ax-nav__bar" aria-hidden="true"></span><span class="ax-nav__label">Brand / Social Icons</span></a>
+      </div>
+    </div>
+
+    <!-- Single-link leaf (Widgets) -->
+    <a class="ax-nav__item" role="treeitem" aria-level="1" href="/widgets/" tabindex="-1">
+      <span class="ax-nav__bar" aria-hidden="true"></span>
+      <svg class="ax-nav__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M4 4h6v6h-6z" /><path d="M14 4h6v6h-6z" /><path d="M4 14h6v6h-6z" /><path d="M14 14h6v6h-6z" /></svg>
+      <span class="ax-nav__label">Widgets</span>
+    </a>
+
+    <!-- Filter empty-state (revealed by nav.js when no matches) -->
+    <p class="ax-sidebar__nav-empty" role="presentation" hidden>No menu items match your filter.</p>
+  </nav>
+
+  <!-- ===== FOOT: mini user card ===== -->
+  <div class="ax-sidebar__foot">
+    <div class="ax-sidebar__user">
+      <img class="ax-avatar ax-sidebar__user-avatar" src="https://i.pravatar.cc/80?img=12" alt="" width="36" height="36" />
+      <span class="ax-sidebar__user-meta">
+        <b class="ax-sidebar__user-name">Jacob Gerrald</b>
+        <small class="ax-sidebar__user-mail">jacob@vireo.io</small>
+      </span>
+      <a class="ax-sidebar__logout" href="/pages/logout/" aria-label="Log out">
+        <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg>
+      </a>
+    </div>
+  </div>
+</aside>

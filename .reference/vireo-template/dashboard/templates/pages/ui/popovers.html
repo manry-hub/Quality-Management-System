@@ -1,0 +1,227 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Popovers</h1>
+              <p class="ax-page-head__subtitle">Glass mini-cards anchored to a trigger — four positions, click &amp; hover, and rich content.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/tooltips/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>
+                <span class="ax-btn__label">Tooltips</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/ui/dropdowns/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                <span class="ax-btn__label">Dropdowns</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Positions ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Popover positions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Placement</span>
+                <h2 class="ax-card__title">Four Positions</h2>
+                <p class="ax-card__subtitle">Top, bottom, start and end — each click-toggled and dismiss-on-outside.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ax-space-6) var(--ax-space-5);place-items:center;padding-block:var(--ax-space-8);">
+
+                <!-- TOP -->
+                <div class="ax-popover" x-data="{ open:false }" @keydown.escape="open=false">
+                  <button type="button" class="ax-btn ax-btn--secondary" @click="open=!open" :aria-expanded="open" aria-haspopup="dialog">
+                    <span class="ax-btn__label">Top</span>
+                  </button>
+                  <div class="ax-popover__panel" role="dialog" aria-label="Top popover" x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open=false"
+                       style="inset-block-end:calc(100% + 12px);inset-inline-start:50%;transform:translateX(-50%);width:240px;">
+                    <span class="ax-popover__arrow" aria-hidden="true" style="inset-block-end:-6px;inset-inline-start:50%;margin-inline-start:-5px;border-block-start:0;border-inline-start:0;"></span>
+                    <div class="ax-popover__body">
+                      <b style="display:block;color:var(--ax-text-strong);margin-bottom:4px;">Anchored above</b>
+                      The panel grows upward and stays inside the card while the arrow tracks the trigger.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- BOTTOM -->
+                <div class="ax-popover" x-data="{ open:false }" @keydown.escape="open=false">
+                  <button type="button" class="ax-btn ax-btn--secondary" @click="open=!open" :aria-expanded="open" aria-haspopup="dialog">
+                    <span class="ax-btn__label">Bottom</span>
+                  </button>
+                  <div class="ax-popover__panel" role="dialog" aria-label="Bottom popover" x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open=false"
+                       style="inset-block-start:calc(100% + 12px);inset-inline-start:50%;transform:translateX(-50%);width:240px;">
+                    <span class="ax-popover__arrow" aria-hidden="true" style="inset-block-start:-6px;inset-inline-start:50%;margin-inline-start:-5px;border-block-end:0;border-inline-end:0;"></span>
+                    <div class="ax-popover__body">
+                      <b style="display:block;color:var(--ax-text-strong);margin-bottom:4px;">Anchored below</b>
+                      The default placement for menus and form helpers that follow a control.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- START -->
+                <div class="ax-popover" x-data="{ open:false }" @keydown.escape="open=false">
+                  <button type="button" class="ax-btn ax-btn--secondary" @click="open=!open" :aria-expanded="open" aria-haspopup="dialog">
+                    <span class="ax-btn__label">Start</span>
+                  </button>
+                  <div class="ax-popover__panel" role="dialog" aria-label="Start popover" x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open=false"
+                       style="inset-inline-end:calc(100% + 12px);inset-block-start:50%;transform:translateY(-50%);width:230px;">
+                    <span class="ax-popover__arrow" aria-hidden="true" style="inset-inline-end:-6px;inset-block-start:50%;margin-block-start:-5px;border-block-start:0;border-inline-start:0;"></span>
+                    <div class="ax-popover__body">
+                      <b style="display:block;color:var(--ax-text-strong);margin-bottom:4px;">Anchored to the start</b>
+                      Useful when a trigger sits near the inline-end edge of a panel.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- END -->
+                <div class="ax-popover" x-data="{ open:false }" @keydown.escape="open=false">
+                  <button type="button" class="ax-btn ax-btn--secondary" @click="open=!open" :aria-expanded="open" aria-haspopup="dialog">
+                    <span class="ax-btn__label">End</span>
+                  </button>
+                  <div class="ax-popover__panel" role="dialog" aria-label="End popover" x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open=false"
+                       style="inset-inline-start:calc(100% + 12px);inset-block-start:50%;transform:translateY(-50%);width:230px;">
+                    <span class="ax-popover__arrow" aria-hidden="true" style="inset-inline-start:-6px;inset-block-start:50%;margin-block-start:-5px;border-block-end:0;border-inline-end:0;"></span>
+                    <div class="ax-popover__body">
+                      <b style="display:block;color:var(--ax-text-strong);margin-bottom:4px;">Anchored to the end</b>
+                      Mirrors automatically under RTL via logical insets.
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Triggers ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Popover triggers">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Interaction</span>
+                <h2 class="ax-card__title">Triggers</h2>
+                <p class="ax-card__subtitle">Click, hover and focus.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);align-items:flex-start;">
+
+              <!-- click -->
+              <div class="ax-popover" x-data="{ open:false }" @keydown.escape="open=false">
+                <button type="button" class="ax-btn ax-btn--primary" @click="open=!open" :aria-expanded="open" aria-haspopup="dialog">
+                  <span class="ax-btn__label">Click to open</span>
+                </button>
+                <div class="ax-popover__panel" role="dialog" aria-label="Click popover" x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open=false"
+                     style="inset-block-start:calc(100% + 12px);inset-inline-start:0;width:240px;">
+                  <span class="ax-popover__arrow" aria-hidden="true" style="inset-block-start:-6px;inset-inline-start:18px;border-block-end:0;border-inline-end:0;"></span>
+                  <div class="ax-popover__body">Toggles on click and closes when you click anywhere outside or press <kbd class="ax-kbd">Esc</kbd>.</div>
+                </div>
+              </div>
+
+              <!-- hover -->
+              <div class="ax-popover" x-data="{ open:false }" @mouseenter="open=true" @mouseleave="open=false" @focusin="open=true" @focusout="open=false">
+                <button type="button" class="ax-btn ax-btn--secondary">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z"/></svg>
+                  <span class="ax-btn__label">Hover / focus</span>
+                </button>
+                <div class="ax-popover__panel" role="dialog" aria-label="Hover popover" x-show="open" x-cloak x-transition.opacity.duration.150ms
+                     style="inset-block-start:calc(100% + 12px);inset-inline-start:0;width:240px;">
+                  <span class="ax-popover__arrow" aria-hidden="true" style="inset-block-start:-6px;inset-inline-start:18px;border-block-end:0;border-inline-end:0;"></span>
+                  <div class="ax-popover__body">Opens on pointer hover and keyboard focus, so it works without a click.</div>
+                </div>
+              </div>
+
+              <!-- icon trigger -->
+              <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">API rate limit</span>
+                <div class="ax-popover" x-data="{ open:false }" @keydown.escape="open=false">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="open=!open" :aria-expanded="open" aria-label="What is the rate limit?">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>
+                  </button>
+                  <div class="ax-popover__panel" role="dialog" aria-label="Rate limit help" x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open=false"
+                       style="inset-block-start:calc(100% + 12px);inset-inline-end:0;width:260px;">
+                    <span class="ax-popover__arrow" aria-hidden="true" style="inset-block-start:-6px;inset-inline-end:14px;border-block-end:0;border-inline-end:0;"></span>
+                    <div class="ax-popover__body">Each workspace key allows <b class="ax-num" style="color:var(--ax-text-strong);font-family:var(--ax-font-mono);">600</b> requests per minute. Bursts above that return <code class="ax-code">429</code>.</div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ───── Rich content (header + body + footer) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Rich popover">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Composition</span>
+                <h2 class="ax-card__title">Header, Body &amp; Footer</h2>
+                <p class="ax-card__subtitle">A confirm flow built entirely from popover sub-elements.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;padding-block-end:var(--ax-space-9);">
+              <div class="ax-popover" x-data="{ open:false }" @keydown.escape="open=false">
+                <button type="button" class="ax-btn ax-btn--danger ax-btn--primary" @click="open=!open" :aria-expanded="open" aria-haspopup="dialog">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                  <span class="ax-btn__label">Delete project</span>
+                </button>
+                <div class="ax-popover__panel" role="dialog" aria-label="Delete confirmation" x-show="open" x-cloak x-transition.opacity.duration.150ms @click.outside="open=false"
+                     style="inset-block-start:calc(100% + 12px);inset-inline-start:0;width:300px;">
+                  <span class="ax-popover__arrow" aria-hidden="true" style="inset-block-start:-6px;inset-inline-start:18px;border-block-end:0;border-inline-end:0;"></span>
+                  <div class="ax-popover__header">Delete “Aurora redesign”?</div>
+                  <div class="ax-popover__body">This permanently removes the project and its <b style="color:var(--ax-text-strong);">214</b> tasks. This action can’t be undone.</div>
+                  <div class="ax-popover__footer">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="open=false">Cancel</button>
+                    <button type="button" class="ax-btn ax-btn--danger ax-btn--primary ax-btn--sm" @click="open=false">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── User card popover ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Profile popover">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pattern</span>
+                <h2 class="ax-card__title">Profile Preview</h2>
+                <p class="ax-card__subtitle">A hover-card that surfaces a teammate without leaving the page.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;padding-block-end:var(--ax-space-9);">
+              <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0 0 var(--ax-space-4);">
+                Assigned to
+                <span class="ax-popover" x-data="{ open:false }" @mouseenter="open=true" @mouseleave="open=false" style="vertical-align:middle;">
+                  <button type="button" class="ax-link" @focusin="open=true" @focusout="open=false" style="font-weight:var(--ax-weight-semibold);">Marcus Reyes</button>
+                  <span class="ax-popover__panel" role="dialog" aria-label="Marcus Reyes profile" x-show="open" x-cloak x-transition.opacity.duration.150ms
+                        style="inset-block-start:calc(100% + 12px);inset-inline-start:0;width:280px;">
+                    <span class="ax-popover__arrow" aria-hidden="true" style="inset-block-start:-6px;inset-inline-start:18px;border-block-end:0;border-inline-end:0;"></span>
+                    <span class="ax-popover__body" style="display:block;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);">MR</span>
+                        <span style="min-width:0;">
+                          <b style="display:block;color:var(--ax-text-strong);">Marcus Reyes</b>
+                          <small style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">Engineering Manager</small>
+                        </span>
+                      </span>
+                      <span class="ax-divider" style="display:block;margin-block:var(--ax-space-3);"></span>
+                      <span class="ax-cluster" style="justify-content:space-between;">
+                        <span style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">marcus.reyes@northwindlabs.app</span>
+                        <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Online</span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+                — review by Friday.
+              </p>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

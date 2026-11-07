@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{ side:'buy', price:'67840.20', amount:'0.0500', placed:false, get total(){ const p=parseFloat(this.price)||0, a=parseFloat(this.amount)||0; return (p*a).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); } }">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Exchange</h1>
+              <p class="ax-page-head__subtitle">BTC / USDT spot market · live order book &amp; depth.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"/><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/><path d="M9 12l2 2l4 -4"/></svg>
+                <span class="ax-btn__label">Open orders</span>
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill" style="margin-inline-start:var(--ax-space-2);">3</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h12l-3 -3"/><path d="M21 17h-12l3 3"/></svg>
+                <span class="ax-btn__label">Convert</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CRYPTO SUB-NAV ════════════════ -->
+        <nav class="ax-tabs ax-tabs--pill" aria-label="Crypto sections" style="margin-bottom:var(--ax-space-5);">
+          <div class="ax-tabs__list" role="tablist">
+            <a class="ax-tabs__tab" role="tab" href="/crypto/wallet/">Wallet</a>
+            <a class="ax-tabs__tab is-active" role="tab" aria-selected="true" aria-current="page" href="/crypto/exchange/">Exchange</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/buy-sell/">Buy &amp; Sell</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/marketcap/">Marketcap</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/transactions/">Transactions</a>
+          </div>
+        </nav>
+
+        <!-- ════════════════ TICKER STRIP ════════════════ -->
+        <section class="ax-card" role="region" aria-label="Pair ticker" style="margin-bottom:var(--ax-space-6);">
+          <div class="ax-card__body" style="display:flex;flex-wrap:wrap;align-items:center;gap:var(--ax-space-5) var(--ax-space-6);justify-content:space-between;padding-block:var(--ax-space-4);">
+            <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+              <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/><path d="M9 18l0 3"/><path d="M13 18l0 3"/></svg></span>
+              <div>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-lg);">BTC / USDT</b><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">Spot</span></div>
+                <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Bitcoin</div>
+              </div>
+            </div>
+            <div style="border-inline-start:1px solid var(--ax-border);padding-inline-start:var(--ax-space-6);">
+              <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-viz-emerald);">$67,840.20</div>
+              <div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">+$1,392.10 · +2.10%</div>
+            </div>
+            <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">24h High</div><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$68,910</div></div>
+            <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">24h Low</div><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$66,120</div></div>
+            <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">24h Vol (BTC)</div><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">41,820</div></div>
+            <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">24h Vol (USDT)</div><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$2.84B</div></div>
+          </div>
+        </section>
+
+        <!-- ════════════════ TRADING GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── PAIR SELECTOR / MARKETS (3) ───── -->
+          <section class="ax-card ax-col-markets" role="region" aria-label="Markets" x-data="{ mq:'' }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Markets</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                <input type="search" class="ax-input ax-input--sm" placeholder="Search pair…" x-model="mq" style="padding-inline-start:34px;" aria-label="Search markets">
+              </div>
+              <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Quote currency" style="width:100%;">
+                <button type="button" class="ax-btn ax-btn--sm ax-btn--block is-selected" role="radio" aria-checked="true">USDT</button>
+                <button type="button" class="ax-btn ax-btn--sm ax-btn--block" role="radio" aria-checked="false">BTC</button>
+                <button type="button" class="ax-btn ax-btn--sm ax-btn--block" role="radio" aria-checked="false">ETH</button>
+              </div>
+              <ul class="ax-list ax-list--compact" style="margin:0;" x-show="'btc usdt eth sol avax ada dot link'.includes(mq.toLowerCase()) || mq===''">
+                <li class="ax-list__row is-active" style="padding-inline:var(--ax-space-2);border-radius:var(--ax-radius-sm);background:var(--ax-accent-wash);">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-semibold);">BTC<small style="color:var(--ax-text-subtle);">/USDT</small></span></span>
+                  <span class="ax-list__trailing" style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">67,840</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);">+2.1%</div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:var(--ax-space-2);">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12l6 -9l6 9l-6 9l-6 -9"/><path d="M6 12l6 -3l6 3l-6 2l-6 -2"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">ETH<small style="color:var(--ax-text-subtle);">/USDT</small></span></span>
+                  <span class="ax-list__trailing" style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">3,512</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);">+3.7%</div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:var(--ax-space-2);">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h12l4 -4h-12l-4 4"/><path d="M8 14l-4 -4h12l4 4"/><path d="M16 10l4 -4h-12l-4 4"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">SOL<small style="color:var(--ax-text-subtle);">/USDT</small></span></span>
+                  <span class="ax-list__trailing" style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">184.20</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);">+18.2%</div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:var(--ax-space-2);">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 12l9 -3"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">AVAX<small style="color:var(--ax-text-subtle);">/USDT</small></span></span>
+                  <span class="ax-list__trailing" style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">38.10</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-red);">−2.4%</div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:var(--ax-space-2);">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/><path d="M12 12l9 -3"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">ADA<small style="color:var(--ax-text-subtle);">/USDT</small></span></span>
+                  <span class="ax-list__trailing" style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">0.452</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);">+1.3%</div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:var(--ax-space-2);">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-red) 18%,transparent);color:var(--ax-viz-red);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/><path d="M8 12h8"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">DOT<small style="color:var(--ax-text-subtle);">/USDT</small></span></span>
+                  <span class="ax-list__trailing" style="text-align:end;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">6.94</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-red);">−0.8%</div></span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── CANDLESTICK CHART (6) ───── -->
+          <section class="ax-card ax-card--chart ax-col-candle" role="region" aria-label="Bitcoin price chart">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">BTC / USDT</span>
+                <h2 class="ax-card__title">Price Chart</h2>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Candle interval">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">15m</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1H</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">1D</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1W</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-ex-candle" aria-label="Candlestick chart of BTC/USDT daily price"></div>
+            </div>
+          </section>
+
+          <!-- ───── ORDER BOOK (3) ───── -->
+          <section class="ax-card ax-col-book" role="region" aria-label="Order book">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Order Book</h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Order book settings">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l8 0"/><path d="M16 6l4 0"/><path d="M8 12l12 0"/><path d="M4 12l0 0"/><path d="M4 18l5 0"/><path d="M13 18l7 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;font-family:var(--ax-font-mono);">
+              <!-- header -->
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;margin-bottom:var(--ax-space-2);">
+                <span>Price (USDT)</span><span style="text-align:end;">Amount (BTC)</span><span style="text-align:end;">Total</span>
+              </div>
+              <!-- ASKS (sell side) — depth shaded right-to-left -->
+              <div style="display:flex;flex-direction:column;gap:1px;">
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:78%;background:color-mix(in oklab,var(--ax-viz-red) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-red);">68,142.0</span><span style="position:relative;text-align:end;color:var(--ax-text);">1.842</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">125.5K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:62%;background:color-mix(in oklab,var(--ax-viz-red) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-red);">68,058.5</span><span style="position:relative;text-align:end;color:var(--ax-text);">0.926</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">63.0K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:48%;background:color-mix(in oklab,var(--ax-viz-red) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-red);">67,964.0</span><span style="position:relative;text-align:end;color:var(--ax-text);">0.612</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">41.6K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:34%;background:color-mix(in oklab,var(--ax-viz-red) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-red);">67,902.5</span><span style="position:relative;text-align:end;color:var(--ax-text);">0.388</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">26.3K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:22%;background:color-mix(in oklab,var(--ax-viz-red) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-red);">67,861.0</span><span style="position:relative;text-align:end;color:var(--ax-text);">0.204</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">13.8K</span></div>
+              </div>
+              <!-- spread / last price -->
+              <div class="ax-cluster" style="justify-content:space-between;padding-block:var(--ax-space-3);margin-block:var(--ax-space-2);border-block:1px solid var(--ax-border);">
+                <span class="ax-num" style="font-size:var(--ax-text-lg);font-weight:700;color:var(--ax-viz-emerald);">67,840.2</span>
+                <span class="ax-cluster" style="gap:var(--ax-space-1);color:var(--ax-text-subtle);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 -6l6 6"/></svg>Spread 0.06%</span>
+              </div>
+              <!-- BIDS (buy side) -->
+              <div style="display:flex;flex-direction:column;gap:1px;">
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:26%;background:color-mix(in oklab,var(--ax-viz-emerald) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-emerald);">67,818.5</span><span style="position:relative;text-align:end;color:var(--ax-text);">0.296</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">20.1K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:40%;background:color-mix(in oklab,var(--ax-viz-emerald) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-emerald);">67,762.0</span><span style="position:relative;text-align:end;color:var(--ax-text);">0.524</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">35.5K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:55%;background:color-mix(in oklab,var(--ax-viz-emerald) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-emerald);">67,690.5</span><span style="position:relative;text-align:end;color:var(--ax-text);">0.718</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">48.6K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:71%;background:color-mix(in oklab,var(--ax-viz-emerald) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-emerald);">67,604.0</span><span style="position:relative;text-align:end;color:var(--ax-text);">1.084</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">73.3K</span></div>
+                <div style="position:relative;display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);padding-block:3px;font-size:var(--ax-text-xs);"><span aria-hidden="true" style="position:absolute;inset-block:0;inset-inline-end:0;width:88%;background:color-mix(in oklab,var(--ax-viz-emerald) 12%,transparent);"></span><span style="position:relative;color:var(--ax-viz-emerald);">67,540.5</span><span style="position:relative;text-align:end;color:var(--ax-text);">1.962</span><span style="position:relative;text-align:end;color:var(--ax-text-muted);">132.5K</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── BUY / SELL PANEL (4) ───── -->
+          <section class="ax-card ax-col-trade" role="region" aria-label="Place order">
+            <div class="ax-card__body">
+              <!-- side toggle -->
+              <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Order side" style="width:100%;margin-bottom:var(--ax-space-4);">
+                <button type="button" class="ax-btn ax-btn--block" role="radio" :aria-checked="side==='buy'" :class="{ 'is-selected': side==='buy' }" @click="side='buy';placed=false">Buy</button>
+                <button type="button" class="ax-btn ax-btn--block" role="radio" :aria-checked="side==='sell'" :class="{ 'is-selected': side==='sell' }" @click="side='sell';placed=false">Sell</button>
+              </div>
+              <!-- order type tabs -->
+              <div class="ax-cluster" style="gap:var(--ax-space-4);margin-bottom:var(--ax-space-4);border-bottom:1px solid var(--ax-border);">
+                <button type="button" class="ax-btn ax-btn--link" style="padding-block:var(--ax-space-2);color:var(--ax-text-strong);border-bottom:2px solid var(--ax-accent);border-radius:0;">Limit</button>
+                <button type="button" class="ax-btn ax-btn--link" style="padding-block:var(--ax-space-2);color:var(--ax-text-muted);">Market</button>
+                <button type="button" class="ax-btn ax-btn--link" style="padding-block:var(--ax-space-2);color:var(--ax-text-muted);">Stop</button>
+              </div>
+              <form @submit.prevent="placed=true" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-cluster" style="justify-content:space-between;">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Available</span>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="side==='buy' ? '12,300.00 USDT' : '0.586 BTC'"></b>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="ex-price">Price</label>
+                  <div style="position:relative;">
+                    <input class="ax-input ax-num" id="ex-price" type="text" inputmode="decimal" x-model="price" style="font-family:var(--ax-font-mono);padding-inline-end:54px;">
+                    <span style="position:absolute;inset-inline-end:12px;top:50%;transform:translateY(-50%);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">USDT</span>
+                  </div>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="ex-amount">Amount</label>
+                  <div style="position:relative;">
+                    <input class="ax-input ax-num" id="ex-amount" type="text" inputmode="decimal" x-model="amount" style="font-family:var(--ax-font-mono);padding-inline-end:46px;">
+                    <span style="position:absolute;inset-inline-end:12px;top:50%;transform:translateY(-50%);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">BTC</span>
+                  </div>
+                </div>
+                <!-- percentage quick-fill -->
+                <div class="ax-btn-group ax-btn-group--segmented" role="group" aria-label="Order size percentage" style="width:100%;">
+                  <button type="button" class="ax-btn ax-btn--sm ax-btn--block" @click="amount=(0.586*0.25).toFixed(4)">25%</button>
+                  <button type="button" class="ax-btn ax-btn--sm ax-btn--block" @click="amount=(0.586*0.5).toFixed(4)">50%</button>
+                  <button type="button" class="ax-btn ax-btn--sm ax-btn--block" @click="amount=(0.586*0.75).toFixed(4)">75%</button>
+                  <button type="button" class="ax-btn ax-btn--sm ax-btn--block" @click="amount=(0.586).toFixed(4)">100%</button>
+                </div>
+                <div style="padding:var(--ax-space-3);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Est. fee (0.10%)</span><b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="'$' + ((parseFloat(total.replace(/,/g,''))||0)*0.001).toFixed(2)"></b></div>
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Order total</span><b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-md);"><span x-text="total"></span> USDT</b></div>
+                </div>
+                <button type="submit" class="ax-btn ax-btn--block" :class="side==='buy' ? 'ax-btn--success' : 'ax-btn--danger'">
+                  <span class="ax-btn__label" x-text="(side==='buy'?'Buy ':'Sell ') + 'BTC'"></span>
+                </button>
+                <p class="ax-note" x-show="placed" x-transition x-cloak style="margin:0;font-size:var(--ax-text-sm);" :style="side==='buy' ? 'color:var(--ax-viz-emerald)' : 'color:var(--ax-viz-red)'" role="status">
+                  <span x-text="(side==='buy'?'Buy':'Sell')"></span> limit order placed for <span class="ax-num" x-text="amount"></span> BTC.
+                </p>
+              </form>
+            </div>
+          </section>
+
+          <!-- ───── RECENT TRADES (full width) ───── -->
+          <section class="ax-card ax-col-full" role="region" aria-label="Recent market trades">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Trades</h2>
+                <p class="ax-card__subtitle">BTC / USDT market</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="/crypto/transactions/">My history</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Side</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Price (USDT)</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Amount (BTC)</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Total (USDT)</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Time</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row"><td class="ax-table__td"><span style="color:var(--ax-viz-emerald);font-weight:var(--ax-weight-medium);">Buy</span></td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);">67,840.20</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">0.1842</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">12,496.16</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">14:32:08</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><span style="color:var(--ax-viz-red);font-weight:var(--ax-weight-medium);">Sell</span></td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-red);">67,838.50</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">0.0512</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">3,473.33</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">14:32:05</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><span style="color:var(--ax-viz-emerald);font-weight:var(--ax-weight-medium);">Buy</span></td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);">67,841.00</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">0.9020</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">61,192.58</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">14:31:58</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><span style="color:var(--ax-viz-emerald);font-weight:var(--ax-weight-medium);">Buy</span></td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);">67,835.75</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">0.0246</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">1,668.76</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">14:31:51</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><span style="color:var(--ax-viz-red);font-weight:var(--ax-weight-medium);">Sell</span></td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-red);">67,830.10</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">0.3380</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">22,926.57</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">14:31:44</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><span style="color:var(--ax-viz-emerald);font-weight:var(--ax-weight-medium);">Buy</span></td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);">67,832.40</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">0.1500</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">10,174.86</td><td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">14:31:39</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+
+        <style>
+          .ax-dash-grid > * { grid-column: 1 / -1; }
+          @media (min-width: 768px) {
+            .ax-dash-grid > .ax-col-markets { grid-column: span 6; }
+            .ax-dash-grid > .ax-col-candle { grid-column: span 6; }
+            .ax-dash-grid > .ax-col-book { grid-column: span 6; }
+            .ax-dash-grid > .ax-col-trade { grid-column: span 6; }
+          }
+          @media (min-width: 1200px) {
+            .ax-dash-grid > .ax-col-markets { grid-column: span 3; }
+            .ax-dash-grid > .ax-col-candle { grid-column: span 6; }
+            .ax-dash-grid > .ax-col-book { grid-column: span 3; }
+            .ax-dash-grid > .ax-col-trade { grid-column: span 4; }
+            .ax-dash-grid > .ax-col-full { grid-column: span 8; }
+          }
+        </style>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+          import { renderChart } from '/src/js/plugins/charts.js';
+          const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+          const candle = document.getElementById('ax-ex-candle');
+          if (candle) {
+            const ohlc = [
+              [1718150400000, 64200, 65100, 63800, 64900],
+              [1718236800000, 64900, 66200, 64500, 65800],
+              [1718323200000, 65800, 66100, 64200, 64600],
+              [1718409600000, 64600, 65900, 64100, 65500],
+              [1718496000000, 65500, 67200, 65300, 66900],
+              [1718582400000, 66900, 67100, 65800, 66100],
+              [1718668800000, 66100, 66800, 64900, 65200],
+              [1718755200000, 65200, 67400, 65000, 67100],
+              [1718841600000, 67100, 68200, 66800, 67900],
+              [1718928000000, 67900, 68100, 66400, 66700],
+              [1719014400000, 66700, 68400, 66500, 68200],
+              [1719100800000, 68200, 68900, 67200, 67840],
+            ].map((c) => ({ x: c[0], y: [c[1], c[2], c[3], c[4]] }));
+            renderChart(candle, 'candlestick', [{ data: ohlc }], {
+              height: 360, legend: 'none',
+              apex: {
+                plotOptions: { candlestick: { colors: { upward: cv('--ax-success-500'), downward: cv('--ax-danger-500') } } },
+                xaxis: { type: 'datetime' },
+                yaxis: { tooltip: { enabled: true }, labels: { formatter: (v) => '$' + (v / 1000).toFixed(1) + 'K' } },
+              },
+            });
+          }
+        </script>
+{% endblock %}

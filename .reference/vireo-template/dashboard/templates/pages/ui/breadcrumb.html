@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Breadcrumb</h1>
+              <p class="ax-page-head__subtitle">Wayfinding trails — chevron &amp; slash separators, leading icons, the home glyph, and a truncated overflow variant.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Chevron (default) -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Chevron separator breadcrumb">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Default</span>
+                <h2 class="ax-card__title">Chevron separators</h2>
+                <p class="ax-card__subtitle">The standard trail used across Vireo.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav class="ax-breadcrumb" aria-label="Breadcrumb">
+                <ol class="ax-breadcrumb__list">
+                  <li class="ax-breadcrumb__item"><a href="/">Dashboard</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item"><a href="/ecommerce/products/">Catalog</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item"><span aria-current="page">Brass Task Light</span></li>
+                </ol>
+              </nav>
+            </div>
+          </section>
+
+          <!-- Slash -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Slash separator breadcrumb">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variant</span>
+                <h2 class="ax-card__title">Slash separators</h2>
+                <p class="ax-card__subtitle">A lighter divider for file-path style trails.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav class="ax-breadcrumb" aria-label="Breadcrumb">
+                <ol class="ax-breadcrumb__list">
+                  <li class="ax-breadcrumb__item"><a href="/apps/file-manager/">Files</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 5l-10 14"/></svg></li>
+                  <li class="ax-breadcrumb__item"><a href="#">Brand assets</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 5l-10 14"/></svg></li>
+                  <li class="ax-breadcrumb__item"><a href="#">2026</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 5l-10 14"/></svg></li>
+                  <li class="ax-breadcrumb__item"><span aria-current="page">launch-deck.pdf</span></li>
+                </ol>
+              </nav>
+            </div>
+          </section>
+
+          <!-- Home glyph -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Breadcrumb with home glyph">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Affordance</span>
+                <h2 class="ax-card__title">Home glyph start</h2>
+                <p class="ax-card__subtitle">An icon root keeps deep trails compact.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav class="ax-breadcrumb" aria-label="Breadcrumb">
+                <ol class="ax-breadcrumb__list">
+                  <li class="ax-breadcrumb__item"><a href="/" aria-label="Home"><svg class="ax-breadcrumb__home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 8.71l-5.333 -4.148a2.666 2.666 0 0 0 -3.274 0l-5.334 4.148a2.665 2.665 0 0 0 -1.029 2.105v7.2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-7.2c0 -.823 -.38 -1.6 -1.03 -2.105"/><path d="M16 15c-2.21 1.333 -5.792 1.333 -8 0"/></svg></a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item"><a href="/ecommerce/orders/">Orders</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item"><span aria-current="page">#10482</span></li>
+                </ol>
+              </nav>
+            </div>
+          </section>
+
+          <!-- With leading icons -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Breadcrumb with leading icons">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Affordance</span>
+                <h2 class="ax-card__title">Per-step icons</h2>
+                <p class="ax-card__subtitle">Each crumb carries a glyph for faster scanning.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav class="ax-breadcrumb" aria-label="Breadcrumb">
+                <ol class="ax-breadcrumb__list">
+                  <li class="ax-breadcrumb__item"><a href="/">
+                    <svg style="width:var(--ax-icon-xs);height:var(--ax-icon-xs);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v8h-6z"/><path d="M4 16h6v4h-6z"/><path d="M14 12h6v8h-6z"/><path d="M14 4h6v4h-6z"/></svg>Dashboard</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item"><a href="#">
+                    <svg style="width:var(--ax-icon-xs);height:var(--ax-icon-xs);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>Customers</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item"><span aria-current="page">
+                    <svg style="width:var(--ax-icon-xs);height:var(--ax-icon-xs);" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>Camila Rossi</span></li>
+                </ol>
+              </nav>
+            </div>
+          </section>
+
+          <!-- Truncated / collapsed overflow -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Truncated breadcrumb">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Long trails</span>
+                <h2 class="ax-card__title">Truncated overflow</h2>
+                <p class="ax-card__subtitle">Deep hierarchies collapse the middle into a menu; the last crumb truncates with ellipsis.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <!-- collapsed middle -->
+              <nav class="ax-breadcrumb" aria-label="Breadcrumb" x-data="{ open:false }">
+                <ol class="ax-breadcrumb__list">
+                  <li class="ax-breadcrumb__item"><a href="/" aria-label="Home"><svg class="ax-breadcrumb__home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 8.71l-5.333 -4.148a2.666 2.666 0 0 0 -3.274 0l-5.334 4.148a2.665 2.665 0 0 0 -1.029 2.105v7.2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-7.2c0 -.823 -.38 -1.6 -1.03 -2.105"/><path d="M16 15c-2.21 1.333 -5.792 1.333 -8 0"/></svg></a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item" style="position:relative;">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Show hidden path" :aria-expanded="open" @click="open=!open" @click.outside="open=false" @keydown.escape="open=false">
+                      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg>
+                    </button>
+                    <div class="ax-flex" x-show="open" x-cloak x-transition.opacity style="position:absolute;top:calc(100% + 6px);inset-inline-start:0;min-width:200px;z-index:20;padding:var(--ax-space-2);background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-lg);flex-direction:column;gap:2px;">
+                      <a class="ax-btn ax-btn--ghost ax-btn--sm ax-btn--block" style="justify-content:flex-start;" href="#"><span class="ax-btn__label">Workspaces</span></a>
+                      <a class="ax-btn ax-btn--ghost ax-btn--sm ax-btn--block" style="justify-content:flex-start;" href="#"><span class="ax-btn__label">Northwind Labs</span></a>
+                      <a class="ax-btn ax-btn--ghost ax-btn--sm ax-btn--block" style="justify-content:flex-start;" href="#"><span class="ax-btn__label">Engineering</span></a>
+                      <a class="ax-btn ax-btn--ghost ax-btn--sm ax-btn--block" style="justify-content:flex-start;" href="#"><span class="ax-btn__label">Platform team</span></a>
+                    </div>
+                  </li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item"><a href="#">Sprint 24</a></li>
+                  <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                  <li class="ax-breadcrumb__item" style="max-width:220px;"><span aria-current="page" class="ax-truncate" style="display:block;color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);">TSK-241 · Migrate webhook delivery to the new retry queue</span></li>
+                </ol>
+              </nav>
+
+              <!-- responsive / wrapping demo -->
+              <div style="max-width:360px;border:1px dashed var(--ax-border-strong);border-radius:var(--ax-radius-md);padding:var(--ax-space-3);background:var(--ax-surface-subtle);">
+                <small style="display:block;margin-bottom:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Constrained width — the trail wraps cleanly</small>
+                <nav class="ax-breadcrumb" aria-label="Breadcrumb">
+                  <ol class="ax-breadcrumb__list">
+                    <li class="ax-breadcrumb__item"><a href="#">Settings</a></li>
+                    <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                    <li class="ax-breadcrumb__item"><a href="#">Billing</a></li>
+                    <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                    <li class="ax-breadcrumb__item"><a href="#">Invoices</a></li>
+                    <li class="ax-breadcrumb__sep" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6l-6 6"/></svg></li>
+                    <li class="ax-breadcrumb__item"><span aria-current="page">INV-2025-0118</span></li>
+                  </ol>
+                </nav>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

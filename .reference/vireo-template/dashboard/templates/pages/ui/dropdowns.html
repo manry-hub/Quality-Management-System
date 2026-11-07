@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Dropdowns</h1>
+              <p class="ax-page-head__subtitle">Glass overlay menus — every direction, with icons, shortcuts, headers, dividers and checkable items.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/modals/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M4 9h16"/></svg>
+                <span class="ax-btn__label">Modals</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ═══════ DIRECTIONS ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Dropdown directions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Placement</span>
+                <h2 class="ax-card__title">Directions</h2>
+                <p class="ax-card__subtitle">Down (default), up, end and start. Click a trigger to open.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-wrap:wrap;gap:var(--ax-space-4);align-items:flex-start;min-height:220px;">
+              <!-- Down -->
+              <div class="ax-dropdown" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="toggle()" :aria-expanded="open">
+                  <span class="ax-btn__label">Down</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.top role="menu" style="inset-block-start:calc(100% + 6px);inset-inline-start:0;">
+                  <button class="ax-menu__item" role="menuitem">Overview</button>
+                  <button class="ax-menu__item" role="menuitem">Reports</button>
+                  <button class="ax-menu__item" role="menuitem">Settings</button>
+                </div>
+              </div>
+              <!-- Up -->
+              <div class="ax-dropdown" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()" style="align-self:flex-end;">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="toggle()" :aria-expanded="open">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>
+                  <span class="ax-btn__label">Up</span>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.bottom role="menu" style="inset-block-end:calc(100% + 6px);inset-inline-start:0;">
+                  <button class="ax-menu__item" role="menuitem">Overview</button>
+                  <button class="ax-menu__item" role="menuitem">Reports</button>
+                  <button class="ax-menu__item" role="menuitem">Settings</button>
+                </div>
+              </div>
+              <!-- End -->
+              <div class="ax-dropdown" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="toggle()" :aria-expanded="open">
+                  <span class="ax-btn__label">End</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.left role="menu" style="inset-block-start:0;inset-inline-start:calc(100% + 6px);">
+                  <button class="ax-menu__item" role="menuitem">Overview</button>
+                  <button class="ax-menu__item" role="menuitem">Reports</button>
+                  <button class="ax-menu__item" role="menuitem">Settings</button>
+                </div>
+              </div>
+              <!-- Start -->
+              <div class="ax-dropdown" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()" style="margin-inline-start:auto;">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="toggle()" :aria-expanded="open">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                  <span class="ax-btn__label">Start</span>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.right role="menu" style="inset-block-start:0;inset-inline-end:calc(100% + 6px);">
+                  <button class="ax-menu__item" role="menuitem">Overview</button>
+                  <button class="ax-menu__item" role="menuitem">Reports</button>
+                  <button class="ax-menu__item" role="menuitem">Settings</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ WITH ICONS + SHORTCUTS ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Dropdown with icons and shortcuts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Rich items</span>
+                <h2 class="ax-card__title">Icons, shortcuts &amp; danger</h2>
+                <p class="ax-card__subtitle">A full action menu with leading icons, key hints and a destructive row.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="min-height:264px;">
+              <div class="ax-dropdown" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()">
+                <button type="button" class="ax-btn ax-btn--primary" @click="toggle()" :aria-expanded="open">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  <span class="ax-btn__label">Create</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.top role="menu" style="inset-block-start:calc(100% + 6px);inset-inline-start:0;min-width:248px;">
+                  <button class="ax-menu__item" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/></svg>
+                    New report <span class="ax-menu__shortcut">⌘N</span>
+                  </button>
+                  <button class="ax-menu__item" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12a9 9 0 0 1 9 -9"/><path d="M14 21a9 9 0 0 0 5 -8"/></svg>
+                    New invoice <span class="ax-menu__shortcut">⌘I</span>
+                  </button>
+                  <button class="ax-menu__item" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 11h6m-3 -3v6"/></svg>
+                    Invite member <span class="ax-menu__shortcut">⌘U</span>
+                  </button>
+                  <hr class="ax-menu__divider">
+                  <button class="ax-menu__item ax-menu__item--danger" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                    Delete workspace
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ HEADERS, SECTIONS & PROFILE ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Dropdown with headers and sections">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Grouped</span>
+                <h2 class="ax-card__title">Headers &amp; sections</h2>
+                <p class="ax-card__subtitle">A profile menu with a header block, section labels and dividers.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="min-height:492px;">
+              <div class="ax-dropdown" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="toggle()" :aria-expanded="open" style="gap:var(--ax-space-3);padding-inline-start:6px;">
+                  <span class="ax-avatar ax-avatar--sm" style="background:var(--ax-accent-wash);color:var(--ax-accent);">AS</span>
+                  <span class="ax-btn__label">Ava Sutton</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.top role="menu" style="inset-block-start:calc(100% + 6px);inset-inline-start:0;min-width:260px;">
+                  <!-- header block -->
+                  <div style="display:flex;gap:var(--ax-space-3);align-items:center;padding:var(--ax-space-2) var(--ax-space-3) var(--ax-space-3);">
+                    <span class="ax-avatar ax-avatar--md" style="background:var(--ax-accent-wash);color:var(--ax-accent);">AS</span>
+                    <div style="min-width:0;">
+                      <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Ava Sutton</div>
+                      <div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">ava.sutton@northwindlabs.app</div>
+                    </div>
+                  </div>
+                  <hr class="ax-menu__divider">
+                  <div class="ax-menu__section-label" role="presentation">Account</div>
+                  <button class="ax-menu__item" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+                    Your profile
+                  </button>
+                  <button class="ax-menu__item" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>
+                    Settings <span class="ax-menu__shortcut">⌘,</span>
+                  </button>
+                  <hr class="ax-menu__divider">
+                  <div class="ax-menu__section-label" role="presentation">Workspace</div>
+                  <button class="ax-menu__item" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-14l8 -4v18"/><path d="M19 21v-10l-6 -4"/></svg>
+                    Northwind Labs
+                  </button>
+                  <button class="ax-menu__item" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 17l3 -3l-3 -3"/></svg>
+                    Billing &amp; plan
+                  </button>
+                  <hr class="ax-menu__divider">
+                  <button class="ax-menu__item ax-menu__item--danger" role="menuitem">
+                    <svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg>
+                    Sign out
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ CHECKABLE + SPLIT BUTTON ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Checkable dropdown and split button">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Selection</span>
+                <h2 class="ax-card__title">Checkable items &amp; split button</h2>
+                <p class="ax-card__subtitle">Single-choice filter and a split CTA with its own caret menu.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-wrap:wrap;gap:var(--ax-space-4);align-items:flex-start;min-height:240px;">
+              <!-- Checkable sort menu -->
+              <div class="ax-dropdown" x-data="{ ...axDropdown(), sort:'recent', set(v){ this.sort=v; this.close(); } }" @keydown.escape="close()" @click.outside="close()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="toggle()" :aria-expanded="open">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l4 -4l4 4m-4 -4v14"/><path d="M21 15l-4 4l-4 -4m4 4v-14"/></svg>
+                  <span class="ax-btn__label">Sort: <span style="text-transform:capitalize;" x-text="sort"></span></span>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.top role="menu" style="inset-block-start:calc(100% + 6px);inset-inline-start:0;">
+                  <div class="ax-menu__section-label" role="presentation">Sort by</div>
+                  <button class="ax-menu__item" role="menuitemradio" :aria-checked="sort==='recent'" :class="{'is-selected':sort==='recent'}" @click="set('recent')">Most recent<svg class="ax-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></button>
+                  <button class="ax-menu__item" role="menuitemradio" :aria-checked="sort==='value'" :class="{'is-selected':sort==='value'}" @click="set('value')">Highest value<svg class="ax-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></button>
+                  <button class="ax-menu__item" role="menuitemradio" :aria-checked="sort==='name'" :class="{'is-selected':sort==='name'}" @click="set('name')">Name (A–Z)<svg class="ax-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></button>
+                </div>
+              </div>
+
+              <!-- Multi-toggle columns menu -->
+              <div class="ax-dropdown" x-data="{ ...axDropdown(), cols:{customer:true,date:true,amount:true,status:false} }" @keydown.escape="close()" @click.outside="close()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="toggle()" :aria-expanded="open">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg>
+                  <span class="ax-btn__label">Columns</span>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.top role="menu" style="inset-block-start:calc(100% + 6px);inset-inline-start:0;">
+                  <div class="ax-menu__section-label" role="presentation">Visible columns</div>
+                  <button class="ax-menu__item" role="menuitemcheckbox" :aria-checked="cols.customer" :class="{'is-selected':cols.customer}" @click.stop="cols.customer=!cols.customer">Customer<svg class="ax-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></button>
+                  <button class="ax-menu__item" role="menuitemcheckbox" :aria-checked="cols.date" :class="{'is-selected':cols.date}" @click.stop="cols.date=!cols.date">Date<svg class="ax-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></button>
+                  <button class="ax-menu__item" role="menuitemcheckbox" :aria-checked="cols.amount" :class="{'is-selected':cols.amount}" @click.stop="cols.amount=!cols.amount">Amount<svg class="ax-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></button>
+                  <button class="ax-menu__item" role="menuitemcheckbox" :aria-checked="cols.status" :class="{'is-selected':cols.status}" @click.stop="cols.status=!cols.status">Status<svg class="ax-menu__check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></button>
+                </div>
+              </div>
+
+              <!-- Split button -->
+              <div class="ax-btn-group ax-btn-group--split" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()" style="position:relative;">
+                <button type="button" class="ax-btn ax-btn--primary">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 13l2 2l4 -4"/></svg>
+                  <span class="ax-btn__label">Save</span>
+                </button>
+                <button type="button" class="ax-btn ax-btn--primary ax-btn-group__caret ax-btn--icon" @click="toggle()" :aria-expanded="open" aria-label="More save options">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+                <div class="ax-menu" x-show="open" x-cloak x-transition.origin.top role="menu" style="inset-block-start:calc(100% + 6px);inset-inline-end:0;">
+                  <button class="ax-menu__item" role="menuitem">Save</button>
+                  <button class="ax-menu__item" role="menuitem">Save &amp; new</button>
+                  <button class="ax-menu__item" role="menuitem">Save as draft</button>
+                  <button class="ax-menu__item" role="menuitem">Save as template</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

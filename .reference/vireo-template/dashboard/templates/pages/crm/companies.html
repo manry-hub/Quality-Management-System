@@ -1,0 +1,342 @@
+{% extends 'base.html' %}
+
+{# CRM · Companies — faithful re-expression of src/html/crm/companies.html. Account
+   KPIs, table/card view toggle, search + industry filter, bulk bar, teleported row
+   menu and new-company modal (axCompanies Alpine). #}
+
+{% block main %}
+      <div x-data="axCompanies()">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Companies</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num" x-text="rows.length"></span> accounts in your pipeline — <span class="ax-num">$2.84M</span> open deal value.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="addOpen = true">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New company</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CRM SUB-NAV ════════════════ -->
+        <nav class="ax-tabs ax-tabs--pill" aria-label="CRM sections" style="margin-bottom:var(--ax-space-5);">
+          <div class="ax-tabs__list" role="tablist">
+            <a class="ax-tabs__tab" role="tab" href="/crm/contacts/">Contacts</a>
+            <a class="ax-tabs__tab is-active" role="tab" aria-selected="true" aria-current="page" href="/crm/companies/">Companies</a>
+            <a class="ax-tabs__tab" role="tab" href="/crm/deals/">Deals</a>
+            <a class="ax-tabs__tab" role="tab" href="/crm/leads/">Leads</a>
+          </div>
+        </nav>
+
+        <!-- ════════════════ KPI ROW ════════════════ -->
+        <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total companies">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M9 8h1"/><path d="M9 12h1"/><path d="M9 16h1"/><path d="M14 8h1"/><path d="M14 12h1"/><path d="M14 16h1"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>6.2%</span>
+              </div>
+              <div class="ax-kpi__label">Total Companies</div>
+              <div class="ax-kpi__value ax-num">128</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Active accounts">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2l4 -4"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.1%</span>
+              </div>
+              <div class="ax-kpi__label">Active Accounts</div>
+              <div class="ax-kpi__value ax-num">94</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Open deal value">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>9.8%</span>
+              </div>
+              <div class="ax-kpi__label">Open Deal Value</div>
+              <div class="ax-kpi__value ax-num">$2.84M</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Churn risk">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>1.4%</span>
+              </div>
+              <div class="ax-kpi__label">At Churn Risk</div>
+              <div class="ax-kpi__value ax-num">7</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Companies table">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">All Companies</h2>
+                <p class="ax-card__subtitle ax-num" style="font-family:var(--ax-font-mono);">
+                  <span x-text="filtered().length"></span> of <span x-text="rows.length"></span> shown
+                </p>
+              </div>
+              <div class="ax-card__actions" style="flex:1 1 auto;flex-wrap:wrap;gap:var(--ax-space-2);min-width:0;">
+                <div style="position:relative;flex:1 1 220px;max-width:300px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input ax-input--sm" placeholder="Search company or owner…" x-model.debounce.200ms="q" @input="page=1" style="padding-inline-start:34px;" aria-label="Search companies">
+                </div>
+                <select class="ax-select ax-select--sm" x-model="fIndustry" @change="page=1" aria-label="Filter by industry" style="min-width:150px;">
+                  <option value="">All industries</option>
+                  <option>SaaS</option>
+                  <option>Fintech</option>
+                  <option>E-commerce</option>
+                  <option>Healthcare</option>
+                  <option>Manufacturing</option>
+                  <option>Agency</option>
+                </select>
+                <div class="ax-segment" role="group" aria-label="View mode" style="margin-inline-start:auto;">
+                  <button type="button" class="ax-segment__option ax-btn--icon" :class="view==='table' && 'is-active'" :aria-checked="view==='table'" @click="view='table'" aria-label="Table view"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                  <button type="button" class="ax-segment__option ax-btn--icon" :class="view==='grid' && 'is-active'" :aria-checked="view==='grid'" @click="view='grid'" aria-label="Card view"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg></button>
+                </div>
+              </div>
+            </div>
+
+            <!-- bulk bar -->
+            <div x-show="selected.length" x-cloak x-transition
+              style="display:flex;align-items:center;gap:var(--ax-space-3);margin:0 var(--ax-space-5) var(--ax-space-3);padding:var(--ax-space-2) var(--ax-space-4);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);border-radius:var(--ax-radius-md);flex-wrap:wrap;">
+              <b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-sm);"><span x-text="selected.length"></span> selected</b>
+              <span style="width:1px;height:18px;background:var(--ax-border-strong);"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Assign owner</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Add tag</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Export</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="color:var(--ax-danger-500);">Archive</button>
+              <span style="flex:1 1 auto;"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Clear selection" @click="selected=[]"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+
+            <!-- ───── TABLE VIEW ───── -->
+            <template x-if="view==='table'">
+              <div class="ax-table-wrap">
+                <table class="ax-table ax-table--hover" style="min-width:880px;">
+                  <caption class="ax-visually-hidden">Companies, sortable and searchable</caption>
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col" style="width:38px;"><input type="checkbox" class="ax-checkbox" aria-label="Select all rows on this page" :checked="allSelected()" :indeterminate.camel="someSelected()" @change="toggleAll($event.target.checked)"></th>
+                      <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('name')" @click="sortBy('name')">Company <span x-html="sortGlyph('name')"></span></th>
+                      <th class="ax-table__th" scope="col">Industry</th>
+                      <th class="ax-table__th ax-table__th--sortable ax-table__th--num" scope="col" :aria-sort="ariaSort('deals')" @click="sortBy('deals')">Deals <span x-html="sortGlyph('deals')"></span></th>
+                      <th class="ax-table__th ax-table__th--sortable ax-table__th--num" scope="col" :aria-sort="ariaSort('value')" @click="sortBy('value')">Open value <span x-html="sortGlyph('value')"></span></th>
+                      <th class="ax-table__th" scope="col">Owner</th>
+                      <th class="ax-table__th" scope="col">Status</th>
+                      <th class="ax-table__th" scope="col" style="width:44px;"><span class="ax-visually-hidden">Actions</span></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="r in paged()" :key="r.id">
+                      <tr class="ax-table__row" :style="selected.includes(r.id) ? 'background:var(--ax-accent-wash);' : ''">
+                        <td class="ax-table__td"><input type="checkbox" class="ax-checkbox" :value="r.id" x-model="selected" :aria-label="'Select ' + r.name"></td>
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                            <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.c} 18%,transparent);color:${r.c};font-weight:700;`"><span x-text="r.mark"></span></span>
+                            <div style="min-width:0;">
+                              <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="r.name"></div>
+                              <div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);" x-text="r.domain"></div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="r.industry"></span></td>
+                        <td class="ax-table__td ax-table__td--num" x-text="r.deals"></td>
+                        <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);" x-text="money(r.value)"></td>
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                            <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.ownerC} 20%,transparent);color:${r.ownerC};font-weight:600;font-size:9px;border-radius:6px;`" x-text="r.ownerI"></span>
+                            <span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);" x-text="r.owner"></span>
+                          </div>
+                        </td>
+                        <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill ax-badge--sm" :class="statusClass(r.status)"><span class="ax-badge__dot"></span><span x-text="r.status"></span></span></td>
+                        <td class="ax-table__td" style="text-align:end;">
+                          <button type="button" data-menu-trigger :data-row="r.id" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="toggleMenu(r.id)" :aria-expanded="(menu===r.id).toString()" aria-haspopup="menu" aria-label="Row actions"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M17 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></button>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </template>
+
+            <!-- ───── CARD VIEW ───── -->
+            <template x-if="view==='grid'">
+              <div class="ax-card__body" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--ax-space-5);">
+                <template x-for="r in paged()" :key="r.id">
+                  <article class="ax-card ax-card--interactive" style="margin:0;">
+                    <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;justify-content:space-between;">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;min-width:0;">
+                          <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.c} 18%,transparent);color:${r.c};font-weight:700;`"><b style="font-size:var(--ax-text-md);" x-text="r.mark"></b></span>
+                          <div style="min-width:0;">
+                            <div class="ax-text-truncate" style="font-weight:600;color:var(--ax-text-strong);" x-text="r.name"></div>
+                            <div class="ax-num ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);" x-text="r.domain"></div>
+                          </div>
+                        </div>
+                        <span class="ax-badge ax-badge--soft ax-badge--pill ax-badge--sm" :class="statusClass(r.status)"><span class="ax-badge__dot"></span><span x-text="r.status"></span></span>
+                      </div>
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="r.industry"></span>
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="r.size + ' staff'"></span>
+                      </div>
+                      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);padding-top:var(--ax-space-1);border-top:1px solid var(--ax-border);">
+                        <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;">Open deals</small><b class="ax-num" style="color:var(--ax-text-strong);" x-text="r.deals"></b></div>
+                        <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;">Value</small><b class="ax-num" style="color:var(--ax-text-strong);" x-text="money(r.value)"></b></div>
+                      </div>
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:space-between;">
+                        <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                          <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.ownerC} 20%,transparent);color:${r.ownerC};font-weight:600;font-size:9px;border-radius:6px;`" x-text="r.ownerI"></span>
+                          <span style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);" x-text="r.owner"></span>
+                        </div>
+                        <a class="ax-btn ax-btn--link ax-btn--sm" href="#">Open →</a>
+                      </div>
+                    </div>
+                  </article>
+                </template>
+              </div>
+            </template>
+
+            <!-- empty -->
+            <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 21h18"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/><path d="M9 8h1m4 0h1m-6 4h1m4 0h1"/></svg></span>
+              <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No companies found</h3>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">No accounts match your search and filters.</p>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="q='';fIndustry='';page=1">Clear filters</button>
+            </div>
+
+            <!-- footer -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                Showing <span x-text="rangeStart()"></span>–<span x-text="rangeEnd()"></span> of <span x-text="filtered().length"></span>
+              </span>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" :disabled="page===1" :aria-disabled="(page===1).toString()" @click="page=Math.max(1,page-1)" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <template x-for="p in pageList()" :key="p">
+                    <li>
+                      <template x-if="p === '…'"><span class="ax-pagination__ellipsis">…</span></template>
+                      <template x-if="p !== '…'"><button type="button" class="ax-pagination__page" :class="{'is-active': page===p}" :aria-current="page===p ? 'page' : null" @click="page=p" x-text="p"></button></template>
+                    </li>
+                  </template>
+                </ul>
+                <button type="button" class="ax-pagination__next" :disabled="page===totalPages()" :aria-disabled="(page===totalPages()).toString()" @click="page=Math.min(totalPages(),page+1)" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════════════════ ROW ACTIONS MENU ════════════════ -->
+        <!-- Teleported to <body> so it escapes the table-wrap's overflow-x clip; a single
+             shared menu positioned (fixed) at whichever 3-dots trigger is open. -->
+        <template x-teleport="body">
+          <div x-show="menu!==null" x-cloak x-transition class="ax-menu" role="menu"
+            @click.outside="if(!$event.target.closest('[data-menu-trigger]')) menu=null"
+            @keydown.escape.window="menu=null" @scroll.window.capture="positionMenu()" @resize.window="positionMenu()"
+            :style="`position:fixed;top:${menuY}px;inset-inline-end:${menuX}px;z-index:60;min-width:170px;`">
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>View account</button>
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg>Edit</button>
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>Add deal</button>
+            <div class="ax-menu__divider" role="separator"></div>
+            <button type="button" class="ax-menu__item ax-menu__item--danger" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>Archive</button>
+          </div>
+        </template>
+
+        <!-- ════════════════ NEW COMPANY MODAL ════════════════ -->
+        <div x-show="addOpen" x-cloak @keydown.escape.window="addOpen=false">
+          <div class="ax-backdrop" x-show="addOpen" x-transition.opacity @click="addOpen=false" style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);"></div>
+          <div class="ax-flex" x-show="addOpen" x-transition role="dialog" aria-modal="true" aria-label="New company" style="position:fixed;inset:0;z-index:51;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+            <form class="ax-card" @submit.prevent="addOpen=false" @click.stop style="width:min(480px,100%);max-height:90vh;overflow:auto;">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">New company</h2></div>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="addOpen=false" aria-label="Close"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-field"><label class="ax-label" for="co-name">Company name</label><input id="co-name" type="text" class="ax-input" placeholder="Northwind Labs"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                  <div class="ax-field"><label class="ax-label" for="co-domain">Domain</label><input id="co-domain" type="text" class="ax-input" placeholder="northwind.io"></div>
+                  <div class="ax-field"><label class="ax-label" for="co-ind">Industry</label><select id="co-ind" class="ax-select"><option>SaaS</option><option>Fintech</option><option>E-commerce</option><option>Healthcare</option><option>Manufacturing</option><option>Agency</option></select></div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                  <div class="ax-field"><label class="ax-label" for="co-size">Headcount</label><input id="co-size" type="number" class="ax-input" placeholder="120"></div>
+                  <div class="ax-field"><label class="ax-label" for="co-owner">Account owner</label><select id="co-owner" class="ax-select"><option>Maya Lindqvist</option><option>Devon Okafor</option><option>Tomás Herrera</option><option>Ava Sutton</option></select></div>
+                </div>
+              </div>
+              <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-2);border-top:1px solid var(--ax-border);">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="addOpen=false">Cancel</button>
+                <button type="submit" class="ax-btn ax-btn--primary">Create company</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    function axCompanies(){
+      const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+      return {
+        q:'', fIndustry:'', view:'table', page:1, perPage:8, sortKey:'value', sortDir:'desc',
+        selected:[], menu:null, menuX:0, menuY:0, addOpen:false,
+        rows:[
+          { id:'co_01', name:'Northwind Labs', mark:'NW', domain:'northwind.io', industry:'SaaS', size:240, deals:6, value:512000, owner:'Maya Lindqvist', ownerI:'ML', ownerC:C.emerald, status:'Customer', c:C.cyan },
+          { id:'co_02', name:'Brightline Capital', mark:'BC', domain:'brightline.co', industry:'Fintech', size:118, deals:4, value:386000, owner:'Tomás Herrera', ownerI:'TH', ownerC:C.violet, status:'Prospect', c:C.violet },
+          { id:'co_03', name:'Crate & Co', mark:'CC', domain:'crateco.com', industry:'E-commerce', size:64, deals:3, value:128400, owner:'Ava Sutton', ownerI:'AS', ownerC:C.emerald, status:'Customer', c:C.amber },
+          { id:'co_04', name:'Meridian Health', mark:'MH', domain:'meridianhealth.org', industry:'Healthcare', size:512, deals:5, value:441000, owner:'Maya Lindqvist', ownerI:'ML', ownerC:C.emerald, status:'Negotiation', c:C.pink },
+          { id:'co_05', name:'Studioform', mark:'SF', domain:'studioform.de', industry:'Agency', size:28, deals:2, value:64000, owner:'Devon Okafor', ownerI:'DO', ownerC:C.cyan, status:'Prospect', c:C.emerald },
+          { id:'co_06', name:'Loop Robotics', mark:'LR', domain:'looprobotics.com', industry:'Manufacturing', size:340, deals:4, value:298000, owner:'Tomás Herrera', ownerI:'TH', ownerC:C.violet, status:'Customer', c:C.cyan },
+          { id:'co_07', name:'Pulse Media', mark:'PM', domain:'pulse.media', industry:'Agency', size:46, deals:1, value:38000, owner:'Ava Sutton', ownerI:'AS', ownerC:C.emerald, status:'At risk', c:C.violet },
+          { id:'co_08', name:'Harbor Freight Co', mark:'HF', domain:'harborfreight.co', industry:'E-commerce', size:156, deals:3, value:174000, owner:'Devon Okafor', ownerI:'DO', ownerC:C.cyan, status:'Customer', c:C.amber },
+          { id:'co_09', name:'Ridgeline Energy', mark:'RE', domain:'ridgeline.energy', industry:'Manufacturing', size:780, deals:2, value:206000, owner:'Maya Lindqvist', ownerI:'ML', ownerC:C.emerald, status:'Negotiation', c:C.pink },
+          { id:'co_10', name:'Clearbox', mark:'CB', domain:'clearbox.app', industry:'SaaS', size:92, deals:5, value:221500, owner:'Tomás Herrera', ownerI:'TH', ownerC:C.violet, status:'Prospect', c:C.cyan },
+          { id:'co_11', name:'Postoak Insurance', mark:'PI', domain:'postoak.com', industry:'Fintech', size:430, deals:3, value:158000, owner:'Ava Sutton', ownerI:'AS', ownerC:C.emerald, status:'Customer', c:C.emerald },
+          { id:'co_12', name:'Meadow Foods', mark:'MF', domain:'meadowfoods.co', industry:'E-commerce', size:210, deals:2, value:84000, owner:'Devon Okafor', ownerI:'DO', ownerC:C.cyan, status:'At risk', c:C.amber },
+        ],
+        money(v){ return v>=1000 ? '$'+(v/1000).toFixed(v%1000===0?0:1)+'K' : '$'+v; },
+        statusClass(s){ return { 'Customer':'ax-badge--success','Prospect':'ax-badge--info','Negotiation':'ax-badge--accent','At risk':'ax-badge--danger' }[s] || 'ax-badge--neutral'; },
+        filtered(){
+          const t=this.q.trim().toLowerCase();
+          let r=this.rows.filter(x=>{
+            if(this.fIndustry && x.industry!==this.fIndustry) return false;
+            if(t && !(x.name.toLowerCase().includes(t) || x.owner.toLowerCase().includes(t) || x.domain.toLowerCase().includes(t))) return false;
+            return true;
+          });
+          const dir=this.sortDir==='asc'?1:-1;
+          return [...r].sort((a,b)=>{ const va=a[this.sortKey],vb=b[this.sortKey]; return typeof va==='number' ? (va-vb)*dir : String(va).localeCompare(String(vb))*dir; });
+        },
+        totalPages(){ return Math.max(1, Math.ceil(this.filtered().length/this.perPage)); },
+        paged(){ if(this.page>this.totalPages()) this.page=this.totalPages(); const s=(this.page-1)*this.perPage; return this.filtered().slice(s,s+this.perPage); },
+        rangeStart(){ return this.filtered().length ? (this.page-1)*this.perPage+1 : 0; },
+        rangeEnd(){ return Math.min(this.page*this.perPage, this.filtered().length); },
+        pageList(){ const tp=this.totalPages(),p=this.page,out=[]; if(tp<=7){ for(let i=1;i<=tp;i++) out.push(i); return out; } out.push(1); if(p>3) out.push('…'); for(let i=Math.max(2,p-1);i<=Math.min(tp-1,p+1);i++) out.push(i); if(p<tp-2) out.push('…'); out.push(tp); return out; },
+        sortBy(k){ if(this.sortKey===k){ this.sortDir=this.sortDir==='asc'?'desc':'asc'; } else { this.sortKey=k; this.sortDir='asc'; } this.page=1; },
+        ariaSort(k){ return this.sortKey===k ? (this.sortDir==='asc'?'ascending':'descending') : 'none'; },
+        sortGlyph(k){ if(this.sortKey!==k) return '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.4;"><path d="M8 9l4 -4l4 4"/><path d="M16 15l-4 4l-4 -4"/></svg>'; return this.sortDir==='asc' ? '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>' : '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>'; },
+        allSelected(){ const ids=this.paged().map(r=>r.id); return ids.length>0 && ids.every(id=>this.selected.includes(id)); },
+        someSelected(){ const ids=this.paged().map(r=>r.id); const n=ids.filter(id=>this.selected.includes(id)).length; return n>0 && n<ids.length; },
+        toggleAll(on){ const ids=this.paged().map(r=>r.id); if(on){ this.selected=[...new Set([...this.selected,...ids])]; } else { this.selected=this.selected.filter(id=>!ids.includes(id)); } },
+        toggleMenu(id){ this.menu = this.menu===id ? null : id; if(this.menu!==null){ this.positionMenu(); this.$nextTick(()=>this.positionMenu()); } },
+        positionMenu(){ if(this.menu===null) return; const el=document.querySelector('[data-menu-trigger][data-row="'+this.menu+'"]'); if(!el) return; const b=el.getBoundingClientRect(); const de=document.documentElement, vw=de.clientWidth, vh=de.clientHeight; if(b.bottom<0 || b.top>vh){ this.menu=null; return; } const rtl=de.getAttribute('dir')==='rtl'; this.menuX=Math.max(8, rtl ? b.left : (vw-b.right)); const menuEl=document.querySelector('.ax-menu[role="menu"]'); const h=menuEl?menuEl.offsetHeight:0; this.menuY=(h && (b.bottom+4+h)>vh) ? Math.max(8, b.top-4-h) : (b.bottom+4); },
+      };
+    }
+  </script>
+{% endblock %}

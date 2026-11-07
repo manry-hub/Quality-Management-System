@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Basic Tables</h1>
+              <p class="ax-page-head__subtitle">Static table variants — striped, bordered, hover, compact &amp; responsive — built on the Aurora <code class="ax-code">.ax-table</code> primitive.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/tables/data-tables/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5a8 3 0 1 0 16 0a8 3 0 1 0 -16 0"/><path d="M3 5v6a8 3 0 0 0 16 0v-6"/><path d="M3 11v6a8 3 0 0 0 16 0v-6"/></svg>
+                <span class="ax-btn__label">Data tables</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export CSV</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── DEFAULT TABLE ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Default table">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Base</span>
+                <h2 class="ax-card__title">Default Table</h2>
+                <p class="ax-card__subtitle">Hairline rows, uppercase eyebrow header, mono numerics — the resting style every variant builds on.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-badge ax-badge--soft ax-badge--neutral"><code class="ax-mono" style="font-size:var(--ax-text-2xs);">.ax-table</code></span>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table">
+                <caption class="ax-visually-hidden">Northwind Labs team — directory with role, department and status</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Name</th>
+                    <th class="ax-table__th" scope="col">Role</th>
+                    <th class="ax-table__th" scope="col">Department</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Tasks</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Ava Sutton</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Operations Lead</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Operations</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Online</span></td>
+                    <td class="ax-table__td ax-table__td--num">24</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Marcus Reyes</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Engineering Manager</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Engineering</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Online</span></td>
+                    <td class="ax-table__td ax-table__td--num">17</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Lena Brandt</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Product Designer</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Design</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Away</span></td>
+                    <td class="ax-table__td ax-table__td--num">31</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Devon Okafor</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Backend Engineer</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Engineering</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Online</span></td>
+                    <td class="ax-table__td ax-table__td--num">12</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Priya Nair</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Data Analyst</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Analytics</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill"><span class="ax-badge__dot"></span>Offline</span></td>
+                    <td class="ax-table__td ax-table__td--num">9</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ───── STRIPED + HOVER (avatars) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Striped table with avatars">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variant</span>
+                <h2 class="ax-card__title">Striped &amp; Hover</h2>
+                <p class="ax-card__subtitle">Zebra rows for scanability, hover tint for pointer feedback.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-badge ax-badge--soft ax-badge--accent"><code class="ax-mono" style="font-size:var(--ax-text-2xs);">--striped --hover</code></span>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--striped ax-table--hover">
+                <caption class="ax-visually-hidden">Customers with segment and lifetime value</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Customer</th>
+                    <th class="ax-table__th" scope="col">Segment</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">LTV</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,var(--ax-surface-solid));color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">CR</span></span>
+                        <div style="min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Camila Rossi</div><div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Lisbon</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--accent">VIP</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$6,180</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,var(--ax-surface-solid));color:var(--ax-viz-violet);"><span class="ax-avatar__initials">OP</span></span>
+                        <div style="min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Olivia Penrose</div><div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Bristol</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--accent">VIP</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$5,980</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,var(--ax-surface-solid));color:var(--ax-viz-amber);"><span class="ax-avatar__initials">EL</span></span>
+                        <div style="min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Erik Lindqvist</div><div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Malmö</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--info">Wholesale</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$5,240</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,var(--ax-surface-solid));color:var(--ax-viz-pink);"><span class="ax-avatar__initials">NH</span></span>
+                        <div style="min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Nadia Haddad</div><div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Marseille</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--accent">VIP</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$4,720</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,var(--ax-surface-solid));color:var(--ax-viz-emerald);"><span class="ax-avatar__initials">YT</span></span>
+                        <div style="min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Yuki Tanaka</div><div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Osaka</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--neutral">Returning</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$2,870</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ───── BORDERED ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Bordered table">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variant</span>
+                <h2 class="ax-card__title">Bordered</h2>
+                <p class="ax-card__subtitle">Full cell rules — best for dense, spreadsheet-like data.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-badge ax-badge--soft ax-badge--accent"><code class="ax-mono" style="font-size:var(--ax-text-2xs);">--bordered</code></span>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--bordered ax-table--hover">
+                <caption class="ax-visually-hidden">Aperture Goods inventory with stock and price</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">SKU</th>
+                    <th class="ax-table__th" scope="col">Product</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Stock</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">APG-0008</td>
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Brass Task Light</td>
+                    <td class="ax-table__td ax-table__td--num">22</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$182.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">APG-0001</td>
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Aperture Desk Lamp</td>
+                    <td class="ax-table__td ax-table__td--num">84</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$129.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">APG-0004</td>
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Walnut Monitor Riser</td>
+                    <td class="ax-table__td ax-table__td--num">41</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$96.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">APG-0002</td>
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Linen Pinboard</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-danger-500);">0</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$58.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">APG-0003</td>
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Matte Ceramic Mug</td>
+                    <td class="ax-table__td ax-table__td--num">312</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$24.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ───── COMPACT ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Compact table">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variant</span>
+                <h2 class="ax-card__title">Compact</h2>
+                <p class="ax-card__subtitle">40px rows — pack more on screen without losing legibility.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-badge ax-badge--soft ax-badge--accent"><code class="ax-mono" style="font-size:var(--ax-text-2xs);">--compact</code></span>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--compact ax-table--hover">
+                <caption class="ax-visually-hidden">Recent ledger entries</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Ref</th>
+                    <th class="ax-table__th" scope="col">Counterparty</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">TXN-88301</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Camila Rossi</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$312.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">TXN-88300</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Cloud hosting</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$1,200.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">TXN-88298</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Payroll — June</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$18,400.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">TXN-88297</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Erik Lindqvist</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$1,544.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">TXN-88296</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Ad spend — Pulse</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$640.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">TXN-88295</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Sofia Marchetti</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$104.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">TXN-88294</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Stripe payout</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$9,820.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ───── CONTEXTUAL ROWS ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Contextual rows table">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variant</span>
+                <h2 class="ax-card__title">Contextual Rows</h2>
+                <p class="ax-card__subtitle">Semantic row tints to surface state at a glance.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-badge ax-badge--soft ax-badge--accent"><code class="ax-mono" style="font-size:var(--ax-text-2xs);">__row--success</code></span>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table">
+                <caption class="ax-visually-hidden">Recent orders by fulfilment state</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Order</th>
+                    <th class="ax-table__th" scope="col">Customer</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Total</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row ax-table__row--success">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">#10480</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Aisha Bello</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">$80.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success">Delivered</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">#10482</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Camila Rossi</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">$312.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--accent">Shipped</span></td>
+                  </tr>
+                  <tr class="ax-table__row ax-table__row--warning">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">#10475</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Yuki Tanaka</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">$225.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning">Pending</span></td>
+                  </tr>
+                  <tr class="ax-table__row ax-table__row--danger">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">#10478</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Daniel Cho</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">$24.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger">Cancelled</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">#10477</td>
+                    <td class="ax-table__td" style="color:var(--ax-text);">Olivia Penrose</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">$200.00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success">Delivered</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ───── RESPONSIVE (with totals footer) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Responsive table">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Behaviour</span>
+                <h2 class="ax-card__title">Responsive &amp; Totals</h2>
+                <p class="ax-card__subtitle">Wide tables scroll horizontally below the lg breakpoint; the footer carries the totals row.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-cluster ax-text-muted" style="gap:var(--ax-space-1);font-size:var(--ax-text-xs);">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="M5 12l4 4"/><path d="M5 12l4 -4"/><path d="M19 12l-4 4"/><path d="M19 12l-4 -4"/></svg>
+                  Scroll on small screens
+                </span>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover" style="min-width:760px;">
+                <caption class="ax-visually-hidden">Order ledger with payment, fulfilment and totals</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Order</th>
+                    <th class="ax-table__th" scope="col">Customer</th>
+                    <th class="ax-table__th" scope="col">Date</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Items</th>
+                    <th class="ax-table__th" scope="col">Payment</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);">#10482</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-strong);">Camila Rossi</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);white-space:nowrap;">Jun 12</td>
+                    <td class="ax-table__td ax-table__td--num">4</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success">Paid</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--accent">Shipped</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$312.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);">#10479</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-strong);">Erik Lindqvist</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);white-space:nowrap;">Jun 10</td>
+                    <td class="ax-table__td ax-table__td--num">9</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success">Paid</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success">Delivered</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$1,544.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);">#10477</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-strong);">Olivia Penrose</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);white-space:nowrap;">Jun 8</td>
+                    <td class="ax-table__td ax-table__td--num">5</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success">Paid</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success">Delivered</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$200.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);">#10475</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-strong);">Yuki Tanaka</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);white-space:nowrap;">Jun 5</td>
+                    <td class="ax-table__td ax-table__td--num">5</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning">Unpaid</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning">Pending</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$225.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);">#10473</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-strong);">Nadia Haddad</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);white-space:nowrap;">Jun 1</td>
+                    <td class="ax-table__td ax-table__td--num">3</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger">Refunded</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger">Refunded</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$238.00</td>
+                  </tr>
+                </tbody>
+                <tfoot class="ax-table__foot">
+                  <tr>
+                    <td class="ax-table__td" colspan="3" style="color:var(--ax-text-muted);">5 orders · last 12 days</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">26</td>
+                    <td class="ax-table__td" colspan="2"></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">$2,519.00</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}

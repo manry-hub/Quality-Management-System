@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% comment %}
+  VIREO — FULL-SCREEN APP SHELL (base-app.html)
+  ─────────────────────────────────────────────────────────────────────────
+  The layout for the 13 standalone app routes under pages/apps/**. It extends
+  base.html purely to reuse its <head> — the anti-flash IIFE, fonts, favicon,
+  <title>, the compiled stylesheet — and the runtime <script>. There is exactly
+  ONE copy of all of that in this edition; this template only swaps the <body>.
+
+  What it replaces: sidebar, dashboard header, footer, breadcrumb, <h1>.
+  What it adds: <body class="ax-app-body"> (locks document scroll),
+  .ax-applayout, the slim app bar (partials/app-bar.html) and
+  <main class="ax-appmain"> — a flex column that is the ONLY scroll container.
+
+  Blocks a page fills:
+    main            — the page body (direct children of .ax-appmain)
+    appmain_attrs   — extra attributes for <main> (x-data, @keydown.window…)
+    scripts / head_extra — inherited from base.html, unchanged
+
+  Exactly ONE direct child of .ax-appmain may carry .ax-app-fill (see
+  CONVENTIONS §11) — only apps/email and apps/chat do.
+{% endcomment %}
+
+{% block body_attrs %} class="ax-app-body"{% endblock %}
+
+{% block body %}
+  {% include 'partials/loader.html' %}
+  <div class="ax-ambient" aria-hidden="true"><i></i></div>
+  <div class="ax-applayout">
+    {% include 'partials/app-bar.html' %}
+
+    <main class="ax-appmain" id="ax-main"{% block appmain_attrs %}{% endblock %}>
+      {% block main %}{% endblock %}
+    </main>
+  </div>
+  {% include 'partials/customizer.html' %}
+{% endblock %}

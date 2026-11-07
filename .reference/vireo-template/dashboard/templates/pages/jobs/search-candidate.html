@@ -1,0 +1,357 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axSearchCandidate()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Search Candidates</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">8,420</span> profiles in your talent pool — <span class="ax-num">126</span> new this week, <span class="ax-num">38</span> shortlisted.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg>
+                <span class="ax-btn__label">Shortlist (38)</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg>
+                <span class="ax-btn__label">Bulk message</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ SEARCH BAR ════════════════ -->
+        <section class="ax-card" role="search" aria-label="Candidate search" style="margin-bottom:var(--ax-space-6);">
+          <div class="ax-card__body" style="display:grid;grid-template-columns:2fr 1.4fr auto;gap:var(--ax-space-3);align-items:end;">
+            <div class="ax-field" style="margin:0;">
+              <label class="ax-label" for="sc-keyword">Role, skill or name</label>
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+                <input id="sc-keyword" type="search" class="ax-input" placeholder="e.g. React, Product Designer, Maya…" x-model.debounce.200ms="q" @input="page=1" style="padding-inline-start:38px;" aria-label="Search candidates">
+              </div>
+            </div>
+            <div class="ax-field" style="margin:0;">
+              <label class="ax-label" for="sc-loc">Location</label>
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
+                <input id="sc-loc" type="text" class="ax-input" placeholder="City, country or Remote" x-model.debounce.200ms="loc" @input="page=1" style="padding-inline-start:38px;" aria-label="Location">
+              </div>
+            </div>
+            <button type="button" class="ax-btn ax-btn--primary" style="height:42px;" @click="page=1">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a5 5 0 1 0 0 10a5 5 0 0 0 0 -10"/><path d="M21 21l-6 -6"/></svg>
+              <span class="ax-btn__label">Search</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ════════════════ LAYOUT: FILTERS RAIL + RESULTS ════════════════ -->
+        <div style="display:grid;grid-template-columns:280px minmax(0,1fr);gap:var(--ax-space-6);align-items:start;" class="ax-jobs-split">
+
+          <!-- ───── FILTERS SIDEBAR ───── -->
+          <aside class="ax-card" role="region" aria-label="Filters" style="position:sticky;top:var(--ax-space-4);">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Filters</h2></div>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="reset()">Reset</button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- Skills -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Top skills</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="s in skillFacets" :key="s.id">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-3);">
+                        <input type="checkbox" class="ax-checkbox" :value="s.id" x-model="fSkills" @change="page=1">
+                        <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="s.label"></span>
+                      </span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="s.count"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Availability -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Availability</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="a in availFacets" :key="a.id">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-3);">
+                        <input type="checkbox" class="ax-checkbox" :value="a.id" x-model="fAvail" @change="page=1">
+                        <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="a.label"></span>
+                      </span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="a.count"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Min experience -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <legend class="ax-label" style="padding:0;margin:0;">Min. experience</legend>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);"><span x-text="minExp"></span>+ yrs</b>
+                </div>
+                <input type="range" class="ax-range ax-range--native" min="0" max="15" step="1" x-model.number="minExp" @input="page=1" aria-label="Minimum years of experience" style="width:100%;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-top:6px;">
+                  <small class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">0</small>
+                  <small class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">15+</small>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Min match -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <legend class="ax-label" style="padding:0;margin:0;">Min. match score</legend>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);"><span x-text="minMatch"></span>%</b>
+                </div>
+                <input type="range" class="ax-range ax-range--native" min="0" max="95" step="5" x-model.number="minMatch" @input="page=1" aria-label="Minimum match score percent" style="width:100%;">
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Work mode -->
+              <div class="ax-field" style="margin:0;">
+                <label class="ax-label" for="sc-mode">Preferred work mode</label>
+                <select id="sc-mode" class="ax-select ax-select--sm" x-model="fMode" @change="page=1">
+                  <option value="">Any mode</option>
+                  <option value="remote">Remote</option>
+                  <option value="hybrid">Hybrid</option>
+                  <option value="onsite">On-site</option>
+                </select>
+              </div>
+
+              <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Open to work only</span>
+                <input type="checkbox" role="switch" class="ax-switch ax-switch--sm" x-model="openOnly" @change="page=1" aria-label="Open to work only">
+              </label>
+            </div>
+          </aside>
+
+          <!-- ───── RESULTS COLUMN ───── -->
+          <div style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+            <!-- result toolbar -->
+            <section class="ax-card" role="region" aria-label="Results toolbar">
+              <div class="ax-card__body" style="display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;padding-block:var(--ax-space-4);">
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+                  <b class="ax-num" style="color:var(--ax-text-strong);" x-text="filtered().length"></b> candidates match
+                  <span x-show="activeChips().length" x-cloak>·</span>
+                  <template x-for="c in activeChips()" :key="c.k">
+                    <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill ax-badge--sm" style="margin-inline-start:6px;">
+                      <span x-text="c.label"></span>
+                      <button type="button" @click="c.clear()" aria-label="Remove filter" style="background:none;border:0;cursor:pointer;color:inherit;display:inline-flex;padding:0;margin-inline-start:4px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                    </span>
+                  </template>
+                </p>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <label class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Sort
+                    <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort candidates" style="min-width:150px;">
+                      <option value="match">Best match</option>
+                      <option value="recent">Recently active</option>
+                      <option value="experience">Most experience</option>
+                      <option value="rating">Top rated</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <!-- candidate cards -->
+            <template x-for="p in paged()" :key="p.id">
+              <article class="ax-card ax-card--interactive" role="region" :aria-label="p.name + ', ' + p.title">
+                <div class="ax-card__body" style="display:grid;grid-template-columns:1fr auto;gap:var(--ax-space-5);align-items:start;">
+
+                  <!-- left: identity + skills -->
+                  <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);min-width:0;">
+                    <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;align-items:flex-start;">
+                      <span style="position:relative;flex:0 0 auto;">
+                        <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" :style="`background:color-mix(in oklab,${p.c} 18%,transparent);color:${p.c};font-weight:700;`"><b style="font-size:var(--ax-text-md);" x-text="p.initials"></b></span>
+                        <span class="ax-avatar__status" :class="`ax-avatar__status--${p.presence}`"></span>
+                      </span>
+                      <div style="min-width:0;">
+                        <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                          <a href="/jobs/candidate-details/" class="ax-text-truncate" style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);text-decoration:none;" x-text="p.name"></a>
+                          <span x-show="p.openToWork" x-cloak class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill ax-badge--sm"><span class="ax-badge__dot"></span>Open</span>
+                        </div>
+                        <div class="ax-text-truncate" style="font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-medium);margin-top:1px;" x-text="p.title"></div>
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-2);">
+                          <span class="ax-cluster" style="gap:5px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg><span x-text="p.location"></span></span>
+                          <span class="ax-cluster ax-num" style="gap:5px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/></svg><span x-text="p.exp + ' yrs exp'"></span></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.55;" x-text="p.bio"></p>
+
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                      <template x-for="s in p.skills" :key="s">
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="s"></span>
+                      </template>
+                    </div>
+
+                    <div class="ax-cluster" style="gap:var(--ax-space-4);padding-top:var(--ax-space-3);border-top:1px solid var(--ax-border);">
+                      <div class="ax-rating ax-rating--sm" role="img" :aria-label="p.rating + ' out of 5 rating'">
+                        <template x-for="n in 5" :key="n">
+                          <span class="ax-rating__star" :class="n <= Math.round(p.rating) ? 'ax-rating__star--full' : ''"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></span>
+                        </template>
+                        <span class="ax-rating__value ax-num" style="font-family:var(--ax-font-mono);" x-text="p.rating.toFixed(1)"></span>
+                      </div>
+                      <span class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);" x-text="'Active ' + p.active"></span>
+                    </div>
+                  </div>
+
+                  <!-- right: match meter + actions -->
+                  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:var(--ax-space-4);justify-content:space-between;align-self:stretch;min-width:148px;">
+                    <div style="text-align:end;width:100%;">
+                      <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;line-height:1;" :style="`color:${matchColor(p.match)};`" x-text="p.match + '%'"></div>
+                      <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;">Match</small>
+                      <div class="ax-progress ax-progress--sm" style="margin-top:var(--ax-space-2);"><div class="ax-progress__track"><div class="ax-progress__fill" :style="`width:${p.match}%;background:${matchColor(p.match)};`"></div></div></div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);width:100%;">
+                      <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--block" @click="shortlist(p)">
+                        <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                        <span class="ax-btn__label">Shortlist</span>
+                      </button>
+                      <a href="/jobs/candidate-details/" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--block">View profile</a>
+                    </div>
+                  </div>
+                </div>
+              </article>
+            </template>
+
+            <!-- empty -->
+            <div x-show="!filtered().length" x-cloak class="ax-card">
+              <div class="ax-card__body" style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+                <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg></span>
+                <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No candidates found</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Loosen the match threshold or remove a skill filter to widen the pool.</p>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="reset()">Clear all filters</button>
+              </div>
+            </div>
+
+            <!-- pagination -->
+            <div class="ax-card" x-show="filtered().length" x-cloak>
+              <div class="ax-card__body" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);padding-block:var(--ax-space-4);">
+                <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                  Showing <span x-text="rangeStart()"></span>–<span x-text="rangeEnd()"></span> of <span x-text="filtered().length"></span>
+                </span>
+                <nav class="ax-pagination" aria-label="Pagination">
+                  <button type="button" class="ax-pagination__prev" :disabled="page===1" :aria-disabled="(page===1).toString()" @click="page=Math.max(1,page-1)" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                  <ul class="ax-pagination__pages">
+                    <template x-for="pg in pageList()" :key="pg">
+                      <li>
+                        <template x-if="pg === '…'"><span class="ax-pagination__ellipsis">…</span></template>
+                        <template x-if="pg !== '…'"><button type="button" class="ax-pagination__page" :class="{'is-active': page===pg}" :aria-current="page===pg ? 'page' : null" @click="page=pg" x-text="pg"></button></template>
+                      </li>
+                    </template>
+                  </ul>
+                  <button type="button" class="ax-pagination__next" :disabled="page===totalPages()" :aria-disabled="(page===totalPages()).toString()" @click="page=Math.min(totalPages(),page+1)" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- shortlist confirmation toast -->
+        <div x-show="toast" x-cloak x-transition.opacity role="status" aria-live="polite" style="position:fixed;inset-block-end:var(--ax-space-6);inset-inline-end:var(--ax-space-6);z-index:60;">
+          <div class="ax-card" style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-4);box-shadow:var(--ax-shadow-md);">
+            <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-accent) 18%,transparent);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true" style="width:16px;height:16px;"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg></span>
+            <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Added to shortlist</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="toast"></div></div>
+          </div>
+        </div>
+
+        <style>
+          @media (max-width: 1024px){ .ax-jobs-split{ grid-template-columns:1fr !important; } .ax-jobs-split > aside{ position:static !important; } }
+          @media (max-width: 560px){ .ax-card--interactive .ax-card__body{ grid-template-columns:1fr !important; } }
+        </style>
+
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axSearchCandidate(){
+      const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+      return {
+        q:'', loc:'', sort:'match', page:1, perPage:6,
+        minExp:0, minMatch:0, fMode:'', openOnly:false, fSkills:[], fAvail:[], toast:'',
+        skillFacets:[
+          { id:'react', label:'React', count:1284 },
+          { id:'figma', label:'Figma', count:962 },
+          { id:'python', label:'Python', count:874 },
+          { id:'typescript', label:'TypeScript', count:1042 },
+          { id:'kubernetes', label:'Kubernetes', count:413 },
+          { id:'sql', label:'SQL', count:1158 },
+        ],
+        availFacets:[
+          { id:'immediate', label:'Immediately', count:486 },
+          { id:'2weeks', label:'Within 2 weeks', count:712 },
+          { id:'1month', label:'Within a month', count:534 },
+          { id:'passive', label:'Passive / open', count:1290 },
+        ],
+        rows:[
+          { id:'p01', name:'Elena Mwangi', title:'Senior Frontend Engineer', initials:'EM', c:C.cyan, presence:'online', location:'Nairobi, KE · Remote', mode:'remote', exp:8, match:94, rating:4.9, openToWork:true, avail:'immediate', active:'2h ago', activeDays:0, skills:['React','TypeScript','Design Systems','GraphQL'], bio:'Builds accessible design-system layers for analytics products. Led the React migration for a 40-person engineering org and mentors front-end guild members.' },
+          { id:'p02', name:'Rohan Chatterjee', title:'Product Designer', initials:'RC', c:C.violet, presence:'away', location:'Bengaluru, IN · Hybrid', mode:'hybrid', exp:6, match:91, rating:4.8, openToWork:true, avail:'2weeks', active:'1d ago', activeDays:1, skills:['Figma','Prototyping','UX Research','Design Ops'], bio:'End-to-end product designer for B2B SaaS. Strong systems thinker who pairs research insight with crisp, shippable interfaces and a tidy Figma library.' },
+          { id:'p03', name:'Sofia Delgado', title:'Account Executive', initials:'SD', c:C.pink, presence:'offline', location:'Madrid, ES · On-site', mode:'onsite', exp:5, match:82, rating:4.6, openToWork:false, avail:'1month', active:'3d ago', activeDays:3, skills:['SaaS Sales','Salesforce','Negotiation'], bio:'Full-cycle AE with a track record of 120%+ quota attainment across mid-market fintech. Calm closer who builds genuine champion relationships.' },
+          { id:'p04', name:'Theo Nakamura', title:'DevOps Engineer', initials:'TN', c:C.amber, presence:'online', location:'Remote · Global', mode:'remote', exp:9, match:88, rating:4.7, openToWork:true, avail:'immediate', active:'5h ago', activeDays:0, skills:['Kubernetes','Terraform','AWS','Go'], bio:'Keeps multi-region Kubernetes estates calm and cheap. Pragmatic about automation, allergic to snowflake infra, and a steady hand during incidents.' },
+          { id:'p05', name:'Amara Boateng', title:'Marketing Manager', initials:'AB', c:C.emerald, presence:'offline', location:'Accra, GH · Hybrid', mode:'hybrid', exp:7, match:76, rating:4.5, openToWork:false, avail:'passive', active:'1w ago', activeDays:7, skills:['Growth','SEO','Lifecycle','Analytics'], bio:'Demand-gen lead fluent in attribution and lifecycle. Took a Series-A startup from 0 to a repeatable paid + content engine in eighteen months.' },
+          { id:'p06', name:'Liam Hartley', title:'Data Analyst', initials:'LH', c:C.cyan, presence:'away', location:'Manchester, UK · Remote', mode:'remote', exp:4, match:79, rating:4.4, openToWork:true, avail:'2weeks', active:'2d ago', activeDays:2, skills:['SQL','Python','dbt','Looker'], bio:'Turns messy product data into decisions. Owns the analytics warehouse, writes clean dbt models, and ships dashboards people actually open.' },
+          { id:'p07', name:'Priya Nair', title:'Staff Data Scientist', initials:'PN', c:C.pink, presence:'online', location:'Remote · US', mode:'remote', exp:11, match:96, rating:5.0, openToWork:true, avail:'1month', active:'4h ago', activeDays:0, skills:['Python','ML','Causal Inference','SQL'], bio:'Leads modelling for clinical-risk prediction. Mentors a small team, owns rigorous experiment design, and ships models that hold up in production.' },
+          { id:'p08', name:'Marcus Whitfield', title:'Engineering Manager', initials:'MW', c:C.violet, presence:'offline', location:'Austin, US · Hybrid', mode:'hybrid', exp:12, match:84, rating:4.7, openToWork:false, avail:'passive', active:'5d ago', activeDays:5, skills:['Leadership','Architecture','Hiring'], bio:'People-first EM who still loves an architecture whiteboard. Grew two squads from four to eleven while keeping retention above 95%.' },
+          { id:'p09', name:'Camila Rossi', title:'Backend Engineer (Go)', initials:'CR', c:C.amber, presence:'online', location:'São Paulo, BR · Remote', mode:'remote', exp:6, match:89, rating:4.8, openToWork:true, avail:'immediate', active:'1h ago', activeDays:0, skills:['Go','PostgreSQL','gRPC','Kafka'], bio:'Builds event-driven backends with clean APIs and thoughtful tests. Genuinely enjoys distributed-systems puzzles and pairing junior engineers up.' },
+          { id:'p10', name:'Nadia Haddad', title:'UX Researcher', initials:'NH', c:C.emerald, presence:'away', location:'Marseille, FR · On-site', mode:'onsite', exp:5, match:73, rating:4.5, openToWork:false, avail:'1month', active:'4d ago', activeDays:4, skills:['Interviews','Synthesis','Surveys','Figma'], bio:'Mixed-methods researcher who makes discovery legible to the whole team. Runs tight studies and turns transcripts into decisions, not decks.' },
+        ],
+        matchColor(m){ return m>=90 ? C.emerald : m>=80 ? C.cyan : m>=70 ? C.amber : 'var(--ax-text-muted)'; },
+        reset(){ this.q=''; this.loc=''; this.minExp=0; this.minMatch=0; this.fMode=''; this.openOnly=false; this.fSkills=[]; this.fAvail=[]; this.sort='match'; this.page=1; },
+        activeChips(){
+          const out=[];
+          if(this.minExp>0) out.push({ k:'exp', label:this.minExp+'+ yrs', clear:()=>{ this.minExp=0; this.page=1; } });
+          if(this.minMatch>0) out.push({ k:'mm', label:'≥ '+this.minMatch+'% match', clear:()=>{ this.minMatch=0; this.page=1; } });
+          if(this.fMode) out.push({ k:'mode', label:this.fMode.charAt(0).toUpperCase()+this.fMode.slice(1), clear:()=>{ this.fMode=''; this.page=1; } });
+          if(this.openOnly) out.push({ k:'otw', label:'Open to work', clear:()=>{ this.openOnly=false; this.page=1; } });
+          this.fSkills.forEach(id=>{ const s=this.skillFacets.find(x=>x.id===id); if(s) out.push({ k:'s'+id, label:s.label, clear:()=>{ this.fSkills=this.fSkills.filter(x=>x!==id); this.page=1; } }); });
+          this.fAvail.forEach(id=>{ const a=this.availFacets.find(x=>x.id===id); if(a) out.push({ k:'a'+id, label:a.label, clear:()=>{ this.fAvail=this.fAvail.filter(x=>x!==id); this.page=1; } }); });
+          return out;
+        },
+        filtered(){
+          const t=this.q.trim().toLowerCase(), l=this.loc.trim().toLowerCase();
+          let r=this.rows.filter(x=>{
+            if(t && !(x.name.toLowerCase().includes(t) || x.title.toLowerCase().includes(t) || x.skills.join(' ').toLowerCase().includes(t))) return false;
+            if(l && !x.location.toLowerCase().includes(l)) return false;
+            if(this.fMode && x.mode!==this.fMode) return false;
+            if(this.openOnly && !x.openToWork) return false;
+            if(this.minExp>0 && x.exp<this.minExp) return false;
+            if(this.minMatch>0 && x.match<this.minMatch) return false;
+            if(this.fAvail.length && !this.fAvail.includes(x.avail)) return false;
+            if(this.fSkills.length){ const sk=x.skills.map(s=>s.toLowerCase()); if(!this.fSkills.every(id=>sk.includes(id) || sk.some(s=>s.includes(id)))) return false; }
+            return true;
+          });
+          if(this.sort==='recent') return [...r].sort((a,b)=>a.activeDays-b.activeDays);
+          if(this.sort==='experience') return [...r].sort((a,b)=>b.exp-a.exp);
+          if(this.sort==='rating') return [...r].sort((a,b)=>b.rating-a.rating);
+          return [...r].sort((a,b)=>b.match-a.match);
+        },
+        totalPages(){ return Math.max(1, Math.ceil(this.filtered().length/this.perPage)); },
+        paged(){ if(this.page>this.totalPages()) this.page=this.totalPages(); const s=(this.page-1)*this.perPage; return this.filtered().slice(s,s+this.perPage); },
+        rangeStart(){ return this.filtered().length ? (this.page-1)*this.perPage+1 : 0; },
+        rangeEnd(){ return Math.min(this.page*this.perPage, this.filtered().length); },
+        pageList(){ const tp=this.totalPages(),p=this.page,out=[]; if(tp<=7){ for(let i=1;i<=tp;i++) out.push(i); return out; } out.push(1); if(p>3) out.push('…'); for(let i=Math.max(2,p-1);i<=Math.min(tp-1,p+1);i++) out.push(i); if(p<tp-2) out.push('…'); out.push(tp); return out; },
+        shortlist(p){ this.toast = p.name + ' · ' + p.title; clearTimeout(this._t); this._t=setTimeout(()=>this.toast='', 2600); },
+      };
+    }
+  </script>
+{% endblock %}

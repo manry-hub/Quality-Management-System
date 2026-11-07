@@ -1,0 +1,84 @@
+{% extends 'pages/auth/_standalone.html' %}
+
+{# error/404 — faithful port of src/html/error/404.html
+   Standalone off-app status page (no sidebar/header). Same DOM/classes/ARIA,
+   same demo copy. Reference hrefs converted to clean Django routes
+   (# -> /x/, index -> /). #}
+
+{% block auth_body %}
+  <!-- top-right tools: theme toggle + back link (off-app chrome) -->
+  <div style="position:fixed;top:var(--ax-space-5);right:var(--ax-space-6);z-index:5;display:flex;gap:var(--ax-space-2);align-items:center;" x-data="{}">
+    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Toggle color theme"
+            @click="document.documentElement.setAttribute('data-ax-theme', document.documentElement.getAttribute('data-ax-theme')==='dark' ? 'light' : 'dark')">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg>
+    </button>
+    <a class="ax-btn ax-btn--ghost ax-btn--sm" href="/">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+      <span class="ax-btn__label">Back to dashboard</span>
+    </a>
+  </div>
+
+  <main class="ax-center" id="ax-main" style="position:relative;z-index:1;width:100%;padding:var(--ax-space-6);">
+    <div style="width:100%;max-width:560px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--ax-space-6);">
+
+      <!-- brand -->
+      <a href="/" aria-label="Vireo home" style="display:inline-flex;align-items:center;gap:var(--ax-space-3);text-decoration:none;">
+        <span aria-hidden="true" style="display:inline-grid;place-items:center;width:40px;height:40px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);">
+          <svg viewBox="0 0 32 32" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+        </span>
+        <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-lg);color:var(--ax-text-strong);letter-spacing:.01em;">Vireo</span>
+      </a>
+
+      <!-- thin-line illustration: broken / disconnected link (single accent highlight on the unplugged tip) -->
+      <div aria-hidden="true" style="position:relative;display:grid;place-items:center;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 50% 40%, var(--ax-accent-wash), transparent 70%);">
+        <span style="position:absolute;inset:0;border-radius:50%;border:1px dashed var(--ax-border-strong);"></span>
+        <svg viewBox="0 0 24 24" width="72" height="72" fill="none" stroke="var(--ax-text-muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20 16l-4 4"/><path d="M7 12l5 5l-1.5 1.5a3.536 3.536 0 1 1 -5 -5l1.5 -1.5"/><path d="M17 12l-5 -5l1.5 -1.5a3.536 3.536 0 1 1 5 5l-1.5 1.5"/><path d="M3 21l2.5 -2.5"/><path d="M18.5 5.5l2.5 -2.5" stroke="var(--ax-accent)"/><path d="M10 11l-2 2" stroke="var(--ax-accent)"/><path d="M13 14l-2 2"/><path d="M16 16l4 4"/>
+        </svg>
+      </div>
+
+      <!-- code + title + body -->
+      <div>
+        <h1 style="margin:0;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+          <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;font-size:var(--ax-text-4xl);line-height:1;color:var(--ax-text-strong);letter-spacing:.04em;">404</span>
+          <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">Page not found</span>
+        </h1>
+        <p style="margin:var(--ax-space-4) auto 0;max-width:42ch;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.55;">
+          We couldn't find the page you were looking for. It may have been moved, renamed, or never existed. Try searching instead.
+        </p>
+      </div>
+
+      <!-- inline search (posts to search-results, demo: no network) -->
+      <form class="ax-input-group" role="search" aria-label="Search the workspace" style="width:100%;max-width:420px;height:44px;"
+            x-data="{ q:'' }" @submit.prevent="if(q.trim()) window.location.href='/pages/search-results/?q='+encodeURIComponent(q.trim())">
+        <span class="ax-input-group__addon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+        </span>
+        <input type="search" class="ax-input" name="q" x-model="q" placeholder="Search pages, people, files…" aria-label="Search query" autocomplete="off" />
+        <button type="submit" class="ax-btn ax-btn--primary" style="border-radius:0;">
+          <span class="ax-btn__label">Search</span>
+        </button>
+      </form>
+
+      <!-- actions -->
+      <div style="display:flex;flex-wrap:wrap;gap:var(--ax-space-3);justify-content:center;">
+        <a class="ax-btn ax-btn--primary" href="/">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>
+          <span class="ax-btn__label">Go home</span>
+        </a>
+        <a class="ax-btn ax-btn--secondary" href="/pages/support/">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M9 18l-3 3v-3h-1a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-7z"/></svg>
+          <span class="ax-btn__label">Contact support</span>
+        </a>
+      </div>
+
+      <!-- helpful links -->
+      <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-subtle);">
+        Or jump to
+        <a class="ax-link" href="/">Dashboard</a> ·
+        <a class="ax-link" href="/pages/profile/">Your profile</a> ·
+        <a class="ax-link" href="/pages/faq/">Help center</a>
+      </p>
+    </div>
+  </main>
+{% endblock %}

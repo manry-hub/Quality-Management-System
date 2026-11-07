@@ -1,0 +1,322 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axEmail()"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">6 unread messages across 4 mailboxes — last synced 2 minutes ago.</p>
+          <div class="ax-apphead__actions">
+            <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+              <span class="ax-btn__label">Refresh</span>
+            </button>
+            <a class="ax-btn ax-btn--primary" href="/apps/email-compose/">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg>
+              <span class="ax-btn__label">Compose</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- ════════════════ 3-PANE EMAIL CLIENT ════════════════ -->
+        <div class="ax-card ax-app-fill" role="region" aria-label="Email client"
+             style="padding:0;overflow:hidden;display:grid;grid-template-columns:240px 360px 1fr;">
+
+          <!-- ───────── PANE 1 · FOLDER RAIL ───────── -->
+          <aside aria-label="Mailbox folders"
+                 style="border-inline-end:1px solid var(--ax-border);display:flex;flex-direction:column;min-height:0;">
+            <div style="padding:var(--ax-space-5) var(--ax-space-5) var(--ax-space-3);">
+              <a class="ax-btn ax-btn--primary ax-btn--block" href="/apps/email-compose/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Compose</span>
+              </a>
+            </div>
+            <nav class="ax-scroll-y" aria-label="Folders" style="flex:1 1 auto;min-height:0;padding:0 var(--ax-space-3) var(--ax-space-4);">
+              <ul class="ax-list ax-list--compact ax-list--selectable" style="gap:2px;">
+                <template x-for="f in folders" :key="f.id">
+                  <li>
+                    <button type="button" class="ax-list__row ax-railrow"
+                            @click="folder = f.id"
+                            :class="folder === f.id && 'is-selected'"
+                            :aria-current="folder === f.id ? 'true' : 'false'"
+                            style="width:100%;border:0;border-radius:var(--ax-radius-md);text-align:start;cursor:pointer;">
+                      <span class="ax-list__leading" style="color:var(--ax-text-muted);" x-html="f.icon"></span>
+                      <span class="ax-list__content"><span class="ax-list__title" x-text="f.name"></span></span>
+                      <span class="ax-list__trailing ax-num"
+                            x-show="f.count"
+                            :style="f.id==='inbox' ? 'color:var(--ax-accent);font-weight:600;' : 'color:var(--ax-text-subtle);'"
+                            x-text="f.count"></span>
+                    </button>
+                  </li>
+                </template>
+              </ul>
+
+              <hr class="ax-divider" style="margin:var(--ax-space-4) var(--ax-space-2);">
+
+              <p class="ax-list__group-label" style="padding-inline:var(--ax-space-3);">Labels</p>
+              <ul class="ax-list ax-list--compact ax-list--selectable" style="gap:2px;">
+                <template x-for="l in labels" :key="l.name">
+                  <li>
+                    <button type="button" class="ax-list__row ax-railrow" @click="label = l.name"
+                            :class="label === l.name && 'is-selected'"
+                            style="width:100%;border:0;border-radius:var(--ax-radius-md);text-align:start;cursor:pointer;">
+                      <span class="ax-list__leading"><i :style="`width:9px;height:9px;border-radius:3px;background:${l.color};display:inline-block;`"></i></span>
+                      <span class="ax-list__content"><span class="ax-list__title" x-text="l.name"></span></span>
+                      <span class="ax-list__trailing ax-num" style="color:var(--ax-text-subtle);" x-text="l.count"></span>
+                    </button>
+                  </li>
+                </template>
+                <li>
+                  <button type="button" class="ax-list__row ax-railrow" style="width:100%;border:0;border-radius:var(--ax-radius-md);text-align:start;cursor:pointer;color:var(--ax-text-muted);">
+                    <span class="ax-list__leading"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span>
+                    <span class="ax-list__content"><span class="ax-list__title">New label</span></span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+
+            <!-- storage meter foot -->
+            <div style="padding:var(--ax-space-4) var(--ax-space-5);border-top:1px solid var(--ax-border);">
+              <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;">
+                <small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Storage</small>
+                <small class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">8.4 / 15 GB</small>
+              </div>
+              <div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:56%;"></div></div></div>
+            </div>
+          </aside>
+
+          <!-- ───────── PANE 2 · MESSAGE LIST ───────── -->
+          <section aria-label="Message list" style="border-inline-end:1px solid var(--ax-border);display:flex;flex-direction:column;min-height:0;">
+            <!-- list toolbar -->
+            <div style="display:flex;align-items:center;gap:var(--ax-space-2);padding:var(--ax-space-3) var(--ax-space-4);border-bottom:1px solid var(--ax-border);min-height:56px;">
+              <!-- default toolbar -->
+              <template x-if="selected.length === 0">
+                <div class="ax-cluster" style="flex:1 1 auto;gap:var(--ax-space-2);flex-wrap:nowrap;">
+                  <label class="ax-check" style="min-height:auto;" title="Select all">
+                    <input type="checkbox" class="ax-checkbox" @change="toggleAll($event.target.checked)" aria-label="Select all messages">
+                  </label>
+                  <div class="ax-field__control" style="flex:1 1 auto;">
+                    <span class="ax-field__affix ax-field__affix--leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                    <input type="search" class="ax-input ax-input--sm ax-input--with-leading-icon" placeholder="Search mail…" aria-label="Search mail">
+                  </div>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Sort messages">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l4 -4l4 4m-4 -4v14"/><path d="M21 15l-4 4l-4 -4m4 4v-14"/></svg>
+                  </button>
+                </div>
+              </template>
+              <!-- bulk bar -->
+              <template x-if="selected.length > 0">
+                <div class="ax-cluster" style="flex:1 1 auto;gap:var(--ax-space-1);flex-wrap:nowrap;">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="selected = []" aria-label="Clear selection">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
+                  </button>
+                  <b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);margin-inline-end:auto;" x-text="`${selected.length} selected`"></b>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="selected=[]" aria-label="Archive selected">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"/><path d="M10 12l4 0"/></svg>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="selected=[]" aria-label="Delete selected">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="selected=[]" aria-label="Mark selected as read">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg>
+                  </button>
+                </div>
+              </template>
+            </div>
+
+            <!-- rows -->
+            <ul class="ax-scroll-y ax-list ax-list--selectable" style="flex:1 1 auto;min-height:0;padding:0;">
+              <template x-for="m in messages" :key="m.id">
+                <li>
+                  <button type="button"
+                          @click="open(m.id)"
+                          :class="active === m.id ? 'is-selected' : ''"
+                          class="ax-list__row ax-mailrow"
+                          style="position:relative;width:100%;text-align:start;display:grid;grid-template-columns:auto auto 1fr;gap:var(--ax-space-3);align-items:start;padding:var(--ax-space-3) var(--ax-space-4);border:0;border-bottom:1px solid var(--ax-border);cursor:pointer;">
+                    <!-- selected accent marker -->
+                    <i aria-hidden="true" x-show="active === m.id" style="position:absolute;inset-block:0;inset-inline-start:0;width:2px;background:var(--ax-accent);"></i>
+                    <span @click.stop class="ax-check" style="min-height:auto;padding-top:2px;">
+                      <input type="checkbox" class="ax-checkbox" :value="m.id" x-model="selected" :aria-label="`Select email from ${m.from}`">
+                    </span>
+                    <button type="button" @click.stop="m.starred = !m.starred"
+                            :aria-label="m.starred ? 'Unstar' : 'Star'" :aria-pressed="m.starred"
+                            style="border:0;background:transparent;cursor:pointer;padding-top:1px;line-height:0;"
+                            :style="m.starred ? 'color:var(--ax-viz-amber);' : 'color:var(--ax-text-subtle);'">
+                      <svg viewBox="0 0 24 24" width="16" height="16" :fill="m.starred ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                    </button>
+                    <span style="min-width:0;">
+                      <span class="ax-cluster" style="justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-2);">
+                        <span class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;min-width:0;">
+                          <i aria-hidden="true" x-show="m.unread" style="width:6px;height:6px;border-radius:50%;background:var(--ax-accent);flex:0 0 auto;"></i>
+                          <span class="ax-text-truncate" :style="m.unread ? 'font-weight:600;color:var(--ax-text-strong);' : 'font-weight:450;color:var(--ax-text);'" x-text="m.from"></span>
+                        </span>
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);flex:0 0 auto;" x-text="m.time"></span>
+                      </span>
+                      <span class="ax-text-truncate" style="display:block;margin-top:1px;" :style="m.unread ? 'font-weight:500;color:var(--ax-text-strong);' : 'color:var(--ax-text);'" x-text="m.subject"></span>
+                      <span class="ax-text-truncate" style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="m.snippet"></span>
+                      <span class="ax-cluster" style="gap:6px;margin-top:5px;" x-show="m.attach || m.tag">
+                        <span class="ax-badge ax-badge--soft ax-badge--sm" x-show="m.tag" :style="`color:${m.tagColor};`"><span class="ax-badge__dot" :style="`background:${m.tagColor};`"></span><span x-text="m.tag"></span></span>
+                        <svg x-show="m.attach" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-text-subtle);"><path d="M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3l6.5 -6.5a3 3 0 0 0 -6 -6l-6.5 6.5a4.5 4.5 0 0 0 9 9l6.5 -6.5"/></svg>
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              </template>
+            </ul>
+          </section>
+
+          <!-- ───────── PANE 3 · READING PANE ───────── -->
+          <section aria-label="Reading pane" style="display:flex;flex-direction:column;min-height:0;">
+            <!-- no selection -->
+            <div class="ax-flex" x-show="!current" style="flex:1 1 auto;flex-direction:column;align-items:center;justify-content:center;gap:var(--ax-space-3);color:var(--ax-text-subtle);text-align:center;padding:var(--ax-space-8);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-fill-hover);color:var(--ax-text-subtle);">
+                <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg>
+              </span>
+              <div><b style="display:block;color:var(--ax-text);font-size:var(--ax-text-md);">Select a message to read</b><span style="font-size:var(--ax-text-sm);">Nothing is open — pick a conversation from the list.</span></div>
+            </div>
+
+            <!-- thread -->
+            <template x-if="current">
+              <div style="display:flex;flex-direction:column;min-height:0;flex:1 1 auto;">
+                <!-- thread header -->
+                <div style="padding:var(--ax-space-5) var(--ax-space-6);border-bottom:1px solid var(--ax-border);">
+                  <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;gap:var(--ax-space-3);">
+                    <h2 class="ax-card__title" style="font-size:var(--ax-text-lg);" x-text="current.subject"></h2>
+                    <div class="ax-cluster" style="gap:2px;flex-wrap:nowrap;flex:0 0 auto;">
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :style="current.starred ? 'color:var(--ax-viz-amber);' : ''" @click="current.starred = !current.starred" aria-label="Star thread">
+                        <svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="current.starred ? 'currentColor':'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                      </button>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Archive thread">
+                        <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"/><path d="M10 12l4 0"/></svg>
+                      </button>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="More actions">
+                        <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="ax-cluster" style="gap:6px;margin-top:var(--ax-space-3);">
+                    <span class="ax-badge ax-badge--soft ax-badge--sm" :style="`color:${current.tagColor};`" x-show="current.tag"><span class="ax-badge__dot" :style="`background:${current.tagColor};`"></span><span x-text="current.tag"></span></span>
+                    <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="`${current.participants} participants · ${current.count} messages`"></span>
+                  </div>
+                </div>
+
+                <!-- body scroll -->
+                <div class="ax-scroll-y" style="flex:1 1 auto;min-height:0;padding:var(--ax-space-6);display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                  <!-- collapsed quote -->
+                  <button type="button" @click="quoteOpen = !quoteOpen" style="align-self:flex-start;border:0;background:transparent;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);cursor:pointer;display:inline-flex;gap:6px;align-items:center;">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="quoteOpen ? 'transform:rotate(90deg);' : ''"><path d="M9 6l6 6l-6 6"/></svg>
+                    <span x-text="quoteOpen ? 'Hide earlier message' : 'Show 1 earlier message'"></span>
+                  </button>
+                  <div x-show="quoteOpen" x-collapse style="border-inline-start:2px solid var(--ax-border-strong);padding-inline-start:var(--ax-space-4);color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.6;">
+                    <p style="margin:0 0 var(--ax-space-2);"><b style="color:var(--ax-text);">Maya — Apr 24, 9:02 AM</b></p>
+                    <p style="margin:0;">Hey team, attaching the revised figures from finance. Let me know if the Q3 forecast needs another pass before we present on Thursday.</p>
+                  </div>
+
+                  <!-- latest message -->
+                  <article style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${current.color} 18%,transparent);color:${current.color};`"><b x-text="current.initials"></b></span>
+                      <div style="flex:1 1 auto;min-width:0;">
+                        <div class="ax-cluster" style="justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-2);">
+                          <b style="color:var(--ax-text-strong);" x-text="current.from"></b>
+                          <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="current.fullTime"></span>
+                        </div>
+                        <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="`to me · ${current.email}`"></span>
+                      </div>
+                    </div>
+                    <div style="color:var(--ax-text);line-height:1.7;font-size:var(--ax-text-sm);" x-html="current.body"></div>
+
+                    <!-- attachments -->
+                    <div x-show="current.attach" class="ax-cluster" style="gap:var(--ax-space-3);">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);min-width:200px;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/></svg></span>
+                        <div style="min-width:0;"><div class="ax-text-truncate" style="font-weight:500;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Q3-Forecast.xlsx</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">248 KB · Spreadsheet</div></div>
+                      </div>
+                    </div>
+                  </article>
+                </div>
+
+                <!-- action bar -->
+                <div style="display:flex;gap:var(--ax-space-2);padding:var(--ax-space-4) var(--ax-space-6);border-top:1px solid var(--ax-border);">
+                  <button type="button" class="ax-btn ax-btn--secondary">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 18v-6a3 3 0 0 0 -3 -3h-10l4 -4m0 8l-4 -4"/></svg>
+                    <span class="ax-btn__label">Reply</span>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--ghost">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 18v-6a3 3 0 0 0 -3 -3h-5l4 -4m0 8l-4 -4"/><path d="M16 18v-6a3 3 0 0 0 -3 -3h-1"/></svg>
+                    <span class="ax-btn__label">Reply all</span>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--ghost">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18v-6a3 3 0 0 1 3 -3h10l-4 -4m0 8l4 -4"/></svg>
+                    <span class="ax-btn__label">Forward</span>
+                  </button>
+                  <span style="flex:1 1 auto;"></span>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Snooze">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
+                  </button>
+                </div>
+              </div>
+            </template>
+          </section>
+        </div>
+
+        <!-- collapse 3-pane → 2-pane → 1-pane -->
+        <style>
+          /* message rows: transparent resting bg (UA reset for classed button),
+             hover + selected driven by role tokens so light/dark both work */
+          [data-ax-route="apps/email"] .ax-mailrow { background: transparent; }
+          [data-ax-route="apps/email"] .ax-mailrow:hover { background: var(--ax-fill-hover); }
+          [data-ax-route="apps/email"] .ax-mailrow.is-selected { background: var(--ax-accent-wash); }
+          /* folder + label rail rows: transparent reset; hover/selected from .ax-list--selectable */
+          [data-ax-route="apps/email"] .ax-railrow { background: transparent; }
+          @media (max-width: 1280px) {
+            [data-ax-route="apps/email"] .ax-card[aria-label="Email client"] { grid-template-columns: 220px 1fr; }
+            [data-ax-route="apps/email"] section[aria-label="Reading pane"] { display: none; }
+          }
+          @media (max-width: 768px) {
+            [data-ax-route="apps/email"] .ax-card[aria-label="Email client"] { grid-template-columns: 1fr; }
+            [data-ax-route="apps/email"] aside[aria-label="Mailbox folders"] { display: none; }
+          }
+        </style>
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axEmail() {
+      const ic = (p) => `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${p}</svg>`;
+      return {
+        folder: 'inbox', label: '', active: 2, quoteOpen: false, selected: [],
+        folders: [
+          { id:'inbox',   name:'Inbox',   count:6, icon: ic('<path d="M4 6a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M4 13h3l3 3h4l3 -3h3"/>') },
+          { id:'starred', name:'Starred', count:3, icon: ic('<path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/>') },
+          { id:'snoozed', name:'Snoozed', count:1, icon: ic('<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/>') },
+          { id:'sent',    name:'Sent',    count:0, icon: ic('<path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/>') },
+          { id:'drafts',  name:'Drafts',  count:2, icon: ic('<path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/>') },
+          { id:'archive', name:'Archive', count:0, icon: ic('<path d="M3 6a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2"/><path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10"/><path d="M10 12l4 0"/>') },
+          { id:'spam',    name:'Spam',    count:0, icon: ic('<path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M12 8v4"/><path d="M12 16h.01"/>') },
+          { id:'trash',   name:'Trash',   count:0, icon: ic('<path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>') },
+        ],
+        labels: [
+          { name:'Finance', color:'#34D399', count:8 },
+          { name:'Clients', color:'#38BDF8', count:14 },
+          { name:'Personal', color:'#A78BFA', count:5 },
+          { name:'Receipts', color:'#FBBF24', count:21 },
+        ],
+        messages: [
+          { id:1, from:'Maya Lindqvist', subject:'Re: Q3 forecast — final review before Thursday', snippet:'Thanks for the quick turnaround. I left two comments on the margin tab…', time:'9:14 AM', unread:true, starred:true, attach:true, tag:'Finance', tagColor:'#34D399', initials:'ML', color:'#34D399', email:'maya.l@northwind.co', fullTime:'Apr 25, 9:14 AM', participants:3, count:4, body:'<p>Thanks for the quick turnaround on this. I left two comments on the margin tab — mostly around the assumed churn rate for the enterprise segment. Otherwise the numbers line up with what finance modelled last week.</p><p>Can we lock the deck by EOD tomorrow so legal has time to review the appendix?</p><p style="margin-bottom:0;">Best,<br>Maya</p>' },
+          { id:2, from:'GitHub', subject:'[vireo/web] 3 new pull requests need review', snippet:'devon-okafor opened #482 · Aurora email client — three-pane layout…', time:'8:40 AM', unread:true, starred:false, attach:false, tag:'Clients', tagColor:'#38BDF8', initials:'GH', color:'#38BDF8', email:'notifications@github.com', fullTime:'Apr 25, 8:40 AM', participants:1, count:1, body:'<p>You have 3 pull requests awaiting review in <b>vireo/web</b>:</p><ul style="padding-inline-start:1.1rem;line-height:1.9;"><li>#482 — Aurora email client (three-pane layout)</li><li>#481 — Fix focus ring on segmented control</li><li>#479 — Dark-mode donut center label contrast</li></ul>' },
+          { id:3, from:'Tomás Herrera', subject:'Contract draft for the Q3 retainer', snippet:'Attached the redlined version — the only open point is the SLA window…', time:'Apr 24', unread:false, starred:true, attach:true, tag:'Clients', tagColor:'#38BDF8', initials:'TH', color:'#A78BFA', email:'tomas@brightline.io', fullTime:'Apr 24, 4:18 PM', participants:2, count:6, body:'<p>Hi — attached the redlined version of the retainer. The only open point is the SLA window in section 4.2; we proposed 8 business hours, your team had asked for 4.</p><p>Happy to jump on a call Friday to close it out.</p>' },
+          { id:4, from:'Priya Nair', subject:'Weekly analytics digest is ready', snippet:'Sessions up 12.4% week over week. Mobile conversion finally crossed 3%…', time:'Apr 24', unread:false, starred:false, attach:false, tag:'', tagColor:'', initials:'PN', color:'#FBBF24', email:'priya@vireo.app', fullTime:'Apr 24, 11:02 AM', participants:1, count:1, body:'<p>Your weekly digest is ready. Highlights:</p><ul style="padding-inline-start:1.1rem;line-height:1.9;"><li>Sessions up <b>12.4%</b> week over week</li><li>Mobile conversion crossed <b>3%</b> for the first time</li><li>Top channel: organic search (27%)</li></ul>' },
+          { id:5, from:'Stripe', subject:'Your payout of $4,210.00 is on the way', snippet:'A payout was initiated to your bank account ending in 7045…', time:'Apr 23', unread:false, starred:false, attach:false, tag:'Receipts', tagColor:'#FBBF24', initials:'St', color:'#A78BFA', email:'support@stripe.com', fullTime:'Apr 23, 6:30 PM', participants:1, count:1, body:'<p>A payout of <b>$4,210.00</b> was initiated to your bank account ending in 7045. It should arrive within 1–2 business days.</p>' },
+          { id:6, from:'Lena Brandt', subject:'New empty-state illustrations uploaded', snippet:'Dropped the dark + light variants into Figma — pinged you on the frame…', time:'Apr 23', unread:false, starred:false, attach:false, tag:'Personal', tagColor:'#A78BFA', initials:'LB', color:'#F472B6', email:'lena@studioform.de', fullTime:'Apr 23, 2:11 PM', participants:1, count:2, body:'<p>Dropped the dark + light variants into Figma. Pinged you on the frame — let me know if the line weight reads OK against the glass surfaces.</p>' },
+          { id:7, from:'Daniel Cho', subject:'Lunch Thursday?', snippet:'That new ramen place near the office opened. 12:30 work for you?', time:'Apr 22', unread:false, starred:false, attach:false, tag:'', tagColor:'', initials:'DC', color:'#FB7185', email:'daniel@gmail.com', fullTime:'Apr 22, 5:40 PM', participants:1, count:3, body:'<p>That new ramen place near the office finally opened. 12:30 Thursday work for you?</p>' },
+        ],
+        get current() { return this.active ? this.messages.find(m => m.id === this.active) : null; },
+        open(id) { this.active = id; this.quoteOpen = false; const m = this.messages.find(x=>x.id===id); if(m) m.unread = false; },
+        toggleAll(on) { this.selected = on ? this.messages.map(m => m.id) : []; },
+      };
+    }
+  </script>
+{% endblock %}

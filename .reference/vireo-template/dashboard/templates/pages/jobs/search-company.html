@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axSearchCompany()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Search Companies</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">312</span> companies hiring now — <span class="ax-num">1,284</span> open roles across <span class="ax-num">38</span> industries.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg>
+                <span class="ax-btn__label">Followed (12)</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a5 5 0 1 0 0 10a5 5 0 0 0 0 -10"/><path d="M21 21l-6 -6"/><path d="M5 10h10"/></svg>
+                <span class="ax-btn__label">Create alert</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ SEARCH BAR ════════════════ -->
+        <section class="ax-card" role="search" aria-label="Company search" style="margin-bottom:var(--ax-space-6);">
+          <div class="ax-card__body" style="display:grid;grid-template-columns:2fr 1.4fr auto;gap:var(--ax-space-3);align-items:end;">
+            <div class="ax-field" style="margin:0;">
+              <label class="ax-label" for="sco-keyword">Company or keyword</label>
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 21l18 0"/><path d="M5 21v-14l8 -4v18"/><path d="M19 21v-10l-6 -4"/><path d="M9 9l0 .01"/><path d="M9 12l0 .01"/><path d="M9 15l0 .01"/><path d="M9 18l0 .01"/></svg>
+                <input id="sco-keyword" type="search" class="ax-input" placeholder="e.g. Northwind Labs, fintech, design…" x-model.debounce.200ms="q" @input="page=1" style="padding-inline-start:38px;" aria-label="Search companies">
+              </div>
+            </div>
+            <div class="ax-field" style="margin:0;">
+              <label class="ax-label" for="sco-loc">Headquarters</label>
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
+                <input id="sco-loc" type="text" class="ax-input" placeholder="City, country or Remote-first" x-model.debounce.200ms="loc" @input="page=1" style="padding-inline-start:38px;" aria-label="Headquarters location">
+              </div>
+            </div>
+            <button type="button" class="ax-btn ax-btn--primary" style="height:42px;" @click="page=1">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a5 5 0 1 0 0 10a5 5 0 0 0 0 -10"/><path d="M21 21l-6 -6"/></svg>
+              <span class="ax-btn__label">Search</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- ════════════════ LAYOUT: FILTERS RAIL + RESULTS ════════════════ -->
+        <div style="display:grid;grid-template-columns:280px minmax(0,1fr);gap:var(--ax-space-6);align-items:start;" class="ax-jobs-split">
+
+          <!-- ───── FILTERS SIDEBAR ───── -->
+          <aside class="ax-card" role="region" aria-label="Filters" style="position:sticky;top:var(--ax-space-4);">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Filters</h2></div>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="reset()">Reset</button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- Industry -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Industry</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="ind in industries" :key="ind.id">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-3);">
+                        <input type="checkbox" class="ax-checkbox" :value="ind.id" x-model="fIndustry" @change="page=1">
+                        <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="ind.label"></span>
+                      </span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="ind.count"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Company size -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Company size</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="s in sizes" :key="s.id">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-3);">
+                        <input type="checkbox" class="ax-checkbox" :value="s.id" x-model="fSize" @change="page=1">
+                        <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="s.label"></span>
+                      </span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="s.count"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Min openings -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <legend class="ax-label" style="padding:0;margin:0;">Min. open roles</legend>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);"><span x-text="minOpen"></span>+</b>
+                </div>
+                <input type="range" class="ax-range ax-range--native" min="0" max="40" step="2" x-model.number="minOpen" @input="page=1" aria-label="Minimum number of open roles" style="width:100%;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-top:6px;">
+                  <small class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">0</small>
+                  <small class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">40+</small>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Min rating -->
+              <fieldset style="border:0;padding:0;margin:0;">
+                <legend class="ax-label" style="margin-bottom:var(--ax-space-3);padding:0;">Min. rating</legend>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="r in [0,3,3.5,4,4.5]" :key="r">
+                    <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;min-height:auto;cursor:pointer;">
+                      <input type="radio" name="sco-rating" class="ax-radio" :value="r" x-model.number="minRating" @change="page=1">
+                      <span class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="r===0 ? 'Any rating' : r.toFixed(1)+'★ & up'"></span>
+                    </label>
+                  </template>
+                </div>
+              </fieldset>
+
+              <hr class="ax-divider" style="margin:0;">
+
+              <!-- Remote-first -->
+              <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:center;justify-content:space-between;min-height:auto;cursor:pointer;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Remote-first only</span>
+                <input type="checkbox" role="switch" class="ax-switch ax-switch--sm" x-model="remoteOnly" @change="page=1" aria-label="Remote-first only">
+              </label>
+            </div>
+          </aside>
+
+          <!-- ───── RESULTS COLUMN ───── -->
+          <div style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+            <!-- result toolbar -->
+            <section class="ax-card" role="region" aria-label="Results toolbar">
+              <div class="ax-card__body" style="display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;padding-block:var(--ax-space-4);">
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+                  <b class="ax-num" style="color:var(--ax-text-strong);" x-text="filtered().length"></b> companies match
+                  <span x-show="activeChips().length" x-cloak>·</span>
+                  <template x-for="c in activeChips()" :key="c.k">
+                    <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill ax-badge--sm" style="margin-inline-start:6px;">
+                      <span x-text="c.label"></span>
+                      <button type="button" @click="c.clear()" aria-label="Remove filter" style="background:none;border:0;cursor:pointer;color:inherit;display:inline-flex;padding:0;margin-inline-start:4px;"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                    </span>
+                  </template>
+                </p>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <label class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Sort
+                    <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort companies" style="min-width:150px;">
+                      <option value="openings">Most open roles</option>
+                      <option value="rating">Top rated</option>
+                      <option value="size">Largest</option>
+                      <option value="name">Name A–Z</option>
+                    </select>
+                  </label>
+                  <div class="ax-segment" role="group" aria-label="View mode">
+                    <button type="button" class="ax-segment__option ax-btn--icon" :class="view==='grid' && 'is-active'" :aria-checked="view==='grid'" @click="view='grid'" aria-label="Grid view"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg></button>
+                    <button type="button" class="ax-segment__option ax-btn--icon" :class="view==='list' && 'is-active'" :aria-checked="view==='list'" @click="view='list'" aria-label="List view"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ───── GRID VIEW ───── -->
+            <template x-if="view==='grid'">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--ax-space-5);">
+                <template x-for="co in paged()" :key="co.id">
+                  <article class="ax-card ax-card--interactive" style="margin:0;" role="region" :aria-label="co.name">
+                    <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);justify-content:space-between;align-items:flex-start;flex-wrap:nowrap;">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;min-width:0;">
+                          <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" :style="`background:color-mix(in oklab,${co.c} 18%,transparent);color:${co.c};font-weight:700;flex:0 0 auto;`"><b style="font-size:var(--ax-text-md);" x-text="co.mark"></b></span>
+                          <div style="min-width:0;">
+                            <div class="ax-cluster" style="gap:6px;">
+                              <a href="#" class="ax-text-truncate" style="font-family:var(--ax-font-display);font-weight:600;color:var(--ax-text-strong);text-decoration:none;" x-text="co.name"></a>
+                              <span x-show="co.verified" x-cloak style="color:var(--ax-viz-cyan);display:inline-flex;" title="Verified"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                            </div>
+                            <div class="ax-num ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);" x-text="co.domain"></div>
+                          </div>
+                        </div>
+                        <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="co.following = !co.following" :aria-pressed="co.following.toString()" :aria-label="co.following ? 'Unfollow' : 'Follow'" :style="co.following ? 'color:var(--ax-accent);' : ''"><svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="co.following ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg></button>
+                      </div>
+
+                      <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.5;" x-text="co.tagline"></p>
+
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="co.industry"></span>
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="co.sizeLabel + ' staff'"></span>
+                        <span x-show="co.remote" x-cloak class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm">Remote-first</span>
+                      </div>
+
+                      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-3);padding-top:var(--ax-space-3);border-top:1px solid var(--ax-border);">
+                        <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;">Open</small><b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-md);" x-text="co.openings"></b></div>
+                        <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;">Rating</small><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-md);"><span x-text="co.rating.toFixed(1)"></span><span style="color:var(--ax-viz-amber);font-size:var(--ax-text-sm);"> ★</span></b></div>
+                        <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;">HQ</small><b class="ax-text-truncate" style="display:block;color:var(--ax-text-strong);font-size:var(--ax-text-sm);font-weight:var(--ax-weight-semibold);" x-text="co.hq"></b></div>
+                      </div>
+
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                        <a href="/jobs/search-jobs/" class="ax-btn ax-btn--primary ax-btn--sm" style="flex:1 1 auto;">View <span x-text="co.openings"></span> roles</a>
+                        <a href="#" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" aria-label="Company website"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg></a>
+                      </div>
+                    </div>
+                  </article>
+                </template>
+              </div>
+            </template>
+
+            <!-- ───── LIST VIEW ───── -->
+            <template x-if="view==='list'">
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <template x-for="co in paged()" :key="co.id">
+                  <article class="ax-card ax-card--interactive" role="region" :aria-label="co.name">
+                    <div class="ax-card__body" style="display:flex;align-items:center;gap:var(--ax-space-4);flex-wrap:wrap;">
+                      <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" :style="`background:color-mix(in oklab,${co.c} 18%,transparent);color:${co.c};font-weight:700;flex:0 0 auto;`"><b style="font-size:var(--ax-text-md);" x-text="co.mark"></b></span>
+                      <div style="flex:1 1 220px;min-width:0;">
+                        <div class="ax-cluster" style="gap:6px;">
+                          <a href="#" class="ax-text-truncate" style="font-family:var(--ax-font-display);font-weight:600;color:var(--ax-text-strong);text-decoration:none;" x-text="co.name"></a>
+                          <span x-show="co.verified" x-cloak style="color:var(--ax-viz-cyan);display:inline-flex;" title="Verified"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                        </div>
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);margin-top:2px;">
+                          <span class="ax-cluster" style="gap:5px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg><span x-text="co.hq"></span></span>
+                          <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="co.industry"></span>
+                        </div>
+                      </div>
+                      <div style="text-align:center;min-width:64px;"><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;">Staff</small><b class="ax-num" style="color:var(--ax-text-strong);" x-text="co.sizeLabel"></b></div>
+                      <div style="text-align:center;min-width:64px;"><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;">Rating</small><b class="ax-num" style="color:var(--ax-text-strong);"><span x-text="co.rating.toFixed(1)"></span><span style="color:var(--ax-viz-amber);"> ★</span></b></div>
+                      <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill"><span class="ax-num" x-text="co.openings"></span>&nbsp;open</span>
+                      <a href="/jobs/search-jobs/" class="ax-btn ax-btn--secondary ax-btn--sm">View roles</a>
+                    </div>
+                  </article>
+                </template>
+              </div>
+            </template>
+
+            <!-- empty -->
+            <div x-show="!filtered().length" x-cloak class="ax-card">
+              <div class="ax-card__body" style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+                <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 21l18 0"/><path d="M5 21v-14l8 -4v18"/><path d="M19 21v-10l-6 -4"/></svg></span>
+                <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No companies found</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Try a different industry or lower the minimum open-roles threshold.</p>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="reset()">Clear all filters</button>
+              </div>
+            </div>
+
+            <!-- pagination -->
+            <div class="ax-card" x-show="filtered().length" x-cloak>
+              <div class="ax-card__body" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);padding-block:var(--ax-space-4);">
+                <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                  Showing <span x-text="rangeStart()"></span>–<span x-text="rangeEnd()"></span> of <span x-text="filtered().length"></span>
+                </span>
+                <nav class="ax-pagination" aria-label="Pagination">
+                  <button type="button" class="ax-pagination__prev" :disabled="page===1" :aria-disabled="(page===1).toString()" @click="page=Math.max(1,page-1)" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                  <ul class="ax-pagination__pages">
+                    <template x-for="pg in pageList()" :key="pg">
+                      <li>
+                        <template x-if="pg === '…'"><span class="ax-pagination__ellipsis">…</span></template>
+                        <template x-if="pg !== '…'"><button type="button" class="ax-pagination__page" :class="{'is-active': page===pg}" :aria-current="page===pg ? 'page' : null" @click="page=pg" x-text="pg"></button></template>
+                      </li>
+                    </template>
+                  </ul>
+                  <button type="button" class="ax-pagination__next" :disabled="page===totalPages()" :aria-disabled="(page===totalPages()).toString()" @click="page=Math.min(totalPages(),page+1)" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <style>
+          @media (max-width: 1024px){ .ax-jobs-split{ grid-template-columns:1fr !important; } .ax-jobs-split > aside{ position:static !important; } }
+        </style>
+
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axSearchCompany(){
+      const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+      return {
+        q:'', loc:'', sort:'openings', view:'grid', page:1, perPage:6,
+        minOpen:0, minRating:0, remoteOnly:false, fIndustry:[], fSize:[],
+        industries:[
+          { id:'SaaS', label:'SaaS', count:74 },
+          { id:'Fintech', label:'Fintech', count:58 },
+          { id:'E-commerce', label:'E-commerce', count:46 },
+          { id:'Healthcare', label:'Healthcare', count:39 },
+          { id:'Manufacturing', label:'Manufacturing', count:31 },
+          { id:'Agency', label:'Agency', count:28 },
+        ],
+        sizes:[
+          { id:'startup', label:'1–50', count:96 },
+          { id:'mid', label:'51–250', count:118 },
+          { id:'large', label:'251–1,000', count:64 },
+          { id:'enterprise', label:'1,000+', count:34 },
+        ],
+        rows:[
+          { id:'co01', name:'Northwind Labs', mark:'NW', c:C.cyan, verified:true, domain:'northwind.io', industry:'SaaS', size:240, sizeLabel:'240', sizeBand:'mid', hq:'Berlin, DE', remote:true, rating:4.7, openings:18, following:true, tagline:'Analytics platform helping product teams ship with confidence. Backed by a strong design-system culture and a remote-first team across the EU.' },
+          { id:'co02', name:'Brightline Capital', mark:'BC', c:C.amber, verified:true, domain:'brightline.co', industry:'Fintech', size:118, sizeLabel:'118', sizeBand:'mid', hq:'New York, US', remote:false, rating:4.4, openings:9, following:false, tagline:'Mid-market lending infrastructure with a sharp go-to-market team. Hiring across sales, risk, and platform engineering this quarter.' },
+          { id:'co03', name:'Crate & Co', mark:'CC', c:C.violet, verified:false, domain:'crateco.com', industry:'E-commerce', size:64, sizeLabel:'64', sizeBand:'mid', hq:'Amsterdam, NL', remote:false, rating:4.2, openings:5, following:false, tagline:'Modern homewares brand with a beloved checkout experience. Small, design-led team that ships fast and obsesses over the unboxing moment.' },
+          { id:'co04', name:'Meridian Health', mark:'MH', c:C.pink, verified:true, domain:'meridianhealth.org', industry:'Healthcare', size:512, sizeLabel:'512', sizeBand:'large', hq:'Remote · US', remote:true, rating:4.6, openings:24, following:true, tagline:'Clinical-risk prediction at scale. Mission-driven org pairing rigorous data science with a genuinely supportive engineering culture.' },
+          { id:'co05', name:'Loop Robotics', mark:'LR', c:C.emerald, verified:true, domain:'looprobotics.com', industry:'Manufacturing', size:340, sizeLabel:'340', sizeBand:'large', hq:'Tokyo, JP', remote:false, rating:4.5, openings:12, following:false, tagline:'Warehouse automation hardware + software. Tight-knit robotics team solving gnarly real-world problems with elegant control systems.' },
+          { id:'co06', name:'Studioform', mark:'SF', c:C.violet, verified:false, domain:'studioform.de', industry:'Agency', size:28, sizeLabel:'28', sizeBand:'startup', hq:'Munich, DE', remote:true, rating:4.8, openings:4, following:false, tagline:'Boutique product design studio for ambitious B2B founders. Senior team, no juniors, every project shipped is portfolio-grade.' },
+          { id:'co07', name:'Clearbox', mark:'CB', c:C.cyan, verified:true, domain:'clearbox.app', industry:'SaaS', size:92, sizeLabel:'92', sizeBand:'mid', hq:'Remote · EU', remote:true, rating:4.6, openings:16, following:false, tagline:'Event-driven automation engine for ops teams. Engineering-first culture with thoughtful APIs and an unusually low meeting load.' },
+          { id:'co08', name:'Ridgeline Energy', mark:'RE', c:C.pink, verified:true, domain:'ridgeline.energy', industry:'Manufacturing', size:780, sizeLabel:'780', sizeBand:'large', hq:'Austin, US', remote:false, rating:4.3, openings:31, following:false, tagline:'Grid-optimisation software for renewable operators. Scaling fast — building out product, platform, and data teams across three offices.' },
+          { id:'co09', name:'Pulse Media', mark:'PM', c:C.amber, verified:false, domain:'pulse.media', industry:'Agency', size:46, sizeLabel:'46', sizeBand:'startup', hq:'London, UK', remote:true, rating:4.1, openings:3, following:false, tagline:'Performance marketing collective for DTC brands. Lean, senior, and data-obsessed with a transparent, async-first way of working.' },
+          { id:'co10', name:'Harbor Freight Co', mark:'HF', c:C.emerald, verified:true, domain:'harborfreight.co', industry:'E-commerce', size:156, sizeLabel:'156', sizeBand:'mid', hq:'Remote · UK', remote:true, rating:4.4, openings:8, following:false, tagline:'B2B marketplace for industrial supplies. Profitable, calm, and quietly excellent — a place engineers tend to stay for years.' },
+          { id:'co11', name:'Postoak Insurance', mark:'PI', c:C.violet, verified:true, domain:'postoak.com', industry:'Fintech', size:430, sizeLabel:'430', sizeBand:'large', hq:'Chicago, US', remote:false, rating:4.0, openings:14, following:false, tagline:'Digital-first commercial insurance. Modernising a century-old industry with clean software and a refreshingly human claims experience.' },
+          { id:'co12', name:'Meadow Foods', mark:'MF', c:C.cyan, verified:false, domain:'meadowfoods.co', industry:'E-commerce', size:210, sizeLabel:'210', sizeBand:'mid', hq:'Dublin, IE', remote:false, rating:4.2, openings:6, following:false, tagline:'Sustainable grocery brand with a loyal subscriber base. Values-led team scaling supply chain, growth, and a small but mighty product crew.' },
+        ],
+        reset(){ this.q=''; this.loc=''; this.minOpen=0; this.minRating=0; this.remoteOnly=false; this.fIndustry=[]; this.fSize=[]; this.sort='openings'; this.page=1; },
+        activeChips(){
+          const out=[];
+          if(this.minOpen>0) out.push({ k:'op', label:this.minOpen+'+ roles', clear:()=>{ this.minOpen=0; this.page=1; } });
+          if(this.minRating>0) out.push({ k:'rt', label:this.minRating.toFixed(1)+'★ & up', clear:()=>{ this.minRating=0; this.page=1; } });
+          if(this.remoteOnly) out.push({ k:'rm', label:'Remote-first', clear:()=>{ this.remoteOnly=false; this.page=1; } });
+          this.fIndustry.forEach(id=>{ out.push({ k:'i'+id, label:id, clear:()=>{ this.fIndustry=this.fIndustry.filter(x=>x!==id); this.page=1; } }); });
+          this.fSize.forEach(id=>{ const s=this.sizes.find(x=>x.id===id); if(s) out.push({ k:'z'+id, label:s.label, clear:()=>{ this.fSize=this.fSize.filter(x=>x!==id); this.page=1; } }); });
+          return out;
+        },
+        filtered(){
+          const t=this.q.trim().toLowerCase(), l=this.loc.trim().toLowerCase();
+          let r=this.rows.filter(x=>{
+            if(t && !(x.name.toLowerCase().includes(t) || x.industry.toLowerCase().includes(t) || x.tagline.toLowerCase().includes(t) || x.domain.toLowerCase().includes(t))) return false;
+            if(l && !x.hq.toLowerCase().includes(l)) return false;
+            if(this.fIndustry.length && !this.fIndustry.includes(x.industry)) return false;
+            if(this.fSize.length && !this.fSize.includes(x.sizeBand)) return false;
+            if(this.minOpen>0 && x.openings<this.minOpen) return false;
+            if(this.minRating>0 && x.rating<this.minRating) return false;
+            if(this.remoteOnly && !x.remote) return false;
+            return true;
+          });
+          if(this.sort==='rating') return [...r].sort((a,b)=>b.rating-a.rating);
+          if(this.sort==='size') return [...r].sort((a,b)=>b.size-a.size);
+          if(this.sort==='name') return [...r].sort((a,b)=>a.name.localeCompare(b.name));
+          return [...r].sort((a,b)=>b.openings-a.openings);
+        },
+        totalPages(){ return Math.max(1, Math.ceil(this.filtered().length/this.perPage)); },
+        paged(){ if(this.page>this.totalPages()) this.page=this.totalPages(); const s=(this.page-1)*this.perPage; return this.filtered().slice(s,s+this.perPage); },
+        rangeStart(){ return this.filtered().length ? (this.page-1)*this.perPage+1 : 0; },
+        rangeEnd(){ return Math.min(this.page*this.perPage, this.filtered().length); },
+        pageList(){ const tp=this.totalPages(),p=this.page,out=[]; if(tp<=7){ for(let i=1;i<=tp;i++) out.push(i); return out; } out.push(1); if(p>3) out.push('…'); for(let i=Math.max(2,p-1);i<=Math.min(tp-1,p+1);i++) out.push(i); if(p<tp-2) out.push('…'); out.push(tp); return out; },
+      };
+    }
+  </script>
+{% endblock %}

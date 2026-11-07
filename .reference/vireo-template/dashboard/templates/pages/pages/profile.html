@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Profile</h1>
+              <p class="ax-page-head__subtitle">Public profile, activity and shared work for Maya Albright.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293l-4.7 1"/></svg>
+                <span class="ax-btn__label">Message</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"/><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3z"/><path d="M16 5l3 3"/></svg>
+                <span class="ax-btn__label">Edit profile</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── IDENTITY HEADER (cover + avatar) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Profile header" style="overflow:hidden;">
+            <!-- cover band -->
+            <div aria-hidden="true" style="height:168px;background:
+                radial-gradient(120% 160% at 12% 0%, color-mix(in oklab,var(--ax-accent) 42%,transparent), transparent 60%),
+                radial-gradient(90% 140% at 88% 10%, color-mix(in oklab,var(--ax-viz-violet) 34%,transparent), transparent 58%),
+                linear-gradient(120deg, var(--ax-surface-subtle), var(--ax-surface-raised));
+                position:relative;">
+              <span style="position:absolute;inset:0;background-image:linear-gradient(var(--ax-border) 1px,transparent 1px),linear-gradient(90deg,var(--ax-border) 1px,transparent 1px);background-size:34px 34px;opacity:.4;"></span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);align-items:flex-end;flex-wrap:wrap;margin-top:-56px;position:relative;">
+                <span class="ax-avatar ax-avatar--2xl ax-avatar--ringed" style="box-shadow:0 0 0 4px var(--ax-surface-raised),0 0 0 6px var(--ax-accent);background:color-mix(in oklab,var(--ax-accent) 16%,var(--ax-surface-solid));color:var(--ax-accent);">
+                  <span class="ax-avatar__initials" style="font-size:var(--ax-text-2xl);">MA</span>
+                  <span class="ax-avatar__status ax-avatar__status--online" aria-hidden="true"></span>
+                </span>
+                <div style="flex:1 1 240px;min-width:0;padding-bottom:var(--ax-space-2);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                    <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-text-strong);line-height:1.2;">Maya Albright</h2>
+                    <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill">Pro</span>
+                  </div>
+                  <div style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-top:2px;">Principal Product Designer · Design Systems</div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-4);margin-top:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                    <span class="ax-cluster" style="gap:6px;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>Lisbon, Portugal
+                    </span>
+                    <span class="ax-cluster" style="gap:6px;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>Joined Mar 2022
+                    </span>
+                    <span class="ax-cluster" style="gap:6px;color:var(--ax-viz-emerald);">
+                      <span style="width:7px;height:7px;border-radius:50%;background:var(--ax-viz-emerald);"></span>Available for work
+                    </span>
+                  </div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);padding-bottom:var(--ax-space-2);">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="View on X / Twitter">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="View on Dribbble">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M9 3.6c5 6 7 10.5 7.5 16.2"/><path d="M6.4 19c3.5 -3.5 6 -6.5 14.5 -6.4"/><path d="M3.1 10.75c5 0 9.814 -.38 15.314 -5"/></svg>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M16 19h6"/><path d="M19 16v6"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4"/></svg>
+                    <span class="ax-btn__label">Follow</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── STAT STRIP ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Posts 248">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6a9 9 0 0 1 9 0a9 9 0 0 1 9 0"/><path d="M3 6l0 13"/><path d="M12 6l0 13"/><path d="M21 6l0 13"/></svg>
+                </span>
+              </div>
+              <div class="ax-kpi__label">Posts</div>
+              <div class="ax-kpi__value ax-num">248</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Followers 12,940">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.2%</span>
+              </div>
+              <div class="ax-kpi__label">Followers</div>
+              <div class="ax-kpi__value ax-num">12,940</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Projects 36">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-10"/></svg>
+                </span>
+              </div>
+              <div class="ax-kpi__label">Projects</div>
+              <div class="ax-kpi__value ax-num">36</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Endorsements 1,102">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.8%</span>
+              </div>
+              <div class="ax-kpi__label">Endorsements</div>
+              <div class="ax-kpi__value ax-num">1,102</div>
+            </div>
+          </div>
+
+          <!-- ───── LEFT RAIL: About + contact + skills + connections ───── -->
+          <div class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <!-- About -->
+            <section class="ax-card" role="region" aria-label="About">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h3 class="ax-card__title">About</h3></div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">
+                  Designer focused on data-dense interfaces and design systems. I help product teams ship calm, accessible tooling — currently leading the component platform at Northwind.
+                </p>
+                <ul class="ax-list ax-list--compact">
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading" style="color:var(--ax-text-subtle);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></span>
+                    <span class="ax-list__content"><span class="ax-list__title">maya.albright@northwind.io</span></span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading" style="color:var(--ax-text-subtle);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span>
+                    <span class="ax-list__content"><span class="ax-list__title ax-num" style="font-family:var(--ax-font-mono);">+351 912 044 318</span></span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;">
+                    <span class="ax-list__leading" style="color:var(--ax-text-subtle);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg></span>
+                    <span class="ax-list__content"><a class="ax-link" href="#">maya.design</a></span>
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- Skills -->
+            <section class="ax-card" role="region" aria-label="Skills and tools">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h3 class="ax-card__title">Skills &amp; Tools</h3></div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Design Systems</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Figma</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Accessibility</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Prototyping</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Tokens</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">CSS</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Research</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Motion</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- Connections -->
+            <section class="ax-card" role="region" aria-label="Connections">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h3 class="ax-card__title">Connections</h3></div>
+                <a class="ax-btn ax-btn--link" href="#">View all</a>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">DK</span></span>
+                  <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Devon Okafor</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Staff Engineer</div></div>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Following</button>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">LB</span></span>
+                  <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Lena Brandt</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Illustrator</div></div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm">Follow</button>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><span class="ax-avatar__initials">TH</span></span>
+                  <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Tomás Herrera</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">PM, Platform</div></div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm">Follow</button>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───── MAIN COLUMN: Tabs (Overview / Activity / Projects) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Profile content"
+                   x-data="{ tab: 'overview' }">
+            <div class="ax-card__body">
+              <div class="ax-tabs">
+                <div class="ax-tabs__list" role="tablist" aria-label="Profile sections">
+                  <button type="button" class="ax-tabs__tab" role="tab" id="tab-overview" :aria-selected="tab==='overview'" :class="{ 'is-active': tab==='overview' }" @click="tab='overview'">Overview</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" id="tab-activity" :aria-selected="tab==='activity'" :class="{ 'is-active': tab==='activity' }" @click="tab='activity'">Activity</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" id="tab-projects" :aria-selected="tab==='projects'" :class="{ 'is-active': tab==='projects' }" @click="tab='projects'">Projects<span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral">12</span></button>
+                </div>
+
+                <!-- OVERVIEW -->
+                <div class="ax-tabs__panel" role="tabpanel" aria-labelledby="tab-overview" x-show="tab==='overview'" x-cloak>
+                  <!-- composer -->
+                  <div style="display:flex;gap:var(--ax-space-3);align-items:flex-start;margin-bottom:var(--ax-space-5);">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-accent) 16%,transparent);color:var(--ax-accent);"><span class="ax-avatar__initials">MA</span></span>
+                    <div style="flex:1 1 auto;" x-data="{ posted:false }">
+                      <textarea class="ax-textarea" rows="2" placeholder="Share an update with your followers…" style="min-height:64px;"></textarea>
+                      <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-2);">
+                        <span x-show="posted" x-cloak class="ax-cluster" style="gap:6px;color:var(--ax-success-500);font-size:var(--ax-text-xs);"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Posted</span>
+                        <span x-show="!posted" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Visible to followers</span>
+                        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm" @click="posted=true">Post update</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- post feed -->
+                  <article style="padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);margin-bottom:var(--ax-space-4);">
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;margin-bottom:var(--ax-space-3);">
+                      <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-accent) 16%,transparent);color:var(--ax-accent);"><span class="ax-avatar__initials">MA</span></span>
+                      <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Maya Albright</div><div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Jun 24 · 09:12</div></div>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Post options"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M17 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg></button>
+                    </div>
+                    <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Shipped the new density tokens today — tables, lists and the side rail all read 8% tighter without losing tap targets. Before/after in the thread. 🎚️</p>
+                    <div class="ax-cluster" style="gap:var(--ax-space-4);margin-top:var(--ax-space-3);color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="gap:6px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg><span class="ax-num">214</span></button>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="gap:6px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1"/></svg><span class="ax-num">38</span></button>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="gap:6px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z"/></svg>Share</button>
+                    </div>
+                  </article>
+
+                  <article style="padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                    <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;margin-bottom:var(--ax-space-3);">
+                      <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-accent) 16%,transparent);color:var(--ax-accent);"><span class="ax-avatar__initials">MA</span></span>
+                      <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Maya Albright</div><div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Jun 19 · 16:40</div></div>
+                    </div>
+                    <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Wrote up how we keep 12 accent themes accessible with a single role-token layer. No per-theme overrides, no hard-coded hex. Link in bio.</p>
+                    <div style="margin-top:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);padding:var(--ax-space-3);background:var(--ax-surface-subtle);">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/></svg></span>
+                        <div style="min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Theming without overrides</div><div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">maya.design/notes/role-tokens</div></div>
+                      </div>
+                    </div>
+                    <div class="ax-cluster" style="gap:var(--ax-space-4);margin-top:var(--ax-space-3);color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="gap:6px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 11v8a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1v-7a1 1 0 0 1 1 -1h3a4 4 0 0 0 4 -4v-1a2 2 0 0 1 4 0v5h3a2 2 0 0 1 2 2l-1 5a2 3 0 0 1 -2 2h-7a3 3 0 0 1 -3 -3"/></svg><span class="ax-num">96</span></button>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="gap:6px;"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1"/></svg><span class="ax-num">12</span></button>
+                    </div>
+                  </article>
+                </div>
+
+                <!-- ACTIVITY -->
+                <div class="ax-tabs__panel" role="tabpanel" aria-labelledby="tab-activity" x-show="tab==='activity'" x-cloak>
+                  <ul class="ax-timeline">
+                    <li class="ax-timeline__item ax-timeline__item--success">
+                      <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                      <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Merged</b> design tokens v3 into <span style="color:var(--ax-accent);">main</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">2h ago</span></div>
+                    </li>
+                    <li class="ax-timeline__item">
+                      <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg></span>
+                      <div class="ax-timeline__content"><p class="ax-timeline__title">Published <span style="color:var(--ax-text);">Empty-state illustration set</span> to the library</p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">Yesterday</span></div>
+                    </li>
+                    <li class="ax-timeline__item">
+                      <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z"/></svg></span>
+                      <div class="ax-timeline__content"><p class="ax-timeline__title">Commented on <span style="color:var(--ax-text);">Sidebar density review</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">Jun 24</span></div>
+                    </li>
+                    <li class="ax-timeline__item">
+                      <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></span>
+                      <div class="ax-timeline__content"><p class="ax-timeline__title">Earned the <b style="color:var(--ax-text-strong);">Top Contributor</b> badge</p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">Jun 21</span></div>
+                    </li>
+                  </ul>
+                </div>
+
+                <!-- PROJECTS -->
+                <div class="ax-tabs__panel" role="tabpanel" aria-labelledby="tab-projects" x-show="tab==='projects'" x-cloak>
+                  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--ax-space-4);">
+                    <article style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;">
+                      <div aria-hidden="true" style="height:88px;background:linear-gradient(120deg,color-mix(in oklab,var(--ax-accent) 32%,transparent),color-mix(in oklab,var(--ax-viz-cyan) 28%,transparent));"></div>
+                      <div style="padding:var(--ax-space-3);">
+                        <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Aurora Design Kit</div>
+                        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-bottom:var(--ax-space-2);">Component library · 84 screens</div>
+                        <div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:92%;"></div></div></div>
+                      </div>
+                    </article>
+                    <article style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;">
+                      <div aria-hidden="true" style="height:88px;background:linear-gradient(120deg,color-mix(in oklab,var(--ax-viz-violet) 32%,transparent),color-mix(in oklab,var(--ax-viz-pink) 26%,transparent));"></div>
+                      <div style="padding:var(--ax-space-3);">
+                        <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Settings Redesign</div>
+                        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-bottom:var(--ax-space-2);">Product · 22 screens</div>
+                        <div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:64%;"></div></div></div>
+                      </div>
+                    </article>
+                    <article style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;">
+                      <div aria-hidden="true" style="height:88px;background:linear-gradient(120deg,color-mix(in oklab,var(--ax-viz-amber) 32%,transparent),color-mix(in oklab,var(--ax-viz-emerald) 26%,transparent));"></div>
+                      <div style="padding:var(--ax-space-3);">
+                        <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Onboarding Flow</div>
+                        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-bottom:var(--ax-space-2);">Growth · 9 screens</div>
+                        <div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:38%;"></div></div></div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}
