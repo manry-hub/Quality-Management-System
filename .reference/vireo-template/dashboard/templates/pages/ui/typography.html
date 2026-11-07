@@ -1,0 +1,238 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Typography</h1>
+              <p class="ax-page-head__subtitle">The Aurora type system — Space Grotesk display, Inter body, JetBrains Mono numerics — sized entirely from the <code class="ax-code">--ax-text-*</code> scale.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/links/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6 -6"/><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"/><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"/></svg>
+                <span class="ax-btn__label">Links</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Type scale -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Type scale">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Scale</span>
+                <h2 class="ax-card__title">Type scale</h2>
+                <p class="ax-card__subtitle">Nine steps from 2xs to 3xl. Token name on the right, rendered size on the left.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);letter-spacing:-0.02em;color:var(--ax-text-strong);line-height:1.05;">Aperture Goods</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-3xl</code></div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);letter-spacing:-0.015em;color:var(--ax-text-strong);">Quarterly review</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-2xl</code></div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Revenue is trending up</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-xl</code></div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Northwind Labs dashboard</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-lg</code></div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-size:var(--ax-text-md);color:var(--ax-text);">Body copy at the medium step</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-md</code></div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Secondary &amp; supporting text</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-sm</code></div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Captions, meta &amp; helper lines</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-xs</code></div>
+              <div class="ax-divider"></div>
+              <div class="ax-cluster ax-cluster--between" style="flex-wrap:nowrap;gap:var(--ax-space-4);"><span style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.08em;color:var(--ax-text-subtle);">Eyebrow &amp; overline labels</span><code class="ax-code" style="flex:0 0 auto;">--ax-text-2xs</code></div>
+            </div>
+          </section>
+
+          <!-- Font families -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Font families">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Families</span>
+                <h2 class="ax-card__title">Typefaces</h2>
+                <p class="ax-card__subtitle">Three roles, one cohesive voice.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div>
+                <div class="ax-eyebrow" style="margin-bottom:var(--ax-space-2);">Display · Space Grotesk</div>
+                <div style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);letter-spacing:-0.015em;">Ag 0123</div>
+              </div>
+              <div class="ax-divider"></div>
+              <div>
+                <div class="ax-eyebrow" style="margin-bottom:var(--ax-space-2);">Sans · Inter</div>
+                <div style="font-family:var(--ax-font-sans);font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">Ag 0123</div>
+              </div>
+              <div class="ax-divider"></div>
+              <div>
+                <div class="ax-eyebrow" style="margin-bottom:var(--ax-space-2);">Mono · JetBrains Mono</div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">Ag 0123</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Headings -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Headings">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Hierarchy</span>
+                <h2 class="ax-card__title">Headings</h2>
+                <p class="ax-card__subtitle">h2–h6 (the single h1 is the page title above).</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);letter-spacing:-0.015em;color:var(--ax-text-strong);">Heading level 2</h2>
+              <h3 style="margin:0;font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Heading level 3</h3>
+              <h4 style="margin:0;font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Heading level 4</h4>
+              <h5 style="margin:0;font-size:var(--ax-text-md);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Heading level 5</h5>
+              <h6 style="margin:0;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-semibold);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-muted);">Heading level 6</h6>
+            </div>
+          </section>
+
+          <!-- Lead & paragraph -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Lead and body paragraphs">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Prose</span>
+                <h2 class="ax-card__title">Lead &amp; body</h2>
+                <p class="ax-card__subtitle">An opening lead line, then default running copy.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <p style="margin:0;font-size:var(--ax-text-lg);line-height:1.5;color:var(--ax-text);font-weight:var(--ax-weight-medium);">
+                Vireo ships nine dashboard editions from one design system, so a Sales view feels identical whether it renders in React, Vue, or Laravel.
+              </p>
+              <p style="margin:0;font-size:var(--ax-text-md);line-height:1.65;color:var(--ax-text-muted);">
+                Every surface resolves to a role token, which is why all twelve accent presets retheme with no extra CSS. Body copy sits at the medium step with comfortable leading; the lead line above carries slightly more weight and air to anchor the section.
+              </p>
+              <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-subtle);">
+                Small print and disclaimers settle at the subtle tier — present, but never competing for attention.
+              </p>
+            </div>
+          </section>
+
+          <!-- Inline elements -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Inline elements">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Within a line</span>
+                <h2 class="ax-card__title">Inline elements</h2>
+                <p class="ax-card__subtitle">Emphasis, marks, code, keys &amp; small-print.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);font-size:var(--ax-text-md);line-height:1.7;color:var(--ax-text);">
+              <p style="margin:0;">You can use <strong style="color:var(--ax-text-strong);">bold</strong>, <em>italic</em>, <u style="text-underline-offset:2px;">underline</u> and <s style="color:var(--ax-text-subtle);">strikethrough</s> for emphasis.</p>
+              <p style="margin:0;">Highlight a phrase with <mark class="ax-mark">the accent mark</mark>, or annotate with <abbr title="Average Order Value" style="text-decoration:underline dotted;text-underline-offset:3px;cursor:help;">AOV</abbr>.</p>
+              <p style="margin:0;">Reference inline code like <code class="ax-code">renderChart()</code> or a keystroke: press <kbd class="ax-kbd">⌘</kbd> <kbd class="ax-kbd">K</kbd> to search.</p>
+              <p style="margin:0;">Show ledger figures in mono: <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$48,210.00</span> with a <span class="ax-num" style="color:var(--ax-viz-emerald);">▲ 12.4%</span> delta.</p>
+              <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Use <sup>superscript</sup> and <sub>subscript</sub> for footnotes and formulas, and <small style="color:var(--ax-text-subtle);">small text</small> for legal lines.</p>
+            </div>
+          </section>
+
+          <!-- Blockquote -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Blockquote">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Quotation</span>
+                <h2 class="ax-card__title">Blockquote</h2>
+                <p class="ax-card__subtitle">An accent edge, larger leading, attributed source.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <blockquote style="margin:0;padding:var(--ax-space-2) 0 var(--ax-space-2) var(--ax-space-5);border-inline-start:3px solid var(--ax-accent);">
+                <p style="margin:0;font-size:var(--ax-text-lg);line-height:1.55;color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);">
+                  We replaced four bespoke admin builds with Vireo and shipped the new billing flow in a single sprint — the token system did most of the work.
+                </p>
+                <footer style="margin-top:var(--ax-space-3);font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+                  — <cite style="font-style:normal;font-weight:var(--ax-weight-semibold);color:var(--ax-text);">Marcus Reyes</cite>, Engineering Manager at Northwind Labs
+                </footer>
+              </blockquote>
+            </div>
+          </section>
+
+          <!-- Lists -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Lists">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Enumeration</span>
+                <h2 class="ax-card__title">Lists</h2>
+                <p class="ax-card__subtitle">Unordered, ordered, description &amp; check lists.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:var(--ax-space-6);">
+              <!-- Unordered -->
+              <div>
+                <div class="ax-eyebrow" style="margin-bottom:var(--ax-space-3);">Unordered</div>
+                <ul style="margin:0;padding-inline-start:1.2em;display:flex;flex-direction:column;gap:var(--ax-space-2);color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">
+                  <li>Lazy-loaded chart plugins</li>
+                  <li>Twelve accent presets
+                    <ul style="margin:var(--ax-space-1) 0 0;padding-inline-start:1.2em;color:var(--ax-text-muted);">
+                      <li>Light &amp; dark per accent</li>
+                      <li>RTL mirroring</li>
+                    </ul>
+                  </li>
+                  <li>Reduced-motion fallbacks</li>
+                </ul>
+              </div>
+              <!-- Ordered -->
+              <div>
+                <div class="ax-eyebrow" style="margin-bottom:var(--ax-space-3);">Ordered</div>
+                <ol style="margin:0;padding-inline-start:1.3em;display:flex;flex-direction:column;gap:var(--ax-space-2);color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">
+                  <li>Scaffold the app shell</li>
+                  <li>Drop in the flagship dashboard</li>
+                  <li>Wire the customizer</li>
+                  <li>Ship to ThemeForest</li>
+                </ol>
+              </div>
+              <!-- Description -->
+              <div>
+                <div class="ax-eyebrow" style="margin-bottom:var(--ax-space-3);">Description</div>
+                <dl style="margin:0;display:flex;flex-direction:column;gap:var(--ax-space-3);font-size:var(--ax-text-sm);">
+                  <div><dt style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Revenue</dt><dd style="margin:2px 0 0;color:var(--ax-text-muted);">Gross sales before refunds.</dd></div>
+                  <div><dt style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">AOV</dt><dd style="margin:2px 0 0;color:var(--ax-text-muted);">Average order value, trailing 30 days.</dd></div>
+                  <div><dt style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Churn</dt><dd style="margin:2px 0 0;color:var(--ax-text-muted);">Share of customers lost this month.</dd></div>
+                </dl>
+              </div>
+              <!-- Checklist -->
+              <div>
+                <div class="ax-eyebrow" style="margin-bottom:var(--ax-space-3);">Checklist</div>
+                <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+                  <li style="display:flex;gap:var(--ax-space-2);align-items:flex-start;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:1px;"><path d="M5 12l5 5l10 -10"/></svg>Dark mode verified</li>
+                  <li style="display:flex;gap:var(--ax-space-2);align-items:flex-start;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:1px;"><path d="M5 12l5 5l10 -10"/></svg>Keyboard navigable</li>
+                  <li style="display:flex;gap:var(--ax-space-2);align-items:flex-start;color:var(--ax-text-subtle);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;margin-top:1px;"><path d="M5 12l14 0"/></svg>RTL audit pending</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <!-- Code block -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Code block and preformatted text">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Monospace</span>
+                <h2 class="ax-card__title">Code block</h2>
+                <p class="ax-card__subtitle">Pre-formatted, scrollable, mono with a subtle surface.</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm"
+                x-data @click="navigator.clipboard?.writeText('renderChart(el, \'area\', series)'); $toast('Snippet copied')">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/><path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"/></svg>
+                <span class="ax-btn__label">Copy</span>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <pre style="margin:0;padding:var(--ax-space-4) var(--ax-space-5);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow-x:auto;font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);line-height:1.7;color:var(--ax-text);" class="ax-scroll-x"><code><span style="color:var(--ax-text-subtle);">// Render the Aurora area chart from the shared wrapper</span>
+<span style="color:var(--ax-viz-violet);">import</span> { renderChart } <span style="color:var(--ax-viz-violet);">from</span> <span style="color:var(--ax-viz-emerald);">'/src/js/plugins/charts.js'</span>;
+
+<span style="color:var(--ax-viz-violet);">const</span> el = document.<span style="color:var(--ax-viz-cyan);">getElementById</span>(<span style="color:var(--ax-viz-emerald);">'revenue'</span>);
+<span style="color:var(--ax-viz-cyan);">renderChart</span>(el, <span style="color:var(--ax-viz-emerald);">'area'</span>, series, { height: <span class="ax-num">320</span> });</code></pre>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

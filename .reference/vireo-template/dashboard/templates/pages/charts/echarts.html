@@ -1,0 +1,334 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">ECharts Gallery</h1>
+              <p class="ax-page-head__subtitle">Gauge, graph &amp; treemap — the heavyweight visualizations, rendered in the same Aurora chrome.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>
+                <span class="ax-btn__label">Docs</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── ROW: Three gauges (radialBar) ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Server health gauge">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Gauge</span>
+                <h2 class="ax-card__title">Server Health</h2>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Healthy</span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ec-gauge-1" aria-label="Gauge showing server health at 82 percent"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="SLA attainment gauge">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Gauge</span>
+                <h2 class="ax-card__title">SLA Attainment</h2>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Watch</span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ec-gauge-2" aria-label="Gauge showing SLA attainment at 67 percent"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Multi-metric radial gauge">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Multi gauge</span>
+                <h2 class="ax-card__title">Capacity</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ec-gauge-3" aria-label="Radial gauge of CPU, memory and disk capacity"></div>
+            </div>
+          </section>
+
+          <!-- ───── ROW: Graph-style network (8) + funnel (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Service dependency graph">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Graph · force</span>
+                <h2 class="ax-card__title">Service Dependencies</h2>
+                <p class="ax-card__subtitle">Node size = traffic · edges = calls between services</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Graph options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;position:relative;">
+              <!-- edges drawn behind the bubble nodes -->
+              <svg viewBox="0 0 100 60" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;inset:var(--ax-space-5) var(--ax-space-5) 0;width:calc(100% - var(--ax-space-5) * 2);height:300px;pointer-events:none;opacity:.5;">
+                <line x1="50" y1="30" x2="22" y2="14" stroke="var(--ax-border-strong)" stroke-width="0.5"/>
+                <line x1="50" y1="30" x2="80" y2="16" stroke="var(--ax-border-strong)" stroke-width="0.5"/>
+                <line x1="50" y1="30" x2="26" y2="48" stroke="var(--ax-border-strong)" stroke-width="0.5"/>
+                <line x1="50" y1="30" x2="78" y2="46" stroke="var(--ax-border-strong)" stroke-width="0.5"/>
+                <line x1="22" y1="14" x2="26" y2="48" stroke="var(--ax-border-strong)" stroke-width="0.5"/>
+                <line x1="80" y1="16" x2="78" y2="46" stroke="var(--ax-border-strong)" stroke-width="0.5"/>
+              </svg>
+              <div id="ec-graph" style="position:relative;" aria-label="Network graph of service dependencies"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Conversion funnel">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Funnel</span>
+                <h2 class="ax-card__title">Signup Funnel</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Visited</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">12,480</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:100%;background:var(--ax-chart-1);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Signed up</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">4,310</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:69%;background:var(--ax-chart-2);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Activated</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">2,640</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:51%;background:var(--ax-chart-3);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Subscribed</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">1,180</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:34%;background:var(--ax-chart-4);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Renewed</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">820</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:23%;background:var(--ax-chart-5);"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── ROW: Treemap (8) + heatmap (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Revenue treemap by category and product">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Treemap</span>
+                <h2 class="ax-card__title">Revenue by Product</h2>
+                <p class="ax-card__subtitle">Tile area = revenue share · Aperture Goods catalogue</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ec-treemap" aria-label="Treemap of revenue by product"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Activity heatmap">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Heatmap</span>
+                <h2 class="ax-card__title">Active Hours</h2>
+                <p class="ax-card__subtitle">Sessions by weekday × slot</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ec-heatmap" aria-label="Heatmap of active hours by weekday and time slot"></div>
+            </div>
+          </section>
+
+          <!-- ───── ROW: Sunburst-style nested radial (4) + scatter (8) ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Nested allocation radial">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Radial</span>
+                <h2 class="ax-card__title">Spend Mix</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ec-radial" aria-label="Radial bar chart of spend allocation"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Cohort scatter chart">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Scatter</span>
+                <h2 class="ax-card__title">Cohort Value</h2>
+                <p class="ax-card__subtitle">Tenure (weeks) × lifetime value · by segment</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ec-scatter" aria-label="Scatter chart of customer cohorts by tenure and lifetime value"></div>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // ── Gauges (radialBar) ──
+    const gauge = (id, val, color, label) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      renderChart(el, 'radialBar', [val], {
+        height: 300, legend: 'none',
+        apex: {
+          colors: [color],
+          plotOptions: { radialBar: {
+            startAngle: -135, endAngle: 135, hollow: { size: '60%' },
+            track: { background: cv('--ax-surface-subtle'), strokeWidth: '100%' },
+            dataLabels: {
+              name: { offsetY: 26, color: cv('--ax-text-muted'), fontFamily: cv('--ax-font-sans'), fontSize: '13px' },
+              value: { offsetY: -8, color: cv('--ax-text-strong'), fontFamily: cv('--ax-font-mono'), fontSize: '28px', fontWeight: 700, formatter: (v) => v + '%' },
+            },
+          } },
+          labels: [label],
+          stroke: { lineCap: 'round' },
+        },
+      });
+    };
+    gauge('ec-gauge-1', 82, cv('--ax-success-500'), 'Healthy');
+    gauge('ec-gauge-2', 67, cv('--ax-warning-500'), 'SLA met');
+
+    // Multi-metric radial
+    const g3 = document.getElementById('ec-gauge-3');
+    if (g3) renderChart(g3, 'radialBar', [78, 64, 41], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3')],
+        labels: ['CPU', 'Memory', 'Disk'],
+        plotOptions: { radialBar: {
+          hollow: { size: '40%' },
+          track: { background: cv('--ax-surface-subtle') },
+          dataLabels: {
+            name: { fontFamily: cv('--ax-font-sans'), color: cv('--ax-text-muted') },
+            value: { fontFamily: cv('--ax-font-mono'), color: cv('--ax-text-strong'), fontWeight: 600 },
+            total: { show: true, label: 'Avg', formatter: () => '61%' },
+          },
+        } },
+        stroke: { lineCap: 'round' },
+      },
+    });
+
+    // ── Graph (force) — emulated with a labelled bubble layout (nodes sized by traffic) ──
+    const graph = document.getElementById('ec-graph');
+    if (graph) renderChart(graph, 'bubble', [
+      { name: 'Gateway', data: [[50, 30, 40]] },
+      { name: 'Auth', data: [[22, 46, 22]] },
+      { name: 'Orders', data: [[80, 44, 28]] },
+      { name: 'Catalog', data: [[26, 12, 24]] },
+      { name: 'Payments', data: [[78, 14, 26]] },
+    ], {
+      height: 300, legend: 'bottom',
+      apex: {
+        colors: [cv('--ax-accent'), cv('--ax-chart-2'), cv('--ax-chart-1'), cv('--ax-chart-4'), cv('--ax-chart-3')],
+        fill: { opacity: 0.82 },
+        dataLabels: { enabled: false },
+        xaxis: { min: 0, max: 100, tickAmount: 5, labels: { show: false }, axisBorder: { show: false } },
+        yaxis: { min: 0, max: 60, labels: { show: false } },
+        grid: { xaxis: { lines: { show: false } }, yaxis: { lines: { show: false } } },
+      },
+    });
+
+    // ── Treemap ──
+    const treemap = document.getElementById('ec-treemap');
+    if (treemap) renderChart(treemap, 'treemap', [{ data: [
+      { x: 'Brass Task Light', y: 284 },
+      { x: 'Aperture Desk Lamp', y: 246 },
+      { x: 'Matte Ceramic Mug', y: 188 },
+      { x: 'Walnut Monitor Riser', y: 164 },
+      { x: 'Stoneware Carafe', y: 132 },
+      { x: 'Felt Laptop Sleeve', y: 118 },
+      { x: 'Grid Notebook A5', y: 96 },
+      { x: 'Oak Pen Tray', y: 74 },
+      { x: 'Linen Pinboard', y: 58 },
+      { x: 'Cork Desk Mat', y: 44 },
+    ] }], {
+      height: 320, legend: 'none',
+      apex: {
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3'), cv('--ax-chart-4'), cv('--ax-chart-5'), cv('--ax-chart-6')],
+        plotOptions: { treemap: { distributed: true, enableShades: false } },
+        dataLabels: { enabled: true, style: { fontFamily: cv('--ax-font-sans'), fontSize: '12px' } },
+        stroke: { width: 2, colors: [cv('--ax-surface-solid')] },
+      },
+    });
+
+    // ── Heatmap ──
+    const heatmap = document.getElementById('ec-heatmap');
+    if (heatmap) {
+      const slots = ['00–06', '06–12', '12–18', '18–24'];
+      const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+      const grid = [
+        [8, 42, 56, 30], [10, 46, 60, 34], [9, 44, 58, 32],
+        [12, 50, 64, 38], [14, 52, 62, 40], [20, 30, 36, 28], [18, 24, 30, 22],
+      ];
+      const series = slots.map((s, si) => ({ name: s, data: days.map((d, di) => ({ x: d, y: grid[di][si] })) }));
+      renderChart(heatmap, 'heatmap', series, {
+        height: 320, legend: 'none',
+        apex: {
+          colors: [cv('--ax-accent')],
+          plotOptions: { heatmap: { radius: 4, enableShades: true, shadeIntensity: 0.6 } },
+          stroke: { width: 2, colors: [cv('--ax-surface-solid')] },
+          dataLabels: { enabled: false },
+        },
+      });
+    }
+
+    // ── Spend mix radial ──
+    const radial = document.getElementById('ec-radial');
+    if (radial) renderChart(radial, 'radialBar', [62, 48, 33, 21], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3'), cv('--ax-chart-4')],
+        labels: ['Product', 'Ads', 'Ops', 'R&D'],
+        plotOptions: { radialBar: {
+          hollow: { size: '34%' },
+          track: { background: cv('--ax-surface-subtle') },
+          dataLabels: {
+            name: { fontFamily: cv('--ax-font-sans'), color: cv('--ax-text-muted'), fontSize: '12px' },
+            value: { fontFamily: cv('--ax-font-mono'), color: cv('--ax-text-strong'), fontWeight: 600 },
+            total: { show: true, label: 'Mix', formatter: () => '100%' },
+          },
+        } },
+        stroke: { lineCap: 'round' },
+      },
+    });
+
+    // ── Scatter ──
+    const scatter = document.getElementById('ec-scatter');
+    if (scatter) renderChart(scatter, 'scatter', [
+      { name: 'VIP', data: [[42, 6180], [38, 5980], [44, 4720], [40, 5240]] },
+      { name: 'Returning', data: [[18, 1840], [22, 2110], [16, 1490], [26, 2870], [20, 1640]] },
+      { name: 'New', data: [[2, 80], [3, 24], [4, 210], [1, 60], [5, 320]] },
+    ], {
+      height: 320, legend: 'bottom',
+      apex: {
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3')],
+        markers: { size: 6 },
+        xaxis: { tickAmount: 6, title: { text: 'Tenure (weeks)', style: { color: cv('--ax-text-subtle'), fontFamily: cv('--ax-font-sans') } }, labels: { formatter: (v) => Math.round(v) } },
+        yaxis: { labels: { formatter: (v) => '$' + (v / 1000).toFixed(1) + 'K' } },
+      },
+    });
+  </script>
+{% endblock %}

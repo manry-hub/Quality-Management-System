@@ -1,0 +1,164 @@
+{% extends 'pages/auth/_standalone.html' %}
+
+{# Coming Soon (pages) — off-app status page (no shell). Faithful re-expression of
+   src/html/pages/coming-soon.html: brand + launching badge, headline, live
+   countdown (4 units), notify form with honeypot + validation, subscribed
+   confirmation and a social row. Extends the shared _standalone.html. Reference
+   hrefs converted to clean Django routes. #}
+
+{% block auth_body %}
+  <div style="position:fixed;top:var(--ax-space-5);right:var(--ax-space-6);z-index:5;display:flex;gap:var(--ax-space-2);align-items:center;" x-data="{}">
+    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Toggle color theme"
+            @click="document.documentElement.setAttribute('data-ax-theme', document.documentElement.getAttribute('data-ax-theme')==='dark' ? 'light' : 'dark')">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg>
+    </button>
+    <a class="ax-btn ax-btn--ghost ax-btn--sm" href="/">
+      <span class="ax-btn__label">Skip preview</span>
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg>
+    </a>
+  </div>
+
+  <main class="ax-center" id="ax-main" style="position:relative;z-index:1;width:100%;padding:var(--ax-space-6);"
+        x-data="comingSoon()" x-init="init()">
+    <div style="width:100%;max-width:640px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--ax-space-7);">
+
+      <!-- brand + status pill -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-4);">
+        <a href="/" aria-label="Vireo home" style="display:inline-flex;align-items:center;gap:var(--ax-space-3);text-decoration:none;">
+          <span aria-hidden="true" style="display:inline-grid;place-items:center;width:42px;height:42px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);">
+            <svg viewBox="0 0 32 32" width="25" height="25" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+          </span>
+          <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-xl);color:var(--ax-text-strong);letter-spacing:.01em;">Vireo</span>
+        </a>
+        <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 13a8 8 0 0 1 7 7a6 6 0 0 0 3 -5a9 9 0 0 0 6 -8a3 3 0 0 0 -3 -3a9 9 0 0 0 -8 6a6 6 0 0 0 -5 3"/><path d="M7 14a6 6 0 0 0 -3 6a6 6 0 0 0 6 -3"/></svg>
+          Launching soon
+        </span>
+      </div>
+
+      <!-- headline + subhead -->
+      <div>
+        <h1 x-text="live ? 'We\'re live.' : 'Something precise is on the way.'"
+            style="margin:0;font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-3xl);line-height:1.1;color:var(--ax-text-strong);letter-spacing:-.01em;">
+          Something precise is on the way.
+        </h1>
+        <p style="margin:var(--ax-space-4) auto 0;max-width:48ch;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.55;">
+          The next Vireo release brings a redesigned analytics workspace, native dark glass surfaces, and 12 retunable accents. Be the first to know when it ships.
+        </p>
+      </div>
+
+      <!-- countdown -->
+      <div class="ax-num" role="timer" aria-label="Time remaining until launch"
+           style="display:grid;grid-template-columns:repeat(4, 1fr);gap:var(--ax-space-3);width:100%;max-width:460px;">
+        <template x-for="unit in units" :key="unit.key">
+          <div class="ax-glass" style="border-radius:var(--ax-radius-lg);padding:var(--ax-space-4) var(--ax-space-2);display:flex;flex-direction:column;align-items:center;gap:6px;">
+            <span x-text="unit.value" class="ax-num"
+                  style="font-family:var(--ax-font-mono);font-weight:600;font-size:var(--ax-num-kpi, var(--ax-text-3xl));line-height:1;color:var(--ax-text-strong);">00</span>
+            <span x-text="unit.label" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.08em;">Days</span>
+          </div>
+        </template>
+      </div>
+
+      <!-- notify form -->
+      <form class="ax-notify" style="width:100%;max-width:440px;" novalidate
+            @submit.prevent="submit()" x-show="!subscribed" x-transition.opacity>
+        <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+          <div class="ax-input-group" :class="error && 'is-invalid'" style="height:46px;">
+            <span class="ax-input-group__addon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg>
+            </span>
+            <label for="cs-email" class="ax-visually-hidden">Email address</label>
+            <input id="cs-email" type="email" class="ax-input" x-model="email" name="email"
+                   placeholder="you@company.com" autocomplete="email"
+                   :aria-invalid="error ? 'true' : 'false'" aria-describedby="cs-email-msg" />
+            <!-- honeypot (must stay empty) -->
+            <input type="text" x-model="hp" name="company_url" tabindex="-1" autocomplete="off" aria-hidden="true"
+                   style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0;" />
+            <button type="submit" class="ax-btn ax-btn--primary" style="border-radius:0;" :disabled="sending">
+              <svg x-show="sending" x-cloak class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="animation:ax-spin .8s linear infinite;"><path d="M12 3a9 9 0 1 0 9 9"/></svg>
+              <span class="ax-btn__label" x-text="sending ? 'Adding…' : 'Notify me'">Notify me</span>
+            </button>
+          </div>
+          <p id="cs-email-msg" x-show="error" x-cloak class="ax-error" role="alert"
+             style="margin:0;text-align:start;font-size:var(--ax-text-xs);" x-text="error"></p>
+        </div>
+      </form>
+
+      <!-- subscribed confirmation (replaces form, no CLS) -->
+      <div x-show="subscribed" x-cloak x-transition.opacity aria-live="polite"
+           class="ax-glass" style="width:100%;max-width:440px;border-radius:var(--ax-radius-lg);padding:var(--ax-space-4) var(--ax-space-5);display:flex;align-items:center;gap:var(--ax-space-3);text-align:start;">
+        <span style="display:inline-grid;place-items:center;width:36px;height:36px;border-radius:50%;background:var(--ax-success-50);color:var(--ax-success-500);flex:0 0 auto;">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg>
+        </span>
+        <div>
+          <p style="margin:0;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">You're on the list</p>
+          <p style="margin:2px 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">We'll email <b class="ax-num" style="font-family:var(--ax-font-mono);" x-text="email"></b> the moment we launch.</p>
+        </div>
+      </div>
+
+      <!-- social row -->
+      <div style="display:flex;align-items:center;gap:var(--ax-space-2);">
+        <span style="font-size:var(--ax-text-sm);color:var(--ax-text-subtle);margin-inline-end:var(--ax-space-2);">Follow along</span>
+        <a class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" href="#" aria-label="Vireo on X">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l11.733 16h4.267l-11.733 -16l-4.267 0"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
+        </a>
+        <a class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" href="#" aria-label="Vireo on GitHub">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"/></svg>
+        </a>
+        <a class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" href="#" aria-label="Vireo on Dribbble">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 3.6c5 6 7 10.5 7.5 16.2"/><path d="M6.4 19c3.5 -3.5 6 -6.5 14.5 -6.4"/><path d="M3.1 10.75c5 0 9.814 -.38 15.314 -5"/></svg>
+        </a>
+        <a class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" href="#" aria-label="Vireo on LinkedIn">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11v5"/><path d="M8 8v.01"/><path d="M12 16v-5"/><path d="M16 16v-3a2 2 0 1 0 -4 0"/><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10"/></svg>
+        </a>
+      </div>
+    </div>
+  </main>
+{% endblock %}
+
+{% block auth_scripts %}
+  <script>
+    function comingSoon() {
+      return {
+        target: Date.now() + 30 * 24 * 60 * 60 * 1000, // demo: 30 days from now
+        units: [
+          { key: 'd', label: 'Days', value: '00' },
+          { key: 'h', label: 'Hours', value: '00' },
+          { key: 'm', label: 'Minutes', value: '00' },
+          { key: 's', label: 'Seconds', value: '00' },
+        ],
+        live: false,
+        email: '', hp: '', error: '', sending: false, subscribed: false,
+        _timer: null,
+        init() {
+          this.tick();
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          // timestamp-diff each second (no accumulated drift); harmless under reduced motion (text-only).
+          this._timer = setInterval(() => this.tick(), 1000);
+        },
+        tick() {
+          let diff = Math.max(0, this.target - Date.now());
+          if (diff === 0) { this.live = true; }
+          const d = Math.floor(diff / 86400000); diff -= d * 86400000;
+          const h = Math.floor(diff / 3600000); diff -= h * 3600000;
+          const m = Math.floor(diff / 60000); diff -= m * 60000;
+          const s = Math.floor(diff / 1000);
+          const pad = (n) => String(n).padStart(2, '0');
+          this.units[0].value = pad(d);
+          this.units[1].value = pad(h);
+          this.units[2].value = pad(m);
+          this.units[3].value = pad(s);
+        },
+        submit() {
+          this.error = '';
+          if (this.hp) return; // honeypot tripped — silently ignore
+          const ok = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.email.trim());
+          if (!ok) { this.error = 'Enter a valid email address.'; return; }
+          this.sending = true;
+          // demo only — never hits the network; anti-enumeration generic success
+          setTimeout(() => { this.sending = false; this.subscribed = true; }, 700);
+        },
+      };
+    }
+  </script>
+{% endblock %}

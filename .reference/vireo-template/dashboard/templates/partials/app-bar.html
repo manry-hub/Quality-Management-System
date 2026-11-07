@@ -1,0 +1,115 @@
+<!-- ============================================================ -->
+<!-- VIREO FULL-SCREEN APP BAR                                    -->
+<!-- Chrome for the 13 standalone app pages (pages/apps/**), which -->
+<!-- extend base-app.html instead of base.html.                   -->
+<!-- Replaces the sidebar + regular header entirely: brand (exit  -->
+<!-- to dashboard), app switcher, then the SAME utility cluster   -->
+<!-- the regular header uses, via the header-utils partial.       -->
+<!-- The cluster is NOT duplicated here: it lives in              -->
+<!-- partials/header-utils.html and is included by both chromes.  -->
+<!--                                                              -->
+<!-- Carries its own .ax-appbar class (NOT .ax-header) so the        -->
+<!-- dashboard shell-style / header-position rules can never move it; -->
+<!-- schemes.css widens its scheme selectors to cover both.           -->
+<!-- ============================================================ -->
+<header class="ax-appbar" role="banner" x-data="axHeader()">
+
+  <!-- 1 · BRAND — the way out of the app, back to the dashboard -->
+  <a class="ax-appbar__brand" href="/" aria-label="Exit to dashboard">
+    <span class="ax-appbar__mark" aria-hidden="true">
+      <svg class="ax-icon" viewBox="0 0 32 32" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmkapp" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmkapp)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+    </span>
+    <span class="ax-appbar__wordmark">VIREO</span>
+    <svg class="ax-icon ax-appbar__exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 6l-6 6l6 6" /><path d="M21 12h-18" /></svg>
+  </a>
+
+  <span class="ax-appbar__divider" aria-hidden="true"></span>
+
+  <!-- 2 · APP SWITCHER — current app name + jump to any other app.
+       x-init marks the current entry by comparing each row's data-ax-app
+       against <html data-ax-route>, so no per-page markup is needed. -->
+  <div class="ax-appswitch" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()"
+       x-init="$el.querySelectorAll('[data-ax-app]').forEach(a => { if (a.dataset.axApp === document.documentElement.dataset.axRoute) { a.classList.add('is-active'); a.setAttribute('aria-current', 'page'); } })">
+    <button type="button" class="ax-appswitch__trigger" @click="toggle()" aria-haspopup="menu" :aria-expanded="open" aria-controls="ax-appswitch-menu">
+      <span class="ax-appswitch__name">{{ ax_title }}</span>
+      <svg class="ax-icon ax-appswitch__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M6 9l6 6l6 -6" /></svg>
+    </button>
+
+    <div id="ax-appswitch-menu" class="ax-dropdown ax-appswitch__menu" role="menu" x-show="open" x-transition.opacity.duration.150ms x-cloak>
+      <p class="ax-dropdown__head">Switch app</p>
+
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/email" href="/apps/email/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10" /><path d="M3 7l9 6l9 -6" /></svg>
+        <span class="ax-appswitch__label">Email</span>
+        <span class="ax-badge ax-badge--accent ax-badge--count">6</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/chat" href="/apps/chat/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293l-4.7 1" /></svg>
+        <span class="ax-appswitch__label">Chat</span>
+        <span class="ax-badge ax-badge--accent ax-badge--count">4</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/calendar" href="/apps/calendar/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M11 15h1" /><path d="M12 15v3" /></svg>
+        <span class="ax-appswitch__label">Calendar</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/kanban" href="/apps/kanban/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M4 4l6 0" /><path d="M14 4l6 0" /><path d="M4 10a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -8" /><path d="M14 10a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2" /></svg>
+        <span class="ax-appswitch__label">Kanban Board</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/todo" href="/apps/todo/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" /></svg>
+        <span class="ax-appswitch__label">To-Do</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/tasks" href="/apps/tasks/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M11 6l9 0" /><path d="M11 12l9 0" /><path d="M11 18l9 0" /><path d="M4 6l1 1l2 -2" /><path d="M4 12l1 1l2 -2" /><path d="M4 18l1 1l2 -2" /></svg>
+        <span class="ax-appswitch__label">Task List View</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/file-manager" href="/apps/file-manager/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-11a2 2 0 0 1 2 -2" /></svg>
+        <span class="ax-appswitch__label">File Manager</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/gallery" href="/apps/gallery/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M15 8h.01" /><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12" /><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5" /><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3" /></svg>
+        <span class="ax-appswitch__label">Gallery</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/contacts" href="/apps/contacts/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M20 6v12a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2" /><path d="M10 16h6" /><path d="M11 11a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M4 8h3" /><path d="M4 12h3" /><path d="M4 16h3" /></svg>
+        <span class="ax-appswitch__label">Contacts</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/notes" href="/apps/notes/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 5a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2l0 -14" /><path d="M9 7l6 0" /><path d="M9 11l6 0" /><path d="M9 15l4 0" /></svg>
+        <span class="ax-appswitch__label">Notes</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/media-player" href="/apps/media-player/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M7 4v16l13 -8z" /></svg>
+        <span class="ax-appswitch__label">Media Player</span>
+      </a>
+
+      <div class="ax-dropdown__divider" role="separator"></div>
+      <p class="ax-dropdown__head">Mail</p>
+
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/email-compose" href="/apps/email-compose/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" /><path d="M13.5 6.5l4 4" /></svg>
+        <span class="ax-appswitch__label">Compose</span>
+      </a>
+      <a class="ax-appswitch__item" role="menuitem" data-ax-app="apps/email-settings" href="/apps/email-settings/">
+        <svg class="ax-icon ax-appswitch__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+        <span class="ax-appswitch__label">Email Settings</span>
+      </a>
+
+      <a class="ax-dropdown__foot" href="/">Back to dashboard</a>
+    </div>
+  </div>
+
+  <!-- 3 · COMMAND SEARCH (⌘K trigger) — same control as the regular header -->
+  <button type="button" class="ax-search ax-search--app" @click="$dispatch('ax-command-open')" aria-haspopup="dialog" aria-controls="ax-command" aria-label="Search or jump to">
+    <svg class="ax-icon ax-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" /><path d="M21 21l-6 -6" /></svg>
+    <span class="ax-search__placeholder">Search or jump to…</span>
+    <kbd class="ax-search__keycap">⌘K</kbd>
+  </button>
+
+  <span class="ax-header__spacer"></span>
+
+  <!-- ===== RIGHT UTILITY CLUSTER — shared with partials/header.html ===== -->
+  {% include 'partials/header-utils.html' %}
+</header>

@@ -1,0 +1,180 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Incoming Quality Control (IQC){% endblock %}
+
+{% block content %}
+<div x-data="{ openModal: null }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Incoming QC & Resin Acceptance</h1>
+        <p class="ax-page-head__subtitle">Raw Polymer Chemical &amp; Melt Flow Verification Terminal · IATF 16949 §8.4.2</p>
+      </div>
+      <div class="ax-page-head__actions">
+        <a href="{% url 'iqc:index' %}" class="ax-btn {% if not status_filter %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+          All ({{ tasks.count }})
+        </a>
+        <a href="{% url 'iqc:index' %}?status=PENDING_INSPECTION" class="ax-btn {% if status_filter == 'PENDING_INSPECTION' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+          Pending ({{ pending_count }})
+        </a>
+        <a href="{% url 'iqc:index' %}?status=ACCEPTED" class="ax-btn {% if status_filter == 'ACCEPTED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+          Accepted ({{ accepted_count }})
+        </a>
+        <a href="{% url 'iqc:index' %}?status=REJECTED" class="ax-btn {% if status_filter == 'REJECTED' %}ax-btn--danger{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+          Rejected ({{ rejected_count }})
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ TABLE CARD ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="IQC Receiving Tasks">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Dock Receiving Queue</span>
+          <h2 class="ax-card__title">Polymer Raw Material Lots</h2>
+          <p class="ax-card__subtitle">Mandatory moisture analyzer &amp; MFI melt index clearance before staging to injection machines</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">LOT NUMBER</th>
+                <th class="ax-table__th" scope="col">RESIN MATERIAL</th>
+                <th class="ax-table__th" scope="col">SUPPLIER</th>
+                <th class="ax-table__th" scope="col">DELIVERED</th>
+                <th class="ax-table__th" scope="col">MOISTURE (%)</th>
+                <th class="ax-table__th" scope="col">MFI (g/10min)</th>
+                <th class="ax-table__th" scope="col">STATUS</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for task in tasks %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ task.lot_number }}
+                </td>
+                <td class="ax-table__td">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">{{ task.material.material_code }}</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ task.material.material_name }} ({{ task.material.polymer_type }})</div>
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-sm);">{{ task.supplier_code }}</td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-sm);">{{ task.quantity_kg }} kg</td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                  {% if task.physical_moisture_pct %}
+                    <span style="font-weight:var(--ax-weight-semibold);{% if task.physical_moisture_pct > task.material.target_moisture_max_pct %}color:var(--ax-danger-500);{% else %}color:var(--ax-success-500);{% endif %}">
+                      {{ task.physical_moisture_pct }}%
+                    </span>
+                  {% else %}
+                    <span style="color:var(--ax-text-subtle);">Pending Test</span>
+                  {% endif %}
+                  <div style="color:var(--ax-text-muted);font-size:11px;">Max: {{ task.material.target_moisture_max_pct }}%</div>
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                  {% if task.physical_mfi_value %}
+                    <span style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ task.physical_mfi_value }}</span>
+                  {% else %}
+                    <span style="color:var(--ax-text-subtle);">Pending Test</span>
+                  {% endif %}
+                  <div style="color:var(--ax-text-muted);font-size:11px;">Nom: {{ task.material.target_mfi_nominal }} &plusmn; {{ task.material.target_mfi_tolerance }}</div>
+                </td>
+                <td class="ax-table__td">
+                  {% if task.status == 'ACCEPTED' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+                    <span class="ax-badge__dot"></span>ACCEPTED
+                  </span>
+                  {% elif task.status == 'REJECTED' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">
+                    <span class="ax-badge__dot"></span>REJECTED
+                  </span>
+                  {% else %}
+                  <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">
+                    <span class="ax-badge__dot"></span>PENDING
+                  </span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  {% if task.status == 'PENDING_INSPECTION' %}
+                  <button type="button" class="ax-btn ax-btn--primary ax-btn--sm" @click="openModal = '{{ task.id }}'">
+                    Verify &amp; Release
+                  </button>
+                  {% else %}
+                  <span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">{{ task.disposition }}</span>
+                  {% endif %}
+                </td>
+              </tr>
+
+              <!-- Alpine Modal Dialog for Task Disposition -->
+              <div x-show="openModal === '{{ task.id }}'" x-cloak style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+                <div class="ax-card" @click.outside="openModal = null" style="max-width:540px;width:100%;background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-xl);padding:var(--ax-space-6);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-4);">
+                    <h3 style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin:0;">
+                      IQC Lab Inspection &mdash; Lot #{{ task.lot_number }}
+                    </h3>
+                    <button type="button" class="ax-icon-btn" @click="openModal = null" aria-label="Close modal">
+                      <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+
+                  <form method="POST" action="{% url 'iqc:disposition' task.id %}">
+                    {% csrf_token %}
+                    <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <div style="padding:var(--ax-space-3);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-md);font-size:var(--ax-text-xs);border:1px solid var(--ax-border);">
+                        <strong>Material Specification:</strong> {{ task.material.material_code }} ({{ task.material.polymer_type }})<br>
+                        Max Moisture: <code>{{ task.material.target_moisture_max_pct }}%</code> | Target MFI: <code>{{ task.material.target_mfi_nominal }} &plusmn; {{ task.material.target_mfi_tolerance }} g/10min</code>
+                      </div>
+
+                      <div class="ax-field">
+                        <label class="ax-label">Tested Moisture Content (%) <span class="ax-field__required">*</span></label>
+                        <input type="number" step="0.0001" name="moisture_pct" class="ax-input ax-mono" placeholder="e.g. 0.0120" required value="{{ task.material.target_moisture_max_pct }}">
+                        <span class="ax-help">Standard ASTM D6980 moisture analyzer reading</span>
+                      </div>
+
+                      <div class="ax-field">
+                        <label class="ax-label">Tested Melt Flow Index (MFI g/10min) <span class="ax-field__required">*</span></label>
+                        <input type="number" step="0.001" name="mfi_value" class="ax-input ax-mono" placeholder="e.g. 18.000" required value="{{ task.material.target_mfi_nominal }}">
+                        <span class="ax-help">ISO 1133 / ASTM D1238 test result</span>
+                      </div>
+
+                      <div class="ax-field">
+                        <label class="ax-label">Quality Disposition <span class="ax-field__required">*</span></label>
+                        <select name="disposition" class="ax-input" required>
+                          <option value="RELEASE_TO_AVAILABLE">RELEASE TO AVAILABLE (Conforming &mdash; Stage to Machines)</option>
+                          <option value="QUARANTINE_REJECTED">QUARANTINE / REJECTED (Non-conforming &mdash; Generate SNCR)</option>
+                        </select>
+                      </div>
+
+                      <div class="ax-field">
+                        <label class="ax-label">Rejection Reason (If Quarantined)</label>
+                        <textarea name="rejection_reason" class="ax-input" rows="2" placeholder="Describe any defect, contamination, or moisture breach..."></textarea>
+                      </div>
+                    </div>
+
+                    <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);margin-top:var(--ax-space-6);">
+                      <button type="button" class="ax-btn ax-btn--secondary" @click="openModal = null">Cancel</button>
+                      <button type="submit" class="ax-btn ax-btn--primary">Submit &amp; Dispatch to WMS</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              {% empty %}
+              <tr class="ax-table__row">
+                <td colspan="8" style="text-align:center;padding:var(--ax-space-8);color:var(--ax-text-muted);">
+                  No incoming resin shipments found in this category.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

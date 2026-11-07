@@ -1,0 +1,354 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axJobsList()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Jobs List</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">48</span> open postings · <span class="ax-num">1,284</span> applicants this month · <span class="ax-num">6</span> closing this week.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <a class="ax-btn ax-btn--primary" href="/jobs/job-post/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Post a job</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── FILTER RAIL (3) ───── -->
+          <aside class="ax-card ax-col--3" role="region" aria-label="Filters" style="align-self:start;position:sticky;top:var(--ax-space-5);">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Filters</h2></div>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="resetFilters()" x-show="filtersActive()" x-cloak>Clear all</button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- keyword -->
+              <div class="ax-field" style="margin:0;">
+                <label class="ax-label" for="f-keyword">Keyword</label>
+                <div style="position:relative;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:17px;height:17px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input id="f-keyword" type="search" class="ax-input" placeholder="Title, skill, team…" x-model="q" style="padding-inline-start:35px;">
+                </div>
+              </div>
+
+              <!-- location -->
+              <div class="ax-field" style="margin:0;">
+                <label class="ax-label" for="f-location">Location</label>
+                <select id="f-location" class="ax-select" x-model="fLocation">
+                  <option value="">Any location</option>
+                  <option value="remote">Remote</option>
+                  <option value="berlin">Berlin, DE</option>
+                  <option value="london">London, UK</option>
+                  <option value="austin">Austin, US</option>
+                  <option value="lisbon">Lisbon, PT</option>
+                </select>
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- employment type -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-3);">Employment type</div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                  <template x-for="t in types" :key="t.id">
+                    <label class="ax-check"><input type="checkbox" class="ax-checkbox" :value="t.id" x-model="fTypes"><span style="font-size:var(--ax-text-sm);flex:1 1 auto;" x-text="t.name"></span><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="t.count"></span></label>
+                  </template>
+                </div>
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- department -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-3);">Department</div>
+                <ul class="ax-list ax-list--compact" style="gap:2px;">
+                  <template x-for="d in departments" :key="d.id">
+                    <li class="ax-list__row" style="border:0;padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);cursor:pointer;" :style="fDept===d.id ? 'background:var(--ax-accent-wash);' : ''" @click="fDept = (fDept===d.id ? '' : d.id)">
+                      <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);" :style="fDept===d.id ? 'color:var(--ax-accent);' : 'color:var(--ax-text);'" x-text="d.name"></span></span>
+                      <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="d.count"></span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- minimum salary -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <span class="ax-label">Min. salary</span>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">$<span x-text="fMinSalary"></span>K+</span>
+                </div>
+                <div class="ax-range">
+                  <div class="ax-range__track"><div class="ax-range__fill" :style="`width:${(fMinSalary/200)*100}%`"></div></div>
+                </div>
+                <input type="range" class="ax-range--native" min="0" max="200" step="5" x-model.number="fMinSalary" style="width:100%;margin-top:var(--ax-space-3);" aria-label="Minimum salary in thousands">
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- experience -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-3);">Experience level</div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-1);">
+                  <template x-for="lvl in levels" :key="lvl.id">
+                    <label class="ax-check" style="min-height:30px;"><input type="radio" name="exp" class="ax-radio" :value="lvl.id" x-model="fLevel"><span style="font-size:var(--ax-text-sm);" x-text="lvl.name"></span></label>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- ───── RESULTS (9) ───── -->
+          <section class="ax-card ax-col--9" role="region" aria-label="Job results">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Open positions</h2>
+                <p class="ax-card__subtitle"><span class="ax-num" x-text="filtered().length"></span> of <span class="ax-num">48</span> postings match</p>
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort jobs" style="min-width:150px;">
+                  <option value="relevance">Relevance</option>
+                  <option value="newest">Newest</option>
+                  <option value="salary">Highest salary</option>
+                  <option value="applicants">Most applicants</option>
+                </select>
+                <div class="ax-segment" role="group" aria-label="View mode">
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='cards').toString()" @click="view='cards'" aria-label="Card view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></svg>
+                  </button>
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='list').toString()" @click="view='list'" aria-label="List view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- active filter chips -->
+            <div class="ax-cluster" style="gap:var(--ax-space-2);padding:0 var(--ax-space-5) var(--ax-space-3);flex-wrap:wrap;" x-show="filtersActive()" x-cloak>
+              <template x-if="fLocation">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill"><span x-text="locationName(fLocation)"></span><button type="button" class="ax-badge__remove" aria-label="Clear location filter" @click="fLocation=''"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-for="t in fTypes" :key="t">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill"><span x-text="typeName(t)"></span><button type="button" class="ax-badge__remove" aria-label="Clear type filter" @click="fTypes = fTypes.filter(x=>x!==t)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-if="fDept">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill"><span x-text="deptName(fDept)"></span><button type="button" class="ax-badge__remove" aria-label="Clear department filter" @click="fDept=''"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-if="fMinSalary>0">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill">$<span class="ax-num" x-text="fMinSalary"></span>K+<button type="button" class="ax-badge__remove" aria-label="Clear salary filter" @click="fMinSalary=0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-if="fLevel">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill"><span x-text="levelName(fLevel)"></span><button type="button" class="ax-badge__remove" aria-label="Clear experience filter" @click="fLevel=''"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+            </div>
+
+            <div class="ax-card__body" style="padding-top:0;">
+
+              <!-- CARDS VIEW -->
+              <div class="ax-flex" x-show="view==='cards'" style="flex-direction:column;gap:var(--ax-space-4);">
+                <template x-for="j in filtered()" :key="j.id">
+                  <article class="ax-card ax-card--interactive" style="margin:0;">
+                    <div style="padding:var(--ax-space-5);display:flex;gap:var(--ax-space-4);flex-wrap:wrap;">
+                      <!-- company logo -->
+                      <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" :style="`background:color-mix(in oklab,${j.color} 18%,transparent);color:${j.color};flex:none;`">
+                        <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M9 8l1 0"/><path d="M9 12l1 0"/><path d="M9 16l1 0"/><path d="M14 8l1 0"/><path d="M14 12l1 0"/><path d="M14 16l1 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg>
+                      </span>
+                      <!-- body -->
+                      <div style="flex:1 1 280px;min-width:0;">
+                        <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);align-items:flex-start;">
+                          <div style="min-width:0;">
+                            <a href="/jobs/job-details/" style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);text-decoration:none;line-height:1.25;" x-text="j.title"></a>
+                            <div class="ax-cluster" style="gap:var(--ax-space-3);margin-top:4px;color:var(--ax-text-muted);font-size:var(--ax-text-sm);">
+                              <span style="font-weight:var(--ax-weight-medium);color:var(--ax-text);" x-text="j.company"></span>
+                              <span class="ax-cluster" style="gap:4px;"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg><span x-text="j.location"></span></span>
+                            </div>
+                          </div>
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="(j.saved ? 'Unsave ' : 'Save ') + j.title" @click="j.saved=!j.saved" :style="j.saved ? 'color:var(--ax-accent);' : ''">
+                            <svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="j.saved ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg>
+                          </button>
+                        </div>
+                        <!-- meta badges -->
+                        <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-3);flex-wrap:wrap;">
+                          <span class="ax-badge ax-badge--soft" :class="j.typeBadge" style="border-radius:var(--ax-radius-xs);" x-text="typeName(j.type)"></span>
+                          <span class="ax-badge ax-badge--soft ax-badge--neutral" style="border-radius:var(--ax-radius-xs);" x-text="levelName(j.level)"></span>
+                          <template x-for="s in j.skills" :key="s">
+                            <span class="ax-badge ax-badge--outline" style="border-radius:var(--ax-radius-xs);" x-text="s"></span>
+                          </template>
+                        </div>
+                      </div>
+                      <!-- right rail -->
+                      <div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;justify-content:space-between;gap:var(--ax-space-3);text-align:end;">
+                        <div>
+                          <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-md);" x-text="salaryRange(j)"></div>
+                          <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">per year</div>
+                        </div>
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);align-items:center;">
+                          <span class="ax-cluster" style="gap:4px;color:var(--ax-text-muted);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg><span class="ax-num" style="font-family:var(--ax-font-mono);" x-text="j.applicants"></span></span>
+                          <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="j.posted"></span>
+                          <a href="/jobs/job-details/" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill">View</a>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </template>
+              </div>
+
+              <!-- LIST VIEW -->
+              <div x-show="view==='list'" x-cloak class="ax-table-wrap" style="margin:0 calc(-1 * var(--ax-space-5));">
+                <table class="ax-table ax-table--hover">
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col">Position</th>
+                      <th class="ax-table__th" scope="col">Department</th>
+                      <th class="ax-table__th" scope="col">Type</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Salary</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Applicants</th>
+                      <th class="ax-table__th" scope="col">Posted</th>
+                      <th class="ax-table__th" scope="col" style="width:44px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="j in filtered()" :key="j.id">
+                      <tr class="ax-table__row">
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                            <span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${j.color} 18%,transparent);color:${j.color};`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/><path d="M9 8l1 0"/><path d="M9 12l1 0"/><path d="M14 8l1 0"/><path d="M14 12l1 0"/></svg></span>
+                            <div style="min-width:0;">
+                              <a href="/jobs/job-details/" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);text-decoration:none;" x-text="j.title"></a>
+                              <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);"><span x-text="j.company"></span> · <span x-text="j.location"></span></div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="ax-table__td" style="color:var(--ax-text-muted);" x-text="deptName(j.dept)"></td>
+                        <td class="ax-table__td"><span class="ax-badge ax-badge--soft" :class="j.typeBadge" style="border-radius:var(--ax-radius-xs);" x-text="typeName(j.type)"></span></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="salaryRange(j)"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="j.applicants"></td>
+                        <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="j.posted"></td>
+                        <td class="ax-table__td">
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Actions for ' + j.title"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></button>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- empty state -->
+              <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+                <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/><path d="M12 12l0 .01"/><path d="M3 13a20 20 0 0 0 18 0"/></svg></span>
+                <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No jobs match your filters</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Try broadening the salary range or clearing some filters.</p>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="resetFilters()">Clear all filters</button>
+              </div>
+            </div>
+
+            <!-- footer / pagination -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">Showing <span x-text="filtered().length"></span> of 48 postings</span>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" disabled aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <li><a href="#" class="ax-pagination__page is-active" aria-current="page">1</a></li>
+                  <li><a href="#" class="ax-pagination__page">2</a></li>
+                  <li><a href="#" class="ax-pagination__page">3</a></li>
+                  <li><span class="ax-pagination__ellipsis">…</span></li>
+                  <li><a href="#" class="ax-pagination__page">6</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+
+        
+
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axJobsList(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+            return {
+              q:'', sort:'relevance', view:'cards',
+              fLocation:'', fTypes:[], fDept:'', fMinSalary:0, fLevel:'',
+              types:[
+                { id:'full_time', name:'Full-time', count:31 },
+                { id:'part_time', name:'Part-time', count:6 },
+                { id:'contract', name:'Contract', count:8 },
+                { id:'internship', name:'Internship', count:3 },
+              ],
+              departments:[
+                { id:'eng', name:'Engineering', count:18 },
+                { id:'design', name:'Design', count:7 },
+                { id:'product', name:'Product', count:5 },
+                { id:'marketing', name:'Marketing', count:6 },
+                { id:'sales', name:'Sales', count:8 },
+                { id:'ops', name:'Operations', count:4 },
+              ],
+              levels:[
+                { id:'junior', name:'Junior (0–2 yrs)' },
+                { id:'mid', name:'Mid (3–5 yrs)' },
+                { id:'senior', name:'Senior (6–9 yrs)' },
+                { id:'lead', name:'Lead / Staff (10+ yrs)' },
+              ],
+              jobs:[
+                { id:1, title:'Senior Product Designer', company:'Northwind Labs', dept:'design', location:'Remote (EU)', loc:'remote', type:'full_time', typeBadge:'ax-badge--accent', level:'senior', min:95, max:120, applicants:38, posted:'2d ago', _o:0, saved:false, color:'#38BDF8', skills:['Design Systems','Figma','A11y'] },
+                { id:2, title:'Staff Frontend Engineer', company:'Helios Cloud', dept:'eng', location:'Berlin, DE', loc:'berlin', type:'full_time', typeBadge:'ax-badge--accent', level:'lead', min:130, max:170, applicants:64, posted:'4d ago', _o:1, saved:true, color:'#A78BFA', skills:['TypeScript','React','Vite'] },
+                { id:3, title:'Product Marketing Manager', company:'Lumen Brands', dept:'marketing', location:'Austin, US', loc:'austin', type:'full_time', typeBadge:'ax-badge--accent', level:'mid', min:78, max:96, applicants:21, posted:'1w ago', _o:2, saved:false, color:'#F472B6', skills:['GTM','Positioning','Analytics'] },
+                { id:4, title:'Backend Engineer (Contract)', company:'Vela Systems', dept:'eng', location:'Remote (Global)', loc:'remote', type:'contract', typeBadge:'ax-badge--warning', level:'mid', min:70, max:90, applicants:47, posted:'3d ago', _o:3, saved:false, color:'#FBBF24', skills:['Go','Postgres','gRPC'] },
+                { id:5, title:'UX Research Lead', company:'Northwind Labs', dept:'design', location:'London, UK', loc:'london', type:'full_time', typeBadge:'ax-badge--accent', level:'lead', min:105, max:135, applicants:19, posted:'5d ago', _o:4, saved:false, color:'#34D399', skills:['Discovery','Interviews','Synthesis'] },
+                { id:6, title:'Account Executive', company:'Quill & Co.', dept:'sales', location:'Lisbon, PT', loc:'lisbon', type:'full_time', typeBadge:'ax-badge--accent', level:'mid', min:60, max:85, applicants:33, posted:'6d ago', _o:5, saved:false, color:'#FB7185', skills:['SaaS','Pipeline','Negotiation'] },
+                { id:7, title:'Design Intern — Summer', company:'Lumen Brands', dept:'design', location:'Austin, US', loc:'austin', type:'internship', typeBadge:'ax-badge--info', level:'junior', min:36, max:42, applicants:88, posted:'1d ago', _o:6, saved:false, color:'#38BDF8', skills:['Figma','Prototyping'] },
+                { id:8, title:'Platform Reliability Engineer', company:'Helios Cloud', dept:'eng', location:'Remote (EU)', loc:'remote', type:'full_time', typeBadge:'ax-badge--accent', level:'senior', min:115, max:150, applicants:29, posted:'2w ago', _o:7, saved:false, color:'#A78BFA', skills:['Kubernetes','Terraform','SLOs'] },
+                { id:9, title:'Part-time Content Strategist', company:'Quill & Co.', dept:'marketing', location:'Remote (US)', loc:'remote', type:'part_time', typeBadge:'ax-badge--neutral', level:'mid', min:45, max:58, applicants:14, posted:'1w ago', _o:8, saved:false, color:'#FBBF24', skills:['SEO','Editorial'] },
+                { id:10, title:'Senior Product Manager', company:'Vela Systems', dept:'product', location:'Berlin, DE', loc:'berlin', type:'full_time', typeBadge:'ax-badge--accent', level:'senior', min:110, max:140, applicants:41, posted:'3d ago', _o:9, saved:false, color:'#34D399', skills:['Roadmap','Discovery','Metrics'] },
+              ],
+              locationName(id){ const m={remote:'Remote',berlin:'Berlin, DE',london:'London, UK',austin:'Austin, US',lisbon:'Lisbon, PT'}; return m[id]||id; },
+              typeName(id){ const t=this.types.find(x=>x.id===id); return t?t.name:id; },
+              deptName(id){ const d=this.departments.find(x=>x.id===id); return d?d.name:id; },
+              levelName(id){ const l=this.levels.find(x=>x.id===id); return l?l.name.replace(/\s*\(.*\)/,''):id; },
+              salaryRange(j){ return '$'+j.min+'K – $'+j.max+'K'; },
+              filtersActive(){ return this.fLocation || this.fTypes.length || this.fDept || this.fMinSalary>0 || this.fLevel; },
+              resetFilters(){ this.fLocation=''; this.fTypes=[]; this.fDept=''; this.fMinSalary=0; this.fLevel=''; },
+              filtered(){
+                let r = this.jobs.filter(j=>{
+                  const term=this.q.trim().toLowerCase();
+                  if(term && !(j.title.toLowerCase().includes(term) || j.company.toLowerCase().includes(term) || j.skills.join(' ').toLowerCase().includes(term))) return false;
+                  if(this.fLocation && j.loc!==this.fLocation) return false;
+                  if(this.fTypes.length && !this.fTypes.includes(j.type)) return false;
+                  if(this.fDept && j.dept!==this.fDept) return false;
+                  if(this.fMinSalary && j.max < this.fMinSalary) return false;
+                  if(this.fLevel && j.level!==this.fLevel) return false;
+                  return true;
+                });
+                const by={
+                  'newest':(a,b)=>a._o-b._o,
+                  'salary':(a,b)=>b.max-a.max,
+                  'applicants':(a,b)=>b.applicants-a.applicants,
+                };
+                if(by[this.sort]) r=[...r].sort(by[this.sort]);
+                return r;
+              },
+            };
+          }
+        </script>
+{% endblock %}

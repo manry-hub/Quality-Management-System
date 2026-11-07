@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Tooltips</h1>
+              <p class="ax-page-head__subtitle">Glassy hover bubbles in four placements, with inverse, rich &amp; shortcut variants — every surface is a role token, so all 12 accents retheme for free.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/notifications/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+                <span class="ax-btn__label">Notifications</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--primary"
+                x-data="{ pinned:false }" :class="{ 'is-loading': false }"
+                @click="pinned=!pinned; $toast(pinned ? 'Tooltips pinned for preview' : 'Tooltips unpinned')">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4.5l-4 4l-4 1.5l-1.5 1.5l7 7l1.5 -1.5l1.5 -4l4 -4"/><path d="M9 15l-4.5 4.5"/><path d="M14.5 4l5.5 5.5"/></svg>
+                <span class="ax-btn__label" x-text="pinned ? 'Pinned' : 'Pin for preview'">Pin for preview</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Placements -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Tooltip placements">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Anchoring</span>
+                <h2 class="ax-card__title">Placements</h2>
+                <p class="ax-card__subtitle">Top, bottom, start &amp; end — hover or focus any trigger. The arrow always points back to its anchor.</p>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Keyboard &amp; pointer accessible</span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:var(--ax-space-6);place-items:center;padding-block:var(--ax-space-6);">
+
+                <!-- TOP -->
+                <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                  <button type="button" class="ax-btn ax-btn--secondary" @focus="show()" @blur="hide()" aria-describedby="tt-top">Top</button>
+                  <span id="tt-top" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity
+                    style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;">
+                    Anchored above
+                    <span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span>
+                  </span>
+                </div>
+
+                <!-- BOTTOM -->
+                <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                  <button type="button" class="ax-btn ax-btn--secondary" @focus="show()" @blur="hide()" aria-describedby="tt-bottom">Bottom</button>
+                  <span id="tt-bottom" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity
+                    style="inset-block-start:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;">
+                    Anchored below
+                    <span class="ax-tooltip__arrow" style="inset-block-start:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span>
+                  </span>
+                </div>
+
+                <!-- START -->
+                <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                  <button type="button" class="ax-btn ax-btn--secondary" @focus="show()" @blur="hide()" aria-describedby="tt-start">Start</button>
+                  <span id="tt-start" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity
+                    style="inset-inline-end:calc(100% + 10px);inset-block-start:50%;transform:translateY(-50%);white-space:nowrap;">
+                    Anchored start
+                    <span class="ax-tooltip__arrow" style="inset-inline-end:-4px;inset-block-start:50%;margin-block-start:-4px;"></span>
+                  </span>
+                </div>
+
+                <!-- END -->
+                <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                  <button type="button" class="ax-btn ax-btn--secondary" @focus="show()" @blur="hide()" aria-describedby="tt-end">End</button>
+                  <span id="tt-end" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity
+                    style="inset-inline-start:calc(100% + 10px);inset-block-start:50%;transform:translateY(-50%);white-space:nowrap;">
+                    Anchored end
+                    <span class="ax-tooltip__arrow" style="inset-inline-start:-4px;inset-block-start:50%;margin-block-start:-4px;"></span>
+                  </span>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+          <!-- Variants -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Tooltip variants">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Surface</span>
+                <h2 class="ax-card__title">Variants</h2>
+                <p class="ax-card__subtitle">Default glass overlay vs. high-contrast inverse bubble.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-wrap:wrap;gap:var(--ax-space-6);align-items:center;padding-block:var(--ax-space-6);">
+              <!-- glass default -->
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <button type="button" class="ax-btn ax-btn--secondary" @focus="show()" @blur="hide()" aria-describedby="tt-glass">Glass overlay</button>
+                <span id="tt-glass" role="tooltip" class="ax-tooltip" x-show="open" x-cloak x-transition.opacity
+                  style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;">
+                  Frosted surface-overlay
+                  <span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span>
+                </span>
+              </div>
+              <!-- inverse -->
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <button type="button" class="ax-btn ax-btn--secondary" @focus="show()" @blur="hide()" aria-describedby="tt-inv">Inverse</button>
+                <span id="tt-inv" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity
+                  style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;">
+                  High-contrast bubble
+                  <span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span>
+                </span>
+              </div>
+              <!-- with shortcut key -->
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <button type="button" class="ax-btn ax-btn--secondary" @focus="show()" @blur="hide()" aria-describedby="tt-key">With shortcut</button>
+                <span id="tt-key" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity
+                  style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;display:inline-flex;align-items:center;">
+                  Quick search
+                  <kbd class="ax-tooltip__key">⌘</kbd><kbd class="ax-tooltip__key">K</kbd>
+                  <span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Icon affordances -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Tooltips on icon affordances">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">In context</span>
+                <h2 class="ax-card__title">Icon-only controls</h2>
+                <p class="ax-card__subtitle">The most common use — a label for icon buttons that lack visible text.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-wrap:wrap;gap:var(--ax-space-4);align-items:center;padding-block:var(--ax-space-6);">
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" @focus="show()" @blur="hide()" aria-label="Bold" aria-describedby="tt-b">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"/><path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"/></svg>
+                </button>
+                <span id="tt-b" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;display:inline-flex;align-items:center;">Bold<kbd class="ax-tooltip__key">⌘B</kbd><span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span></span>
+              </div>
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" @focus="show()" @blur="hide()" aria-label="Italic" aria-describedby="tt-i">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5l6 0"/><path d="M7 19l6 0"/><path d="M14 5l-4 14"/></svg>
+                </button>
+                <span id="tt-i" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;display:inline-flex;align-items:center;">Italic<kbd class="ax-tooltip__key">⌘I</kbd><span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span></span>
+              </div>
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" @focus="show()" @blur="hide()" aria-label="Insert link" aria-describedby="tt-link">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6 -6"/><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"/><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"/></svg>
+                </button>
+                <span id="tt-link" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;display:inline-flex;align-items:center;">Insert link<kbd class="ax-tooltip__key">⌘K</kbd><span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span></span>
+              </div>
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" @focus="show()" @blur="hide()" aria-label="Delete" aria-describedby="tt-del">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                </button>
+                <span id="tt-del" role="tooltip" class="ax-tooltip ax-tooltip--inverse" x-show="open" x-cloak x-transition.opacity style="inset-block-end:calc(100% + 10px);inset-inline-start:50%;transform:translateX(-50%);white-space:nowrap;">Move to trash<span class="ax-tooltip__arrow" style="inset-block-end:-4px;inset-inline-start:50%;margin-inline-start:-4px;"></span></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Rich tooltip -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Rich tooltip">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Content</span>
+                <h2 class="ax-card__title">Rich tooltip</h2>
+                <p class="ax-card__subtitle">A title plus a line of supporting copy — still hover/focus driven.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;gap:var(--ax-space-6);flex-wrap:wrap;align-items:center;padding-block:var(--ax-space-6);">
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <span class="ax-avatar ax-avatar--lg" tabindex="0" role="img" aria-label="Ava Sutton, Operations Lead" @focus="show()" @blur="hide()" aria-describedby="tt-rich" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);cursor:default;">
+                  <span class="ax-avatar__initials">AS</span>
+                  <span class="ax-avatar__status ax-avatar__status--online"></span>
+                </span>
+                <span id="tt-rich" role="tooltip" class="ax-tooltip" x-show="open" x-cloak x-transition.opacity
+                  style="inset-inline-start:calc(100% + 12px);inset-block-start:50%;transform:translateY(-50%);max-width:220px;white-space:normal;text-align:start;">
+                  <b style="display:block;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Ava Sutton</b>
+                  <span style="display:block;color:var(--ax-text-muted);margin-block-start:2px;">Operations Lead · Online now</span>
+                  <span class="ax-tooltip__arrow" style="inset-inline-start:-4px;inset-block-start:50%;margin-block-start:-4px;"></span>
+                </span>
+              </div>
+              <div x-data="axTooltip" style="position:relative;" @mouseenter="show()" @mouseleave="hide()">
+                <span tabindex="0" class="ax-num" @focus="show()" @blur="hide()" aria-describedby="tt-metric"
+                  style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);cursor:default;border-block-end:1px dashed var(--ax-border-strong);">$748.2K</span>
+                <span id="tt-metric" role="tooltip" class="ax-tooltip" x-show="open" x-cloak x-transition.opacity
+                  style="inset-block-start:calc(100% + 10px);inset-inline-start:0;max-width:240px;white-space:normal;text-align:start;">
+                  <b style="display:block;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Gross revenue</b>
+                  <span style="display:block;color:var(--ax-text-muted);margin-block-start:2px;">Jul 2025 – Jun 2026 · <span class="ax-num" style="color:var(--ax-viz-emerald);">▲ 12.4%</span> vs. prior period</span>
+                  <span class="ax-tooltip__arrow" style="inset-block-start:-4px;inset-inline-start:18px;"></span>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Native title fallback -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Native title attribute fallback">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">No-JS fallback</span>
+                <h2 class="ax-card__title">Native <code class="ax-code">title</code></h2>
+                <p class="ax-card__subtitle">Where a styled bubble is overkill, the browser <code class="ax-code">title</code> still works everywhere.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);padding-block:var(--ax-space-6);">
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin:0;">
+                The <a class="ax-link" href="#" title="Server-Side Rendering — HTML generated on the server per request">SSR</a> rollout
+                shipped Tuesday, ahead of the <span style="text-decoration:underline dotted;text-underline-offset:3px;color:var(--ax-text);cursor:help;" title="Originally scheduled for Friday, Jun 13">planned date</span>.
+                Hover <a class="ax-link" href="#" title="Average Order Value across the trailing 30 days">AOV</a> for the metric definition.
+              </p>
+              <div class="ax-divider"></div>
+              <p style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin:0;">
+                Tip: pair the <code class="ax-code">title</code> attribute with <code class="ax-code">x-tooltip</code> to upgrade it to a styled bubble when Alpine is present.
+              </p>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends 'base.html' %}
+
+{# Search Results — faithful re-expression of src/html/pages/search-results.html:
+   facets sidebar (type filter, modified radios, tips), result tabs + linked
+   result list with mark() highlighting, no-results empty state and pagination.
+   axSearchResults() Alpine factory defined in the scripts block; x-data moved
+   onto a wrapping div since base.html owns the main element. #}
+
+{% block main %}
+<div x-data="axSearchResults()">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Results for "<span x-text="query"></span>"</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num" x-text="total" aria-live="polite"></span> results across pages, people, files and projects · <span class="ax-num">0.21s</span></p>
+            </div>
+            <div class="ax-page-head__actions">
+              <form role="search" class="ax-input-group" aria-label="Refine search" style="min-width:300px;height:40px;" @submit.prevent="query = (draft.trim() || query)">
+                <span class="ax-input-group__addon" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                <input type="search" class="ax-input" x-model="draft" placeholder="Refine your search…" aria-label="Refine search query" autocomplete="off">
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Facets sidebar ───── -->
+          <aside class="ax-col--3" aria-label="Search facets" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <section class="ax-card" role="region" aria-label="Filter by type">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Type</h2></div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <ul class="ax-list ax-list--compact" style="margin:0;">
+                  <template x-for="f in facets" :key="f.id">
+                    <li class="ax-list__row" style="cursor:pointer;border:0;padding-inline:var(--ax-space-2);border-radius:var(--ax-radius-sm);" :style="tab===f.id && 'background:var(--ax-accent-wash);'" @click="tab=f.id">
+                      <span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" :style="`background:color-mix(in oklab,${f.tint} 18%,transparent);color:${f.tint};`"><span style="display:contents;" x-html="f.icon"></span></span></span>
+                      <span class="ax-list__content"><span class="ax-list__title" :style="tab===f.id ? 'color:var(--ax-accent);' : ''" x-text="f.label"></span></span>
+                      <span class="ax-list__trailing ax-num ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" x-text="f.count"></span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+            </section>
+
+            <section class="ax-card" role="region" aria-label="Filter by date">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Modified</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                <label class="ax-check" style="font-size:var(--ax-text-sm);color:var(--ax-text);"><input type="radio" name="date" class="ax-radio" checked><span>Any time</span></label>
+                <label class="ax-check" style="font-size:var(--ax-text-sm);color:var(--ax-text);"><input type="radio" name="date" class="ax-radio"><span>Past 7 days</span></label>
+                <label class="ax-check" style="font-size:var(--ax-text-sm);color:var(--ax-text);"><input type="radio" name="date" class="ax-radio"><span>Past 30 days</span></label>
+                <label class="ax-check" style="font-size:var(--ax-text-sm);color:var(--ax-text);"><input type="radio" name="date" class="ax-radio"><span>This year</span></label>
+              </div>
+            </section>
+
+            <section class="ax-card" role="region" aria-label="Search tips">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                <div class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--ax-accent)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9h.01"/><path d="M11 12h1v4h1"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Search tips</b></div>
+                <p style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-muted);line-height:1.55;">Use <code class="ax-num">type:file</code> to scope, <code class="ax-num">"exact phrase"</code> for phrases, and <kbd class="ax-kbd">⌘</kbd><kbd class="ax-kbd">K</kbd> from anywhere to jump.</p>
+              </div>
+            </section>
+          </aside>
+
+          <!-- ───── Results column ───── -->
+          <div class="ax-col--9" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- Result tabs -->
+            <section class="ax-card" role="region" aria-label="Search results">
+              <div class="ax-card__header" style="padding-bottom:0;border-bottom:0;">
+                <div class="ax-tabs ax-tabs--scrollable" role="tablist" aria-label="Result categories" style="width:100%;">
+                  <div class="ax-tabs__list">
+                    <template x-for="f in facets" :key="'t'+f.id">
+                      <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="tab===f.id" :class="tab===f.id && 'is-active'" @click="tab=f.id">
+                        <span x-text="f.label"></span><span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm ax-num" x-text="f.count"></span>
+                      </button>
+                    </template>
+                  </div>
+                </div>
+              </div>
+              <div class="ax-card__body" role="tabpanel">
+                <ul class="ax-list ax-list--linked" style="margin:0;">
+                  <template x-for="r in visibleResults" :key="r.id">
+                    <li class="ax-list__row" style="align-items:flex-start;padding-block:var(--ax-space-3);">
+                      <span class="ax-list__leading"><span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.tint} 16%,transparent);color:${r.tint};`"><span style="display:contents;" x-html="r.icon"></span></span></span>
+                      <span class="ax-list__content" style="min-width:0;">
+                        <a href="#" class="ax-list__title" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);text-decoration:none;" x-html="r.title"></a>
+                        <span style="display:block;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.5;margin-top:2px;" x-html="r.snippet"></span>
+                        <span class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-2);">
+                          <span class="ax-badge ax-badge--outline ax-badge--sm" x-text="r.typeLabel"></span>
+                          <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-html="r.path"></span>
+                          <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">·</span>
+                          <span class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="r.when"></span>
+                        </span>
+                      </span>
+                    </li>
+                  </template>
+                </ul>
+
+                <!-- no-results empty state -->
+                <div class="ax-flex" x-show="visibleResults.length===0" x-cloak style="padding-block:var(--ax-space-9);text-align:center;flex-direction:column;align-items:center;gap:var(--ax-space-4);">
+                  <span aria-hidden="true" style="display:grid;place-items:center;width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 50% 40%, var(--ax-accent-wash), transparent 70%);">
+                    <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="var(--ax-text-muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/><path d="M8 10l4 0" stroke="var(--ax-accent)"/></svg>
+                  </span>
+                  <div><h3 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-md);color:var(--ax-text-strong);">No results in this category</h3><p style="margin:var(--ax-space-2) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Try a different tab, check your spelling, or broaden the query.</p></div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="tab='all'"><span class="ax-btn__label">Show all results</span></button>
+                </div>
+              </div>
+              <div class="ax-card__footer" x-show="visibleResults.length>0">
+                <nav class="ax-pagination" aria-label="Results pages" style="width:100%;justify-content:space-between;">
+                  <span class="ax-pagination__summary ax-num">Showing 1–<span x-text="visibleResults.length"></span> of <span x-text="total"></span></span>
+                  <div class="ax-pagination__pages">
+                    <button type="button" class="ax-pagination__prev ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Previous page" disabled><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                    <button type="button" class="ax-pagination__page is-active ax-num" aria-current="page">1</button>
+                    <button type="button" class="ax-pagination__page ax-num">2</button>
+                    <button type="button" class="ax-pagination__page ax-num">3</button>
+                    <span class="ax-pagination__ellipsis">…</span>
+                    <button type="button" class="ax-pagination__page ax-num">9</button>
+                    <button type="button" class="ax-pagination__next ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Next page"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                  </div>
+                </nav>
+              </div>
+            </section>
+          </div>
+        </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    function axSearchResults() {
+      const I = {
+        page: '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>',
+        person: '<path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>',
+        file: '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/>',
+        project: '<path d="M3 21l18 0"/><path d="M5 21v-14l8 -4v18"/><path d="M19 21v-10l-6 -4"/>',
+      };
+      const wrap = (p) => '<svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + p + '</svg>';
+      const mark = (s) => s.replace(/(vireo)/gi, '<mark class="ax-mark">$1</mark>');
+      const data = [
+        { id:1, type:'page', typeLabel:'Page', tint:'var(--ax-viz-cyan)', title:mark('Vireo — Sales dashboard'), snippet:mark('The flagship Vireo dashboard with revenue KPIs, area chart and recent transactions.'), path:'Dashboards › Sales', when:'2h ago' },
+        { id:2, type:'person', typeLabel:'Person', tint:'var(--ax-viz-violet)', title:'Mara Lindqvist', snippet:mark('Staff engineer on the Vireo charts team · mara@vireo.io'), path:'People › Engineering', when:'Online' },
+        { id:3, type:'file', typeLabel:'File', tint:'var(--ax-viz-pink)', title:mark('vireo-brand-guidelines.pdf'), snippet:mark('Aurora visual language — color tokens, typography and the Vireo notch mark.'), path:'Files › Brand', when:'Jun 24' },
+        { id:4, type:'project', typeLabel:'Project', tint:'var(--ax-viz-emerald)', title:mark('Vireo 2.4 — Aurora migration'), snippet:mark('Migrate all specs to the Aurora glass language across the Vireo component kit.'), path:'Projects › Active', when:'Jun 22' },
+        { id:5, type:'page', typeLabel:'Page', tint:'var(--ax-viz-cyan)', title:mark('Vireo pricing'), snippet:mark('Compare Starter, Pro and Business tiers for the Vireo platform.'), path:'Pages › Pricing', when:'Jun 19' },
+        { id:6, type:'file', typeLabel:'File', tint:'var(--ax-viz-pink)', title:mark('vireo-changelog.md'), snippet:mark('Release notes for every Vireo version since 1.0.0.'), path:'Files › Docs', when:'Jun 18' },
+        { id:7, type:'person', typeLabel:'Person', tint:'var(--ax-viz-violet)', title:'Devon Okafor', snippet:mark('Product designer — owns the Vireo empty-state illustrations.'), path:'People › Design', when:'2d ago' },
+      ].map(r => ({ ...r, icon: wrap(I[r.type]) }));
+
+      return {
+        query: 'vireo',
+        draft: '',
+        tab: 'all',
+        results: data,
+        get facets() {
+          const c = (t) => data.filter(r => r.type === t).length;
+          return [
+            { id:'all', label:'All', count:data.length, tint:'var(--ax-accent)', icon: wrap('<path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h12"/>') },
+            { id:'page', label:'Pages', count:c('page'), tint:'var(--ax-viz-cyan)', icon: wrap(I.page) },
+            { id:'person', label:'People', count:c('person'), tint:'var(--ax-viz-violet)', icon: wrap(I.person) },
+            { id:'file', label:'Files', count:c('file'), tint:'var(--ax-viz-pink)', icon: wrap(I.file) },
+            { id:'project', label:'Projects', count:c('project'), tint:'var(--ax-viz-emerald)', icon: wrap(I.project) },
+          ];
+        },
+        get total() { return this.results.length; },
+        get visibleResults() { return this.tab === 'all' ? this.results : this.results.filter(r => r.type === this.tab); },
+        init() {
+          const q = new URLSearchParams(location.search).get('q');
+          if (q) this.query = q;
+          this.draft = this.query;
+        },
+      };
+    }
+  </script>
+{% endblock %}

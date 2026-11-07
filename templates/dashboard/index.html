@@ -1,0 +1,451 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Quality Executive Control{% endblock %}
+
+{% block content %}
+<!-- ════════════════ PAGE HEAD ════════════════ -->
+<div class="ax-page-head">
+  <div class="ax-page-head__row">
+    <div>
+      <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+      <h1 class="ax-page-head__title">Plant Quality & Andon Overview</h1>
+      <p class="ax-page-head__subtitle">Precision Automotive Injection Molding Surveillance · IATF 16949:2016 &amp; 21 CFR Part 11</p>
+    </div>
+    <div class="ax-page-head__actions">
+      <a class="ax-btn ax-btn--secondary ax-btn--pill" href="{% url 'iqc:index' %}">
+        <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" />
+        </svg>
+        <span class="ax-btn__label">IQC Dock</span>
+      </a>
+      <a class="ax-btn ax-btn--secondary ax-btn--pill" href="{% url 'ipqc:index' %}">
+        <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 5m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z" /><path d="M9 9h6v6h-6z" />
+        </svg>
+        <span class="ax-btn__label">IPQC Machines</span>
+      </a>
+      <a class="ax-btn ax-btn--primary" href="{% url 'oqc:index' %}">
+        <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
+        </svg>
+        <span class="ax-btn__label">OQC Clearance</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ DASHBOARD GRID ════════════════ -->
+<div class="ax-dash-grid">
+
+  <!-- ───── KPI 1: IQC Acceptance Rate ───── -->
+  <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Incoming Quality Control">
+    <div class="ax-card__body">
+      <div class="ax-kpi__top">
+        <span class="ax-kpi__icon ax-kpi__icon--c1">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" />
+          </svg>
+        </span>
+        <span class="ax-kpi__delta ax-kpi__delta--up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>
+          {{ iqc_rate }}%
+        </span>
+      </div>
+      <div class="ax-kpi__label">INCOMING QC (IQC)</div>
+      <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+        <div class="ax-kpi__value ax-num">{{ iqc_accepted }}<small style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);font-weight:normal;"> / {{ iqc_total }} Lots</small></div>
+        <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="36" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Accepted","data":[92,94,95,93,96,98,{{ iqc_rate|default:100 }}]}]' style="min-height:36px" aria-hidden="true"></div>
+      </div>
+      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">
+        {{ iqc_pending }} lot(s) awaiting lab test
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── KPI 2: IPQC FAI Hard Gating ───── -->
+  <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="In-Process QC Gating">
+    <div class="ax-card__body">
+      <div class="ax-kpi__top">
+        <span class="ax-kpi__icon ax-kpi__icon--c2">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 5m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z" /><path d="M9 9h6v6h-6z" />
+          </svg>
+        </span>
+        <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">
+          {{ active_machines_count }} Active IMMs
+        </span>
+      </div>
+      <div class="ax-kpi__label">IPQC HARD GATING</div>
+      <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+        <div class="ax-kpi__value ax-num">{{ ipqc_fai_approved }}<small style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);font-weight:normal;"> FAI Released</small></div>
+        <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="36" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"FAI","data":[2,4,3,6,5,8,{{ ipqc_fai_approved|default:5 }}]}]' style="min-height:36px" aria-hidden="true"></div>
+      </div>
+      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">
+        {{ ipqc_fai_pending }} awaiting first-piece sign-off
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── KPI 3: Outgoing QC (c=0) Clearance ───── -->
+  <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Outgoing QC Clearance">
+    <div class="ax-card__body">
+      <div class="ax-kpi__top">
+        <span class="ax-kpi__icon ax-kpi__icon--c3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M9 11l3 3l8 -8" /><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9" />
+          </svg>
+        </span>
+        <span class="ax-kpi__delta ax-kpi__delta--up">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>
+          {{ oqc_compliance_rate }}%
+        </span>
+      </div>
+      <div class="ax-kpi__label">OUTGOING QC (c=0)</div>
+      <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+        <div class="ax-kpi__value ax-num">{{ oqc_released }}<small style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);font-weight:normal;"> / {{ oqc_total }} Pallets</small></div>
+        <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="36" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"CoC","data":[8,10,12,11,14,15,{{ oqc_released|default:10 }}]}]' style="min-height:36px" aria-hidden="true"></div>
+      </div>
+      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">
+        {{ oqc_pending }} pallet(s) in c=0 inspection
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── KPI 4: Plant Andon & Drift Alerts ───── -->
+  <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Plant Andon Status">
+    <div class="ax-card__body">
+      <div class="ax-kpi__top">
+        {% if andon_alerts > 0 %}
+        <span class="ax-kpi__icon ax-kpi__icon--c4" style="background:color-mix(in oklab,var(--ax-danger-500) 18%,transparent);color:var(--ax-danger-500);">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 9v4" /><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0" /><path d="M12 16h.01" />
+          </svg>
+        </span>
+        <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">
+          <span class="ax-badge__dot"></span>LINE STOP
+        </span>
+        {% else %}
+        <span class="ax-kpi__icon ax-kpi__icon--c3">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3a9 9 0 0 1 9 9v1a9 9 0 0 1 -9 9a9 9 0 0 1 -9 -9v-1a9 9 0 0 1 9 -9z" /><path d="M9 12l2 2l4 -4" />
+          </svg>
+        </span>
+        <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+          <span class="ax-badge__dot"></span>NORMAL
+        </span>
+        {% endif %}
+      </div>
+      <div class="ax-kpi__label">ANDON DRIFT ALERTS</div>
+      <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+        {% if andon_alerts > 0 %}
+        <div class="ax-kpi__value ax-num" style="color:var(--ax-danger-500);">{{ andon_alerts }}<small style="font-size:var(--ax-text-xs);font-weight:normal;"> Line-Stop(s)</small></div>
+        {% else %}
+        <div class="ax-kpi__value ax-num" style="color:var(--ax-success-500);">0<small style="font-size:var(--ax-text-xs);font-weight:normal;"> Active Holds</small></div>
+        {% endif %}
+        <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="36" data-ax-chart-color="{% if andon_alerts > 0 %}--ax-danger-500{% else %}--ax-viz-emerald{% endif %}" data-ax-chart-series='[{"name":"Alerts","data":[0,0,0,1,0,{{ andon_alerts|default:0 }}]}]' style="min-height:36px" aria-hidden="true"></div>
+      </div>
+      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">
+        {% if andon_alerts > 0 %}Immediate QA action required{% else %}All 10 IMM machines in cushion tolerance{% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── HERO 1: Cushion Drift Telemetry Chart ───── -->
+  <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Screw Cushion Position Telemetry Chart">
+    <div class="ax-card__header">
+      <div class="ax-card__titles">
+        <span class="ax-card__eyebrow">Real-Time Telemetry</span>
+        <h2 class="ax-card__title">Screw Cushion Drift Surveillance (mm)</h2>
+        <p class="ax-card__subtitle">Shot-to-shot injection molding cushion position vs. nominal (5.0 mm ± 0.5 mm tolerance)</p>
+      </div>
+      <div class="ax-card__actions">
+        <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">
+          <span class="ax-badge__dot"></span>3-Shot Drift Hard Stop
+        </span>
+      </div>
+    </div>
+    <div class="ax-card__body" style="padding-top:0;">
+      <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);display:flex;align-items:center;">
+        <span class="ax-cluster" style="gap:var(--ax-space-2);display:inline-flex;align-items:center;">
+          <i style="width:10px;height:10px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i>
+          <small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Actual Cushion (mm)</small>
+        </span>
+        <span class="ax-cluster" style="gap:var(--ax-space-2);display:inline-flex;align-items:center;">
+          <i style="width:10px;height:10px;border-radius:3px;background:var(--ax-success-500);display:inline-block;"></i>
+          <small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Nominal (5.0mm)</small>
+        </span>
+        <span class="ax-cluster" style="gap:var(--ax-space-2);display:inline-flex;align-items:center;">
+          <i style="width:10px;height:10px;border-radius:3px;background:var(--ax-danger-500);display:inline-block;"></i>
+          <small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">USL / LSL Limit (±0.5mm)</small>
+        </span>
+      </div>
+      <div id="cushionDriftChart" style="min-height:300px;" aria-label="Screw cushion trend chart"></div>
+    </div>
+  </section>
+
+  <!-- ───── HERO 2: Quality Governance Funnel & Outbox ───── -->
+  <section class="ax-card ax-col--4" role="region" aria-label="Quality Gates Funnel">
+    <div class="ax-card__header">
+      <div class="ax-card__titles">
+        <span class="ax-card__eyebrow">Governance &amp; Traceability</span>
+        <h2 class="ax-card__title">Quality Gate Compliance</h2>
+        <p class="ax-card__subtitle">IATF 16949 Gating Status Across Workcells</p>
+      </div>
+    </div>
+    <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+      <div>
+        <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;display:flex;">
+          <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">IQC Raw Resin Acceptance</span>
+          <b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">{{ iqc_rate }}%</b>
+        </div>
+        <div class="ax-progress ax-progress--sm" style="background:var(--ax-border);height:6px;border-radius:3px;overflow:hidden;">
+          <div class="ax-progress__fill" style="width:{{ iqc_rate }}%;height:100%;background:var(--ax-accent);"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;display:flex;">
+          <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">IPQC First-Piece FAI Releases</span>
+          <b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">{{ ipqc_fai_approved }} Passed</b>
+        </div>
+        <div class="ax-progress ax-progress--sm" style="background:var(--ax-border);height:6px;border-radius:3px;overflow:hidden;">
+          <div class="ax-progress__fill" style="width:85%;height:100%;background:var(--ax-viz-cyan);"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;display:flex;">
+          <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">OQC Final c=0 CoC Clearance</span>
+          <b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">{{ oqc_compliance_rate }}%</b>
+        </div>
+        <div class="ax-progress ax-progress--sm" style="background:var(--ax-border);height:6px;border-radius:3px;overflow:hidden;">
+          <div class="ax-progress__fill" style="width:{{ oqc_compliance_rate }}%;height:100%;background:var(--ax-viz-emerald);"></div>
+        </div>
+      </div>
+
+      <div style="padding:var(--ax-space-4);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-lg);border:1px solid var(--ax-border);">
+        <div style="display:flex;align-items:center;gap:var(--ax-space-3);margin-bottom:var(--ax-space-2);">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" style="color:var(--ax-accent);" aria-hidden="true">
+            <path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" />
+          </svg>
+          <span style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">21 CFR Part 11 Active</span>
+        </div>
+        <p style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);margin:0;">
+          All record transitions cryptographically sealed into immutable Merkle SHA-256 event chains.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───── RECENT METROLOGY & OPERATIONAL QUALITY TABLE ───── -->
+  <section class="ax-card ax-col--12" role="region" aria-label="Recent Operational Inspections">
+    <div class="ax-card__header">
+      <div class="ax-card__titles">
+        <span class="ax-card__eyebrow">Real-Time Registry</span>
+        <h2 class="ax-card__title">Recent Quality Gate Inspections &amp; Audit Trail</h2>
+        <p class="ax-card__subtitle">Cross-terminal logs across Receiving, Shopfloor IMMs, and Shipping Clearance</p>
+      </div>
+      <div class="ax-card__actions">
+        <a class="ax-btn ax-btn--ghost ax-btn--sm" href="/admin/core/audittrailevent/">View Full Audit Log</a>
+      </div>
+    </div>
+    <div class="ax-card__body" style="padding:0;">
+      <div class="ax-table-wrap">
+        <table class="ax-table ax-table--hover">
+          <thead class="ax-table__head">
+            <tr>
+              <th class="ax-table__th" scope="col">GATE</th>
+              <th class="ax-table__th" scope="col">ITEM / LOT / MACHINE</th>
+              <th class="ax-table__th" scope="col">PARAMETERS</th>
+              <th class="ax-table__th" scope="col">DISPOSITION / STATUS</th>
+              <th class="ax-table__th" scope="col">TIMESTAMP</th>
+              <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for iqc in recent_iqc %}
+            <tr class="ax-table__row">
+              <td class="ax-table__td">
+                <span class="ax-badge ax-badge--soft ax-badge--primary ax-badge--pill">IQC Receiving</span>
+              </td>
+              <td class="ax-table__td">
+                <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" class="ax-mono">{{ iqc.lot_number }}</div>
+                <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ iqc.material.material_code }} · {{ iqc.supplier_code }}</div>
+              </td>
+              <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                Moisture: {{ iqc.physical_moisture_pct|default:"—" }}% | MFI: {{ iqc.physical_mfi|default:"—" }}
+              </td>
+              <td class="ax-table__td">
+                {% if iqc.status == "ACCEPTED" %}
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>ACCEPTED</span>
+                {% elif iqc.status == "REJECTED" %}
+                <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill"><span class="ax-badge__dot"></span>REJECTED</span>
+                {% else %}
+                <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>PENDING</span>
+                {% endif %}
+              </td>
+              <td class="ax-table__td ax-mono" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">
+                {{ iqc.created_at|date:"Y-m-d H:i" }}
+              </td>
+              <td class="ax-table__td ax-table__td--num">
+                <a href="{% url 'iqc:index' %}" class="ax-btn ax-btn--ghost ax-btn--sm">Inspect</a>
+              </td>
+            </tr>
+            {% endfor %}
+
+            {% for ipqc in recent_ipqc %}
+            <tr class="ax-table__row">
+              <td class="ax-table__td">
+                <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">IPQC Hard Gate</span>
+              </td>
+              <td class="ax-table__td">
+                <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" class="ax-mono">{{ ipqc.machine_code }}</div>
+                <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ ipqc.part.part_number }} · Mold {{ ipqc.mold_code }}</div>
+              </td>
+              <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                FAI Cavities: {{ ipqc.cavity_samples.count|default:"8" }} sampled
+              </td>
+              <td class="ax-table__td">
+                {% if ipqc.disposition == "RELEASED" %}
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>RELEASED</span>
+                {% elif ipqc.disposition == "REJECTED" %}
+                <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill"><span class="ax-badge__dot"></span>REJECTED</span>
+                {% else %}
+                <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>AWAITING FAI</span>
+                {% endif %}
+              </td>
+              <td class="ax-table__td ax-mono" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">
+                {{ ipqc.created_at|date:"Y-m-d H:i" }}
+              </td>
+              <td class="ax-table__td ax-table__td--num">
+                <a href="{% url 'ipqc:index' %}" class="ax-btn ax-btn--ghost ax-btn--sm">Review</a>
+              </td>
+            </tr>
+            {% endfor %}
+
+            {% for oqc in recent_oqc %}
+            <tr class="ax-table__row">
+              <td class="ax-table__td">
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill">OQC Clearance</span>
+              </td>
+              <td class="ax-table__td">
+                <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" class="ax-mono">Pallet #{{ oqc.pallet_lot_number }}</div>
+                <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ oqc.part.part_number }} (Qty: {{ oqc.lot_quantity }})</div>
+              </td>
+              <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                c=0 Sampling: {{ oqc.sample_size }} pcs | Defects: {{ oqc.defects_found }}
+              </td>
+              <td class="ax-table__td">
+                {% if oqc.status == "RELEASED_FOR_SHIPMENT" %}
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>COC ISSUED</span>
+                {% elif oqc.status == "REJECTED" %}
+                <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill"><span class="ax-badge__dot"></span>QUARANTINED</span>
+                {% else %}
+                <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>IN INSPECTION</span>
+                {% endif %}
+              </td>
+              <td class="ax-table__td ax-mono" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">
+                {{ oqc.created_at|date:"Y-m-d H:i" }}
+              </td>
+              <td class="ax-table__td ax-table__td--num">
+                <a href="{% url 'oqc:index' %}" class="ax-btn ax-btn--ghost ax-btn--sm">Inspect</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Screw Cushion Drift Telemetry Chart
+  const shotLabels = {{ shot_labels_json|safe }};
+  const cushionValues = {{ cushion_values_json|safe }};
+  const uslLine = {{ usl_line_json|safe }};
+  const lslLine = {{ lsl_line_json|safe }};
+  const nominalLine = {{ nominal_line_json|safe }};
+
+  const chartOptions = {
+    chart: {
+      type: 'line',
+      height: 320,
+      toolbar: { show: false },
+      background: 'transparent',
+      fontFamily: 'Inter, sans-serif'
+    },
+    theme: {
+      mode: document.documentElement.getAttribute('data-ax-theme') === 'dark' ? 'dark' : 'light'
+    },
+    stroke: {
+      curve: 'straight',
+      width: [3, 2, 2, 2],
+      dashArray: [0, 4, 4, 0]
+    },
+    colors: ['#1e5885', '#EF4444', '#EF4444', '#10B981'],
+    series: [
+      { name: 'Cushion (mm)', data: cushionValues },
+      { name: 'USL (5.5mm)', data: uslLine },
+      { name: 'LSL (4.5mm)', data: lslLine },
+      { name: 'Nominal (5.0mm)', data: nominalLine }
+    ],
+    xaxis: {
+      categories: shotLabels,
+      labels: {
+        style: {
+          colors: 'var(--ax-text-subtle)',
+          fontFamily: 'JetBrains Mono, monospace'
+        }
+      },
+      axisBorder: { show: false },
+      axisTicks: { show: false }
+    },
+    yaxis: {
+      min: 4.0,
+      max: 6.0,
+      decimalsInFloat: 2,
+      labels: {
+        style: {
+          colors: 'var(--ax-text-subtle)',
+          fontFamily: 'JetBrains Mono, monospace'
+        }
+      }
+    },
+    grid: {
+      borderColor: 'var(--ax-border)',
+      strokeDashArray: 3
+    },
+    markers: {
+      size: [5, 0, 0, 0]
+    },
+    tooltip: {
+      shared: true,
+      intersect: false,
+      theme: document.documentElement.getAttribute('data-ax-theme') === 'dark' ? 'dark' : 'light'
+    }
+  };
+
+  const chartEl = document.querySelector("#cushionDriftChart");
+  if (chartEl && window.ApexCharts) {
+    const chart = new ApexCharts(chartEl, chartOptions);
+    chart.render();
+
+    // Re-theme ApexCharts dynamically on light/dark toggle
+    document.addEventListener("ax:change", function (e) {
+      if (e.detail && e.detail.reason === "theme") {
+        const isDark = e.detail.mode === "dark" || document.documentElement.getAttribute("data-ax-theme") === "dark";
+        chart.updateOptions({
+          theme: { mode: isDark ? "dark" : "light" },
+          tooltip: { theme: isDark ? "dark" : "light" }
+        });
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

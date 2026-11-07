@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axMarketplace()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Marketplace</h1>
+              <p class="ax-page-head__subtitle">Browse <span class="ax-num">8,420</span> items across <span class="ax-num">36</span> collections — floor up <span class="ax-num">6.2%</span> today.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>
+                <span class="ax-btn__label">0.000 ETH</span>
+              </button>
+              <a class="ax-btn ax-btn--primary" href="/nft/create-nft/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5"/><path d="M10 12l-2 -2.2l.6 -1"/></svg>
+                <span class="ax-btn__label">Create NFT</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid" style="align-items:start;">
+
+          <!-- ───────── FILTER RAIL (3) ───────── -->
+          <aside class="ax-card ax-col--3" role="region" aria-label="Filters" style="position:sticky;top:var(--ax-space-6);">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Filters</h2></div>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="resetFilters()">Reset</button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- status -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Status</div>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <template x-for="s in statuses" :key="s.id">
+                    <button type="button" @click="fStatus = (fStatus===s.id ? '' : s.id)"
+                      class="ax-badge ax-badge--pill"
+                      :class="fStatus===s.id ? 'ax-badge--accent ax-badge--solid' : 'ax-badge--neutral ax-badge--soft'"
+                      style="cursor:pointer;border:0;" :aria-pressed="(fStatus===s.id).toString()" x-text="s.label"></button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- price range -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <span class="ax-label" style="margin:0;">Price range (ETH)</span>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                  <input type="text" class="ax-input ax-input--sm ax-num" inputmode="decimal" placeholder="Min" x-model="priceMin" style="font-family:var(--ax-font-mono);" aria-label="Minimum price">
+                  <span style="color:var(--ax-text-subtle);">–</span>
+                  <input type="text" class="ax-input ax-input--sm ax-num" inputmode="decimal" placeholder="Max" x-model="priceMax" style="font-family:var(--ax-font-mono);" aria-label="Maximum price">
+                </div>
+              </div>
+
+              <!-- category chips -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Category</div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-1);">
+                  <template x-for="c in categories" :key="c.id">
+                    <label class="ax-check" style="gap:var(--ax-space-2);min-height:30px;justify-content:space-between;">
+                      <span class="ax-cluster" style="gap:var(--ax-space-2);"><input type="checkbox" class="ax-checkbox" :value="c.id" x-model="fCats"><span style="font-size:var(--ax-text-sm);" x-text="c.label"></span></span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="c.count"></span>
+                    </label>
+                  </template>
+                </div>
+              </div>
+
+              <!-- chain -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Chain</div>
+                <select class="ax-select ax-select--sm" x-model="fChain" aria-label="Filter by chain">
+                  <option value="">All chains</option>
+                  <option value="eth">Ethereum</option>
+                  <option value="sol">Solana</option>
+                  <option value="poly">Polygon</option>
+                </select>
+              </div>
+
+              <!-- verified toggle -->
+              <label class="ax-check" style="gap:var(--ax-space-3);">
+                <input type="checkbox" class="ax-switch" x-model="fVerified">
+                <span style="display:flex;flex-direction:column;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-medium);">Verified only</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Hide unverified creators</span></span>
+              </label>
+            </div>
+          </aside>
+
+          <!-- ───────── GRID (9) ───────── -->
+          <div class="ax-col--9" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+            <!-- toolbar -->
+            <section class="ax-card" role="region" aria-label="Search and sort">
+              <div class="ax-card__body" style="display:flex;align-items:center;gap:var(--ax-space-3);flex-wrap:wrap;">
+                <div style="position:relative;flex:1 1 240px;min-width:200px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input" placeholder="Search items, collections, creators…" x-model="q" style="padding-inline-start:36px;" aria-label="Search marketplace">
+                </div>
+                <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort items" style="min-width:160px;">
+                  <option value="recent">Recently listed</option>
+                  <option value="low">Price: low to high</option>
+                  <option value="high">Price: high to low</option>
+                  <option value="ending">Ending soon</option>
+                  <option value="likes">Most liked</option>
+                </select>
+                <div class="ax-segment" role="group" aria-label="Grid density">
+                  <button type="button" class="ax-segment__option" :class="{ 'is-active': density==='comfortable' }" :aria-pressed="(density==='comfortable').toString()" @click="density='comfortable'" aria-label="Comfortable density">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg>
+                  </button>
+                  <button type="button" class="ax-segment__option" :class="{ 'is-active': density==='compact' }" :aria-pressed="(density==='compact').toString()" @click="density='compact'" aria-label="Compact density">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h4v4h-4z"/><path d="M10 4h4v4h-4z"/><path d="M16 4h4v4h-4z"/><path d="M4 10h4v4h-4z"/><path d="M10 10h4v4h-4z"/><path d="M16 10h4v4h-4z"/><path d="M4 16h4v4h-4z"/><path d="M10 16h4v4h-4z"/><path d="M16 16h4v4h-4z"/></svg>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- result count + active chips -->
+            <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;">
+              <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);"><b style="color:var(--ax-text-strong);" x-text="filtered().length"></b> items</span>
+              <div class="ax-cluster" style="gap:var(--ax-space-2);" x-show="fCats.length || fStatus || fChain || fVerified" x-cloak>
+                <template x-for="c in fCats" :key="c">
+                  <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill" style="gap:4px;"><span x-text="categories.find(x=>x.id===c)?.label"></span><button type="button" @click="fCats=fCats.filter(x=>x!==c)" aria-label="Remove category filter" style="background:none;border:0;cursor:pointer;color:inherit;display:inline-flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:11px;height:11px;"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </template>
+              </div>
+            </div>
+
+            <!-- TILE GRID -->
+            <div :style="`display:grid;grid-template-columns:repeat(auto-fill,minmax(${density==='compact' ? '180px' : '230px'},1fr));gap:var(--ax-space-4);`">
+              <template x-for="n in filtered()" :key="n.id">
+                <article class="ax-card ax-card--interactive ax-nft-tile" style="margin:0;overflow:hidden;display:flex;flex-direction:column;">
+                  <!-- media -->
+                  <a href="/nft/nft-details/" class="ax-nft-tile__media" :style="`aspect-ratio:1/1;display:block;position:relative;background:linear-gradient(${n.angle}deg, color-mix(in oklab,${n.c1} 78%,var(--ax-surface-solid)), color-mix(in oklab,${n.c2} 60%,var(--ax-surface-solid)));`" :aria-label="'View ' + n.title">
+                    <span x-show="n.sale==='auction'" class="ax-badge ax-badge--neutral ax-badge--soft ax-badge--pill ax-num ax-nft-tile__timer" style="position:absolute;top:var(--ax-space-3);inset-inline-start:var(--ax-space-3);font-family:var(--ax-font-mono);backdrop-filter:blur(6px);"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 7v5l3 3"/></svg><span x-text="n.ends"></span></span>
+                    <button type="button" class="ax-nft-fav" :class="{ 'is-fav': n.fav }" @click.prevent="n.fav=!n.fav" :aria-pressed="n.fav.toString()" :aria-label="n.fav ? 'Unfavorite' : 'Favorite'" style="position:absolute;top:var(--ax-space-3);inset-inline-end:var(--ax-space-3);">
+                      <svg viewBox="0 0 24 24" :fill="n.fav ? 'var(--ax-accent)' : 'none'" :stroke="n.fav ? 'var(--ax-accent)' : '#fff'" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>
+                    </button>
+                    <!-- hover CTA -->
+                    <span class="ax-nft-tile__cta">
+                      <span class="ax-btn ax-btn--primary ax-btn--sm ax-btn--block" style="pointer-events:none;" x-text="n.sale==='auction' ? 'Place bid' : 'Buy now'"></span>
+                    </span>
+                  </a>
+                  <!-- body -->
+                  <div class="ax-card__body" style="padding:var(--ax-space-3) var(--ax-space-4);display:flex;flex-direction:column;gap:var(--ax-space-2);flex:1 1 auto;">
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--xs" :style="`background:linear-gradient(135deg,${n.c1},${n.c2});flex:none;`" :aria-label="'Creator ' + n.creator"></span>
+                      <span class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);flex:1 1 auto;min-width:0;" x-text="n.collection"></span>
+                      <svg x-show="n.verified" viewBox="0 0 24 24" fill="none" stroke="var(--ax-accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-label="Verified" style="width:14px;height:14px;flex:none;"><path d="M5 7.2a2.2 2.2 0 0 1 2.2 -2.2h1a2.2 2.2 0 0 0 1.55 -.64l.7 -.7a2.2 2.2 0 0 1 3.12 0l.7 .7c.412 .41 .97 .64 1.55 .64h1a2.2 2.2 0 0 1 2.2 2.2v1c0 .58 .23 1.138 .64 1.55l.7 .7a2.2 2.2 0 0 1 0 3.12l-.7 .7a2.2 2.2 0 0 0 -.64 1.55v1a2.2 2.2 0 0 1 -2.2 2.2h-1a2.2 2.2 0 0 0 -1.55 .64l-.7 .7a2.2 2.2 0 0 1 -3.12 0l-.7 -.7a2.2 2.2 0 0 0 -1.55 -.64h-1a2.2 2.2 0 0 1 -2.2 -2.2v-1a2.2 2.2 0 0 0 -.64 -1.55l-.7 -.7a2.2 2.2 0 0 1 0 -3.12l.7 -.7a2.2 2.2 0 0 0 .64 -1.55v-1"/><path d="M9 12l2 2l4 -4"/></svg>
+                    </div>
+                    <a href="/nft/nft-details/" class="ax-text-truncate" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);text-decoration:none;" x-text="n.title"></a>
+                    <div class="ax-cluster" style="justify-content:space-between;margin-top:auto;padding-top:var(--ax-space-2);border-top:1px solid var(--ax-border);">
+                      <span style="min-width:0;">
+                        <span style="display:block;font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;color:var(--ax-text-subtle);" x-text="n.sale==='auction' ? 'Current bid' : 'Price'"></span>
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="n.price.toFixed(2) + ' ETH'"></span>
+                      </span>
+                      <span class="ax-cluster" style="gap:4px;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">
+                        <svg viewBox="0 0 24 24" :fill="n.fav ? 'var(--ax-accent)' : 'none'" :stroke="n.fav ? 'var(--ax-accent)' : 'currentColor'" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>
+                        <span class="ax-num" x-text="n.fav ? n.likes+1 : n.likes"></span>
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              </template>
+            </div>
+
+            <!-- empty state -->
+            <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M6 12l6 -9l6 9l-6 9l-6 -9"/><path d="M6 12l6 -3l6 3l-6 2l-6 -2"/></svg></span>
+              <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">Nothing listed yet</h3>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">No items match these filters. Try widening your search or create your own.</p>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="resetFilters();q=''">Clear filters</button>
+            </div>
+
+            <!-- load more -->
+            <div class="ax-flex" x-show="filtered().length" x-cloak style="justify-content:center;padding-top:var(--ax-space-2);">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+                <span class="ax-btn__label">Load more</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <style>
+          .ax-nft-tile__cta { position:absolute; inset-inline:var(--ax-space-3); bottom:var(--ax-space-3); opacity:0; transform:translateY(6px); transition:opacity var(--ax-motion-fast) var(--ax-ease-standard), transform var(--ax-motion-fast) var(--ax-ease-standard); }
+          .ax-nft-tile:hover .ax-nft-tile__cta { opacity:1; transform:translateY(0); }
+          .ax-nft-fav { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border:0; border-radius:var(--ax-radius-pill); background:rgba(8,10,15,.42); cursor:pointer; backdrop-filter:blur(6px); transition:background var(--ax-motion-fast); }
+          .ax-nft-fav svg { width:16px; height:16px; }
+          .ax-nft-fav:hover { background:rgba(8,10,15,.6); }
+          @media (prefers-reduced-motion: reduce){ .ax-nft-tile__cta { transition:none; } }
+        </style>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axMarketplace(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',accent:'var(--ax-accent)'};
+            return {
+              q:'', sort:'recent', density:'comfortable',
+              fStatus:'', priceMin:'', priceMax:'', fCats:[], fChain:'', fVerified:false,
+              statuses:[ {id:'buy',label:'Buy now'}, {id:'auction',label:'On auction'}, {id:'new',label:'New'} ],
+              categories:[
+                { id:'art', label:'Art', count:2840 },
+                { id:'collectibles', label:'Collectibles', count:1920 },
+                { id:'gaming', label:'Gaming', count:1460 },
+                { id:'photography', label:'Photography', count:980 },
+                { id:'music', label:'Music', count:720 },
+                { id:'generative', label:'Generative', count:500 },
+              ],
+              items:[
+                { id:1,  title:'Quiet Forms #001', collection:'Quiet Forms',  creator:'Mira Aoki',    cat:'generative',  sale:'auction', price:2.40, likes:184, fav:false, verified:true,  chain:'eth', new:true,  ends:'06:12:40', c1:C.violet,  c2:C.cyan,    angle:135, age:1 },
+                { id:2,  title:'Porcelain #014',   collection:'Quiet Surface',creator:'Helio Studio', cat:'art',         sale:'buy',     price:1.85, likes:142, fav:true,  verified:true,  chain:'eth', new:false, ends:'', c1:C.cyan,    c2:C.emerald, angle:120, age:2 },
+                { id:3,  title:'Neon Drifter #218',collection:'Pixel Nomads', creator:'Vortex Labs',  cat:'gaming',      sale:'auction', price:3.80, likes:309, fav:false, verified:true,  chain:'eth', new:false, ends:'00:42:18', c1:C.pink,    c2:C.amber,   angle:150, age:4 },
+                { id:4,  title:'Solar Beast #088', collection:'Solar Beasts', creator:'Kojima.eth',   cat:'collectibles',sale:'buy',     price:0.92, likes:96,  fav:false, verified:false, chain:'poly',new:true,  ends:'', c1:C.amber,   c2:C.pink,    angle:165, age:1 },
+                { id:5,  title:'Chrome Spirit #44',collection:'Chrome Spirits',creator:'Nova Reyes',  cat:'art',         sale:'auction', price:2.10, likes:221, fav:false, verified:true,  chain:'eth', new:false, ends:'01:14:05', c1:C.emerald, c2:C.cyan,    angle:140, age:5 },
+                { id:6,  title:'Glyph Engine #07', collection:'Echo Wardens', creator:'Helio Studio', cat:'generative',  sale:'buy',     price:5.40, likes:412, fav:true,  verified:true,  chain:'eth', new:false, ends:'', c1:C.cyan,    c2:C.violet,  angle:130, age:7 },
+                { id:7,  title:'Bone Field #102',  collection:'Quiet Surface',creator:'Mira Aoki',    cat:'photography', sale:'buy',     price:1.10, likes:78,  fav:false, verified:true,  chain:'sol', new:false, ends:'', c1:C.violet,  c2:C.pink,    angle:155, age:6 },
+                { id:8,  title:'Iron Bloom #99',   collection:'Solar Beasts', creator:'Kojima.eth',   cat:'collectibles',sale:'auction', price:1.70, likes:133, fav:false, verified:false, chain:'poly',new:false, ends:'02:31:40', c1:C.amber,   c2:C.violet,  angle:125, age:8 },
+                { id:9,  title:'Pastel Voyage #12',collection:'Aurora Genesis',creator:'Vortex Labs', cat:'art',         sale:'buy',     price:4.20, likes:268, fav:false, verified:true,  chain:'eth', new:true,  ends:'', c1:C.pink,    c2:C.cyan,    angle:145, age:1 },
+                { id:10, title:'Echo Warden #1201',collection:'Echo Wardens', creator:'Nova Reyes',   cat:'gaming',      sale:'buy',     price:1.20, likes:54,  fav:false, verified:true,  chain:'eth', new:false, ends:'', c1:C.cyan,    c2:C.amber,   angle:160, age:9 },
+                { id:11, title:'Soft Static #03',  collection:'Quiet Forms',  creator:'Mira Aoki',    cat:'music',       sale:'auction', price:0.85, likes:41,  fav:false, verified:true,  chain:'sol', new:false, ends:'00:08:22', c1:C.emerald, c2:C.violet,  angle:135, age:10 },
+                { id:12, title:'Marble Ghost #56', collection:'Chrome Spirits',creator:'Helio Studio',cat:'collectibles',sale:'buy',     price:6.80, likes:520, fav:true,  verified:true,  chain:'eth', new:false, ends:'', c1:C.violet,  c2:C.emerald, angle:128, age:11 },
+              ],
+              num(v){ const n=parseFloat(String(v).replace(/[^0-9.]/g,'')); return isNaN(n)?null:n; },
+              resetFilters(){ this.fStatus=''; this.priceMin=''; this.priceMax=''; this.fCats=[]; this.fChain=''; this.fVerified=false; },
+              filtered(){
+                let r=this.items.filter(n=>{
+                  const term=this.q.trim().toLowerCase();
+                  if(term && !(n.title.toLowerCase().includes(term) || n.collection.toLowerCase().includes(term) || n.creator.toLowerCase().includes(term))) return false;
+                  if(this.fStatus==='buy' && n.sale!=='buy') return false;
+                  if(this.fStatus==='auction' && n.sale!=='auction') return false;
+                  if(this.fStatus==='new' && !n.new) return false;
+                  if(this.fCats.length && !this.fCats.includes(n.cat)) return false;
+                  if(this.fChain && n.chain!==this.fChain) return false;
+                  if(this.fVerified && !n.verified) return false;
+                  const lo=this.num(this.priceMin), hi=this.num(this.priceMax);
+                  if(lo!==null && n.price<lo) return false;
+                  if(hi!==null && n.price>hi) return false;
+                  return true;
+                });
+                const by={ low:(a,b)=>a.price-b.price, high:(a,b)=>b.price-a.price, likes:(a,b)=>b.likes-a.likes, recent:(a,b)=>a.age-b.age, ending:(a,b)=>(a.ends?1:2)-(b.ends?1:2) || a.ends.localeCompare(b.ends) };
+                if(by[this.sort]) r=[...r].sort(by[this.sort]);
+                return r;
+              },
+            };
+          }
+        </script>
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'pages/auth/_standalone.html' %}
+
+{# Logout — off-app status page (no shell). Faithful re-expression of
+   src/html/pages/logout.html: signed-out card with the just-signed-out user,
+   sign-in/home actions and a 10s auto-redirect countdown. Extends the shared
+   _standalone.html (ax-standalone body, anti-flash head, ambient backdrop).
+   Reference hrefs converted to clean Django routes. #}
+
+{% block auth_body %}
+  <div style="position:fixed;top:var(--ax-space-5);right:var(--ax-space-6);z-index:5;display:flex;gap:var(--ax-space-2);align-items:center;" x-data="{}">
+    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Toggle color theme"
+            @click="document.documentElement.setAttribute('data-ax-theme', document.documentElement.getAttribute('data-ax-theme')==='dark' ? 'light' : 'dark')">
+      <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg>
+    </button>
+  </div>
+
+  <main class="ax-center" id="ax-main" style="position:relative;z-index:1;width:100%;padding:var(--ax-space-6);"
+        x-data="logoutScreen()" x-init="init()">
+    <div style="width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-6);">
+
+      <!-- brand -->
+      <a href="/" aria-label="Vireo home" style="display:inline-flex;align-items:center;gap:var(--ax-space-3);text-decoration:none;">
+        <span aria-hidden="true" style="display:inline-grid;place-items:center;width:40px;height:40px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);">
+          <svg viewBox="0 0 32 32" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+        </span>
+        <span style="font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-lg);color:var(--ax-text-strong);letter-spacing:.01em;">Vireo</span>
+      </a>
+
+      <!-- signed-out card -->
+      <div class="ax-glass" style="width:100%;border-radius:var(--ax-radius-xl);padding:var(--ax-space-8);display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--ax-space-5);">
+
+        <!-- signed-out glyph -->
+        <span aria-hidden="true" style="display:inline-grid;place-items:center;width:64px;height:64px;border-radius:50%;background:var(--ax-accent-wash);color:var(--ax-accent);">
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg>
+        </span>
+
+        <h1 style="margin:0;font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">
+          You've signed out
+        </h1>
+        <p style="margin:0;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.55;">
+          Your session on this device has ended securely. Sign back in any time to return to your workspace.
+        </p>
+
+        <!-- who just signed out -->
+        <div style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-4);width:100%;background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);text-align:start;">
+          <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab, var(--ax-viz-violet) 18%, transparent);color:var(--ax-viz-violet);flex:0 0 auto;">
+            <span style="font-weight:var(--ax-weight-semibold);">DO</span>
+          </span>
+          <div style="min-width:0;">
+            <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" class="ax-text-truncate">Devon Okafor</div>
+            <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" class="ax-text-truncate">devon@vireo.io</div>
+          </div>
+          <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill" style="margin-inline-start:auto;flex:0 0 auto;">
+            <span class="ax-badge__dot"></span>Secure
+          </span>
+        </div>
+
+        <!-- actions -->
+        <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);width:100%;">
+          <a class="ax-btn ax-btn--primary ax-btn--block" href="/auth/sign-in-basic/">
+            <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M21 12h-13l3 -3"/><path d="M11 15l-3 -3"/></svg>
+            <span class="ax-btn__label">Sign in again</span>
+          </a>
+          <a class="ax-btn ax-btn--secondary ax-btn--block" href="/">
+            <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"/></svg>
+            <span class="ax-btn__label">Back to home</span>
+          </a>
+        </div>
+
+        <!-- auto-redirect note -->
+        <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-subtle);" aria-live="polite">
+          Redirecting to sign in in <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="seconds"></b> seconds…
+          <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="cancel()" x-show="!cancelled" style="padding:0;min-height:auto;">Stay here</button>
+          <span x-show="cancelled" x-cloak style="color:var(--ax-text-subtle);">Auto-redirect cancelled.</span>
+        </p>
+      </div>
+
+      <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-subtle);text-align:center;">
+        Not you? <a class="ax-link" href="/auth/sign-in-basic/">Sign in as another user</a>
+      </p>
+    </div>
+  </main>
+{% endblock %}
+
+{% block auth_scripts %}
+  <script>
+    function logoutScreen() {
+      return {
+        seconds: 10,
+        cancelled: false,
+        _timer: null,
+        init() {
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          this._timer = setInterval(() => {
+            if (this.cancelled) return;
+            this.seconds -= 1;
+            if (this.seconds <= 0) {
+              clearInterval(this._timer);
+              window.location.href = '/auth/sign-in-basic/';
+            }
+          }, 1000);
+        },
+        cancel() { this.cancelled = true; clearInterval(this._timer); },
+      };
+    }
+  </script>
+{% endblock %}

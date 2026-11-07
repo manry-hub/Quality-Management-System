@@ -1,0 +1,356 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Bi-Directional Lot Genealogy &amp; Blast Radius{% endblock %}
+
+{% block content %}
+<div>
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Bi-Directional Lot Genealogy &amp; Blast Radius</h1>
+        <p class="ax-page-head__subtitle">IATF 16949 §8.5.2 Complete Supply Chain Pedigree &amp; Multi-Tier Quarantine Containment Engine</p>
+      </div>
+      <div class="ax-page-head__actions">
+        <span class="ax-badge ax-badge--soft ax-badge--primary ax-badge--pill">
+          Indexed Nodes: {{ total_nodes }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SEARCH & QUERY CARD ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <section class="ax-card ax-col--12" role="region" aria-label="Genealogy Query">
+      <div class="ax-card__body">
+        <form method="GET" action="{% url 'traceability:index' %}" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+          <div style="display:grid;grid-template-columns:2fr 1fr auto;gap:var(--ax-space-4);align-items:flex-end;">
+            <div class="ax-field" style="margin-bottom:0;">
+              <label class="ax-label">Traceability Node / Serial / Barcode Identifier</label>
+              <input type="text" name="identifier" class="ax-input ax-mono" placeholder="e.g. SHIPMENT-SH-4491, PALLET-PL-9021, RESIN-LOT-2026-X1" value="{{ identifier }}" required>
+            </div>
+
+            <div class="ax-field" style="margin-bottom:0;">
+              <label class="ax-label">Traversal Direction</label>
+              <select name="direction" class="ax-input">
+                <option value="backward" {% if direction == 'backward' %}selected{% endif %}>
+                  Backward Trace (Shipment &rarr; Raw Polymer)
+                </option>
+                <option value="forward" {% if direction == 'forward' %}selected{% endif %}>
+                  Forward Blast Radius (Resin &rarr; Impacted Pallets)
+                </option>
+              </select>
+            </div>
+
+            <div>
+              <button type="submit" class="ax-btn ax-btn--primary">
+                <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+                  <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+                  <path d="M21 21l-6 -6" />
+                </svg>
+                Execute Trace
+              </button>
+            </div>
+          </div>
+
+          <!-- Quick samples -->
+          <div style="display:flex;align-items:center;gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">
+            <span>Sample queries:</span>
+            <a href="{% url 'traceability:index' %}?identifier=SHIPMENT-SH-4491&direction=backward" class="ax-badge ax-badge--soft ax-badge--secondary ax-mono">SHIPMENT-SH-4491 (Backward)</a>
+            <a href="{% url 'traceability:index' %}?identifier=RESIN-LOT-2026-X1&direction=forward" class="ax-badge ax-badge--soft ax-badge--secondary ax-mono">RESIN-LOT-2026-X1 (Forward)</a>
+          </div>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ RESULTS VIEW ════════════════ -->
+  {% if results %}
+    {% if results.mode == 'backward' %}
+      <!-- BACKWARD GENEALOGY CHAIN -->
+      <div class="ax-dash-grid">
+        <section class="ax-card ax-col--12" role="region" aria-label="Backward Genealogy Trail">
+          <div class="ax-card__header">
+            <div class="ax-card__titles">
+              <span class="ax-card__eyebrow">Backward Chain of Custody</span>
+              <h2 class="ax-card__title">Genealogy Pedigree &mdash; {{ identifier }}</h2>
+              <p class="ax-card__subtitle">Traversed from customer destination back through warehouse pallets, cartons, machine runs, and supplier polymer lot</p>
+            </div>
+          </div>
+          <div class="ax-card__body" style="padding:0;">
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">STEP</th>
+                    <th class="ax-table__th" scope="col">TIER LEVEL</th>
+                    <th class="ax-table__th" scope="col">NODE IDENTIFIER</th>
+                    <th class="ax-table__th" scope="col">PARENT LINK</th>
+                    <th class="ax-table__th" scope="col">METADATA SNAPSHOT</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">RECORDED AT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for step in results.chain %}
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-mono" style="color:var(--ax-primary-600);font-weight:var(--ax-weight-bold);">
+                      #{{ forloop.counter }}
+                    </td>
+                    <td class="ax-table__td">
+                      <span class="ax-badge ax-badge--soft ax-badge--primary ax-badge--pill">
+                        {{ step.node_type }}
+                      </span>
+                    </td>
+                    <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                      {{ step.node_identifier }}
+                    </td>
+                    <td class="ax-table__td ax-mono" style="color:var(--ax-text-muted);">
+                      {{ step.parent_identifier|default:"[ROOT LOT]" }}
+                    </td>
+                    <td class="ax-table__td" style="font-size:var(--ax-text-xs);">
+                      <code style="background:var(--ax-surface-subtle);padding:2px 6px;border-radius:4px;border:1px solid var(--ax-border);">
+                        {{ step.metadata|default:"{}" }}
+                      </code>
+                    </td>
+                    <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:11px;color:var(--ax-text-muted);">
+                      {{ step.created_at|slice:":19" }}
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr class="ax-table__row">
+                    <td colspan="6" style="text-align:center;padding:var(--ax-space-8);color:var(--ax-text-muted);">
+                      No genealogy record found for identifier: <strong>{{ identifier }}</strong>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+
+    {% elif results.mode == 'forward' %}
+      <!-- FORWARD BLAST RADIUS SUMMARY & TABLE -->
+      <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+        <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-primary-500);">
+          <div class="ax-card__body">
+            <span class="ax-card__eyebrow">Total Impacted Nodes</span>
+            <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+              {{ results.data.total_impacted_units }}
+            </div>
+            <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Downstream entities</p>
+          </div>
+        </div>
+
+        <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-danger-500);">
+          <div class="ax-card__body">
+            <span class="ax-card__eyebrow" style="color:var(--ax-danger-500);">Affected Shipments</span>
+            <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-danger-500);margin-top:var(--ax-space-2);" class="ax-mono">
+              {{ results.data.affected_shipments|length }}
+            </div>
+            <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Immediate customer recall candidates</p>
+          </div>
+        </div>
+
+        <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-warning-500);">
+          <div class="ax-card__body">
+            <span class="ax-card__eyebrow" style="color:var(--ax-warning-500);">Affected Pallets</span>
+            <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-warning-500);margin-top:var(--ax-space-2);" class="ax-mono">
+              {{ results.data.affected_pallets|length }}
+            </div>
+            <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">WMS warehouse quarantine locks</p>
+          </div>
+        </div>
+
+        <div class="ax-card ax-col--3">
+          <div class="ax-card__body">
+            <span class="ax-card__eyebrow">Affected Runs</span>
+            <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+              {{ results.data.affected_runs|length }}
+            </div>
+            <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">IMM machine production jobs</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Blast radius descendants table -->
+      <div class="ax-dash-grid">
+        <section class="ax-card ax-col--12" role="region" aria-label="Blast Radius Tree">
+          <div class="ax-card__header">
+            <div class="ax-card__titles">
+              <span class="ax-card__eyebrow">Containment Blast Radius</span>
+              <h2 class="ax-card__title">Affected Entities Downstream of {{ identifier }}</h2>
+              <p class="ax-card__subtitle">Complete inventory tree requiring containment, quarantine, or customer alert</p>
+            </div>
+          </div>
+          <div class="ax-card__body" style="padding:0;">
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">DEPTH</th>
+                    <th class="ax-table__th" scope="col">ENTITY TYPE</th>
+                    <th class="ax-table__th" scope="col">NODE IDENTIFIER</th>
+                    <th class="ax-table__th" scope="col">PARENT NODE</th>
+                    <th class="ax-table__th" scope="col">METADATA</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">INDEXED AT</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for desc in results.data.descendants %}
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-mono" style="color:var(--ax-text-muted);">
+                      Level {{ desc.depth }}
+                    </td>
+                    <td class="ax-table__td">
+                      {% if desc.node_type == 'SHIPMENT' %}
+                      <span class="ax-badge ax-badge--solid ax-badge--danger ax-badge--pill">SHIPMENT</span>
+                      {% elif desc.node_type == 'PALLET' %}
+                      <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">PALLET</span>
+                      {% else %}
+                      <span class="ax-badge ax-badge--soft ax-badge--secondary ax-badge--pill">{{ desc.node_type }}</span>
+                      {% endif %}
+                    </td>
+                    <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                      {{ desc.node_identifier }}
+                    </td>
+                    <td class="ax-table__td ax-mono" style="color:var(--ax-text-subtle);">
+                      {{ desc.parent_identifier }}
+                    </td>
+                    <td class="ax-table__td" style="font-size:var(--ax-text-xs);">
+                      <code style="background:var(--ax-surface-subtle);padding:2px 6px;border-radius:4px;border:1px solid var(--ax-border);">
+                        {{ desc.metadata }}
+                      </code>
+                    </td>
+                    <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:11px;color:var(--ax-text-muted);">
+                      {{ desc.created_at|slice:":19" }}
+                    </td>
+                  </tr>
+                  {% empty %}
+                  <tr class="ax-table__row">
+                    <td colspan="6" style="text-align:center;padding:var(--ax-space-8);color:var(--ax-text-muted);">
+                      No downstream entities found. Blast radius is clean or identifier not found.
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    {% endif %}
+
+  {% else %}
+    <!-- ════════════════ GENEALOGY ARCHITECTURE & RECENT NODES ════════════════ -->
+    <div class="ax-dash-grid">
+      <section class="ax-card ax-col--12" role="region" aria-label="Traceability Graph Architecture">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow">Bi-Directional Pedigree Pipeline</span>
+            <h2 class="ax-card__title">Automotive Injection Molding Supply Chain Topology</h2>
+            <p class="ax-card__subtitle">IATF 16949 compliant multi-tier relationship graph enabling sub-2-second backward root-cause analysis and forward blast radius containment</p>
+          </div>
+        </div>
+        <div class="ax-card__body">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;padding:var(--ax-space-4);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-lg);border:1px solid var(--ax-border);">
+            <div style="text-align:center;flex:1;">
+              <span class="ax-badge ax-badge--soft ax-badge--secondary" style="font-size:11px;">TIER 1 (MATERIAL)</span>
+              <div class="ax-mono" style="font-weight:var(--ax-weight-bold);margin-top:4px;">RESIN LOT</div>
+              <div style="font-size:11px;color:var(--ax-text-muted);">IQC Receiving Dock</div>
+            </div>
+            <div style="color:var(--ax-text-muted);">&rarr;</div>
+            <div style="text-align:center;flex:1;">
+              <span class="ax-badge ax-badge--soft ax-badge--secondary" style="font-size:11px;">TIER 2 (DRYING)</span>
+              <div class="ax-mono" style="font-weight:var(--ax-weight-bold);margin-top:4px;">DRYING HOPPER</div>
+              <div style="font-size:11px;color:var(--ax-text-muted);">Central Dryer System</div>
+            </div>
+            <div style="color:var(--ax-text-muted);">&rarr;</div>
+            <div style="text-align:center;flex:1;">
+              <span class="ax-badge ax-badge--soft ax-badge--primary" style="font-size:11px;">TIER 3 (MOLDING)</span>
+              <div class="ax-mono" style="font-weight:var(--ax-weight-bold);margin-top:4px;">MACHINE RUN</div>
+              <div style="font-size:11px;color:var(--ax-text-muted);">IMM Injection Press</div>
+            </div>
+            <div style="color:var(--ax-text-muted);">&rarr;</div>
+            <div style="text-align:center;flex:1;">
+              <span class="ax-badge ax-badge--soft ax-badge--primary" style="font-size:11px;">TIER 4 (PACKAGING)</span>
+              <div class="ax-mono" style="font-weight:var(--ax-weight-bold);margin-top:4px;">CARTON / TOTE</div>
+              <div style="font-size:11px;color:var(--ax-text-muted);">Part Cavity Serialization</div>
+            </div>
+            <div style="color:var(--ax-text-muted);">&rarr;</div>
+            <div style="text-align:center;flex:1;">
+              <span class="ax-badge ax-badge--soft ax-badge--warning" style="font-size:11px;">TIER 5 (WAREHOUSE)</span>
+              <div class="ax-mono" style="font-weight:var(--ax-weight-bold);margin-top:4px;">PALLET</div>
+              <div style="font-size:11px;color:var(--ax-text-muted);">WMS Staging Bay</div>
+            </div>
+            <div style="color:var(--ax-text-muted);">&rarr;</div>
+            <div style="text-align:center;flex:1;">
+              <span class="ax-badge ax-badge--soft ax-badge--danger" style="font-size:11px;">TIER 6 (LOGISTICS)</span>
+              <div class="ax-mono" style="font-weight:var(--ax-weight-bold);margin-top:4px;">SHIPMENT</div>
+              <div style="font-size:11px;color:var(--ax-text-muted);">Customer ASN / BOL</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECENT RECORDED NODES -->
+      <section class="ax-card ax-col--12" role="region" aria-label="Recent Nodes">
+        <div class="ax-card__header">
+          <div class="ax-card__titles">
+            <span class="ax-card__eyebrow">Graph State</span>
+            <h2 class="ax-card__title">Recently Indexed Traceability Nodes</h2>
+          </div>
+        </div>
+        <div class="ax-card__body" style="padding:0;">
+          <div class="ax-table-wrap">
+            <table class="ax-table ax-table--hover">
+              <thead class="ax-table__head">
+                <tr>
+                  <th class="ax-table__th" scope="col">TYPE</th>
+                  <th class="ax-table__th" scope="col">IDENTIFIER</th>
+                  <th class="ax-table__th" scope="col">PARENT IDENTIFIER</th>
+                  <th class="ax-table__th" scope="col">CREATED AT</th>
+                  <th class="ax-table__th ax-table__th--num" scope="col">ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for node in recent_nodes %}
+                <tr class="ax-table__row">
+                  <td class="ax-table__td">
+                    <span class="ax-badge ax-badge--soft ax-badge--secondary ax-badge--pill">
+                      {{ node.node_type }}
+                    </span>
+                  </td>
+                  <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                    {{ node.node_identifier }}
+                  </td>
+                  <td class="ax-table__td ax-mono" style="color:var(--ax-text-muted);">
+                    {{ node.parent_identifier|default:"[ROOT]" }}
+                  </td>
+                  <td class="ax-table__td ax-mono" style="font-size:11px;color:var(--ax-text-muted);">
+                    {{ node.created_at|date:"Y-m-d H:i" }}
+                  </td>
+                  <td class="ax-table__td ax-table__td--num">
+                    <a href="{% url 'traceability:index' %}?identifier={{ node.node_identifier }}&direction=backward" class="ax-btn ax-btn--secondary ax-btn--sm">
+                      Trace
+                    </a>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr class="ax-table__row">
+                  <td colspan="5" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-muted);">
+                    No traceability nodes recorded yet.
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

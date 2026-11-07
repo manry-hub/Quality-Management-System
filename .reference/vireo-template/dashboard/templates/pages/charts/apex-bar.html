@@ -1,0 +1,259 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Bar &amp; Column Charts</h1>
+              <p class="ax-page-head__subtitle">ApexCharts bar family — basic columns, grouped, stacked, horizontal and data-labelled variants with 4px corner radius.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="https://apexcharts.com/docs/chart-types/bar-chart/" target="_blank" rel="noopener">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5"/><path d="M3 16h5v5"/><path d="M3 21l5 -5"/></svg>
+                <span class="ax-btn__label">Docs</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export all</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -6"/><path d="M15 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -10"/><path d="M9 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -14"/><path d="M4 20h14"/></svg>
+                <span class="ax-btn__label">New chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── BASIC COLUMN — hero, 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Basic column chart of orders by month"
+                   x-data="{ tab: 'chart' }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Basic · vertical column</span>
+                <h2 class="ax-card__title">Orders by Month</h2>
+                <p class="ax-card__subtitle">Single-series columns with a 4px top radius</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="tablist" aria-label="View mode">
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='chart' }" @click="tab='chart'" :aria-selected="tab==='chart'" role="tab">Chart</button>
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='table' }" @click="tab='table'" :aria-selected="tab==='table'" role="tab">Table</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div x-show="tab==='chart'">
+                <div id="ax-bar-basic" aria-label="Column chart of orders by month, peak 1,248 in June"></div>
+              </div>
+              <div x-show="tab==='table'" x-cloak class="ax-table-wrap">
+                <table class="ax-table ax-table--compact">
+                  <caption class="ax-visually-hidden">Orders by month, January to June</caption>
+                  <thead class="ax-table__head"><tr><th class="ax-table__th" scope="col">Month</th><th class="ax-table__th ax-table__th--num" scope="col">Orders</th></tr></thead>
+                  <tbody>
+                    <tr class="ax-table__row"><td class="ax-table__td">Jan</td><td class="ax-table__td ax-table__td--num">820</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Feb</td><td class="ax-table__td ax-table__td--num">910</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Mar</td><td class="ax-table__td ax-table__td--num">880</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Apr</td><td class="ax-table__td ax-table__td--num">1,010</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">May</td><td class="ax-table__td ax-table__td--num">1,120</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Jun</td><td class="ax-table__td ax-table__td--num">1,248</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── HORIZONTAL BAR — top products, 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Horizontal bar chart of top selling products">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Horizontal</span>
+                <h2 class="ax-card__title">Top Products</h2>
+                <p class="ax-card__subtitle">Units sold, ranked</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-bar-horizontal" aria-label="Horizontal bar chart of top selling products by units sold"></div>
+            </div>
+          </section>
+
+          <!-- ───── GROUPED COLUMN — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Grouped column chart of revenue versus target">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Grouped</span>
+                <h2 class="ax-card__title">Revenue vs. Target</h2>
+                <p class="ax-card__subtitle">Side-by-side columns per quarter</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Actual</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Target</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-bar-grouped" aria-label="Grouped column chart comparing actual revenue against target by quarter"></div>
+            </div>
+          </section>
+
+          <!-- ───── STACKED COLUMN — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Stacked column chart of order status by month">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Stacked</span>
+                <h2 class="ax-card__title">Order Status</h2>
+                <p class="ax-card__subtitle">Delivered, shipped and processing per month</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);flex-wrap:wrap;">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-emerald);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Delivered</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Shipped</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Processing</small></span>
+              </div>
+              <div id="ax-bar-stacked" aria-label="Stacked column chart of order status counts by month"></div>
+            </div>
+          </section>
+
+          <!-- ───── COLUMN WITH DATA LABELS — 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Column chart with data labels for revenue by category">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">With data labels</span>
+                <h2 class="ax-card__title">Revenue by Category</h2>
+                <p class="ax-card__subtitle">Values printed on each column for quick scanning</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Category revenue options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-bar-labels" aria-label="Column chart with data labels of revenue by product category"></div>
+            </div>
+          </section>
+
+          <!-- ───── 100% STACKED / NEGATIVE rail — 4 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Column chart with positive and negative budget variance">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Negative values</span>
+                <h2 class="ax-card__title">Budget Variance</h2>
+                <p class="ax-card__subtitle">Over and under per team</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-bar-negative" aria-label="Column chart of budget variance, positive above and negative below the baseline"></div>
+            </div>
+          </section>
+
+        </div>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // Basic column — accent series, 4px top radius
+    const basic = document.getElementById('ax-bar-basic');
+    if (basic) renderChart(basic, 'bar', [
+      { name: 'Orders', data: [820, 910, 880, 1010, 1120, 1248] },
+    ], {
+      height: 330, legend: 'none', accent: true,
+      apex: {
+        plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '48%' } },
+        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun'] },
+      },
+    });
+
+    // Horizontal bar — top products
+    const horiz = document.getElementById('ax-bar-horizontal');
+    if (horiz) renderChart(horiz, 'bar', [
+      { name: 'Units', data: [540, 331, 298, 241, 212] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-cyan')],
+        plotOptions: { bar: { horizontal: true, borderRadius: 4, borderRadiusApplication: 'end', barHeight: '58%', distributed: false } },
+        xaxis: { categories: ['Matte Mug','Grid Notebook','Desk Lamp','Laptop Sleeve','Brass Light'] },
+      },
+    });
+
+    // Grouped column — actual vs target
+    const grouped = document.getElementById('ax-bar-grouped');
+    if (grouped) renderChart(grouped, 'bar', [
+      { name: 'Actual', data: [142, 168, 191, 214] },
+      { name: 'Target', data: [150, 160, 185, 205] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan')],
+        plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '62%' } },
+        xaxis: { categories: ['Q1','Q2','Q3','Q4'] },
+        yaxis: { labels: { formatter: (v) => '$' + v + 'K' } },
+      },
+    });
+
+    // Stacked column — order status
+    const stacked = document.getElementById('ax-bar-stacked');
+    if (stacked) renderChart(stacked, 'bar', [
+      { name: 'Delivered',  data: [320, 360, 340, 410, 460, 520] },
+      { name: 'Shipped',    data: [140, 160, 150, 180, 210, 240] },
+      { name: 'Processing', data: [80, 90, 100, 110, 130, 150] },
+    ], {
+      height: 300, legend: 'none', stacked: true,
+      apex: {
+        colors: [cv('--ax-viz-emerald'), cv('--ax-viz-cyan'), cv('--ax-viz-amber')],
+        plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', borderRadiusWhenStacked: 'last', columnWidth: '52%' } },
+        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun'] },
+      },
+    });
+
+    // Column with data labels — revenue by category
+    const labels = document.getElementById('ax-bar-labels');
+    if (labels) renderChart(labels, 'bar', [
+      { name: 'Revenue', data: [238, 184, 142, 96, 71, 48] },
+    ], {
+      height: 320, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-violet')],
+        plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '50%', distributed: false, dataLabels: { position: 'top' } } },
+        dataLabels: {
+          enabled: true,
+          formatter: (v) => '$' + v + 'K',
+          offsetY: -18,
+          style: { fontSize: '11px', fontFamily: cv('--ax-font-mono'), colors: [cv('--ax-text-muted')] },
+        },
+        xaxis: { categories: ['Lighting','Desk','Drinkware','Storage','Stationery','Tech'] },
+        yaxis: { labels: { formatter: (v) => '$' + v + 'K' } },
+      },
+    });
+
+    // Negative column — budget variance
+    const neg = document.getElementById('ax-bar-negative');
+    if (neg) renderChart(neg, 'bar', [
+      { name: 'Variance', data: [4.2, -1.8, 2.6, -3.1, 1.4, -0.9] },
+    ], {
+      height: 280, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-cyan')],
+        plotOptions: {
+          bar: {
+            borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '54%',
+            colors: { ranges: [{ from: -100, to: 0, color: cv('--ax-danger-500') }, { from: 0, to: 100, color: cv('--ax-success-500') }] },
+          },
+        },
+        xaxis: { categories: ['Eng','Sales','Ops','Mktg','CS','Fin'] },
+        yaxis: { labels: { formatter: (v) => (v > 0 ? '+' : '') + v + 'K' } },
+        annotations: { yaxis: [{ y: 0, borderColor: cv('--ax-border-strong'), strokeDashArray: 4 }] },
+        tooltip: { y: { formatter: (v) => (v >= 0 ? '+' : '−') + '$' + Math.abs(v).toFixed(1) + 'K' } },
+      },
+    });
+  </script>
+{% endblock %}

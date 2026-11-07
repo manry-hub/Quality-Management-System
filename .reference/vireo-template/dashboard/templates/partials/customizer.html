@@ -1,0 +1,220 @@
+<aside id="ax-customizer" class="ax-customizer" role="dialog" aria-modal="true" aria-labelledby="ax-customizer-title"
+       x-data="axCustomizer()" x-show="open" x-cloak
+       @ax-customizer-open.window="open = true"
+       @keydown.escape.window="open = false"
+       x-transition:enter="ax-customizer--enter" x-transition:leave="ax-customizer--leave">
+
+  <!-- Click-catch scrim — fixed full-viewport, painted BEHIND the panel (z-index:-1). -->
+  <button type="button" class="ax-customizer__backdrop" @click="open = false" aria-label="Close customizer" tabindex="-1"></button>
+
+  <!-- ===== HEADER ===== -->
+  <div class="ax-customizer__head">
+    <div class="ax-customizer__head-text">
+      <h2 id="ax-customizer-title" class="ax-customizer__title">Theme Customizer</h2>
+      <p class="ax-customizer__sub">Live preview — changes save automatically</p>
+    </div>
+    <button type="button" class="ax-icon-btn ax-customizer__close" @click="open = false" aria-label="Close customizer">
+      <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+    </button>
+  </div>
+
+  <!-- ===== BODY (scrolls) ===== -->
+  <div class="ax-customizer__body">
+
+    <!-- COLOR MODE -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Color Mode</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Color mode">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="mode==='light'" :class="{'is-active': mode==='light'}" data-ax-set="mode" data-ax-value="light" @click="setMode('light')">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" /></svg>
+          <span>Light</span>
+        </button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="mode==='dark'" :class="{'is-active': mode==='dark'}" data-ax-set="mode" data-ax-value="dark" @click="setMode('dark')">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" /></svg>
+          <span>Dark</span>
+        </button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="mode==='system'" :class="{'is-active': mode==='system'}" data-ax-set="mode" data-ax-value="system" @click="setMode('system')">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10" /><path d="M7 20h10" /><path d="M9 16v4" /><path d="M15 16v4" /></svg>
+          <span>System</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- DIRECTION -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Direction</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Direction">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="dir==='ltr'" :class="{'is-active': dir==='ltr'}" data-ax-set="dir" data-ax-value="ltr" @click="setDir('ltr')"><span>LTR</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="dir==='rtl'" :class="{'is-active': dir==='rtl'}" data-ax-set="dir" data-ax-value="rtl" @click="setDir('rtl')"><span>RTL</span></button>
+      </div>
+    </section>
+
+    <!-- ACCENT PRESETS (12) -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Accent Presets</p>
+      <div class="ax-swatch-grid" role="radiogroup" aria-label="Accent color">
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='verdigris'" :class="{'is-active': accent==='verdigris'}" style="--sw:#1E856C" data-ax-set="accent" data-ax-value="verdigris" aria-label="Verdigris" @click="setAccent('verdigris')"><svg class="ax-swatch__check ax-icon" x-show="accent==='verdigris'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='cobalt'" :class="{'is-active': accent==='cobalt'}" style="--sw:#2A5FCC" data-ax-set="accent" data-ax-value="cobalt" aria-label="Cobalt" @click="setAccent('cobalt')"><svg class="ax-swatch__check ax-icon" x-show="accent==='cobalt'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='indigo'" :class="{'is-active': accent==='indigo'}" style="--sw:#4F46C9" data-ax-set="accent" data-ax-value="indigo" aria-label="Indigo" @click="setAccent('indigo')"><svg class="ax-swatch__check ax-icon" x-show="accent==='indigo'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='amethyst'" :class="{'is-active': accent==='amethyst'}" style="--sw:#8A46B5" data-ax-set="accent" data-ax-value="amethyst" aria-label="Amethyst" @click="setAccent('amethyst')"><svg class="ax-swatch__check ax-icon" x-show="accent==='amethyst'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='magenta'" :class="{'is-active': accent==='magenta'}" style="--sw:#C13C84" data-ax-set="accent" data-ax-value="magenta" aria-label="Magenta" @click="setAccent('magenta')"><svg class="ax-swatch__check ax-icon" x-show="accent==='magenta'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='terracotta'" :class="{'is-active': accent==='terracotta'}" style="--sw:#C25339" data-ax-set="accent" data-ax-value="terracotta" aria-label="Terracotta" @click="setAccent('terracotta')"><svg class="ax-swatch__check ax-icon" x-show="accent==='terracotta'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='amber'" :class="{'is-active': accent==='amber'}" style="--sw:#C1820E" data-ax-set="accent" data-ax-value="amber" aria-label="Amber" @click="setAccent('amber')"><svg class="ax-swatch__check ax-icon" x-show="accent==='amber'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='olive'" :class="{'is-active': accent==='olive'}" style="--sw:#647F1C" data-ax-set="accent" data-ax-value="olive" aria-label="Olive" @click="setAccent('olive')"><svg class="ax-swatch__check ax-icon" x-show="accent==='olive'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='forest'" :class="{'is-active': accent==='forest'}" style="--sw:#2C7A4B" data-ax-set="accent" data-ax-value="forest" aria-label="Forest" @click="setAccent('forest')"><svg class="ax-swatch__check ax-icon" x-show="accent==='forest'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='teal'" :class="{'is-active': accent==='teal'}" style="--sw:#10808F" data-ax-set="accent" data-ax-value="teal" aria-label="Teal" @click="setAccent('teal')"><svg class="ax-swatch__check ax-icon" x-show="accent==='teal'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='slate'" :class="{'is-active': accent==='slate'}" style="--sw:#4A5A6B" data-ax-set="accent" data-ax-value="slate" aria-label="Slate" @click="setAccent('slate')"><svg class="ax-swatch__check ax-icon" x-show="accent==='slate'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+        <button type="button" class="ax-swatch" role="radio" :aria-checked="accent==='graphite'" :class="{'is-active': accent==='graphite'}" style="--sw:#52514C" data-ax-set="accent" data-ax-value="graphite" aria-label="Graphite" @click="setAccent('graphite')"><svg class="ax-swatch__check ax-icon" x-show="accent==='graphite'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true"><path d="M5 12l5 5l10 -10" /></svg></button>
+      </div>
+    </section>
+
+    <!-- CUSTOM COLORS -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Custom Colors</p>
+      <label class="ax-color-field">
+        <span class="ax-color-field__label">Primary</span>
+        <span class="ax-color-field__controls">
+          <input type="color" class="ax-color-input" data-ax-set="accent-custom" :value="customAccent || '#1E856C'" @input.debounce.120ms="setCustomAccent($event.target.value)" aria-label="Custom primary color" />
+          <input type="text" class="ax-hex" data-ax-set="accent-custom-hex" :value="customAccent" placeholder="#RRGGBB" @change="setCustomAccent($event.target.value)" aria-label="Custom primary hex" />
+        </span>
+      </label>
+      <div class="ax-recent-swatches" role="group" aria-label="Recently used colors">
+        <template x-for="hex in recentAccents" :key="hex">
+          <button type="button" class="ax-recent-swatch" :style="`--sw:${hex}`" :aria-label="hex" @click="setCustomAccent(hex)"></button>
+        </template>
+      </div>
+      <label class="ax-color-field">
+        <span class="ax-color-field__label">Background</span>
+        <span class="ax-color-field__controls">
+          <input type="color" class="ax-color-input" data-ax-set="bg-custom" @input.debounce.120ms="setCustomBg($event.target.value)" aria-label="Custom background color" />
+        </span>
+      </label>
+      <div class="ax-tint-row" role="group" aria-label="Background presets">
+        <button type="button" class="ax-tint" style="--sw:#FCFBF9" data-ax-bg-tint="porcelain" aria-label="Porcelain (default)" @click="setCustomBg('#FCFBF9')"></button>
+        <button type="button" class="ax-tint" style="--sw:#F4F6F8" data-ax-bg-tint="cool-gray" aria-label="Cool Gray" @click="setCustomBg('#F4F6F8')"></button>
+        <button type="button" class="ax-tint" style="--sw:#F7F3EC" data-ax-bg-tint="warm-sand" aria-label="Warm Sand" @click="setCustomBg('#F7F3EC')"></button>
+        <button type="button" class="ax-tint" style="--sw:#EFF1F4" data-ax-bg-tint="slate-mist" aria-label="Slate Mist" @click="setCustomBg('#EFF1F4')"></button>
+      </div>
+      <p class="ax-note ax-note--warn" x-show="bgLowContrast" x-cloak>Low contrast — text may be hard to read.</p>
+    </section>
+
+    <!-- NAVIGATION -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Navigation</p>
+      <p class="ax-customizer__label">Orientation</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Navigation orientation">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="nav==='vertical'" :class="{'is-active': nav==='vertical'}" data-ax-set="nav" data-ax-value="vertical" @click="setNav('vertical')"><span>Vertical</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="nav==='horizontal'" :class="{'is-active': nav==='horizontal'}" data-ax-set="nav" data-ax-value="horizontal" @click="setNav('horizontal')"><span>Horizontal</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="nav==='hybrid'" :class="{'is-active': nav==='hybrid'}" data-ax-set="nav" data-ax-value="hybrid" @click="setNav('hybrid')"><span>Hybrid</span></button>
+      </div>
+      <p class="ax-customizer__label">Menu interaction</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Menu interaction">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="menu==='click'" :class="{'is-active': menu==='click'}" data-ax-set="menu" data-ax-value="click" @click="setMenu('click')"><span>Click</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="menu==='hover'" :class="{'is-active': menu==='hover'}" data-ax-set="menu" data-ax-value="hover" @click="setMenu('hover')"><span>Hover</span></button>
+      </div>
+      <p class="ax-note">Hover opens the top bar &amp; the collapsed sidebar&rsquo;s flyouts on pointer-over · the expanded sidebar always opens submenus on click.</p>
+    </section>
+
+    <!-- SHELL STYLE — governs the sidebar AND header together (docked vs detached).
+         Hidden in Horizontal nav (no rail to dock/detach against). -->
+    <section class="ax-customizer__section" x-show="nav!=='horizontal'" x-cloak>
+      <p class="ax-eyebrow">Shell Style</p>
+      <div class="ax-style-list ax-style-list--pair" role="radiogroup" aria-label="Shell style">
+        <button type="button" class="ax-style" role="radio" :aria-checked="shellStyle==='default'" :class="{'is-active': shellStyle==='default'}" data-ax-set="shell-style" data-ax-value="default" @click="setShellStyle('default')"><span class="ax-style__diagram ax-style__diagram--default" aria-hidden="true"></span><span class="ax-style__label">Docked</span></button>
+        <button type="button" class="ax-style" role="radio" :aria-checked="shellStyle==='detached'" :class="{'is-active': shellStyle==='detached'}" data-ax-set="shell-style" data-ax-value="detached" @click="setShellStyle('detached')"><span class="ax-style__diagram ax-style__diagram--detached" aria-hidden="true"></span><span class="ax-style__label">Detached</span></button>
+      </div>
+      <p class="ax-note">Docked keeps the sidebar &amp; header flush to the edges · Detached floats both as inset cards.</p>
+    </section>
+
+    <!-- SIDEBAR — hidden in Horizontal nav (no rail to style). -->
+    <section class="ax-customizer__section" x-show="nav!=='horizontal'" x-cloak>
+      <p class="ax-eyebrow">Sidebar</p>
+      <p class="ax-customizer__label">Behavior</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Sidebar behavior">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="sidebarBehavior==='collapsible'" :class="{'is-active': sidebarBehavior==='collapsible'}" data-ax-set="sidebar-behavior" data-ax-value="collapsible" @click="setSidebarBehavior('collapsible')"><span>Collapsible</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="sidebarBehavior==='expanded'" :class="{'is-active': sidebarBehavior==='expanded'}" data-ax-set="sidebar-behavior" data-ax-value="expanded" @click="setSidebarBehavior('expanded')"><span>Expanded</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="sidebarBehavior==='compact'" :class="{'is-active': sidebarBehavior==='compact'}" data-ax-set="sidebar-behavior" data-ax-value="compact" @click="setSidebarBehavior('compact')"><span>Compact</span></button>
+      </div>
+      <p class="ax-note">Collapsible keeps the header toggle · Expanded locks the full rail · Compact locks the icon rail (submenus fly out).</p>
+
+      <p class="ax-customizer__label">Position</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Sidebar position">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="sidebarPos==='fixed'" :class="{'is-active': sidebarPos==='fixed'}" data-ax-set="sidebar-position" data-ax-value="fixed" @click="setSidebarPos('fixed')"><span>Fixed</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="sidebarPos==='static'" :class="{'is-active': sidebarPos==='static'}" data-ax-set="sidebar-position" data-ax-value="static" @click="setSidebarPos('static')"><span>Static</span></button>
+      </div>
+
+      <p class="ax-customizer__label">Color scheme</p>
+      <div class="ax-scheme-row" role="radiogroup" aria-label="Sidebar color scheme">
+        <button type="button" class="ax-scheme ax-scheme--light" role="radio" :aria-checked="sidebarScheme==='light'" :class="{'is-active': sidebarScheme==='light'}" data-ax-set="sidebar-scheme" data-ax-value="light" aria-label="Light" @click="setSidebarScheme('light')"></button>
+        <button type="button" class="ax-scheme ax-scheme--dark" role="radio" :aria-checked="sidebarScheme==='dark'" :class="{'is-active': sidebarScheme==='dark'}" data-ax-set="sidebar-scheme" data-ax-value="dark" aria-label="Dark" @click="setSidebarScheme('dark')"></button>
+        <button type="button" class="ax-scheme ax-scheme--brand" role="radio" :aria-checked="sidebarScheme==='brand'" :class="{'is-active': sidebarScheme==='brand'}" data-ax-set="sidebar-scheme" data-ax-value="brand" aria-label="Brand" @click="setSidebarScheme('brand')"></button>
+        <button type="button" class="ax-scheme ax-scheme--gradient" role="radio" :aria-checked="sidebarScheme==='gradient'" :class="{'is-active': sidebarScheme==='gradient'}" data-ax-set="sidebar-scheme" data-ax-value="gradient" aria-label="Gradient" @click="setSidebarScheme('gradient')"></button>
+        <button type="button" class="ax-scheme ax-scheme--transparent" role="radio" :aria-checked="sidebarScheme==='transparent'" :class="{'is-active': sidebarScheme==='transparent'}" data-ax-set="sidebar-scheme" data-ax-value="transparent" aria-label="Transparent" @click="setSidebarScheme('transparent')"></button>
+      </div>
+
+      <p class="ax-customizer__label">Background image</p>
+      <div class="ax-thumb-strip" role="radiogroup" aria-label="Sidebar background image" :aria-disabled="sidebarScheme!=='light'">
+        <button type="button" class="ax-thumb ax-thumb--none" role="radio" :aria-checked="sidebarImage==='none'" :class="{'is-active': sidebarImage==='none'}" data-ax-set="sidebar-image" data-ax-value="none" aria-label="None" @click="setSidebarImage('none')"></button>
+        <button type="button" class="ax-thumb" role="radio" :aria-checked="sidebarImage==='texture-1'" :class="{'is-active': sidebarImage==='texture-1'}" data-ax-set="sidebar-image" data-ax-value="texture-1" aria-label="Texture 1" @click="setSidebarImage('texture-1')"></button>
+        <button type="button" class="ax-thumb" role="radio" :aria-checked="sidebarImage==='texture-2'" :class="{'is-active': sidebarImage==='texture-2'}" data-ax-set="sidebar-image" data-ax-value="texture-2" aria-label="Texture 2" @click="setSidebarImage('texture-2')"></button>
+        <button type="button" class="ax-thumb" role="radio" :aria-checked="sidebarImage==='texture-3'" :class="{'is-active': sidebarImage==='texture-3'}" data-ax-set="sidebar-image" data-ax-value="texture-3" aria-label="Texture 3" @click="setSidebarImage('texture-3')"></button>
+        <button type="button" class="ax-thumb" role="radio" :aria-checked="sidebarImage==='texture-4'" :class="{'is-active': sidebarImage==='texture-4'}" data-ax-set="sidebar-image" data-ax-value="texture-4" aria-label="Texture 4" @click="setSidebarImage('texture-4')"></button>
+        <button type="button" class="ax-thumb" role="radio" :aria-checked="sidebarImage==='texture-5'" :class="{'is-active': sidebarImage==='texture-5'}" data-ax-set="sidebar-image" data-ax-value="texture-5" aria-label="Texture 5" @click="setSidebarImage('texture-5')"></button>
+        <button type="button" class="ax-thumb" role="radio" :aria-checked="sidebarImage==='texture-6'" :class="{'is-active': sidebarImage==='texture-6'}" data-ax-set="sidebar-image" data-ax-value="texture-6" aria-label="Texture 6" @click="setSidebarImage('texture-6')"></button>
+      </div>
+      <p class="ax-note" x-show="sidebarScheme!=='light'" x-cloak>Background image renders over the Light scheme only.</p>
+    </section>
+
+    <!-- HEADER -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Header</p>
+      <p class="ax-customizer__label">Position</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Header position">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="headerPos==='fixed'" :class="{'is-active': headerPos==='fixed'}" data-ax-set="header-position" data-ax-value="fixed" @click="setHeaderPos('fixed')"><span>Fixed</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="headerPos==='static'" :class="{'is-active': headerPos==='static'}" data-ax-set="header-position" data-ax-value="static" @click="setHeaderPos('static')"><span>Static</span></button>
+      </div>
+      <p class="ax-customizer__label">Color scheme</p>
+      <div class="ax-scheme-row" role="radiogroup" aria-label="Header color scheme">
+        <button type="button" class="ax-scheme ax-scheme--light" role="radio" :aria-checked="headerScheme==='light'" :class="{'is-active': headerScheme==='light'}" data-ax-set="header-scheme" data-ax-value="light" aria-label="Light" @click="setHeaderScheme('light')"></button>
+        <button type="button" class="ax-scheme ax-scheme--dark" role="radio" :aria-checked="headerScheme==='dark'" :class="{'is-active': headerScheme==='dark'}" data-ax-set="header-scheme" data-ax-value="dark" aria-label="Dark" @click="setHeaderScheme('dark')"></button>
+        <button type="button" class="ax-scheme ax-scheme--brand" role="radio" :aria-checked="headerScheme==='brand'" :class="{'is-active': headerScheme==='brand'}" data-ax-set="header-scheme" data-ax-value="brand" aria-label="Brand" @click="setHeaderScheme('brand')"></button>
+        <button type="button" class="ax-scheme ax-scheme--gradient" role="radio" :aria-checked="headerScheme==='gradient'" :class="{'is-active': headerScheme==='gradient'}" data-ax-set="header-scheme" data-ax-value="gradient" aria-label="Gradient" @click="setHeaderScheme('gradient')"></button>
+        <button type="button" class="ax-scheme ax-scheme--transparent" role="radio" :aria-checked="headerScheme==='transparent'" :class="{'is-active': headerScheme==='transparent'}" data-ax-set="header-scheme" data-ax-value="transparent" aria-label="Transparent" @click="setHeaderScheme('transparent')"></button>
+      </div>
+    </section>
+
+    <!-- LAYOUT -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Layout</p>
+      <p class="ax-customizer__label">Page style</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Page style">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="page==='regular'" :class="{'is-active': page==='regular'}" data-ax-set="page" data-ax-value="regular" @click="setPage('regular')"><span>Regular</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="page==='classic'" :class="{'is-active': page==='classic'}" data-ax-set="page" data-ax-value="classic" @click="setPage('classic')"><span>Classic</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="page==='compact'" :class="{'is-active': page==='compact'}" data-ax-set="page" data-ax-value="compact" @click="setPage('compact')"><span>Compact</span></button>
+      </div>
+      <p class="ax-customizer__label">Width</p>
+      <div class="ax-segmented" role="radiogroup" aria-label="Layout width">
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="width==='fluid'" :class="{'is-active': width==='fluid'}" data-ax-set="width" data-ax-value="fluid" @click="setWidth('fluid')"><span>Fluid</span></button>
+        <button type="button" class="ax-segmented__btn" role="radio" :aria-checked="width==='full'" :class="{'is-active': width==='full'}" data-ax-set="width" data-ax-value="full" @click="setWidth('full')"><span>Full</span></button>
+      </div>
+    </section>
+
+    <!-- MISC / LOADER -->
+    <section class="ax-customizer__section">
+      <p class="ax-eyebrow">Misc</p>
+      <label class="ax-toggle">
+        <span class="ax-toggle__label">Page loader</span>
+        <input type="checkbox" class="ax-toggle__input" data-ax-set="loader" :checked="loader==='on'" @change="setLoader($event)" />
+        <span class="ax-toggle__track" aria-hidden="true"><span class="ax-toggle__thumb"></span></span>
+      </label>
+    </section>
+  </div>
+
+  <!-- ===== FOOTER (sticky) ===== -->
+  <div class="ax-customizer__foot">
+    <button type="button" class="ax-btn ax-btn--ghost-danger" data-ax-action="reset" @click="reset()">Reset</button>
+    <button type="button" class="ax-btn ax-btn--ghost" data-ax-action="copy-config" @click="copyConfig()">Copy config</button>
+  </div>
+
+  <div class="ax-customizer__live" aria-live="polite" x-text="announce"></div>
+</aside>

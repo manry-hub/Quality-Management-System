@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{# Team — faithful re-expression of the HTML reference src/html/pages/team.html:
+   toolbar (search + department filter + grid/list toggle), grid of member cards,
+   list-view table, filtered-empty state, and the invite modal. Alpine x-data
+   moved onto a wrapping <div> since base.html provides the <main> element. #}
+
+{% block main %}
+<div x-data="{ view:'grid', dept:'all', q:'', invite:false, sent:false,
+              members: [
+                { id:1, name:'Maya Albright',   role:'Owner',    dept:'Design',      init:'MA', tint:'var(--ax-accent)',       status:'online',  email:'maya@northwind.io' },
+                { id:2, name:'Devon Okafor',     role:'Admin',    dept:'Engineering', init:'DK', tint:'var(--ax-viz-cyan)',     status:'online',  email:'devon@northwind.io' },
+                { id:3, name:'Lena Brandt',      role:'Editor',   dept:'Design',      init:'LB', tint:'var(--ax-viz-violet)',   status:'away',    email:'lena@northwind.io' },
+                { id:4, name:'Tomás Herrera',    role:'Admin',    dept:'Product',     init:'TH', tint:'var(--ax-viz-amber)',    status:'online',  email:'tomas@northwind.io' },
+                { id:5, name:'Priya Nair',       role:'Editor',   dept:'Analytics',   init:'PN', tint:'var(--ax-viz-emerald)',  status:'busy',    email:'priya@northwind.io' },
+                { id:6, name:'Ava Sutton',       role:'Viewer',   dept:'Product',     init:'AS', tint:'var(--ax-viz-pink)',     status:'offline', email:'ava@northwind.io' },
+                { id:7, name:'Henry Whitlock',   role:'Editor',   dept:'Engineering', init:'HW', tint:'var(--ax-viz-cyan)',     status:'online',  email:'henry@northwind.io' },
+                { id:8, name:'Camila Rossi',     role:'Viewer',   dept:'Analytics',   init:'CR', tint:'var(--ax-viz-violet)',   status:'away',    email:'camila@northwind.io' } ],
+              get filtered() { return this.members.filter(m =>
+                (this.dept==='all' || m.dept===this.dept) &&
+                (this.q==='' || (m.name+m.role+m.dept).toLowerCase().includes(this.q.toLowerCase()))); },
+              statusColor(s){ return { online:'var(--ax-viz-emerald)', away:'var(--ax-viz-amber)', busy:'var(--ax-viz-red)', offline:'var(--ax-text-subtle)' }[s]; },
+              statusLabel(s){ return { online:'Online', away:'Away', busy:'Busy', offline:'Offline' }[s]; } }">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Team</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num" x-text="members.length">8</span> members across 4 departments.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--primary" @click="invite=true; sent=false">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M16 19h6"/><path d="M19 16v6"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4"/></svg>
+                <span class="ax-btn__label">Invite member</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ TOOLBAR ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Team toolbar">
+            <div class="ax-card__body">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:wrap;justify-content:space-between;">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:wrap;flex:1 1 auto;">
+                  <div style="position:relative;flex:1 1 220px;min-width:180px;max-width:320px;">
+                    <svg style="position:absolute;left:var(--ax-space-3);top:50%;transform:translateY(-50%);color:var(--ax-text-subtle);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 0 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                    <input type="search" class="ax-input" placeholder="Search members…" x-model="q" aria-label="Search members" style="padding-inline-start:var(--ax-space-8);">
+                  </div>
+                  <select class="ax-select" aria-label="Filter by department" x-model="dept" style="max-width:180px;">
+                    <option value="all">All departments</option>
+                    <option value="Design">Design</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Product">Product</option>
+                    <option value="Analytics">Analytics</option>
+                  </select>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" aria-live="polite"><span x-text="filtered.length"></span> shown</span>
+                  <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="View mode">
+                    <button type="button" class="ax-btn ax-btn--sm ax-btn--icon" role="radio" :aria-checked="view==='grid'" :class="{ 'is-selected': view==='grid' }" @click="view='grid'" aria-label="Grid view"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--sm ax-btn--icon" role="radio" :aria-checked="view==='list'" :class="{ 'is-selected': view==='list' }" @click="view='list'" aria-label="List view"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ════════════════ GRID VIEW ════════════════ -->
+          <div class="ax-col--12" x-show="view==='grid'" x-cloak>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--ax-space-5);">
+              <template x-for="m in filtered" :key="m.id">
+                <article class="ax-card ax-card--interactive" role="region" :aria-label="m.name">
+                  <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                    <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;">
+                      <span class="ax-avatar ax-avatar--lg" :style="`background:color-mix(in oklab,${m.tint} 16%,transparent);color:${m.tint};`">
+                        <span class="ax-avatar__initials" x-text="m.init"></span>
+                        <span class="ax-avatar__status" :style="`background:${statusColor(m.status)}`" :aria-label="statusLabel(m.status)"></span>
+                      </span>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Member options"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg></button>
+                    </div>
+                    <div>
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);"><span style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="m.name"></span></div>
+                      <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="m.role + ' · ' + m.dept"></div>
+                      <div class="ax-cluster" style="gap:6px;margin-top:6px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);"><span :style="`width:7px;height:7px;border-radius:50%;background:${statusColor(m.status)}`"></span><span x-text="statusLabel(m.status)"></span></div>
+                    </div>
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-1);">
+                      <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--block">
+                        <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1"/></svg>
+                        <span class="ax-btn__label">Message</span>
+                      </button>
+                      <a class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :href="'mailto:' + m.email" :aria-label="'Email ' + m.name"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></a>
+                    </div>
+                  </div>
+                </article>
+              </template>
+            </div>
+            <!-- filtered-empty -->
+            <div x-show="filtered.length===0" x-cloak class="ax-card" style="margin-top:var(--ax-space-5);">
+              <div class="ax-card__body" style="text-align:center;padding-block:var(--ax-space-8);">
+                <span class="ax-avatar ax-avatar--lg" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin-inline:auto;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                <p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);margin-top:var(--ax-space-3);">No team members match your filters</p>
+                <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-top:4px;">Try a different search or department.</p>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" style="margin-top:var(--ax-space-3);" @click="q=''; dept='all'">Clear filters</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ════════════════ LIST VIEW ════════════════ -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Team members list" x-show="view==='list'" x-cloak>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Member</th>
+                    <th class="ax-table__th" scope="col">Role</th>
+                    <th class="ax-table__th" scope="col">Department</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                    <th class="ax-table__th" scope="col" style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="m in filtered" :key="m.id">
+                    <tr class="ax-table__row">
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                          <span class="ax-avatar ax-avatar--sm" :style="`background:color-mix(in oklab,${m.tint} 16%,transparent);color:${m.tint};`"><span class="ax-avatar__initials" x-text="m.init"></span></span>
+                          <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="m.name"></div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="m.email"></div></div>
+                        </div>
+                      </td>
+                      <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill" x-text="m.role"></span></td>
+                      <td class="ax-table__td" style="color:var(--ax-text-muted);" x-text="m.dept"></td>
+                      <td class="ax-table__td"><span class="ax-cluster" style="gap:6px;font-size:var(--ax-text-sm);color:var(--ax-text);"><span :style="`width:8px;height:8px;border-radius:50%;background:${statusColor(m.status)}`"></span><span x-text="statusLabel(m.status)"></span></span></td>
+                      <td class="ax-table__td" style="text-align:right;">
+                        <div class="ax-cluster" style="gap:var(--ax-space-1);justify-content:flex-end;">
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Message ' + m.name"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l1.3 -3.9a9 8 0 1 1 3.4 2.9l-4.7 1"/></svg></button>
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Options for ' + m.name"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/></svg></button>
+                        </div>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ════════════════ INVITE MODAL ════════════════ -->
+        <div class="ax-grid" x-show="invite" x-cloak style="position:fixed;inset:0;z-index:60;place-items:center;padding:var(--ax-space-4);">
+          <div @click="invite=false" style="position:absolute;inset:0;background:rgba(8,10,16,.55);backdrop-filter:blur(2px);"></div>
+          <div role="dialog" aria-modal="true" aria-labelledby="inv-title" class="ax-card" style="position:relative;max-width:460px;width:100%;" x-transition @keydown.escape.window="invite=false">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title" id="inv-title">Invite a team member</h2><p class="ax-card__subtitle">They'll get an email to join your workspace.</p></div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="invite=false" aria-label="Close dialog"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <form class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);" @submit.prevent="sent=true; setTimeout(() => invite=false, 1200)">
+              <div x-show="sent" x-cloak class="ax-alert ax-alert--success" x-transition>
+                <span class="ax-alert__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                <div class="ax-alert__content"><p class="ax-alert__message">Invitation sent.</p></div>
+              </div>
+              <div class="ax-field"><label class="ax-label" for="inv-email">Email address</label><input id="inv-email" type="email" class="ax-input" placeholder="name@company.com" required></div>
+              <div class="ax-field"><label class="ax-label" for="inv-role">Role</label><select id="inv-role" class="ax-select"><option>Viewer</option><option>Editor</option><option>Admin</option></select><span class="ax-help">Admins can manage members and billing.</span></div>
+              <div class="ax-field"><label class="ax-label" for="inv-dept">Department</label><select id="inv-dept" class="ax-select"><option>Design</option><option>Engineering</option><option>Product</option><option>Analytics</option></select></div>
+              <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:flex-end;margin-top:var(--ax-space-2);">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="invite=false">Cancel</button>
+                <button type="submit" class="ax-btn ax-btn--primary">Send invite</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+</div>
+{% endblock %}

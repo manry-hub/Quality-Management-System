@@ -1,0 +1,327 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Material Review Board (MRB){% endblock %}
+
+{% block content %}
+<div x-data="{ openInitiateModal: false, openVoteModalId: null, openFinalizeModalId: null }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Material Review Board (MRB)</h1>
+        <p class="ax-page-head__subtitle">Multi-Disciplinary Concession, Rework &amp; Four-Eyes Principle Governance · IATF 16949 §8.7.1.1</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openInitiateModal = true">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+            <path d="M12 5v14" /><path d="M5 12h14" />
+          </svg>
+          Initiate MRB Case
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ METRICS SUMMARY ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Total Cases</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ total_cases }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Historical board deliberations</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-warning-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-warning-500);">In Active Deliberation</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-warning-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ in_deliberation_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Awaiting quorum or Four-Eyes votes</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-success-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Approved Dispositions</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-success-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ approved_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Concession / Rework authorized</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Scrap / Rejected</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-danger-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ rejected_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Rejected or scrapped lots</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ FILTER CHIPS ════════════════ -->
+  <div style="display:flex;gap:var(--ax-space-2);margin-bottom:var(--ax-space-4);flex-wrap:wrap;">
+    <a href="{% url 'mrb:index' %}" class="ax-btn {% if not status_filter %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      All Cases
+    </a>
+    <a href="{% url 'mrb:index' %}?status=IN_DELIBERATION" class="ax-btn {% if status_filter == 'IN_DELIBERATION' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      In Deliberation
+    </a>
+    <a href="{% url 'mrb:index' %}?status=APPROVED" class="ax-btn {% if status_filter == 'APPROVED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Approved
+    </a>
+    <a href="{% url 'mrb:index' %}?status=REJECTED" class="ax-btn {% if status_filter == 'REJECTED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Rejected
+    </a>
+  </div>
+
+  <!-- ════════════════ MRB DELIBERATION LIST ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="MRB Deliberation Docket">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">IATF 16949 Section 8.7.1.1 Deliberation Docket</span>
+          <h2 class="ax-card__title">Material Review Cases</h2>
+          <p class="ax-card__subtitle">Four-Eyes Principle governs all Concession (Use-As-Is) authorizations with 21 CFR 11 cryptographic signatures</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">CASE / NCR</th>
+                <th class="ax-table__th" scope="col">TARGET ASSET</th>
+                <th class="ax-table__th" scope="col">PROPOSED DISPOSITION</th>
+                <th class="ax-table__th" scope="col">VOTES &amp; FOUR-EYES GATING</th>
+                <th class="ax-table__th" scope="col">STATUS</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">BOARD ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for mrb in mrb_cases %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td">
+                  <div class="ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                    MRB-{{ mrb.id|stringformat:".8s"|upper }}
+                  </div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-primary-600);font-weight:var(--ax-weight-medium);margin-top:2px;">
+                    Ref: {{ mrb.ncr.ncr_number }}
+                  </div>
+                </td>
+                <td class="ax-table__td">
+                  <span class="ax-badge ax-badge--soft ax-badge--secondary" style="font-size:10px;">{{ mrb.ncr.target_type }}</span>
+                  <div class="ax-mono" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);margin-top:2px;">
+                    {{ mrb.ncr.target_identifier }}
+                  </div>
+                </td>
+                <td class="ax-table__td">
+                  <span class="ax-badge ax-badge--soft ax-badge--primary ax-badge--pill">
+                    {{ mrb.proposed_disposition }}
+                  </span>
+                  {% if mrb.final_disposition %}
+                  <div style="font-size:11px;color:var(--ax-success-500);margin-top:4px;font-weight:var(--ax-weight-semibold);">
+                    Final: {{ mrb.final_disposition }}
+                  </div>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td">
+                  <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:4px;">
+                    {% for vote in mrb.votes.all %}
+                    <span class="ax-badge ax-badge--soft {% if vote.vote == 'APPROVE' %}ax-badge--success{% else %}ax-badge--danger{% endif %} ax-badge--pill" style="font-size:11px;">
+                      {{ vote.voter_role }}: {{ vote.vote }}
+                    </span>
+                    {% empty %}
+                    <span style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">No votes cast yet</span>
+                    {% endfor %}
+                  </div>
+                  {% if mrb.proposed_disposition == 'USE_AS_IS' or mrb.customer_approval_required %}
+                  <div style="font-size:11px;color:var(--ax-warning-500);display:flex;align-items:center;gap:4px;">
+                    <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12"><path d="M12 9v2m0 4v.01" /><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" /></svg>
+                    Four-Eyes Gated (QM + Chief Eng)
+                  </div>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td">
+                  {% if mrb.status == 'APPROVED' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">APPROVED</span>
+                  {% elif mrb.status == 'REJECTED' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">REJECTED</span>
+                  {% else %}
+                  <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">IN DELIBERATION</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  <div style="display:flex;gap:var(--ax-space-2);justify-content:flex-end;">
+                    {% if mrb.status == 'IN_DELIBERATION' %}
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="openVoteModalId = '{{ mrb.id }}'">
+                      Cast Vote
+                    </button>
+                    <button type="button" class="ax-btn ax-btn--primary ax-btn--sm" @click="openFinalizeModalId = '{{ mrb.id }}'">
+                      Finalize
+                    </button>
+                    {% else %}
+                    <span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Concluded</span>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Cast Vote Modal -->
+              <div x-show="openVoteModalId === '{{ mrb.id }}'" x-cloak style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+                <div class="ax-card" @click.outside="openVoteModalId = null" style="max-width:500px;width:100%;background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-xl);padding:var(--ax-space-6);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-4);">
+                    <h3 style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin:0;">
+                      Cast MRB Vote &mdash; {{ mrb.ncr.ncr_number }}
+                    </h3>
+                    <button type="button" class="ax-icon-btn" @click="openVoteModalId = null" aria-label="Close modal">
+                      <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+                  <form method="POST" action="{% url 'mrb:vote' mrb.id %}">
+                    {% csrf_token %}
+                    <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <div class="ax-field">
+                        <label class="ax-label">Member Role <span class="ax-field__required">*</span></label>
+                        <select name="voter_role" class="ax-input" required>
+                          {% for role_code, role_label in roles %}
+                          <option value="{{ role_code }}">{{ role_label }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="ax-field">
+                        <label class="ax-label">Deliberation Vote <span class="ax-field__required">*</span></label>
+                        <select name="vote" class="ax-input" required>
+                          {% for v_code, v_label in vote_choices %}
+                          <option value="{{ v_code }}">{{ v_label }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                      <div class="ax-field">
+                        <label class="ax-label">Engineering Rationale &amp; Comments</label>
+                        <textarea name="comments" class="ax-input" rows="2" placeholder="Provide technical assessment..."></textarea>
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);margin-top:var(--ax-space-6);">
+                      <button type="button" class="ax-btn ax-btn--secondary" @click="openVoteModalId = null">Cancel</button>
+                      <button type="submit" class="ax-btn ax-btn--primary">Sign &amp; Cast Vote</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              <!-- Finalize Disposition Modal -->
+              <div x-show="openFinalizeModalId === '{{ mrb.id }}'" x-cloak style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+                <div class="ax-card" @click.outside="openFinalizeModalId = null" style="max-width:540px;width:100%;background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-xl);padding:var(--ax-space-6);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-4);">
+                    <h3 style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin:0;">
+                      Finalize MRB Disposition &mdash; {{ mrb.ncr.ncr_number }}
+                    </h3>
+                    <button type="button" class="ax-icon-btn" @click="openFinalizeModalId = null" aria-label="Close modal">
+                      <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+                  <form method="POST" action="{% url 'mrb:finalize' mrb.id %}">
+                    {% csrf_token %}
+                    <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <div class="ax-field">
+                        <label class="ax-label">Final Quality Disposition <span class="ax-field__required">*</span></label>
+                        <select name="final_disposition" class="ax-input" required>
+                          {% for d_code, d_label in dispositions %}
+                          <option value="{{ d_code }}">{{ d_label }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+
+                      <div style="padding:var(--ax-space-3);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-md);font-size:var(--ax-text-xs);border:1px solid var(--ax-border);">
+                        <strong>Four-Eyes Requirement:</strong> If selecting <code>USE AS IS (Concession)</code>, both the Quality Manager and Chief Engineer must have cast <code>APPROVE</code> votes, and customer approval documentation must be referenced.
+                      </div>
+
+                      <div class="ax-field">
+                        <label class="ax-label">Concession Rationale</label>
+                        <textarea name="concession_rationale" class="ax-input" rows="2" placeholder="Engineering justification why defect is non-critical for form, fit, or function..."></textarea>
+                      </div>
+
+                      <div class="ax-field">
+                        <label class="ax-label">Customer Approval Reference / Document ID</label>
+                        <input type="text" name="customer_doc" class="ax-input ax-mono" placeholder="e.g. OEM-CONCESSION-DOC-2026-09">
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);margin-top:var(--ax-space-6);">
+                      <button type="button" class="ax-btn ax-btn--secondary" @click="openFinalizeModalId = null">Cancel</button>
+                      <button type="submit" class="ax-btn ax-btn--primary">Execute Disposition</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              {% empty %}
+              <tr class="ax-table__row">
+                <td colspan="6" style="text-align:center;padding:var(--ax-space-8);color:var(--ax-text-muted);">
+                  No MRB deliberation cases found.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ INITIATE MRB CASE MODAL ════════════════ -->
+  <div x-show="openInitiateModal" x-cloak style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+    <div class="ax-card" @click.outside="openInitiateModal = false" style="max-width:540px;width:100%;background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-xl);padding:var(--ax-space-6);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-4);">
+        <h3 style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin:0;">
+          Initiate Material Review Board Case
+        </h3>
+        <button type="button" class="ax-icon-btn" @click="openInitiateModal = false" aria-label="Close modal">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <form method="POST" action="{% url 'mrb:initiate' %}">
+        {% csrf_token %}
+        <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+          <div class="ax-field">
+            <label class="ax-label">Candidate Non-Conformance Report <span class="ax-field__required">*</span></label>
+            <select name="ncr_id" class="ax-input" required>
+              <option value="">-- Select NCR --</option>
+              {% for candidate in eligible_ncrs %}
+              <option value="{{ candidate.id }}">{{ candidate.ncr_number }} [{{ candidate.severity }}] &mdash; {{ candidate.target_identifier }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="ax-field">
+            <label class="ax-label">Proposed Disposition <span class="ax-field__required">*</span></label>
+            <select name="proposed_disposition" class="ax-input" required>
+              {% for d_code, d_label in dispositions %}
+              <option value="{{ d_code }}">{{ d_label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="ax-field">
+            <label class="ax-label">Initial Assessment / Rationale</label>
+            <textarea name="concession_rationale" class="ax-input" rows="2" placeholder="Initial engineering proposal..."></textarea>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);margin-top:var(--ax-space-6);">
+          <button type="button" class="ax-btn ax-btn--secondary" @click="openInitiateModal = false">Cancel</button>
+          <button type="submit" class="ax-btn ax-btn--primary">Create MRB Case</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

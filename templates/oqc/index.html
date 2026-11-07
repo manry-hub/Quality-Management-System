@@ -1,0 +1,240 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Outgoing Quality Control (OQC){% endblock %}
+
+{% block content %}
+<div x-data="{ openModal: null }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Outgoing QC &amp; Shipping Quality Clearance</h1>
+        <p class="ax-page-head__subtitle">ISO 2859-1 Level II Normal Inspection · Zero Defect (c=0) Gating · Certificate of Conformance Release</p>
+      </div>
+      <div class="ax-page-head__actions">
+        <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+          <span class="ax-badge__dot"></span>ZERO DEFECT (c=0) MANDATE
+        </span>
+        <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">
+          <span class="ax-badge__dot"></span>2D DATAMATRIX AUDIT
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ 3 KPI STAT CARDS ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-kpi ax-col--4">
+      <div class="ax-card__body">
+        <div class="ax-kpi__top">
+          <span class="ax-kpi__icon ax-kpi__icon--c1">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg>
+          </span>
+          <span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-text-muted);">Audited</span>
+        </div>
+        <div class="ax-kpi__label">TOTAL PALLETS AUDITED</div>
+        <div class="ax-kpi__value ax-num">{{ total_count }}</div>
+        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">
+          Finished goods packaging units
+        </div>
+      </div>
+    </div>
+
+    <div class="ax-card ax-kpi ax-col--4">
+      <div class="ax-card__body">
+        <div class="ax-kpi__top">
+          <span class="ax-kpi__icon ax-kpi__icon--c3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3l8 -8"/><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"/></svg>
+          </span>
+          <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">Certified</span>
+        </div>
+        <div class="ax-kpi__label">RELEASED FOR SHIPMENT</div>
+        <div class="ax-kpi__value ax-num" style="color:var(--ax-success-500);">{{ released_count }}</div>
+        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">
+          Certified with CoC released to WMS
+        </div>
+      </div>
+    </div>
+
+    <div class="ax-card ax-kpi ax-col--4">
+      <div class="ax-card__body">
+        <div class="ax-kpi__top">
+          <span class="ax-kpi__icon ax-kpi__icon--c4" style="background:color-mix(in oklab,var(--ax-danger-500) 18%,transparent);color:var(--ax-danger-500);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/></svg>
+          </span>
+          <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">Quarantined</span>
+        </div>
+        <div class="ax-kpi__label">REJECTED / QUARANTINED</div>
+        <div class="ax-kpi__value ax-num" style="color:var(--ax-danger-500);">{{ rejected_count }}</div>
+        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-2);">
+          Blocked from Delivery Order picking
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ OQC PALLET CLEARANCE LEDGER ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="OQC Shipping Clearance Ledger">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Zero Defect Verification</span>
+          <h2 class="ax-card__title">Finished Goods Pallet Clearance Queue</h2>
+          <p class="ax-card__subtitle">ISO 2859-1 Level II normal inspection sampling (Ac=0, Re=1) and hermetic packaging seal audit</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">PALLET BARCODE</th>
+                <th class="ax-table__th" scope="col">PART DETAILS</th>
+                <th class="ax-table__th" scope="col">LOT SIZE</th>
+                <th class="ax-table__th" scope="col">SAMPLE (ISO 2859-1)</th>
+                <th class="ax-table__th" scope="col">DEFECTS (c=0)</th>
+                <th class="ax-table__th" scope="col">PACKAGING AUDIT</th>
+                <th class="ax-table__th" scope="col">STATUS</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for insp in inspections %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);">
+                  {{ insp.pallet_barcode }}
+                </td>
+                <td class="ax-table__td">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">{{ insp.part.part_number }}</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ insp.part.part_name }} ({{ insp.part.drawing_revision }})</div>
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-sm);">{{ insp.batch_quantity }} pcs</td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-semibold);color:var(--ax-accent);">{{ insp.sample_size }} pcs</td>
+                <td class="ax-table__td ax-mono">
+                  {% if insp.defects_found > 0 %}
+                  <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">
+                    <span class="ax-badge__dot"></span>{{ insp.defects_found }} DEFECTS (NG)
+                  </span>
+                  {% else %}
+                  <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+                    <span class="ax-badge__dot"></span>0 DEFECTS
+                  </span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-xs);">
+                  {% if insp.packaging_box_intact and insp.esd_bag_sealed and insp.desiccant_present and insp.datamatrix_verified %}
+                  <span style="color:var(--ax-success-500);display:inline-flex;align-items:center;gap:4px;">
+                    <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                    Box · ESD · Desiccant OK
+                  </span>
+                  {% else %}
+                  <span style="color:var(--ax-danger-500);display:inline-flex;align-items:center;gap:4px;">
+                    <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
+                    Packaging Incomplete
+                  </span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td">
+                  {% if insp.status == 'RELEASED_FOR_SHIPMENT' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+                    <span class="ax-badge__dot"></span>RELEASED
+                  </span>
+                  {% elif insp.status == 'REJECTED' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">
+                    <span class="ax-badge__dot"></span>REJECTED
+                  </span>
+                  {% else %}
+                  <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">
+                    <span class="ax-badge__dot"></span>PENDING
+                  </span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  {% if insp.status == 'PENDING' %}
+                  <button type="button" class="ax-btn ax-btn--primary ax-btn--sm" @click="openModal = '{{ insp.id }}'">
+                    Audit &amp; Release
+                  </button>
+                  {% elif insp.coc_number %}
+                  <a href="{% url 'oqc:view_coc' insp.id %}" target="_blank" class="ax-btn ax-btn--secondary ax-btn--sm">
+                    View CoC
+                  </a>
+                  {% else %}
+                  <span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Quarantined</span>
+                  {% endif %}
+                </td>
+              </tr>
+
+              <!-- Alpine Modal for Pallet Release -->
+              <div x-show="openModal === '{{ insp.id }}'" x-cloak style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+                <div class="ax-card" @click.outside="openModal = null" style="max-width:540px;width:100%;background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-xl);padding:var(--ax-space-6);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-4);">
+                    <h3 style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin:0;">
+                      OQC Shipping Clearance &mdash; {{ insp.pallet_barcode }}
+                    </h3>
+                    <button type="button" class="ax-icon-btn" @click="openModal = null" aria-label="Close modal">
+                      <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+
+                  <form method="POST" action="{% url 'oqc:release' insp.id %}">
+                    {% csrf_token %}
+                    <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <div style="padding:var(--ax-space-3);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-md);font-size:var(--ax-text-xs);border:1px solid var(--ax-border);">
+                        <strong>ISO 2859-1 Level II Plan:</strong> Inspect exactly <code>{{ insp.sample_size }} pcs</code> out of {{ insp.batch_quantity }} pcs.<br>
+                        Acceptance Criteria: <strong>Ac = 0, Re = 1</strong>. A single defect rejects the pallet.
+                      </div>
+
+                      <div class="ax-field">
+                        <label class="ax-label">Defects Count Found <span class="ax-field__required">*</span></label>
+                        <input type="number" min="0" name="defects_found" class="ax-input ax-mono" value="0" required>
+                        <span class="ax-help">Enter 0 for conforming parts. Any count &gt; 0 will automatically reject the pallet.</span>
+                      </div>
+
+                      <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);margin-top:var(--ax-space-2);">
+                        <label class="ax-label" style="margin-bottom:4px;">Mandatory Packaging Audit Checklist</label>
+
+                        <label style="display:flex;align-items:center;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+                          <input type="checkbox" name="box_intact" checked>
+                          <span>Corrugated outer box structurally intact and sealed</span>
+                        </label>
+
+                        <label style="display:flex;align-items:center;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+                          <input type="checkbox" name="esd_sealed" checked>
+                          <span>Anti-static ESD bag hermetically sealed</span>
+                        </label>
+
+                        <label style="display:flex;align-items:center;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+                          <input type="checkbox" name="desiccant" checked>
+                          <span>Moisture desiccant pouch present</span>
+                        </label>
+
+                        <label style="display:flex;align-items:center;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+                          <input type="checkbox" name="datamatrix" checked>
+                          <span>2D DataMatrix barcode scannable &amp; matched to ERP Delivery Order</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);margin-top:var(--ax-space-6);">
+                      <button type="button" class="ax-btn ax-btn--secondary" @click="openModal = null">Cancel</button>
+                      <button type="submit" class="ax-btn ax-btn--primary">Generate CoC &amp; Release to WMS</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              {% empty %}
+              <tr class="ax-table__row">
+                <td colspan="8" style="text-align:center;padding:var(--ax-space-8);color:var(--ax-text-muted);">
+                  No outgoing pallets in queue.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+{% endblock %}

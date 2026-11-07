@@ -1,0 +1,369 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Social Media</h1>
+              <p class="ax-page-head__subtitle">Audience growth and engagement across 5 connected channels.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">Last 30 days</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Create Post</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Followers 482K, up 3.8%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>3.8%</span>
+              </div>
+              <div class="ax-kpi__label">Total Followers</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">482K</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[7,9,10,14,16,20,24,28]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Engagement Rate 4.6%, up 0.5%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>0.5%</span>
+              </div>
+              <div class="ax-kpi__label">Engagement Rate</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">4.6%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Trend","data":[10,12,11,15,17,18,21,23]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Impressions this month 2.4M, up 12.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>12.0%</span>
+              </div>
+              <div class="ax-kpi__label">Impressions (30D)</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">2.4M</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[6,10,9,16,18,23,26,30]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="New Followers this month 18.2K, up 6.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4"/><path d="M19 16v6"/><path d="M16 19h6"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>6.0%</span>
+              </div>
+              <div class="ax-kpi__label">New Followers (30D)</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">18.2K</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[9,11,10,16,15,21,23,26]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Audience Growth area (8) + Engagement by Platform (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Audience growth">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Reach</span>
+                <h2 class="ax-card__title">Audience Growth</h2>
+                <p class="ax-card__subtitle">Reach &amp; impressions over the last 12 weeks</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Reach</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Impressions</small></span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div
+                data-ax-chart="apex" data-ax-chart-type="area" data-ax-chart-height="310" data-ax-chart-legend="none" data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"Reach","data":[182,210,198,240,232,268,254,290,278,312,330,358]},{"name":"Impressions","data":[420,468,452,520,498,560,540,600,584,648,690,742]}]'
+                aria-label="Area chart of reach and impressions over twelve weeks"></div>
+            </div>
+          </section>
+
+          <!-- Engagement by Platform breakdown -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Engagement by platform">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">By Platform</h2>
+                <p class="ax-card__subtitle">Share of engagement</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Instagram</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">38%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:38%;background:var(--ax-accent);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">TikTok</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">27%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:27%;background:var(--ax-viz-cyan);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">X / Twitter</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">16%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:16%;background:var(--ax-viz-violet);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">LinkedIn</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">12%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:12%;background:var(--ax-viz-pink);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Facebook</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">7%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:7%;background:var(--ax-viz-amber);"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Engagement Types (4) + Sentiment semi-gauge (4) + Scheduled Posts (4) ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Engagement types">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Engagement Types</h2>
+                <p class="ax-card__subtitle">Last 30 days</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-social-engage" aria-label="Donut: Likes, Comments, Shares, Saves"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Likes</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">684K</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Comments</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">142K</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Shares</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">96K</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Saves</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">58K</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Audience sentiment">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Audience Sentiment</h2>
+                <p class="ax-card__subtitle">Mentions analysis</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-social-sentiment" aria-label="Semi-gauge: 72% positive sentiment"></div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);text-align:center;margin-top:var(--ax-space-2);">
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Positive</small><b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-md);">72%</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Neutral</small><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-md);">21%</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Negative</small><b class="ax-num" style="color:var(--ax-danger-500);font-size:var(--ax-text-md);">7%</b></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Scheduled posts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Scheduled Posts</h2>
+                <p class="ax-card__subtitle">Next up in queue</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Queue</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:54px;font-weight:600;">Today</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Summer collection teaser</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Instagram · Reel · 18:00</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:54px;font-weight:600;">Jun 28</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Behind-the-scenes thread</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">X · Thread · 12:30</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:54px;font-weight:600;">Jun 29</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Customer spotlight</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">TikTok · Video · 09:00</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:54px;font-weight:600;">Jul 1</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Q3 hiring announcement</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">LinkedIn · Article · 10:00</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Top Posts (8) + Recent Mentions (4) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Top performing posts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Top Posts</h2>
+                <p class="ax-card__subtitle">Best performers this month</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Post</th>
+                    <th class="ax-table__th" scope="col">Platform</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Reach</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Engagement</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"/><path d="M4 4m0 3a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v10a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3z"/><path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5"/><path d="M14 14l1 -1a3 5 0 0 1 3 0l2 2"/></svg></span><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:240px;">Sunset launch carousel</div></div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-accent);">Instagram</span></td>
+                    <td class="ax-table__td ax-table__td--num">412K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">48.2K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">11.7%</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13 -8z"/></svg></span><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:240px;">Studio process timelapse</div></div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-viz-cyan);">TikTok</span></td>
+                    <td class="ax-table__td ax-table__td--num">368K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">39.6K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">10.8%</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M9 18l-1 3l3 -2h6a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h3"/></svg></span><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:240px;">Why we rebuilt our app</div></div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-viz-violet);">X</span></td>
+                    <td class="ax-table__td ax-table__td--num">214K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">19.1K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">8.9%</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11m-5 0a5 5 0 1 0 10 0a5 5 0 1 0 -10 0"/><path d="M16 19h6"/><path d="M19 16v6"/><path d="M21 21l-2 -2"/></svg></span><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:240px;">Hiring: 4 open roles</div></div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-viz-amber);">LinkedIn</span></td>
+                    <td class="ax-table__td ax-table__td--num">98K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">7.4K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">7.6%</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"/><path d="M4 4m0 3a3 3 0 0 1 3 -3h10a3 3 0 0 1 3 3v10a3 3 0 0 1 -3 3h-10a3 3 0 0 1 -3 -3z"/><path d="M4 15l4 -4a3 5 0 0 1 3 0l5 5"/></svg></span><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:240px;">Customer reviews roundup</div></div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-accent);">Instagram</span></td>
+                    <td class="ax-table__td ax-table__td--num">76K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">5.1K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">6.7%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Recent Mentions feed -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Recent mentions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Mentions</h2>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Inbox</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-timeline">
+                <li class="ax-timeline__item ax-timeline__item--success">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 9l-2 2"/><path d="M9 9l.01 0"/><path d="M15 9l.01 0"/><path d="M8 13a4 4 0 1 0 8 0"/><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">@maria.codes</b> "Obsessed with the new packaging 😍"</p>
+                    <span class="ax-timeline__time">6m ago · Instagram</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M9 18l-1 3l3 -2h6a2 2 0 0 0 2 -2v-9a2 2 0 0 0 -2 -2h-12a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h3"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">@devon_b</b> asked about restock dates</p>
+                    <span class="ax-timeline__time">22m ago · X</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">@studioline</b> reshared your launch reel</p>
+                    <span class="ax-timeline__time">48m ago · Instagram</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-danger-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 16h.01"/><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">@jordan.k</b> reported a shipping delay</p>
+                    <span class="ax-timeline__time">1h ago · Facebook</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">@techweekly</b> tagged you in a roundup</p>
+                    <span class="ax-timeline__time">3h ago · LinkedIn</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    const engage = document.getElementById('ax-social-engage');
+    if (engage) renderChart(engage, 'donut', [684, 142, 96, 58], {
+      height: 220, legend: 'none',
+      apex: {
+        labels: ['Likes', 'Comments', 'Shares', 'Saves'],
+        colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: { show: true, value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600, formatter: (v) => (v / 1000).toFixed(0) + 'K' }, total: { show: true, label: 'Total', formatter: () => '980K' } } } } },
+      },
+    });
+
+    // Sentiment — semi gauge
+    const sentiment = document.getElementById('ax-social-sentiment');
+    if (sentiment) renderChart(sentiment, 'radialBar', [72], {
+      height: 230, accent: false,
+      apex: {
+        labels: ['Positive'],
+        colors: [cv('--ax-viz-emerald')],
+        plotOptions: { radialBar: { startAngle: -90, endAngle: 90, hollow: { size: '58%' }, track: { background: cv('--ax-surface-subtle'), startAngle: -90, endAngle: 90 }, dataLabels: { name: { offsetY: -6, color: cv('--ax-text-muted'), fontSize: '13px' }, value: { offsetY: -38, fontFamily: cv('--ax-font-display'), fontWeight: 700, fontSize: '28px', color: cv('--ax-text-strong') } } } },
+      },
+    });
+  </script>
+{% endblock %}

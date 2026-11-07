@@ -1,0 +1,305 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axWallet()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Wallet</h1>
+              <p class="ax-page-head__subtitle">Your items, balance, and on-chain activity — all in one place.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <template x-if="!connected">
+                <button type="button" class="ax-btn ax-btn--primary" @click="openConnect()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>
+                  <span class="ax-btn__label">Connect wallet</span>
+                </button>
+              </template>
+              <template x-if="connected">
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill" @click="copyAddr()">
+                    <span class="ax-avatar ax-avatar--xs" style="background:linear-gradient(135deg,var(--ax-viz-violet),var(--ax-viz-cyan));" aria-hidden="true"></span>
+                    <span class="ax-btn__label ax-num" style="font-family:var(--ax-font-mono);" x-text="addrShort"></span>
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667l0 -8.666"/><path d="M4.012 16.737a2.005 2.005 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--ghost" @click="disconnect()">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg>
+                    <span class="ax-btn__label">Disconnect</span>
+                  </button>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- copy toast -->
+        <div x-show="copied" x-cloak x-transition class="ax-alert ax-alert--success ax-alert--inline" role="status" style="margin-bottom:var(--ax-space-5);"><div class="ax-alert__content"><div class="ax-alert__message">Address copied to clipboard.</div></div></div>
+
+        <!-- ════════════════ DISCONNECTED STATE ════════════════ -->
+        <div x-show="!connected" x-cloak class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Connect your wallet">
+            <div class="ax-card__body" style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg></span>
+              <h2 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);font-size:var(--ax-text-xl);margin-bottom:var(--ax-space-2);">Connect a wallet to get started</h2>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);max-width:440px;margin:0 auto var(--ax-space-5);">Connect to view your collected items, track your balance, and manage listings. Your keys never leave your device.</p>
+              <button type="button" class="ax-btn ax-btn--primary" @click="openConnect()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>
+                <span class="ax-btn__label">Connect wallet</span>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════════════════ CONNECTED STATE ════════════════ -->
+        <div x-show="connected" x-cloak class="ax-dash-grid">
+
+          <!-- balance hero (8) -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Wallet balance">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-lg);padding:var(--ax-space-6);background:var(--ax-gradient-plate);box-shadow:var(--ax-shadow-md);color:#fff;">
+                <span aria-hidden="true" style="position:absolute;top:-40px;right:-30px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.16);filter:blur(8px);"></span>
+                <span aria-hidden="true" style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.1);"></span>
+                <div class="ax-cluster" style="justify-content:space-between;position:relative;">
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);letter-spacing:.06em;opacity:.92;" x-text="addrShort"></span>
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.9;"><path d="M6 12l6 -9l6 9l-6 9l-6 -9"/><path d="M6 12l6 -3l6 3l-6 2l-6 -2"/></svg>
+                </div>
+                <div style="margin-top:var(--ax-space-5);position:relative;">
+                  <div style="font-size:var(--ax-text-xs);opacity:.85;">Total balance</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:700;line-height:1.1;letter-spacing:-.01em;">12.84 ETH</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);opacity:.9;margin-top:2px;">≈ $30,560.40</div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-5);position:relative;">
+                  <button type="button" class="ax-btn ax-btn--solid">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                    <span class="ax-btn__label">Send</span>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--solid">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M18 13l-6 6"/><path d="M6 13l6 6"/></svg>
+                    <span class="ax-btn__label">Receive</span>
+                  </button>
+                  <button type="button" class="ax-btn ax-btn--solid">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h2"/></svg>
+                    <span class="ax-btn__label">Buy ETH</span>
+                  </button>
+                </div>
+              </div>
+              <!-- token holdings -->
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);">
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><span style="width:8px;height:8px;border-radius:50%;background:var(--ax-viz-violet);"></span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Ethereum</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-top:4px;">10.42 ETH</div>
+                </div>
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><span style="width:8px;height:8px;border-radius:50%;background:var(--ax-viz-cyan);"></span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Wrapped ETH</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-top:4px;">2.42 WETH</div>
+                </div>
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><span style="width:8px;height:8px;border-radius:50%;background:var(--ax-viz-emerald);"></span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">USDC</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-top:4px;">1,240 USDC</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- portfolio stats (4) -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Portfolio">
+            <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Portfolio</h2></div></div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Est. NFT value</span>
+                <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">24.6 ETH</b>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Items owned</span>
+                <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">18</b>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Items created</span>
+                <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">7</b>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Royalties earned</span>
+                <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);">+3.12 ETH</b>
+              </div>
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">30-day change</span><b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-sm);">+14.2%</b></div>
+                <svg viewBox="0 0 220 40" width="100%" height="40" fill="none" preserveAspectRatio="none" style="color:var(--ax-accent);" aria-hidden="true"><path d="M2 34 28 30 54 31 80 24 106 26 132 18 158 20 184 12 218 6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+            </div>
+          </section>
+
+          <!-- tabs + collection grid (12) -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Your items" x-data="{ tab:'owned' }">
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-tabs" style="flex:1 1 auto;">
+                <div class="ax-tabs__list" role="tablist" aria-label="Item collections">
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="(tab==='owned').toString()" :class="tab==='owned' && 'is-active'" @click="tab='owned'">Owned <span class="ax-badge ax-badge--neutral ax-badge--soft ax-badge--sm ax-tabs__badge ax-num">18</span></button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="(tab==='created').toString()" :class="tab==='created' && 'is-active'" @click="tab='created'">Created <span class="ax-badge ax-badge--neutral ax-badge--soft ax-badge--sm ax-tabs__badge ax-num">7</span></button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="(tab==='favorited').toString()" :class="tab==='favorited' && 'is-active'" @click="tab='favorited'">Favorited <span class="ax-badge ax-badge--neutral ax-badge--soft ax-badge--sm ax-tabs__badge ax-num">9</span></button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="(tab==='activity').toString()" :class="tab==='activity' && 'is-active'" @click="tab='activity'">Activity</button>
+                </div>
+              </div>
+              <select class="ax-select ax-select--sm" aria-label="Sort items" style="min-width:150px;">
+                <option>Recently added</option>
+                <option>Price: high to low</option>
+                <option>Price: low to high</option>
+              </select>
+            </div>
+
+            <div class="ax-card__body">
+              <!-- grid tabs -->
+              <template x-for="t in ['owned','created','favorited']" :key="t">
+                <div class="ax-grid" x-show="tab===t" style="grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:var(--ax-space-4);">
+                  <template x-for="n in $root._wallet[t]" :key="n.id">
+                    <article class="ax-card ax-card--interactive" style="margin:0;overflow:hidden;display:flex;flex-direction:column;">
+                      <a href="/nft/nft-details/" style="aspect-ratio:1/1;display:block;position:relative;" :style="`background:linear-gradient(${n.angle}deg, color-mix(in oklab,${n.c1} 76%,var(--ax-surface-solid)), color-mix(in oklab,${n.c2} 56%,var(--ax-surface-solid)));`" :aria-label="'View ' + n.title">
+                        <span x-show="n.listed" class="ax-badge ax-badge--success ax-badge--soft ax-badge--pill ax-badge--sm" style="position:absolute;top:var(--ax-space-2);inset-inline-start:var(--ax-space-2);backdrop-filter:blur(6px);">Listed</span>
+                      </a>
+                      <div class="ax-card__body" style="padding:var(--ax-space-3) var(--ax-space-4);display:flex;flex-direction:column;gap:4px;">
+                        <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="n.collection"></div>
+                        <div class="ax-text-truncate" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="n.title"></div>
+                        <div class="ax-cluster" style="justify-content:space-between;padding-top:6px;border-top:1px solid var(--ax-border);margin-top:4px;">
+                          <span style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;color:var(--ax-text-subtle);" x-text="t==='favorited' ? 'Price' : (n.listed ? 'Listed' : 'Floor')"></span>
+                          <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="n.price.toFixed(2) + ' ETH'"></span>
+                        </div>
+                      </div>
+                    </article>
+                  </template>
+                </div>
+              </template>
+
+              <!-- activity tab -->
+              <div x-show="tab==='activity'" x-cloak class="ax-table-wrap" style="margin:0 calc(-1 * var(--ax-space-5));">
+                <table class="ax-table ax-table--hover">
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col">Event</th>
+                      <th class="ax-table__th" scope="col">Item</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Amount</th>
+                      <th class="ax-table__th" scope="col">From → To</th>
+                      <th class="ax-table__th" scope="col">Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="e in $root._wallet.activity" :key="e.id">
+                      <tr class="ax-table__row">
+                        <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" :class="e.badge" x-text="e.event"></span></td>
+                        <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="e.item"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" :style="`font-family:var(--ax-font-mono);color:${e.amount>0 ? 'var(--ax-viz-emerald)' : 'var(--ax-text)'};`" x-text="e.amount ? (e.amount>0?'+':'') + e.amount.toFixed(2) + ' ETH' : '—'"></td>
+                        <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);font-size:var(--ax-text-xs);" x-text="e.fromto"></td>
+                        <td class="ax-table__td" style="color:var(--ax-text-subtle);" x-text="e.date"></td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════════════════ CONNECT MODAL ════════════════ -->
+        <div class="ax-flex" x-show="modal" x-cloak style="position:fixed;inset:0;z-index:80;align-items:center;justify-content:center;padding:var(--ax-space-5);">
+          <div style="position:absolute;inset:0;background:color-mix(in oklab,var(--ax-canvas) 72%,transparent);backdrop-filter:blur(4px);" @click="closeConnect()"></div>
+          <div class="ax-card" style="position:relative;width:min(440px,100%);margin:0;" role="dialog" aria-modal="true" aria-label="Connect a wallet" @keydown.escape.window="closeConnect()">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Connect a wallet</h2><p class="ax-card__subtitle" x-show="state==='list'">Choose how you'd like to connect.</p></div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="closeConnect()" aria-label="Close"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- provider list -->
+              <div class="ax-flex" x-show="state==='list'" style="flex-direction:column;gap:var(--ax-space-2);">
+                <template x-for="p in providers" :key="p.id">
+                  <button type="button" @click="connect(p)" style="display:flex;align-items:center;gap:var(--ax-space-3);width:100%;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface);cursor:pointer;text-align:start;transition:border-color var(--ax-motion-fast),background var(--ax-motion-fast);" onmouseover="this.style.borderColor='var(--ax-accent)';this.style.background='var(--ax-accent-wash)'" onmouseout="this.style.borderColor='var(--ax-border)';this.style.background='var(--ax-surface)'">
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${p.color} 18%,transparent);color:${p.color};flex:none;`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-html="p.icon"></svg></span>
+                    <span style="flex:1 1 auto;min-width:0;"><span style="display:block;font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="p.name"></span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="p.desc"></span></span>
+                    <span x-show="p.popular" class="ax-badge ax-badge--accent ax-badge--soft ax-badge--sm ax-badge--pill">Popular</span>
+                  </button>
+                </template>
+                <p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);text-align:center;margin-top:var(--ax-space-2);">By connecting you agree to the <a href="/pages/terms/" class="ax-link">terms of service</a>.</p>
+              </div>
+
+              <!-- connecting -->
+              <div x-show="state==='connecting'" x-cloak style="text-align:center;padding:var(--ax-space-6) 0;">
+                <span class="ax-spinner ax-spinner--lg" style="margin:0 auto var(--ax-space-4);" role="status" aria-label="Connecting"><span class="ax-spinner__glyph"></span></span>
+                <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Connecting to <span x-text="active?.name"></span>…</div>
+                <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-top:var(--ax-space-2);">Approve the connection request in your wallet.</p>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="margin-top:var(--ax-space-4);" @click="state='list'">Cancel</button>
+              </div>
+
+              <!-- error -->
+              <div x-show="state==='error'" x-cloak style="text-align:center;padding:var(--ax-space-5) 0;">
+                <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-danger-500) 16%,transparent);color:var(--ax-danger-500);margin:0 auto var(--ax-space-3);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 16h.01"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg></span>
+                <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Connection declined</div>
+                <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-top:var(--ax-space-2);">The request was rejected in your wallet. You can try again.</p>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:center;margin-top:var(--ax-space-4);">
+                  <button type="button" class="ax-btn ax-btn--ghost" @click="state='list'">Back</button>
+                  <button type="button" class="ax-btn ax-btn--primary" @click="connect(active)">Retry</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axWallet(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+            return {
+              connected:false, modal:false, state:'list', active:null, copied:false,
+              addr:'0x8a2f9d4e1c77b3a06f55214bd90c3e7a14bd77a9',
+              get addrShort(){ return this.addr.slice(0,6) + '…' + this.addr.slice(-4); },
+              providers:[
+                { id:'meta',   name:'MetaMask',        desc:'Connect using the browser extension', color:C.amber,   popular:true,  icon:'<path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5"/>' },
+                { id:'wc',     name:'WalletConnect',   desc:'Scan with a mobile wallet',           color:C.cyan,    popular:false, icon:'<path d="M4.912 9.875c3.872 -3.581 10.304 -3.581 14.176 0l.467 .43a.483 .483 0 0 1 0 .714l-1.598 1.48a.252 .252 0 0 1 -.354 0l-.642 -.594c-2.702 -2.5 -7.086 -2.5 -9.788 0l-.688 .636a.252 .252 0 0 1 -.354 0l-1.598 -1.48a.483 .483 0 0 1 0 -.714z"/><path d="M7 13l2 2l3 -3l3 3l2 -2"/>' },
+                { id:'coin',   name:'Coinbase Wallet', desc:'Connect with Coinbase',               color:C.violet,  popular:false, icon:'<path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 9h6v6h-6z"/>' },
+                { id:'ledger', name:'Ledger',          desc:'Connect a hardware wallet',           color:C.emerald, popular:false, icon:'<path d="M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1"/><path d="M9 8v8"/><path d="M13 8h2v8h-2"/>' },
+              ],
+              _wallet:{
+                owned:[
+                  { id:1, title:'Quiet Forms #018', collection:'Quiet Forms',   price:2.40, listed:true,  angle:135, c1:C.violet,  c2:C.cyan },
+                  { id:2, title:'Porcelain #014',   collection:'Quiet Surface', price:1.85, listed:false, angle:120, c1:C.cyan,    c2:C.emerald },
+                  { id:3, title:'Marble Ghost #56', collection:'Chrome Spirits',price:6.80, listed:false, angle:128, c1:C.violet,  c2:C.emerald },
+                  { id:4, title:'Solar Beast #088', collection:'Solar Beasts',  price:0.92, listed:true,  angle:165, c1:C.amber,   c2:C.pink },
+                  { id:5, title:'Glyph Engine #07', collection:'Echo Wardens',  price:5.40, listed:false, angle:130, c1:C.cyan,    c2:C.violet },
+                  { id:6, title:'Pastel Voyage #12',collection:'Aurora Genesis',price:4.20, listed:false, angle:145, c1:C.pink,    c2:C.cyan },
+                ],
+                created:[
+                  { id:1, title:'Quiet Forms #145', collection:'Quiet Forms', price:2.00, listed:true,  angle:135, c1:C.violet, c2:C.cyan },
+                  { id:2, title:'Quiet Forms #144', collection:'Quiet Forms', price:1.90, listed:true,  angle:150, c1:C.emerald,c2:C.violet },
+                  { id:3, title:'Quiet Forms #143', collection:'Quiet Forms', price:1.80, listed:false, angle:128, c1:C.cyan,   c2:C.pink },
+                ],
+                favorited:[
+                  { id:1, title:'Neon Drifter #218',collection:'Pixel Nomads', price:3.80, listed:false, angle:135, c1:C.pink,   c2:C.amber },
+                  { id:2, title:'Chrome Spirit #44',collection:'Chrome Spirits',price:2.10, listed:false, angle:140, c1:C.emerald,c2:C.cyan },
+                  { id:3, title:'Iron Bloom #99',   collection:'Solar Beasts', price:1.70, listed:false, angle:125, c1:C.amber,  c2:C.violet },
+                  { id:4, title:'Bone Field #102',  collection:'Quiet Surface',price:1.10, listed:false, angle:155, c1:C.violet, c2:C.pink },
+                ],
+                activity:[
+                  { id:1, event:'Purchase', badge:'ax-badge--success', item:'Marble Ghost #56', amount:-6.80, fromto:'0x14bd → you',   date:'2h ago' },
+                  { id:2, event:'Sale',     badge:'ax-badge--info',    item:'Quiet Forms #143', amount:1.80,  fromto:'you → 0x77c1',   date:'Yesterday' },
+                  { id:3, event:'Listing',  badge:'ax-badge--warning', item:'Solar Beast #088', amount:0.92,  fromto:'you → market',   date:'Jun 24' },
+                  { id:4, event:'Royalty',  badge:'ax-badge--success', item:'Quiet Forms #144', amount:0.095, fromto:'resale',         date:'Jun 22' },
+                  { id:5, event:'Transfer', badge:'ax-badge--neutral', item:'Bone Field #102',  amount:0,     fromto:'0x2def → you',   date:'Jun 20' },
+                ],
+              },
+              openConnect(){ this.modal=true; this.state='list'; this.active=null; },
+              closeConnect(){ this.modal=false; this.state='list'; },
+              connect(p){
+                this.active=p; this.state='connecting';
+                // simulate: Ledger declines to demonstrate the error state; others succeed
+                setTimeout(()=>{
+                  if(p.id==='ledger'){ this.state='error'; }
+                  else { this.connected=true; this.modal=false; this.state='list'; }
+                }, 1400);
+              },
+              disconnect(){ this.connected=false; },
+              copyAddr(){ try{ navigator.clipboard?.writeText(this.addr); }catch(e){} this.copied=true; setTimeout(()=>{ this.copied=false; }, 2200); },
+            };
+          }
+        </script>
+{% endblock %}

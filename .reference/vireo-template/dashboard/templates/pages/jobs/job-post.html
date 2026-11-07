@@ -1,0 +1,423 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axJobPost()">
+
+        <form @submit.prevent="save('publish')">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Post a Job</h1>
+              <p class="ax-page-head__subtitle">Write the posting, set compensation &amp; screening, then publish to your careers page.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/jobs/list/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+                <span class="ax-btn__label">Back to jobs</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- save success toast -->
+        <div x-show="saved" x-cloak x-transition class="ax-alert ax-alert--success" role="status" style="margin-bottom:var(--ax-space-6);">
+          <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+          <div class="ax-alert__content"><p class="ax-alert__title" x-text="savedKind==='draft' ? 'Saved as draft' : 'Job published'"></p><p class="ax-alert__message" x-text="savedKind==='draft' ? 'Your posting is saved. Publish it when you\'re ready.' : 'This posting is now live on your careers page.'"></p></div>
+          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="saved=false" aria-label="Dismiss"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid" style="padding-bottom:96px;">
+
+          <!-- ───────── LEFT COLUMN (8) ───────── -->
+          <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- ░░ BASIC INFO ░░ -->
+            <section class="ax-card" role="region" aria-label="Role details">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 1</span>
+                  <h2 class="ax-card__title">Role details</h2>
+                  <p class="ax-card__subtitle">What candidates see at the top of the posting.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div class="ax-field">
+                  <label class="ax-label" for="j-title">Job title <span class="ax-field__required">*</span></label>
+                  <input id="j-title" type="text" class="ax-input" placeholder="e.g. Senior Product Designer" x-model="form.title" maxlength="100">
+                  <span class="ax-help">Appears as the posting headline and page title.</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="j-dept">Department <span class="ax-field__required">*</span></label>
+                    <select id="j-dept" class="ax-select" x-model="form.dept">
+                      <option value="">Select department</option>
+                      <option value="eng">Engineering</option>
+                      <option value="design">Design</option>
+                      <option value="product">Product</option>
+                      <option value="marketing">Marketing</option>
+                      <option value="sales">Sales</option>
+                      <option value="ops">Operations</option>
+                    </select>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="j-level">Experience level</label>
+                    <select id="j-level" class="ax-select" x-model="form.level">
+                      <option value="junior">Junior (0–2 yrs)</option>
+                      <option value="mid">Mid (3–5 yrs)</option>
+                      <option value="senior">Senior (6–9 yrs)</option>
+                      <option value="lead">Lead / Staff (10+ yrs)</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- employment type segmented -->
+                <div class="ax-field" style="margin:0;">
+                  <span class="ax-label" style="margin-bottom:var(--ax-space-2);">Employment type</span>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;">
+                    <template x-for="t in employmentTypes" :key="t.id">
+                      <button type="button" class="ax-btn ax-btn--sm ax-btn--pill" :class="form.type===t.id ? 'ax-btn--primary' : 'ax-btn--secondary'" @click="form.type=t.id" x-text="t.name"></button>
+                    </template>
+                  </div>
+                </div>
+                <!-- location + remote -->
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 7;margin:0;">
+                    <label class="ax-label" for="j-location">Location</label>
+                    <input id="j-location" type="text" class="ax-input" placeholder="e.g. Berlin, DE" x-model="form.location" :disabled="form.remote==='remote'">
+                  </div>
+                  <div class="ax-field" style="grid-column:span 5;margin:0;">
+                    <label class="ax-label" for="j-remote">Work model</label>
+                    <select id="j-remote" class="ax-select" x-model="form.remote">
+                      <option value="onsite">On-site</option>
+                      <option value="hybrid">Hybrid</option>
+                      <option value="remote">Fully remote</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ COMPENSATION ░░ -->
+            <section class="ax-card" role="region" aria-label="Compensation">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 2</span>
+                  <h2 class="ax-card__title">Compensation</h2>
+                  <p class="ax-card__subtitle">Transparent pay ranges get up to 2× more applicants.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 4;margin:0;">
+                    <label class="ax-label" for="j-min">Min. salary</label>
+                    <div class="ax-input-group">
+                      <span class="ax-input-group__addon" style="color:var(--ax-text-muted);" x-text="currencySymbol()"></span>
+                      <input id="j-min" type="text" class="ax-input ax-num" inputmode="numeric" placeholder="95,000" x-model="form.salMin" style="border:0;background:transparent;font-family:var(--ax-font-mono);">
+                    </div>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 4;margin:0;">
+                    <label class="ax-label" for="j-max">Max. salary</label>
+                    <div class="ax-input-group">
+                      <span class="ax-input-group__addon" style="color:var(--ax-text-muted);" x-text="currencySymbol()"></span>
+                      <input id="j-max" type="text" class="ax-input ax-num" inputmode="numeric" placeholder="120,000" x-model="form.salMax" style="border:0;background:transparent;font-family:var(--ax-font-mono);">
+                    </div>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 4;margin:0;">
+                    <label class="ax-label" for="j-currency">Currency</label>
+                    <select id="j-currency" class="ax-select" x-model="form.currency">
+                      <option value="usd">USD ($)</option>
+                      <option value="eur">EUR (€)</option>
+                      <option value="gbp">GBP (£)</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="j-period">Pay period</label>
+                    <select id="j-period" class="ax-select" x-model="form.period">
+                      <option value="year">Per year</option>
+                      <option value="month">Per month</option>
+                      <option value="hour">Per hour</option>
+                    </select>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;margin:0;justify-content:flex-end;">
+                    <label class="ax-check" style="gap:var(--ax-space-3);">
+                      <input type="checkbox" class="ax-switch" x-model="form.showEquity">
+                      <span style="display:flex;flex-direction:column;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-medium);">Includes equity</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Show an equity note on the posting.</span></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ DESCRIPTION ░░ -->
+            <section class="ax-card" role="region" aria-label="Description">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 3</span>
+                  <h2 class="ax-card__title">Description</h2>
+                  <p class="ax-card__subtitle">Sell the role — the mission, the impact, and the team.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div class="ax-field" style="margin:0;">
+                  <label class="ax-label" for="j-desc">About the role</label>
+                  <!-- editor toolbar (visual; Quill mounts here in production) -->
+                  <div role="toolbar" aria-label="Formatting" style="display:flex;gap:2px;padding:6px;border:1px solid var(--ax-border);border-bottom:0;border-radius:var(--ax-radius-sm) var(--ax-radius-sm) 0 0;background:var(--ax-surface-subtle);flex-wrap:wrap;">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bold"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"/><path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Italic"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5l6 0"/><path d="M7 19l6 0"/><path d="M14 5l-4 14"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Underline"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5v5a5 5 0 0 0 10 0v-5"/><path d="M5 21h14"/></svg></button>
+                    <span style="width:1px;background:var(--ax-border);margin:2px 4px;"></span>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bulleted list"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Numbered list"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6h9"/><path d="M11 12h9"/><path d="M12 18h8"/><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4"/><path d="M6 10v-6l-2 2"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Insert link"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6 -6"/><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"/><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"/></svg></button>
+                  </div>
+                  <textarea id="j-desc" class="ax-textarea" rows="6" placeholder="Describe the mission, the team, and what success looks like in this role…" x-model="form.desc" style="border-radius:0 0 var(--ax-radius-sm) var(--ax-radius-sm);min-height:160px;"></textarea>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ REQUIREMENTS ░░ -->
+            <section class="ax-card" role="region" aria-label="Requirements">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 4</span>
+                  <h2 class="ax-card__title">Requirements</h2>
+                  <p class="ax-card__subtitle">Add must-haves as a clean, scannable list.</p>
+                </div>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="addReq()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  <span class="ax-btn__label">Add requirement</span>
+                </button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <template x-for="(r, ri) in requirements" :key="r.id">
+                  <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                    <span style="flex:none;color:var(--ax-text-subtle);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></span>
+                    <input type="text" class="ax-input" placeholder="e.g. 6+ years designing SaaS products" x-model="r.text" style="flex:1 1 auto;">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="requirements.splice(ri,1)" :aria-label="'Remove requirement ' + (ri+1)" :disabled="requirements.length===1"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+                  </div>
+                </template>
+              </div>
+            </section>
+
+            <!-- ░░ SKILLS ░░ -->
+            <section class="ax-card" role="region" aria-label="Skills">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 5</span>
+                  <h2 class="ax-card__title">Skills</h2>
+                  <p class="ax-card__subtitle">Tags help candidates and search match this role.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div class="ax-field" style="margin:0;">
+                  <label class="ax-label" for="j-skills">Add skills</label>
+                  <div class="ax-tags">
+                    <template x-for="(s, si) in form.skills" :key="si">
+                      <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill" style="gap:4px;"><span x-text="s"></span><button type="button" @click="form.skills.splice(si,1)" :aria-label="'Remove skill ' + s" style="background:none;border:0;cursor:pointer;color:inherit;display:inline-flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:11px;height:11px;"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                    </template>
+                    <input id="j-skills" type="text" class="ax-tags__input" placeholder="Add a skill…" @keydown.enter.prevent="addSkill($event)" @keydown.comma.prevent="addSkill($event)">
+                  </div>
+                  <span class="ax-help">Press Enter or comma to add. Try: Figma, TypeScript, Discovery.</span>
+                </div>
+                <!-- suggestions -->
+                <div style="margin-top:var(--ax-space-4);">
+                  <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Suggestions</div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;">
+                    <template x-for="s in suggestions.filter(x=>!form.skills.includes(x))" :key="s">
+                      <button type="button" class="ax-badge ax-badge--outline" style="border-radius:var(--ax-radius-pill);cursor:pointer;gap:4px;" @click="form.skills.push(s)"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg><span x-text="s"></span></button>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ APPLICATION SETTINGS ░░ -->
+            <section class="ax-card" role="region" aria-label="Application settings">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 6</span>
+                  <h2 class="ax-card__title">Application settings</h2>
+                  <p class="ax-card__subtitle">Control how people apply and what you collect.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="j-deadline">Application deadline</label>
+                    <input id="j-deadline" type="date" class="ax-input ax-num" x-model="form.deadline" style="font-family:var(--ax-font-mono);">
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="j-cap">Applicant cap</label>
+                    <input id="j-cap" type="text" class="ax-input ax-num" inputmode="numeric" placeholder="60" x-model="form.cap" style="font-family:var(--ax-font-mono);">
+                  </div>
+                </div>
+                <label class="ax-check" style="gap:var(--ax-space-3);">
+                  <input type="checkbox" class="ax-switch" x-model="form.requireResume">
+                  <span style="display:flex;flex-direction:column;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-medium);">Require a resume</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Applicants must upload a PDF or DOCX.</span></span>
+                </label>
+                <!-- screening questions -->
+                <div>
+                  <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                    <span class="ax-label">Screening questions</span>
+                    <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="addQuestion()">+ Add question</button>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <template x-for="(qn, qi) in questions" :key="qn.id">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <input type="text" class="ax-input ax-input--sm" placeholder="e.g. Share a portfolio link" x-model="qn.text" style="flex:1 1 auto;">
+                        <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="questions.splice(qi,1)" :aria-label="'Remove question ' + (qi+1)"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                      </div>
+                    </template>
+                    <div x-show="!questions.length" x-cloak style="font-size:var(--ax-text-sm);color:var(--ax-text-subtle);padding:var(--ax-space-2) 0;">No screening questions yet — add one to pre-qualify applicants.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───────── RIGHT RAIL (4) ───────── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- ░░ VISIBILITY ░░ -->
+            <section class="ax-card" role="region" aria-label="Visibility">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Visibility</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <template x-for="s in statuses" :key="s.id">
+                  <label style="display:flex;align-items:center;gap:var(--ax-space-3);cursor:pointer;border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);border:1.5px solid;transition:border-color var(--ax-motion-fast) var(--ax-ease-standard);"
+                         :style="form.status===s.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);' : 'border-color:var(--ax-border);background:var(--ax-surface);'">
+                    <input type="radio" name="j-status" class="ax-radio" :value="s.id" x-model="form.status">
+                    <span style="width:8px;height:8px;border-radius:50%;flex:none;" :style="`background:${s.c};`"></span>
+                    <span style="flex:1 1 auto;"><span style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="s.name"></span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="s.desc"></span></span>
+                  </label>
+                </template>
+                <div class="ax-field" x-show="form.status==='scheduled'" x-cloak style="margin-top:var(--ax-space-1);">
+                  <label class="ax-label" for="j-schedule">Publish date</label>
+                  <input id="j-schedule" type="date" class="ax-input ax-num" x-model="form.scheduleDate" style="font-family:var(--ax-font-mono);">
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ HIRING TEAM ░░ -->
+            <section class="ax-card" role="region" aria-label="Hiring team">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Hiring team</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-field" style="margin:0;">
+                  <label class="ax-label" for="j-manager">Hiring manager</label>
+                  <select id="j-manager" class="ax-select" x-model="form.manager">
+                    <option value="priya">Priya Nair</option>
+                    <option value="marcus">Marcus Lindqvist</option>
+                    <option value="lena">Lena Brandt</option>
+                  </select>
+                </div>
+                <div>
+                  <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Reviewers</div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">TH</span></span>
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">DO</span></span>
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><span class="ax-avatar__initials">AS</span></span>
+                    <button type="button" class="ax-avatar ax-avatar--sm" style="background:var(--ax-surface-subtle);color:var(--ax-text-muted);border:1px dashed var(--ax-border-strong);cursor:pointer;" aria-label="Add reviewer"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ PREVIEW ░░ -->
+            <section class="ax-card" role="region" aria-label="Posting preview">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Live preview</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-4);background:var(--ax-surface-subtle);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                    <span class="ax-avatar ax-avatar--md ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-accent) 16%,transparent);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
+                    <div style="min-width:0;">
+                      <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);line-height:1.25;" x-text="form.title || 'Job title'"></div>
+                      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="(deptName() || 'Department') + ' · ' + workModel()"></div>
+                    </div>
+                  </div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-3);flex-wrap:wrap;">
+                    <span class="ax-badge ax-badge--soft ax-badge--accent" style="border-radius:var(--ax-radius-xs);" x-text="typeName()"></span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="salaryPreview()"></span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <!-- ════════════════ STICKY ACTION BAR ════════════════ -->
+        <div style="position:sticky;bottom:0;z-index:5;margin:0 calc(-1 * var(--ax-space-6));padding:var(--ax-space-4) var(--ax-space-6);background:var(--ax-surface);backdrop-filter:blur(18px) saturate(1.1);border-top:1px solid var(--ax-border);box-shadow:var(--ax-shadow-sm);">
+          <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;">
+            <span class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-warning-500);"><path d="M12 9v4"/><path d="M12 16h.01"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg>
+              <span>Draft not yet published</span>
+            </span>
+            <div class="ax-cluster" style="gap:var(--ax-space-2);">
+              <a class="ax-btn ax-btn--ghost" href="/jobs/list/">Cancel</a>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="save('draft')">Save draft</button>
+              <button type="submit" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                <span class="ax-btn__label">Publish job</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        </form>
+
+        
+
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axJobPost(){
+            return {
+              saved:false, savedKind:'', _rid:2, _qid:0,
+              form:{
+                title:'', dept:'', level:'senior', type:'full_time',
+                location:'', remote:'remote',
+                salMin:'', salMax:'', currency:'usd', period:'year', showEquity:true,
+                desc:'', skills:[],
+                deadline:'', cap:'60', requireResume:true,
+                status:'active', scheduleDate:'',
+                manager:'priya',
+              },
+              employmentTypes:[
+                { id:'full_time', name:'Full-time' },
+                { id:'part_time', name:'Part-time' },
+                { id:'contract', name:'Contract' },
+                { id:'internship', name:'Internship' },
+              ],
+              requirements:[
+                { id:1, text:'' },
+              ],
+              questions:[],
+              suggestions:['Figma','Design Systems','Accessibility','TypeScript','UX Research','Prototyping','Roadmapping'],
+              statuses:[
+                { id:'active', name:'Published', desc:'Live on your careers page', c:'var(--ax-viz-emerald)' },
+                { id:'draft', name:'Draft', desc:'Only visible to your team', c:'var(--ax-text-subtle)' },
+                { id:'scheduled', name:'Scheduled', desc:'Goes live on a set date', c:'var(--ax-viz-amber)' },
+              ],
+              currencySymbol(){ return { usd:'$', eur:'€', gbp:'£' }[this.form.currency] || '$'; },
+              deptName(){ const m={eng:'Engineering',design:'Design',product:'Product',marketing:'Marketing',sales:'Sales',ops:'Operations'}; return m[this.form.dept]||''; },
+              typeName(){ const t=this.employmentTypes.find(x=>x.id===this.form.type); return t?t.name:'Full-time'; },
+              workModel(){ return { onsite:'On-site', hybrid:'Hybrid', remote:'Remote' }[this.form.remote] || 'Remote'; },
+              salaryPreview(){
+                const fmt=(v)=>{ const n=parseInt(String(v).replace(/[^0-9]/g,''),10); if(!n) return ''; return n>=1000 ? '$'+Math.round(n/1000)+'K' : '$'+n; };
+                const a=fmt(this.form.salMin), b=fmt(this.form.salMax);
+                if(a&&b) return a+' – '+b; if(a) return 'From '+a; if(b) return 'Up to '+b; return 'Salary TBD';
+              },
+              addReq(){ this.requirements.push({ id:++this._rid, text:'' }); },
+              addQuestion(){ this.questions.push({ id:++this._qid, text:'' }); },
+              addSkill(e){ const v=e.target.value.trim().replace(/,$/,''); if(v && !this.form.skills.includes(v)){ this.form.skills.push(v); } e.target.value=''; },
+              save(kind){ this.savedKind=kind; this.saved=true; window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>{ this.saved=false; }, 4000); },
+            };
+          }
+        </script>
+{% endblock %}

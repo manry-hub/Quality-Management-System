@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{# utilities/position — faithful port of src/html/utilities/position.html.
+   Same DOM/classes/ARIA, same demo copy and Alpine helpers (including the
+   x-teleport toast). Reference hrefs converted to clean Django routes. #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Positioning</h1>
+              <p class="ax-page-head__subtitle">Relative, absolute, sticky &amp; fixed — composed with role tokens so overlays read in light and dark alike.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/utilities/helpers/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h4l13 -13a1.5 1.5 0 0 0 -4 -4l-13 13v4"/><path d="M14.5 5.5l4 4"/><path d="M12 8l-5 -5l-4 4l5 5"/><path d="M7 8l-1.5 1.5"/><path d="M16 12l5 5l-4 4l-5 -5"/><path d="M16 17l-1.5 1.5"/></svg>
+                <span class="ax-btn__label">Helpers</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/utilities/breakpoints/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5a1 1 0 0 1 1 -1h16a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-16a1 1 0 0 1 -1 -1v-10"/><path d="M7 20h10"/><path d="M9 16v4"/><path d="M15 16v4"/></svg>
+                <span class="ax-btn__label">Breakpoints</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid"
+          x-data="{ fixedOpen:false }">
+
+          <!-- Absolute -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Absolute positioning demo">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">position: absolute</span>
+                <h2 class="ax-card__title">Absolute overlays</h2>
+                <p class="ax-card__subtitle">A relatively-positioned parent anchors badges, ribbons &amp; status dots.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ax-space-4);">
+              <!-- corner badge -->
+              <div style="position:relative;border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);padding:var(--ax-space-5);background:var(--ax-surface-subtle);min-height:104px;">
+                <span style="position:absolute;top:var(--ax-space-3);right:var(--ax-space-3);" class="ax-badge ax-badge--solid ax-badge--danger ax-badge--pill">−40%</span>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:6px;">top / right</span>
+                <b style="color:var(--ax-text-strong);">Aperture Desk Lamp</b>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);margin-top:4px;">$129.00</div>
+              </div>
+              <!-- avatar status dot -->
+              <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);padding:var(--ax-space-5);background:var(--ax-surface-subtle);min-height:104px;display:flex;align-items:center;gap:var(--ax-space-3);">
+                <span style="position:relative;">
+                  <span class="ax-avatar ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);">AS</span>
+                  <i aria-hidden="true" style="position:absolute;bottom:-2px;right:-2px;width:13px;height:13px;border-radius:var(--ax-radius-pill);background:var(--ax-success-500);border:2px solid var(--ax-surface-solid);"></i>
+                </span>
+                <div>
+                  <b style="display:block;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Ava Sutton</b>
+                  <span style="font-size:var(--ax-text-xs);color:var(--ax-success-500);">Online</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Centered absolute -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Centered absolute overlay demo">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">inset + transform</span>
+                <h2 class="ax-card__title">Dead-center overlay</h2>
+                <p class="ax-card__subtitle">A media frame with a centered play affordance and a top ribbon.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="position:relative;border-radius:var(--ax-radius-lg);overflow:hidden;height:140px;background:linear-gradient(135deg,var(--ax-accent),var(--ax-viz-violet));">
+                <span style="position:absolute;top:0;left:0;padding:6px 14px;background:var(--ax-surface-overlay);color:var(--ax-text-strong);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);border-bottom-right-radius:var(--ax-radius-md);">FEATURED</span>
+                <button type="button" aria-label="Play overview video"
+                  style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:54px;height:54px;border-radius:var(--ax-radius-pill);background:var(--ax-surface-overlay);border:1px solid var(--ax-border-strong);display:grid;place-items:center;cursor:pointer;color:var(--ax-text-strong);box-shadow:var(--ax-shadow-md);">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor" stroke="none" aria-hidden="true"><path d="M8 5.14v13.72a1 1 0 0 0 1.5 .86l11 -6.86a1 1 0 0 0 0 -1.72l-11 -6.86a1 1 0 0 0 -1.5 .86z"/></svg>
+                </button>
+                <span style="position:absolute;bottom:var(--ax-space-3);left:var(--ax-space-4);color:#fff;font-weight:var(--ax-weight-semibold);">Vireo in 90 seconds</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Sticky -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Sticky positioning demo">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">position: sticky</span>
+                <h2 class="ax-card__title">Sticky section headers</h2>
+                <p class="ax-card__subtitle">Scroll this list — each group label pins to the top of its scroll box.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-scroll" style="height:240px;border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                <template x-for="grp in [
+                  ['A', ['Aisha Bello','Ava Sutton','Aperture Goods']],
+                  ['B', ['Brightway Retail','Brass Task Light']],
+                  ['C', ['Camila Rossi','Cedar & Co.','Cork Desk Mat']],
+                  ['D', ['Daniel Cho','Devon Okafor']],
+                  ['E', ['Erik Lindqvist']]
+                ]" :key="grp[0]">
+                  <div>
+                    <div style="position:sticky;top:0;z-index:1;padding:6px var(--ax-space-4);background:var(--ax-surface-subtle);border-bottom:1px solid var(--ax-border);backdrop-filter:blur(6px);">
+                      <span class="ax-eyebrow" x-text="grp[0]"></span>
+                    </div>
+                    <template x-for="row in grp[1]" :key="row">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-4);border-bottom:1px solid var(--ax-border);">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);font-size:var(--ax-text-2xs);" x-text="row.split(' ').map(w=>w[0]).join('').slice(0,2)"></span>
+                        <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="row"></span>
+                      </div>
+                    </template>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- Fixed (simulated) -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Fixed positioning demo">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">position: fixed</span>
+                <h2 class="ax-card__title">Fixed toast &amp; FAB</h2>
+                <p class="ax-card__subtitle">Pinned to the viewport, above all content. Trigger the live examples.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Fixed elements ignore scroll and sit relative to the viewport — used for toasts, FABs and the mobile sidebar overlay.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <button type="button" class="ax-btn ax-btn--primary"
+                  @click="fixedOpen=true; setTimeout(()=>fixedOpen=false, 3200)">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+                  <span class="ax-btn__label">Show fixed toast</span>
+                </button>
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Appears bottom-right for ~3s.</span>
+              </div>
+              <div style="border:1px dashed var(--ax-border-strong);border-radius:var(--ax-radius-md);padding:var(--ax-space-4);position:relative;min-height:72px;">
+                <span class="ax-eyebrow" style="display:block;margin-bottom:6px;">FAB pattern</span>
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">A floating action button anchors to a corner — shown here within the card via <code class="ax-code">absolute</code>, fixed in production.</span>
+                <span aria-hidden="true" style="position:absolute;bottom:var(--ax-space-3);right:var(--ax-space-3);width:44px;height:44px;border-radius:var(--ax-radius-pill);background:var(--ax-accent);color:var(--ax-on-accent);display:grid;place-items:center;box-shadow:var(--ax-shadow-md);">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- z-index ladder -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Stacking context demo">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">z-index</span>
+                <h2 class="ax-card__title">Stacking order</h2>
+                <p class="ax-card__subtitle">Overlapping layers prove the painting order — later siblings with higher z sit on top.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="position:relative;height:120px;">
+                <template x-for="(z,i) in [['base',0,'--ax-viz-cyan'],['card',1,'--ax-viz-violet'],['popover',2,'--ax-viz-pink'],['toast',3,'--ax-accent']]" :key="z[0]">
+                  <div :style="'position:absolute;top:'+(i*14)+'px;left:'+(i*64)+'px;z-index:'+z[1]+';width:150px;height:84px;border-radius:var(--ax-radius-lg);background:var('+z[2]+');color:#fff;display:flex;flex-direction:column;justify-content:center;padding:var(--ax-space-4);box-shadow:var(--ax-shadow-md);'">
+                    <b style="text-transform:capitalize;" x-text="z[0]"></b>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);opacity:.9;" x-text="'z-index: '+z[1]"></span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- the actual fixed toast, teleported to body -->
+          <template x-teleport="body">
+            <div x-show="fixedOpen" x-cloak x-transition.opacity
+              role="status" aria-live="polite"
+              style="position:fixed;bottom:var(--ax-space-6);right:var(--ax-space-6);z-index:9999;display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-overlay);border:1px solid var(--ax-border-strong);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-md);backdrop-filter:blur(12px);max-width:320px;">
+              <span aria-hidden="true" style="display:grid;place-items:center;width:30px;height:30px;border-radius:var(--ax-radius-sm);background:var(--ax-success-50);color:var(--ax-success-500);flex:0 0 auto;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg>
+              </span>
+              <div style="min-width:0;">
+                <b style="display:block;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Fixed to the viewport</b>
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Scroll — this toast stays put.</span>
+              </div>
+            </div>
+          </template>
+
+        </div>
+{% endblock %}

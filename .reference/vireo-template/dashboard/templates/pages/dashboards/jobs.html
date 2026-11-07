@@ -1,0 +1,419 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Recruitment</h1>
+              <p class="ax-page-head__subtitle">Hiring pipeline health across 12 active requisitions — June 2026.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">Last 30 days</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Post Job</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Open Positions 58, up 4.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/><path d="M12 12l0 .01"/><path d="M3 13a20 20 0 0 0 18 0"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.0%</span>
+              </div>
+              <div class="ax-kpi__label">Open Positions</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">58</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[8,10,9,15,16,20,23,26]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Applications this month 2,940, up 11.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 9l1 0"/><path d="M9 13l6 0"/><path d="M9 17l6 0"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>11.0%</span>
+              </div>
+              <div class="ax-kpi__label">Applications (30D)</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">2,940</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Trend","data":[6,10,9,16,18,22,27,30]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Time to hire 24 days, down 8.0% which is good">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 12l3 2"/><path d="M12 7v5"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>8.0%</span>
+              </div>
+              <div class="ax-kpi__label">Time to Hire</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">24 <small style="font-size:var(--ax-text-md);color:var(--ax-text-muted);font-weight:500;">days</small></div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[26,23,24,20,18,15,12,8]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Offer acceptance 78%, up 2.5%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4"/><path d="M15 19l2 2l4 -4"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.5%</span>
+              </div>
+              <div class="ax-kpi__label">Offer Acceptance</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">78%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[12,14,13,17,18,21,23,25]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Hiring Funnel (8) + Source of Hire donut (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Hiring funnel">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pipeline</span>
+                <h2 class="ax-card__title">Hiring Funnel</h2>
+                <p class="ax-card__subtitle">Candidate stages across all open requisitions</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Range">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">7D</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">30D</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">QTD</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-jobs-funnel" aria-label="Funnel: Applied 2940, Screened 1180, Interview 460, Offer 96, Hired 72"></div>
+            </div>
+          </section>
+
+          <!-- Source of Hire donut -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Source of hire">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Source of Hire</h2>
+                <p class="ax-card__subtitle">Where candidates come from</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Source options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-jobs-source" aria-label="Donut: Job boards 42%, Referrals 28%, Agency 18%, Direct 12%"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Job boards</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">42%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Referrals</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">28%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Agency</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">18%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Direct apply</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">12%</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── SECONDARY: Applications trend (4) + Openings by dept (4) + Hiring target (4) ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Applications trend">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Applications Trend</h2>
+                <p class="ax-card__subtitle">New applications per week</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);align-items:baseline;margin-bottom:var(--ax-space-2);">
+                <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);">2,940</div>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>11.0%</span>
+              </div>
+              <div
+                data-ax-chart="apex" data-ax-chart-type="area" data-ax-chart-height="150" data-ax-chart-legend="none" data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"Applications","data":[480,520,610,580,690,720,810,940]}]'
+                aria-label="Area chart of weekly applications trending up"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Openings by department">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Openings by Department</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-jobs-dept" aria-label="Horizontal bar: Engineering 18, Sales 12, Design 9, Marketing 8, Support 6, Ops 5"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Hiring target">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Quarterly Hiring Target</h2>
+                <p class="ax-card__subtitle">72 of 90 hires · Q2 FY26</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-jobs-target" aria-label="Radial gauge: 80% of hiring target reached"></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);text-align:center;margin-top:var(--ax-space-2);">
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Hired</small><b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-md);">72</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Remaining</small><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-md);">18</b></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Recent Applicants (8) + Interviews Today (4) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Recent applicants">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Applicants</h2>
+                <p class="ax-card__subtitle">Latest candidates across all roles</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Candidate</th>
+                    <th class="ax-table__th" scope="col">Role</th>
+                    <th class="ax-table__th" scope="col">Stage</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Match</th>
+                    <th class="ax-table__th" scope="col">Applied</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">EM</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Elena Mwangi</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">elena.m@mail.com</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Senior Frontend Engineer</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">Interview</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">94%</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 24</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:600;">RC</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Rohan Chatterjee</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">rohan.c@mail.com</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Product Designer</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">Offer</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">91%</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 23</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);font-weight:600;">SD</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Sofia Delgado</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">sofia.d@mail.com</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Account Executive</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-text-muted);">Screened</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">82%</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 23</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);font-weight:600;">TN</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Theo Nakamura</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">theo.n@mail.com</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">DevOps Engineer</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">Interview</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">79%</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 22</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);font-weight:600;">AB</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Amara Boateng</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">amara.b@mail.com</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Marketing Manager</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-text-muted);">Screened</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">76%</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 21</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">LH</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Liam Hartley</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">liam.h@mail.com</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Data Analyst</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">Rejected</span></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-muted);">61%</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 20</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Interviews Today — agenda mini -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Interviews today">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Interviews Today</h2>
+                <p class="ax-card__subtitle">Thu, Jun 27</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Calendar</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">09:30</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Elena Mwangi</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Sr. Frontend · with Priya N. · Room 4</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">11:00</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Theo Nakamura</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">DevOps · with Marcus W. · Zoom</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">14:15</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Sofia Delgado</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Account Exec · with Dana R. · Room 2</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:48px;font-weight:600;">16:00</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Amara Boateng</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Marketing Mgr · with Leo F. · Room 1</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Open Jobs list (12) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Open jobs">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Open Requisitions</h2>
+                <p class="ax-card__subtitle">Active job postings and applicant volume</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Manage jobs</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Title</th>
+                    <th class="ax-table__th" scope="col">Department</th>
+                    <th class="ax-table__th" scope="col">Location</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Applicants</th>
+                    <th class="ax-table__th" scope="col">Posted</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Senior Frontend Engineer</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Engineering</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Remote · EU</td>
+                    <td class="ax-table__td ax-table__td--num">214</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 8</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Active</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Product Designer</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Design</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">London, UK</td>
+                    <td class="ax-table__td ax-table__td--num">168</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 11</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Active</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Account Executive</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Sales</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">New York, US</td>
+                    <td class="ax-table__td ax-table__td--num">142</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 14</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Screening</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">DevOps Engineer</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Engineering</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Remote · Global</td>
+                    <td class="ax-table__td ax-table__td--num">97</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 16</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Active</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Customer Success Lead</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Support</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Berlin, DE</td>
+                    <td class="ax-table__td ax-table__td--num">61</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 19</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-text-muted);"><span class="ax-badge__dot"></span>Draft</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // Hiring funnel — emulated via horizontal bar, descending stages
+    const funnel = document.getElementById('ax-jobs-funnel');
+    if (funnel) renderChart(funnel, 'bar', [{ name: 'Candidates', data: [2940, 1180, 460, 96, 72] }], {
+      height: 330, legend: 'none', accent: true,
+      apex: {
+        plotOptions: { bar: { horizontal: true, borderRadius: 6, barHeight: '62%', distributed: true } },
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-amber'), cv('--ax-viz-emerald')],
+        xaxis: { categories: ['Applied', 'Screened', 'Interview', 'Offer', 'Hired'] },
+        dataLabels: { enabled: true, textAnchor: 'start', offsetX: 4, style: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 }, formatter: (v) => v.toLocaleString() },
+        tooltip: { y: { formatter: (v) => v.toLocaleString() + ' candidates' } },
+      },
+    });
+
+    // Source of hire donut
+    const source = document.getElementById('ax-jobs-source');
+    if (source) renderChart(source, 'donut', [42, 28, 18, 12], {
+      height: 220, legend: 'none',
+      apex: {
+        labels: ['Job boards', 'Referrals', 'Agency', 'Direct'],
+        colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: { show: true, value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 }, total: { show: true, label: 'Hires', formatter: () => '72' } } } } },
+      },
+    });
+
+    // Openings by department — horizontal bar
+    const dept = document.getElementById('ax-jobs-dept');
+    if (dept) renderChart(dept, 'bar', [{ name: 'Openings', data: [18, 12, 9, 8, 6, 5] }], {
+      height: 230, legend: 'none', accent: true,
+      apex: {
+        plotOptions: { bar: { horizontal: true, borderRadius: 4, barHeight: '56%' } },
+        xaxis: { categories: ['Engineering', 'Sales', 'Design', 'Marketing', 'Support', 'Ops'] },
+        dataLabels: { enabled: true, offsetX: 14, style: { fontFamily: cv('--ax-font-mono'), fontWeight: 600, colors: [cv('--ax-on-accent')] } },
+      },
+    });
+
+    // Hiring target — radial gauge
+    const target = document.getElementById('ax-jobs-target');
+    if (target) renderChart(target, 'radialBar', [80], {
+      height: 230, accent: true,
+      apex: {
+        labels: ['Target'],
+        plotOptions: { radialBar: { hollow: { size: '62%' }, track: { background: cv('--ax-surface-subtle') }, dataLabels: { name: { offsetY: 22, color: cv('--ax-text-muted'), fontSize: '13px' }, value: { offsetY: -14, fontFamily: cv('--ax-font-display'), fontWeight: 700, fontSize: '28px', color: cv('--ax-text-strong') } } } },
+      },
+    });
+  </script>
+{% endblock %}

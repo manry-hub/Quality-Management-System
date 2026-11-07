@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Navbar</h1>
+              <p class="ax-page-head__subtitle">Top-navigation patterns composed from the glass <code class="ax-code">.ax-topnav</code> rail — brand bars, section tabs, marketing headers &amp; toolbars.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l16 0"/><path d="M4 12l16 0"/><path d="M4 18l16 0"/></svg>
+                <span class="ax-btn__label">Layout presets</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- App brand bar -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Application brand bar navbar">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Application</span>
+                <h2 class="ax-card__title">Brand bar</h2>
+                <p class="ax-card__subtitle">Logo + primary nav + search + actions — the standard product header.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav class="ax-topnav" aria-label="Brand bar example" style="position:static;border-radius:var(--ax-radius-md);border:1px solid var(--ax-border);block-size:auto;padding:var(--ax-space-3) var(--ax-space-4);flex-wrap:wrap;">
+                <a href="#" class="ax-cluster" style="gap:var(--ax-space-3);text-decoration:none;color:var(--ax-text-strong);flex-wrap:nowrap;">
+                  <span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:var(--ax-radius-sm);background:var(--ax-gradient-accent);color:var(--ax-on-accent);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9z"/><path d="M12 12l8 -4.5"/><path d="M12 12v9"/><path d="M12 12l-8 -4.5"/></svg>
+                  </span>
+                  <b style="font-family:var(--ax-font-display);font-size:var(--ax-text-md);">Vireo</b>
+                </a>
+                <div class="ax-cluster" style="gap:var(--ax-space-1);margin-inline-start:var(--ax-space-4);flex-wrap:nowrap;">
+                  <a href="#" class="ax-btn ax-btn--ghost ax-btn--sm" aria-current="page" style="color:var(--ax-accent);background:var(--ax-accent-wash);"><span class="ax-btn__label">Dashboard</span></a>
+                  <a href="#" class="ax-btn ax-btn--ghost ax-btn--sm"><span class="ax-btn__label">Orders</span></a>
+                  <a href="#" class="ax-btn ax-btn--ghost ax-btn--sm"><span class="ax-btn__label">Products</span></a>
+                  <a href="#" class="ax-btn ax-btn--ghost ax-btn--sm"><span class="ax-btn__label">Customers</span></a>
+                </div>
+                <span class="ax-spacer"></span>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                  <div style="display:inline-flex;align-items:center;gap:var(--ax-space-2);padding:6px var(--ax-space-3);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-pill);color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                    <span>Search</span><kbd class="ax-kbd">⌘K</kbd>
+                  </div>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Notifications" style="position:relative;">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+                    <span class="ax-badge ax-badge--solid ax-badge--danger ax-badge--count" style="position:absolute;top:-2px;inset-inline-end:-2px;">2</span>
+                  </button>
+                  <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">AS</span></span>
+                </div>
+              </nav>
+            </div>
+          </section>
+
+          <!-- Section tabs nav -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Section tabs navbar">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Sub-navigation</span>
+                <h2 class="ax-card__title">Section tabs</h2>
+                <p class="ax-card__subtitle">A secondary tab rail for switching views within a page.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;" x-data="{ tab:'overview' }">
+              <nav class="ax-topnav" aria-label="Section tabs example" style="position:static;border-radius:var(--ax-radius-md);border:1px solid var(--ax-border);block-size:auto;padding:var(--ax-space-2) var(--ax-space-3);gap:var(--ax-space-1);">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" :style="tab==='overview' ? 'color:var(--ax-accent);background:var(--ax-accent-wash);' : ''" :aria-current="tab==='overview' ? 'page' : false" @click="tab='overview'"><span class="ax-btn__label">Overview</span></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" :style="tab==='analytics' ? 'color:var(--ax-accent);background:var(--ax-accent-wash);' : ''" :aria-current="tab==='analytics' ? 'page' : false" @click="tab='analytics'"><span class="ax-btn__label">Analytics</span></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" :style="tab==='reports' ? 'color:var(--ax-accent);background:var(--ax-accent-wash);' : ''" :aria-current="tab==='reports' ? 'page' : false" @click="tab='reports'"><span class="ax-btn__label">Reports</span><span class="ax-badge ax-badge--soft ax-badge--accent ax-num" style="margin-inline-start:6px;">3</span></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" :style="tab==='settings' ? 'color:var(--ax-accent);background:var(--ax-accent-wash);' : ''" :aria-current="tab==='settings' ? 'page' : false" @click="tab='settings'"><span class="ax-btn__label">Settings</span></button>
+              </nav>
+              <div style="margin-top:var(--ax-space-4);padding:var(--ax-space-4);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-md);font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+                Active panel: <b style="color:var(--ax-text-strong);text-transform:capitalize;" x-text="tab"></b>
+              </div>
+            </div>
+          </section>
+
+          <!-- Pill nav -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Pill navigation">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Filter</span>
+                <h2 class="ax-card__title">Pill nav</h2>
+                <p class="ax-card__subtitle">Rounded, washed-accent active state for filter rails.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;" x-data="{ seg:'all' }">
+              <div class="ax-tabs ax-tabs--pill">
+                <div class="ax-tabs__list" role="tablist" aria-label="Pill nav example">
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="seg==='all'" :class="{ 'is-active': seg==='all' }" @click="seg='all'">All<span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral ax-num">128</span></button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="seg==='active'" :class="{ 'is-active': seg==='active' }" @click="seg='active'">Active</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="seg==='draft'" :class="{ 'is-active': seg==='draft' }" @click="seg='draft'">Draft</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="seg==='archived'" :class="{ 'is-active': seg==='archived' }" @click="seg='archived'">Archived</button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Marketing header -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Marketing site header navbar">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Marketing</span>
+                <h2 class="ax-card__title">Site header</h2>
+                <p class="ax-card__subtitle">A public landing-page header with centered links and a clear CTA.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav class="ax-topnav" aria-label="Marketing header example" style="position:static;border-radius:var(--ax-radius-md);border:1px solid var(--ax-border);block-size:auto;padding:var(--ax-space-3) var(--ax-space-5);flex-wrap:wrap;">
+                <a href="#" class="ax-cluster" style="gap:var(--ax-space-2);text-decoration:none;color:var(--ax-text-strong);flex-wrap:nowrap;">
+                  <span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--ax-gradient-accent);color:var(--ax-on-accent);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5v9l-8 4.5l-8 -4.5v-9z"/></svg>
+                  </span>
+                  <b style="font-family:var(--ax-font-display);font-size:var(--ax-text-md);">Vireo</b>
+                </a>
+                <span class="ax-spacer"></span>
+                <div class="ax-cluster" style="gap:var(--ax-space-5);margin-inline:auto;flex-wrap:nowrap;">
+                  <a class="ax-link" href="#" style="color:var(--ax-text);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Features</a>
+                  <a class="ax-link" href="#" style="color:var(--ax-text);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Pricing</a>
+                  <a class="ax-link" href="#" style="color:var(--ax-text);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Docs</a>
+                  <a class="ax-link" href="#" style="color:var(--ax-text);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Changelog</a>
+                </div>
+                <span class="ax-spacer"></span>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                  <a href="#" class="ax-btn ax-btn--ghost ax-btn--sm"><span class="ax-btn__label">Sign in</span></a>
+                  <a href="#" class="ax-btn ax-btn--primary ax-btn--sm"><span class="ax-btn__label">Start free trial</span></a>
+                </div>
+              </nav>
+            </div>
+          </section>
+
+          <!-- Toolbar nav -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Editor toolbar navbar">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Workspace</span>
+                <h2 class="ax-card__title">Editor toolbar</h2>
+                <p class="ax-card__subtitle">A document/editor bar — title, dividers, grouped tools &amp; a save action.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <nav class="ax-topnav" aria-label="Editor toolbar example" style="position:static;border-radius:var(--ax-radius-md);border:1px solid var(--ax-border);block-size:auto;padding:var(--ax-space-2) var(--ax-space-4);flex-wrap:wrap;">
+                <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;min-width:0;">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Back"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg></button>
+                  <span class="ax-truncate" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Q3 Revenue Report</span>
+                  <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">Draft</span>
+                </div>
+                <span class="ax-divider ax-divider--vertical" style="block-size:24px;margin-inline:var(--ax-space-2);"></span>
+                <div class="ax-cluster" style="gap:2px;flex-wrap:nowrap;">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bold"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"/><path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"/></svg></button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Italic"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5l6 0"/><path d="M7 19l6 0"/><path d="M14 5l-4 14"/></svg></button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bulleted list" aria-pressed="true" style="color:var(--ax-accent);background:var(--ax-accent-wash);"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                </div>
+                <span class="ax-spacer"></span>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                  <div style="display:flex;align-items:center;">
+                    <span class="ax-avatar ax-avatar--xs ax-avatar--ringed" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">PN</span></span>
+                    <span class="ax-avatar ax-avatar--xs ax-avatar--ringed" style="margin-inline-start:-7px;background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><span class="ax-avatar__initials">LB</span></span>
+                  </div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm"><span class="ax-btn__label">Preview</span></button>
+                  <button type="button" class="ax-btn ax-btn--primary ax-btn--sm"
+                    x-data @click="$toast({ msg:'Report saved', tone:'success' })"><span class="ax-btn__label">Save</span></button>
+                </div>
+              </nav>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+
+{# CRM · Contacts — faithful re-expression of src/html/crm/contacts.html. Contacts
+   table with presence dots, lifecycle badges, quick actions, search + lifecycle/sort
+   filters, bulk bar, teleported row menu and new-contact modal (axCrmContacts Alpine). #}
+
+{% block main %}
+      <div x-data="axCrmContacts()">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Contacts</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num" x-text="rows.length"></span> people across <span class="ax-num">128</span> accounts — <span class="ax-num">42</span> active this week.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Import</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="addOpen = true">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New contact</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CRM SUB-NAV ════════════════ -->
+        <nav class="ax-tabs ax-tabs--pill" aria-label="CRM sections" style="margin-bottom:var(--ax-space-5);">
+          <div class="ax-tabs__list" role="tablist">
+            <a class="ax-tabs__tab is-active" role="tab" aria-selected="true" aria-current="page" href="/crm/contacts/">Contacts</a>
+            <a class="ax-tabs__tab" role="tab" href="/crm/companies/">Companies</a>
+            <a class="ax-tabs__tab" role="tab" href="/crm/deals/">Deals</a>
+            <a class="ax-tabs__tab" role="tab" href="/crm/leads/">Leads</a>
+          </div>
+        </nav>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Contacts table">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">All Contacts</h2>
+                <p class="ax-card__subtitle ax-num" style="font-family:var(--ax-font-mono);">
+                  <span x-text="filtered().length"></span> of <span x-text="rows.length"></span> shown
+                </p>
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <div style="position:relative;flex:1 1 180px;min-width:160px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input ax-input--sm" placeholder="Search name, company or email…" x-model.debounce.200ms="q" @input="page=1" style="padding-inline-start:34px;" aria-label="Search contacts">
+                </div>
+                <select class="ax-select ax-select--sm" x-model="fStatus" @change="page=1" aria-label="Filter by lifecycle" style="flex:1 1 180px;min-width:150px;">
+                  <option value="">All lifecycle</option>
+                  <option>Customer</option>
+                  <option>Opportunity</option>
+                  <option>Lead</option>
+                  <option>Subscriber</option>
+                </select>
+                <select class="ax-select ax-select--sm" x-model="sort" @change="page=1" aria-label="Sort contacts" style="flex:1 1 180px;min-width:150px;">
+                  <option value="recent">Last activity</option>
+                  <option value="name">Name A–Z</option>
+                  <option value="company">Company</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- bulk bar -->
+            <div x-show="selected.length" x-cloak x-transition
+              style="display:flex;align-items:center;gap:var(--ax-space-3);margin:0 var(--ax-space-5) var(--ax-space-3);padding:var(--ax-space-2) var(--ax-space-4);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);border-radius:var(--ax-radius-md);flex-wrap:wrap;">
+              <b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-sm);"><span x-text="selected.length"></span> selected</b>
+              <span style="width:1px;height:18px;background:var(--ax-border-strong);"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg>
+                <span class="ax-btn__label">Email</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Add to sequence</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Add tag</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="color:var(--ax-danger-500);">Delete</button>
+              <span style="flex:1 1 auto;"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Clear selection" @click="selected=[]"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+
+            <!-- table -->
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover" style="min-width:920px;">
+                <caption class="ax-visually-hidden">Contacts, sortable and searchable</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col" style="width:38px;"><input type="checkbox" class="ax-checkbox" aria-label="Select all rows on this page" :checked="allSelected()" :indeterminate.camel="someSelected()" @change="toggleAll($event.target.checked)"></th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('name')" @click="sortBy('name')">Name <span x-html="sortGlyph('name')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('company')" @click="sortBy('company')">Company <span x-html="sortGlyph('company')"></span></th>
+                    <th class="ax-table__th" scope="col">Email</th>
+                    <th class="ax-table__th" scope="col">Lifecycle</th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('lastDays')" @click="sortBy('lastDays')">Last activity <span x-html="sortGlyph('lastDays')"></span></th>
+                    <th class="ax-table__th" scope="col" style="width:120px;">Quick actions</th>
+                    <th class="ax-table__th" scope="col" style="width:44px;"><span class="ax-visually-hidden">More</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="r in paged()" :key="r.id">
+                    <tr class="ax-table__row" :style="selected.includes(r.id) ? 'background:var(--ax-accent-wash);' : ''">
+                      <td class="ax-table__td"><input type="checkbox" class="ax-checkbox" :value="r.id" x-model="selected" :aria-label="'Select ' + r.name"></td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                          <span style="position:relative;flex:0 0 auto;">
+                            <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.c} 18%,transparent);color:${r.c};font-weight:700;`"><span style="font-size:10px;" x-text="r.initials"></span></span>
+                            <span class="ax-avatar__status" :class="`ax-avatar__status--${r.presence}`"></span>
+                          </span>
+                          <div style="min-width:0;">
+                            <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="r.name"></div>
+                            <div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="r.role"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                          <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${r.coC} 18%,transparent);color:${r.coC};font-weight:700;font-size:10px;`" x-text="r.coMark"></span>
+                          <span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);" x-text="r.company"></span>
+                        </div>
+                      </td>
+                      <td class="ax-table__td"><a class="ax-link ax-num" :href="`mailto:${r.email}`" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);" x-text="r.email"></a></td>
+                      <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill ax-badge--sm" :class="lifeClass(r.life)"><span class="ax-badge__dot"></span><span x-text="r.life"></span></span></td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:6px;flex-wrap:nowrap;white-space:nowrap;">
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="`color:${r.actC};flex:0 0 auto;`" x-html="r.actIcon"></svg>
+                          <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="r.lastAct"></span>
+                          <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="'· ' + r.lastTime"></span>
+                        </div>
+                      </td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:6px;flex-wrap:nowrap;">
+                          <a class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" :href="`mailto:${r.email}`" aria-label="Email"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></a>
+                          <a class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" :href="`tel:${r.phone}`" aria-label="Call"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></a>
+                          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" aria-label="Log a task"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                        </div>
+                      </td>
+                      <td class="ax-table__td" style="text-align:end;">
+                        <button type="button" data-menu-trigger :data-row="r.id" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="toggleMenu(r.id)" :aria-expanded="(menu===r.id).toString()" aria-haspopup="menu" aria-label="More actions"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M17 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- empty -->
+            <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg></span>
+              <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No contacts found</h3>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">No people match your search and filters.</p>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="q='';fStatus='';page=1">Clear filters</button>
+            </div>
+
+            <!-- footer -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                  Showing <span x-text="rangeStart()"></span>–<span x-text="rangeEnd()"></span> of <span x-text="filtered().length"></span>
+                </span>
+                <label class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-muted);flex-wrap:nowrap;white-space:nowrap;">
+                  Rows
+                  <select class="ax-select ax-select--sm" x-model.number="perPage" @change="page=1" aria-label="Rows per page" style="min-width:72px;">
+                    <option :value="8">8</option>
+                    <option :value="16">16</option>
+                    <option :value="32">32</option>
+                  </select>
+                </label>
+              </div>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" :disabled="page===1" :aria-disabled="(page===1).toString()" @click="page=Math.max(1,page-1)" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <template x-for="p in pageList()" :key="p">
+                    <li>
+                      <template x-if="p === '…'"><span class="ax-pagination__ellipsis">…</span></template>
+                      <template x-if="p !== '…'"><button type="button" class="ax-pagination__page" :class="{'is-active': page===p}" :aria-current="page===p ? 'page' : null" @click="page=p" x-text="p"></button></template>
+                    </li>
+                  </template>
+                </ul>
+                <button type="button" class="ax-pagination__next" :disabled="page===totalPages()" :aria-disabled="(page===totalPages()).toString()" @click="page=Math.min(totalPages(),page+1)" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════════════════ ROW ACTIONS MENU ════════════════ -->
+        <!-- Teleported to <body> so it escapes the table-wrap's overflow-x clip; a single
+             shared menu positioned (fixed) at whichever 3-dots trigger is open. -->
+        <template x-teleport="body">
+          <div x-show="menu!==null" x-cloak x-transition class="ax-menu" role="menu"
+            @click.outside="if(!$event.target.closest('[data-menu-trigger]')) menu=null"
+            @keydown.escape.window="menu=null" @scroll.window.capture="positionMenu()" @resize.window="positionMenu()"
+            :style="`position:fixed;top:${menuY}px;inset-inline-end:${menuX}px;z-index:60;min-width:170px;`">
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>View profile</button>
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/><path d="M13.5 6.5l4 4"/></svg>Edit</button>
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>Create deal</button>
+            <div class="ax-menu__divider" role="separator"></div>
+            <button type="button" class="ax-menu__item ax-menu__item--danger" role="menuitem" @click="menu=null"><svg class="ax-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>Delete</button>
+          </div>
+        </template>
+
+        <!-- ════════════════ NEW CONTACT MODAL ════════════════ -->
+        <div x-show="addOpen" x-cloak @keydown.escape.window="addOpen=false">
+          <div class="ax-backdrop" x-show="addOpen" x-transition.opacity @click="addOpen=false" style="position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.4);"></div>
+          <div class="ax-flex" x-show="addOpen" x-transition role="dialog" aria-modal="true" aria-label="New contact" style="position:fixed;inset:0;z-index:51;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+            <form class="ax-card" @submit.prevent="addOpen=false" @click.stop style="width:min(480px,100%);max-height:90vh;overflow:auto;">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">New contact</h2></div>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="addOpen=false" aria-label="Close"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                  <div class="ax-field"><label class="ax-label" for="ct-first">First name</label><input id="ct-first" type="text" class="ax-input" placeholder="Jane"></div>
+                  <div class="ax-field"><label class="ax-label" for="ct-last">Last name</label><input id="ct-last" type="text" class="ax-input" placeholder="Cooper"></div>
+                </div>
+                <div class="ax-field"><label class="ax-label" for="ct-email">Email</label><input id="ct-email" type="email" class="ax-input" placeholder="jane@northwind.io"></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                  <div class="ax-field"><label class="ax-label" for="ct-company">Company</label><input id="ct-company" type="text" class="ax-input" placeholder="Northwind Labs"></div>
+                  <div class="ax-field"><label class="ax-label" for="ct-life">Lifecycle</label><select id="ct-life" class="ax-select"><option>Subscriber</option><option>Lead</option><option>Opportunity</option><option>Customer</option></select></div>
+                </div>
+              </div>
+              <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-2);border-top:1px solid var(--ax-border);">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="addOpen=false">Cancel</button>
+                <button type="submit" class="ax-btn ax-btn--primary">Create contact</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    function axCrmContacts(){
+      const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+      const I={
+        email:'<path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/>',
+        call:'<path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/>',
+        meet:'<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>',
+        note:'<path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/>',
+        deal:'<path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/>'
+      };
+      return {
+        q:'', fStatus:'', sort:'recent', page:1, perPage:8,
+        sortKey:'lastDays', sortDir:'asc', selected:[], menu:null, menuX:0, menuY:0, addOpen:false,
+        rows:[
+          { id:'c01', name:'Maya Lindqvist', role:'CFO', company:'Northwind Labs', coMark:'NW', coC:C.cyan, initials:'ML', c:C.emerald, presence:'online', email:'maya.l@northwind.io', phone:'+1 (415) 555-0188', life:'Customer', lastAct:'Replied to email', actIcon:I.email, actC:C.emerald, lastTime:'2h', lastDays:0 },
+          { id:'c02', name:'Tomás Herrera', role:'VP Sales', company:'Brightline Capital', coMark:'BC', coC:C.violet, initials:'TH', c:C.violet, presence:'away', email:'tomas@brightline.co', phone:'+34 612 55 01 77', life:'Opportunity', lastAct:'Call · 14 min', actIcon:I.call, actC:C.cyan, lastTime:'5h', lastDays:0 },
+          { id:'c03', name:'Ava Sutton', role:'Head of Ops', company:'Crate & Co', coMark:'CC', coC:C.amber, initials:'AS', c:C.emerald, presence:'online', email:'ava@crateco.com', phone:'+1 (310) 555-0120', life:'Customer', lastAct:'Demo booked', actIcon:I.meet, actC:C.violet, lastTime:'1d', lastDays:1 },
+          { id:'c04', name:'Dr. Nadia Haddad', role:'Procurement Lead', company:'Meridian Health', coMark:'MH', coC:C.pink, initials:'NH', c:C.pink, presence:'busy', email:'n.haddad@meridianhealth.org', phone:'+33 4 91 55 02 10', life:'Opportunity', lastAct:'Note added', actIcon:I.note, actC:C.amber, lastTime:'1d', lastDays:1 },
+          { id:'c05', name:'Lena Brandt', role:'Creative Director', company:'Studioform', coMark:'SF', coC:C.emerald, initials:'LB', c:C.violet, presence:'offline', email:'lena@studioform.de', phone:'+49 30 5550 0199', life:'Lead', lastAct:'Email opened', actIcon:I.email, actC:C.emerald, lastTime:'2d', lastDays:2 },
+          { id:'c06', name:'Daniel Cho', role:'Product Lead', company:'Loop Robotics', coMark:'LR', coC:C.cyan, initials:'DC', c:C.cyan, presence:'offline', email:'daniel@looprobotics.com', phone:'+82 2 5550 0166', life:'Customer', lastAct:'Deal won', actIcon:I.deal, actC:C.emerald, lastTime:'3d', lastDays:3 },
+          { id:'c07', name:'Greta Hoffmann', role:'Buyer', company:'Pulse Media', coMark:'PM', coC:C.violet, initials:'GH', c:C.amber, presence:'offline', email:'greta.h@pulse.media', phone:'+49 40 5550 0144', life:'Subscriber', lastAct:'Form submitted', actIcon:I.note, actC:C.amber, lastTime:'4d', lastDays:4 },
+          { id:'c08', name:'Henry Whitlock', role:'Procurement', company:'Harbor Freight Co', coMark:'HF', coC:C.amber, initials:'HW', c:C.cyan, presence:'offline', email:'henry@harborfreight.co', phone:'+44 20 7946 0102', life:'Opportunity', lastAct:'Call · 6 min', actIcon:I.call, actC:C.cyan, lastTime:'5d', lastDays:5 },
+          { id:'c09', name:'Erik Lindqvist', role:'CTO', company:'Ridgeline Energy', coMark:'RE', coC:C.pink, initials:'EL', c:C.violet, presence:'away', email:'erik.l@ridgeline.energy', phone:'+46 40 555 0177', life:'Lead', lastAct:'Meeting held', actIcon:I.meet, actC:C.violet, lastTime:'6d', lastDays:6 },
+          { id:'c10', name:'Sofia Marchetti', role:'Operations', company:'Clearbox', coMark:'CB', coC:C.cyan, initials:'SM', c:C.emerald, presence:'online', email:'sofia.m@clearbox.app', phone:'+39 02 5550 0188', life:'Customer', lastAct:'Replied to email', actIcon:I.email, actC:C.emerald, lastTime:'8d', lastDays:8 },
+          { id:'c11', name:'Rahul Menon', role:'Finance Manager', company:'Postoak Insurance', coMark:'PI', coC:C.emerald, initials:'RM', c:C.amber, presence:'offline', email:'rahul.menon@postoak.com', phone:'+91 98765 43210', life:'Subscriber', lastAct:'Email opened', actIcon:I.email, actC:C.emerald, lastTime:'10d', lastDays:10 },
+          { id:'c12', name:'Aisha Bello', role:'Category Buyer', company:'Meadow Foods', coMark:'MF', coC:C.amber, initials:'AB', c:C.pink, presence:'offline', email:'aisha.bello@meadowfoods.co', phone:'+234 1 555 0143', life:'Lead', lastAct:'Note added', actIcon:I.note, actC:C.amber, lastTime:'12d', lastDays:12 },
+        ],
+        lifeClass(s){ return { 'Customer':'ax-badge--success','Opportunity':'ax-badge--accent','Lead':'ax-badge--info','Subscriber':'ax-badge--neutral' }[s] || 'ax-badge--neutral'; },
+        filtered(){
+          const t=this.q.trim().toLowerCase();
+          let r=this.rows.filter(x=>{
+            if(this.fStatus && x.life!==this.fStatus) return false;
+            if(t && !(x.name.toLowerCase().includes(t) || x.company.toLowerCase().includes(t) || x.email.toLowerCase().includes(t))) return false;
+            return true;
+          });
+          if(this.sort==='name') return [...r].sort((a,b)=>a.name.localeCompare(b.name));
+          if(this.sort==='company') return [...r].sort((a,b)=>a.company.localeCompare(b.company));
+          if(this.sort==='recent'){ this.sortKey='lastDays'; this.sortDir='asc'; }
+          const dir=this.sortDir==='asc'?1:-1;
+          return [...r].sort((a,b)=>{ const va=a[this.sortKey],vb=b[this.sortKey]; return typeof va==='number' ? (va-vb)*dir : String(va).localeCompare(String(vb))*dir; });
+        },
+        totalPages(){ return Math.max(1, Math.ceil(this.filtered().length/this.perPage)); },
+        paged(){ if(this.page>this.totalPages()) this.page=this.totalPages(); const s=(this.page-1)*this.perPage; return this.filtered().slice(s,s+this.perPage); },
+        rangeStart(){ return this.filtered().length ? (this.page-1)*this.perPage+1 : 0; },
+        rangeEnd(){ return Math.min(this.page*this.perPage, this.filtered().length); },
+        pageList(){ const tp=this.totalPages(),p=this.page,out=[]; if(tp<=7){ for(let i=1;i<=tp;i++) out.push(i); return out; } out.push(1); if(p>3) out.push('…'); for(let i=Math.max(2,p-1);i<=Math.min(tp-1,p+1);i++) out.push(i); if(p<tp-2) out.push('…'); out.push(tp); return out; },
+        sortBy(k){ this.sort=''; if(this.sortKey===k){ this.sortDir=this.sortDir==='asc'?'desc':'asc'; } else { this.sortKey=k; this.sortDir='asc'; } this.page=1; },
+        ariaSort(k){ return this.sortKey===k && !this.sort ? (this.sortDir==='asc'?'ascending':'descending') : 'none'; },
+        sortGlyph(k){ if(this.sortKey!==k || this.sort) return '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.4;"><path d="M8 9l4 -4l4 4"/><path d="M16 15l-4 4l-4 -4"/></svg>'; return this.sortDir==='asc' ? '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>' : '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>'; },
+        allSelected(){ const ids=this.paged().map(r=>r.id); return ids.length>0 && ids.every(id=>this.selected.includes(id)); },
+        someSelected(){ const ids=this.paged().map(r=>r.id); const n=ids.filter(id=>this.selected.includes(id)).length; return n>0 && n<ids.length; },
+        toggleAll(on){ const ids=this.paged().map(r=>r.id); if(on){ this.selected=[...new Set([...this.selected,...ids])]; } else { this.selected=this.selected.filter(id=>!ids.includes(id)); } },
+        toggleMenu(id){ this.menu = this.menu===id ? null : id; if(this.menu!==null){ this.positionMenu(); this.$nextTick(()=>this.positionMenu()); } },
+        positionMenu(){ if(this.menu===null) return; const el=document.querySelector('[data-menu-trigger][data-row="'+this.menu+'"]'); if(!el) return; const b=el.getBoundingClientRect(); const de=document.documentElement, vw=de.clientWidth, vh=de.clientHeight; if(b.bottom<0 || b.top>vh){ this.menu=null; return; } const rtl=de.getAttribute('dir')==='rtl'; this.menuX=Math.max(8, rtl ? b.left : (vw-b.right)); const menuEl=document.querySelector('.ax-menu[role="menu"]'); const h=menuEl?menuEl.offsetHeight:0; this.menuY=(h && (b.bottom+4+h)>vh) ? Math.max(8, b.top-4-h) : (b.bottom+4); },
+      };
+    }
+  </script>
+{% endblock %}

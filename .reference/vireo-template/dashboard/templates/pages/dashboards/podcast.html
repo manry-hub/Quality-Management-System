@@ -1,0 +1,371 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Podcast Studio</h1>
+              <p class="ax-page-head__subtitle">Listens, subscribers and episode performance — The Signal show.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">Last 30 days</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Upload Episode</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Plays 1.82M, up 9.5%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13 -8l-13 -8"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>9.5%</span>
+              </div>
+              <div class="ax-kpi__label">Total Plays</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">1.82M</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[6,10,9,16,18,22,26,30]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Subscribers 64,200, up 4.2%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2l0 -3"/><path d="M15 15a2 2 0 0 1 2 -2h1a2 2 0 0 1 2 2v3a2 2 0 0 1 -2 2h-1a2 2 0 0 1 -2 -2l0 -3"/><path d="M4 15v-3a8 8 0 0 1 16 0v3"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.2%</span>
+              </div>
+              <div class="ax-kpi__label">Subscribers</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">64,200</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Trend","data":[8,10,9,14,15,19,22,25]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Average Listen-Through 71%, up 1.8%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.8%</span>
+              </div>
+              <div class="ax-kpi__label">Avg Listen-Through</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">71%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[12,13,14,16,17,18,20,22]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Revenue this month $12,400, up 7.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>7.0%</span>
+              </div>
+              <div class="ax-kpi__label">Revenue (30D)</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$12,400</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[9,11,10,15,16,20,22,26]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Plays & Subscribers area (8) + Now Playing W-MEDIA (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Plays and subscribers">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Performance</span>
+                <h2 class="ax-card__title">Plays &amp; Subscribers</h2>
+                <p class="ax-card__subtitle">Weekly plays vs. net new subscribers</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Plays</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Net subs</small></span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-pod-plays" aria-label="Mixed chart: weekly plays area with net new subscriber columns"></div>
+            </div>
+          </section>
+
+          <!-- Now Playing / Latest Episode — W-MEDIA player -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Now playing"
+            x-data="{ playing: false, progress: 38 }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Latest episode</span>
+                <h2 class="ax-card__title">Now Playing</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- cover art -->
+              <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-lg);aspect-ratio:16/9;background:var(--ax-gradient-plate);display:flex;align-items:center;justify-content:center;margin-bottom:var(--ax-space-4);box-shadow:var(--ax-shadow-md);">
+                <span aria-hidden="true" style="position:absolute;top:-30px;right:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.16);filter:blur(4px);"></span>
+                <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:relative;opacity:.95;"><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+                <span class="ax-badge ax-badge--soft ax-badge--pill" style="position:absolute;top:var(--ax-space-3);left:var(--ax-space-3);background:rgba(0,0,0,.32);color:#fff;border:0;">EP 148</span>
+              </div>
+              <div style="margin-bottom:var(--ax-space-3);">
+                <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-md);">The Cost of Speed</div>
+                <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Maya Okonkwo &amp; guest Theo Park</div>
+              </div>
+              <!-- scrubber -->
+              <div class="ax-progress ax-progress--sm" style="margin-bottom:6px;"><div class="ax-progress__track"><div class="ax-progress__fill" :style="`width:${progress}%`" style="width:38%;"></div></div></div>
+              <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-4);">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">16:42</span>
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">44:08</span>
+              </div>
+              <!-- transport -->
+              <div class="ax-cluster" style="justify-content:center;gap:var(--ax-space-4);">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Previous episode">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 5v14l-12 -7l12 -7"/><path d="M4 5l0 14"/></svg>
+                </button>
+                <button type="button" class="ax-btn ax-btn--primary ax-btn--icon" style="width:52px;height:52px;border-radius:var(--ax-radius-pill);" @click="playing = !playing" :aria-label="playing ? 'Pause' : 'Play'">
+                  <svg x-show="!playing" class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13 -8l-13 -8"/></svg>
+                  <svg x-show="playing" x-cloak class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"/><path d="M14 5m0 1a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1v12a1 1 0 0 1 -1 1h-2a1 1 0 0 1 -1 -1z"/></svg>
+                </button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Next episode">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5v14l12 -7l-12 -7"/><path d="M20 5l0 14"/></svg>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Listens by Platform donut (4) + Listener Retention line (8) ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Listens by platform">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">By Platform</h2>
+                <p class="ax-card__subtitle">Share of listens</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-pod-platform" aria-label="Donut: Spotify, Apple Podcasts, YouTube, Web"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Spotify</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">46%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Apple Podcasts</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">31%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">YouTube</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">15%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Web player</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">8%</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Listener retention">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Listener Retention</h2>
+                <p class="ax-card__subtitle">Drop-off across episode 148 duration</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">All episodes</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div
+                data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-height="290" data-ax-chart-legend="none" data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"Listeners","data":[100,98,95,91,88,86,83,80,78,75,72,69,66,62,58,54,49,44]}]'
+                aria-label="Line chart of listener retention decreasing across episode duration"></div>
+            </div>
+          </section>
+
+          <!-- ───── Top Episodes (8) + Upcoming Releases (4) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Top episodes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Top Episodes</h2>
+                <p class="ax-card__subtitle">Most played in the last 90 days</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Episode</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Plays</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Completion</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Duration</th>
+                    <th class="ax-table__th" scope="col">Released</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 20%,transparent);color:var(--ax-viz-amber);font-weight:700;">1</span><div><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:260px;">Why Founders Burn Out</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">EP 142 · with Dr. Reyes</div></div></div></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">312K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">79%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);">48:22</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">May 14</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-text-subtle) 22%,transparent);color:var(--ax-text-muted);font-weight:700;">2</span><div><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:260px;">The AI Hype Cycle, Honestly</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">EP 139 · solo</div></div></div></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">284K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">76%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);">41:09</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Apr 30</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 20%,transparent);color:var(--ax-viz-pink);font-weight:700;">3</span><div><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:260px;">Designing for Trust</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">EP 135 · with L. Brandt</div></div></div></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">241K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">72%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);">52:47</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Apr 2</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">4</span><div><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:260px;">Remote Teams That Last</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">EP 131 · with M. Whitfield</div></div></div></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">198K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">68%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);">39:55</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Mar 5</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:600;">5</span><div><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);max-width:260px;">Pricing Without Fear</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">EP 128 · solo</div></div></div></td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);">176K</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">70%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);">34:18</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Feb 12</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Upcoming Releases -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Upcoming releases">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Upcoming Releases</h2>
+                <p class="ax-card__subtitle">Production schedule</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Calendar</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:54px;font-weight:600;">Jun 30</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">EP 149 — Hiring Slow</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Editing · with R. Okafor</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:54px;font-weight:600;">Jul 7</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">EP 150 — Milestone Q&amp;A</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Recording · live audience</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:54px;font-weight:600;">Jul 14</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">EP 151 — Open Source $</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Scheduled · with K. Devi</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:54px;font-weight:600;">Jul 21</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">EP 152 — Listener Mailbag</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Outlining · solo</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Recent Reviews (12) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Recent reviews">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Reviews</h2>
+                <p class="ax-card__subtitle">Latest listener ratings across platforms</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">All reviews</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:var(--ax-space-2);display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-5);">
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                <div class="ax-cluster" style="justify-content:space-between;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">JD</span><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">jordan_d</b></div>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:calc(var(--ax-text-md) * 1.25);letter-spacing:2px;color:var(--ax-viz-amber);">★★★★★</span>
+                </div>
+                <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">"Best episode on burnout I've heard. The pacing is perfect and the guest was incredible."</p>
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Apple Podcasts · 2d ago</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                <div class="ax-cluster" style="justify-content:space-between;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:600;">SP</span><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">s.peralta</b></div>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:calc(var(--ax-text-md) * 1.25);letter-spacing:2px;color:var(--ax-viz-amber);">★★★★☆</span>
+                </div>
+                <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">"Great show overall — would love slightly shorter episodes for the commute, but content is gold."</p>
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Spotify · 4d ago</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                <div class="ax-cluster" style="justify-content:space-between;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);font-weight:600;">MN</span><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">m.nakajima</b></div>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:calc(var(--ax-text-md) * 1.25);letter-spacing:2px;color:var(--ax-viz-amber);">★★★★★</span>
+                </div>
+                <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">"The pricing episode changed how I run my freelance business. Practical and honest. Subscribed!"</p>
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">YouTube · 5d ago</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // Plays (line) + net subscribers (column) — mixed
+    const plays = document.getElementById('ax-pod-plays');
+    if (plays) renderChart(plays, 'line', [
+      { name: 'Plays', type: 'line', data: [128, 142, 136, 158, 150, 172, 166, 188, 180, 204, 196, 224] },
+      { name: 'Net subs', type: 'column', data: [38, 44, 40, 52, 48, 58, 54, 64, 60, 72, 68, 82] },
+    ], {
+      height: 310, legend: 'none', accent: true,
+      apex: {
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan')],
+        stroke: { width: [3, 0], curve: 'smooth' },
+        fill: { type: ['solid', 'solid'], opacity: [1, 0.85] },
+        plotOptions: { bar: { columnWidth: '38%', borderRadius: 3 } },
+        xaxis: { categories: ['W1', 'W2', 'W3', 'W4', 'W5', 'W6', 'W7', 'W8', 'W9', 'W10', 'W11', 'W12'] },
+        yaxis: { labels: { formatter: (v) => v + 'K' } },
+      },
+    });
+
+    // Listens by platform donut
+    const platform = document.getElementById('ax-pod-platform');
+    if (platform) renderChart(platform, 'donut', [46, 31, 15, 8], {
+      height: 220, legend: 'none',
+      apex: {
+        labels: ['Spotify', 'Apple Podcasts', 'YouTube', 'Web'],
+        colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: { show: true, value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 }, total: { show: true, label: 'Plays', formatter: () => '1.82M' } } } } },
+      },
+    });
+  </script>
+{% endblock %}

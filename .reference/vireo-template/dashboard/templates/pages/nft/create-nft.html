@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axCreateNft()">
+        <form @submit.prevent="mint()">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Create NFT</h1>
+              <p class="ax-page-head__subtitle">Upload your artwork, set the details, and mint it to the marketplace.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/nft/marketplace/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+                <span class="ax-btn__label">Cancel</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- mint result -->
+        <div x-show="minted" x-cloak x-transition class="ax-alert ax-alert--success" role="status" style="margin-bottom:var(--ax-space-6);">
+          <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+          <div class="ax-alert__content"><p class="ax-alert__title">Item minted</p><p class="ax-alert__message"><b class="ax-num" x-text="form.name || 'Your item'"></b> is now live on the marketplace. Transaction <span class="ax-num" style="font-family:var(--ax-font-mono);">0x4e91…a07c</span> confirmed.</p></div>
+          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="minted=false" aria-label="Dismiss"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid" style="align-items:start;">
+
+          <!-- ───────── LEFT (8) ───────── -->
+          <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- ░░ UPLOAD ░░ -->
+            <section class="ax-card" role="region" aria-label="Upload artwork">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 1</span>
+                  <h2 class="ax-card__title">Upload artwork</h2>
+                  <p class="ax-card__subtitle">This is the file minted on-chain. It can't be changed later.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <!-- empty dropzone -->
+                <div x-show="!uploaded" class="ax-dropzone" :class="dragover ? 'is-dragover' : ''">
+                  <label class="ax-dropzone__area" for="nft-file" @dragover.prevent="dragover=true" @dragleave="dragover=false" @drop.prevent="dragover=false;doUpload()" style="cursor:pointer;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M9 15l3 -3l3 3"/><path d="M12 12l0 9"/></svg>
+                    <div><b style="color:var(--ax-text);">Click to upload</b> or drag &amp; drop</div>
+                    <small style="color:var(--ax-text-subtle);">PNG, JPG, GIF, SVG, MP4 or GLB up to 100 MB</small>
+                    <input id="nft-file" type="file" accept="image/*,video/mp4,.glb" class="ax-visually-hidden" @change="doUpload()">
+                  </label>
+                </div>
+                <!-- preview -->
+                <div class="ax-flex" x-show="uploaded" x-cloak style="flex-direction:column;gap:var(--ax-space-3);">
+                  <div style="position:relative;aspect-ratio:1/1;max-width:380px;border-radius:var(--ax-radius-lg);overflow:hidden;border:1px solid var(--ax-border);display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg, color-mix(in oklab,var(--ax-viz-violet) 76%,var(--ax-surface-solid)), color-mix(in oklab,var(--ax-viz-cyan) 56%,var(--ax-surface-solid)));">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:64px;height:64px;"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>
+                    <button type="button" class="ax-btn ax-btn--icon ax-btn--sm" @click="uploaded=false" aria-label="Remove artwork" style="position:absolute;top:8px;inset-inline-end:8px;background:rgba(8,10,15,.5);color:#fff;border:0;border-radius:var(--ax-radius-sm);backdrop-filter:blur(6px);"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                  </div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;"><path d="M5 12l5 5l10 -10"/></svg>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);">quiet-forms-145.png</span> · <span class="ax-num">2.8 MB</span> · 2400×2400
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ DETAILS ░░ -->
+            <section class="ax-card" role="region" aria-label="Item details">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 2</span>
+                  <h2 class="ax-card__title">Details</h2>
+                  <p class="ax-card__subtitle">Give your item a name and tell collectors about it.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div class="ax-field">
+                  <label class="ax-label" for="nft-name">Name <span class="ax-field__required">*</span></label>
+                  <input id="nft-name" type="text" class="ax-input" placeholder="e.g. Quiet Forms #145" x-model="form.name" maxlength="80">
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="nft-desc">Description</label>
+                  <textarea id="nft-desc" class="ax-textarea" rows="4" placeholder="Describe the concept, edition, and what holders get." x-model="form.desc" maxlength="600"></textarea>
+                  <span class="ax-help"><span class="ax-num" x-text="form.desc.length"></span> / 600 characters · Markdown supported.</span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="nft-collection">Collection <span class="ax-field__required">*</span></label>
+                    <select id="nft-collection" class="ax-select" x-model="form.collection">
+                      <option value="">Select a collection</option>
+                      <option value="quiet-forms">Quiet Forms</option>
+                      <option value="quiet-surface">Quiet Surface</option>
+                      <option value="aurora-genesis">Aurora Genesis</option>
+                      <option value="__new">+ Create new collection</option>
+                    </select>
+                    <span class="ax-help" x-show="form.collection==='__new'" x-cloak>You'll set the collection name &amp; logo on the next step.</span>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="nft-chain">Blockchain</label>
+                    <select id="nft-chain" class="ax-select" x-model="form.chain">
+                      <option value="eth">Ethereum</option>
+                      <option value="poly">Polygon</option>
+                      <option value="sol">Solana</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ PROPERTIES ░░ -->
+            <section class="ax-card" role="region" aria-label="Properties">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 3</span>
+                  <h2 class="ax-card__title">Properties</h2>
+                  <p class="ax-card__subtitle">Traits shown as chips on the item. They power rarity &amp; filters.</p>
+                </div>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="addTrait()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  <span class="ax-btn__label">Add trait</span>
+                </button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <template x-for="(t, i) in form.traits" :key="t.id">
+                  <div style="display:grid;grid-template-columns:1fr 1fr 40px;gap:var(--ax-space-3);align-items:start;">
+                    <input type="text" class="ax-input" placeholder="Type (e.g. Background)" x-model="t.k" :aria-label="'Trait ' + (i+1) + ' name'">
+                    <input type="text" class="ax-input" placeholder="Value (e.g. Bone)" x-model="t.v" :aria-label="'Trait ' + (i+1) + ' value'">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="form.traits.splice(i,1)" :aria-label="'Remove trait ' + (i+1)"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+                  </div>
+                </template>
+                <div x-show="!form.traits.length" x-cloak style="text-align:center;padding:var(--ax-space-5) 0;color:var(--ax-text-muted);font-size:var(--ax-text-sm);">No traits yet. Add one to describe this item's attributes.</div>
+              </div>
+            </section>
+
+            <!-- ░░ PRICING / SALE ░░ -->
+            <section class="ax-card" role="region" aria-label="Pricing and supply">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 4</span>
+                  <h2 class="ax-card__title">Pricing &amp; supply</h2>
+                  <p class="ax-card__subtitle">Choose how this item sells and how many exist.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <!-- sale type -->
+                <div>
+                  <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Sale type</div>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);">
+                    <template x-for="s in saleTypes" :key="s.id">
+                      <label style="display:flex;flex-direction:column;gap:4px;cursor:pointer;border-radius:var(--ax-radius-md);padding:var(--ax-space-3);border:1.5px solid;transition:border-color var(--ax-motion-fast) var(--ax-ease-standard);"
+                        :style="form.sale===s.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);' : 'border-color:var(--ax-border);background:var(--ax-surface);'">
+                        <span class="ax-cluster" style="justify-content:space-between;">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;" :style="form.sale===s.id ? 'color:var(--ax-accent);' : 'color:var(--ax-text-subtle);'" x-html="s.icon"></svg>
+                          <input type="radio" name="nft-sale" class="ax-radio" :value="s.id" x-model="form.sale">
+                        </span>
+                        <span style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="s.name"></span>
+                        <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="s.desc"></span>
+                      </label>
+                    </template>
+                  </div>
+                </div>
+                <!-- price fields -->
+                <div class="ax-grid" style="grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);" x-show="form.sale!=='open'" x-cloak>
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="nft-price" x-text="form.sale==='auction' ? 'Starting bid' : 'Price'"></label>
+                    <div class="ax-input-group">
+                      <input id="nft-price" type="text" class="ax-input ax-num" inputmode="decimal" placeholder="0.00" x-model="form.price" style="border:0;background:transparent;font-family:var(--ax-font-mono);">
+                      <span class="ax-input-group__addon" style="color:var(--ax-text-muted);">ETH</span>
+                    </div>
+                    <span class="ax-help" x-show="priceUsd()" x-cloak>≈ <span class="ax-num" style="font-family:var(--ax-font-mono);" x-text="priceUsd()"></span> at current rate</span>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;margin:0;" x-show="form.sale==='auction'" x-cloak>
+                    <label class="ax-label" for="nft-duration">Auction duration</label>
+                    <select id="nft-duration" class="ax-select" x-model="form.duration">
+                      <option value="12">12 hours</option>
+                      <option value="24">1 day</option>
+                      <option value="72">3 days</option>
+                      <option value="168">7 days</option>
+                    </select>
+                  </div>
+                </div>
+                <!-- supply + royalties -->
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="nft-supply">Supply</label>
+                    <input id="nft-supply" type="text" class="ax-input ax-num" inputmode="numeric" placeholder="1" x-model="form.supply" style="font-family:var(--ax-font-mono);">
+                    <span class="ax-help">Number of copies to mint (ERC-1155 for &gt; 1).</span>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;margin:0;">
+                    <label class="ax-label" for="nft-royalty">Creator royalty</label>
+                    <div class="ax-input-group">
+                      <input id="nft-royalty" type="text" class="ax-input ax-num" inputmode="decimal" placeholder="5" x-model="form.royalty" style="border:0;background:transparent;font-family:var(--ax-font-mono);">
+                      <span class="ax-input-group__addon" style="color:var(--ax-text-muted);">%</span>
+                    </div>
+                    <span class="ax-help">Earned on every future resale. Max 15%.</span>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───────── RIGHT RAIL (4) ───────── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);position:sticky;top:var(--ax-space-6);">
+
+            <!-- live preview -->
+            <section class="ax-card" role="region" aria-label="Live preview">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Preview</h2><p class="ax-card__subtitle">How your card appears in the market.</p></div></div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <article class="ax-card" style="margin:0;overflow:hidden;max-width:260px;">
+                  <div style="aspect-ratio:1/1;background:linear-gradient(135deg, color-mix(in oklab,var(--ax-viz-violet) 76%,var(--ax-surface-solid)), color-mix(in oklab,var(--ax-viz-cyan) 56%,var(--ax-surface-solid)));display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:44px;height:44px;"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/></svg>
+                  </div>
+                  <div class="ax-card__body" style="padding:var(--ax-space-3) var(--ax-space-4);display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="collectionLabel()"></div>
+                    <div class="ax-text-truncate" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="form.name || 'Untitled item'"></div>
+                    <div class="ax-cluster" style="justify-content:space-between;padding-top:var(--ax-space-2);border-top:1px solid var(--ax-border);">
+                      <span style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;color:var(--ax-text-subtle);" x-text="form.sale==='auction' ? 'Starting bid' : 'Price'"></span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="(parseFloat(form.price)||0).toFixed(2) + ' ETH'"></span>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </section>
+
+            <!-- fee summary -->
+            <section class="ax-card" role="region" aria-label="Fees and cost">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Cost summary</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <ul class="ax-list ax-list--compact">
+                  <li class="ax-list__row" style="padding-inline:0;"><span class="ax-list__content"><span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Network (gas) fee</span></span><span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">0.0042 ETH</span></li>
+                  <li class="ax-list__row" style="padding-inline:0;"><span class="ax-list__content"><span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Marketplace fee (2.5%)</span></span><span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="marketFee()"></span></li>
+                  <li class="ax-list__row" style="padding-inline:0;"><span class="ax-list__content"><span style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Creator royalty</span></span><span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="(parseFloat(form.royalty)||0) + '%'"></span></li>
+                  <li class="ax-list__row" style="padding-inline:0;border-bottom:0;"><span class="ax-list__content"><span style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">You receive on sale</span></span><span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-viz-emerald);" x-text="netReceive()"></span></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- mint actions -->
+            <section class="ax-card" role="region" aria-label="Mint">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <label class="ax-check" style="gap:var(--ax-space-2);align-items:flex-start;">
+                  <input type="checkbox" class="ax-checkbox" x-model="agree" style="margin-top:2px;">
+                  <span style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);line-height:1.5;">I confirm I own the rights to this artwork and agree to the <a href="/pages/terms/" class="ax-link">creator terms</a>.</span>
+                </label>
+                <button type="submit" class="ax-btn ax-btn--primary ax-btn--block" :disabled="!canMint()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 5h12l3 5l-8.5 9.5a.7 .7 0 0 1 -1 0l-8.5 -9.5l3 -5"/><path d="M10 12l-2 -2.2l.6 -1"/></svg>
+                  <span class="ax-btn__label" x-text="form.sale==='auction' ? 'Mint &amp; list auction' : 'Mint item'"></span>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--block" @click="saveDraft()">Save as draft</button>
+                <p x-show="draftSaved" x-cloak x-transition style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);text-align:center;">Draft saved.</p>
+                <p x-show="!canMint()" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);text-align:center;">Add artwork, a name, a collection &amp; accept the terms to mint.</p>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axCreateNft(){
+            return {
+              dragover:false, uploaded:false, agree:false, minted:false, draftSaved:false, _id:0,
+              form:{
+                name:'', desc:'', collection:'', chain:'eth',
+                traits:[ { id:1, k:'Background', v:'Bone' }, { id:2, k:'Palette', v:'Verdigris' } ],
+                sale:'fixed', price:'', duration:'24', supply:'1', royalty:'5',
+              },
+              saleTypes:[
+                { id:'fixed',   name:'Fixed price', desc:'Sell at a set price',   icon:'<path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/>' },
+                { id:'auction', name:'Auction',     desc:'Highest bid wins',      icon:'<path d="M13 10l7.383 7.418c.823 .82 .823 2.148 0 2.967a2.11 2.11 0 0 1 -2.976 0l-7.407 -7.385"/><path d="M6 9l4 4"/><path d="M13 10l-4 -4"/><path d="M3 21h7"/>' },
+                { id:'open',    name:'Open offers', desc:'Accept any offer',      icon:'<path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/>' },
+              ],
+              _id2:2,
+              addTrait(){ this.form.traits.push({ id:++this._id2 + 10, k:'', v:'' }); },
+              num(v){ const n=parseFloat(String(v).replace(/[^0-9.]/g,'')); return isNaN(n)?0:n; },
+              priceUsd(){ const p=this.num(this.form.price); return p ? '$' + (p*2380).toLocaleString('en-US',{maximumFractionDigits:0}) : ''; },
+              collectionLabel(){ const m={'quiet-forms':'Quiet Forms','quiet-surface':'Quiet Surface','aurora-genesis':'Aurora Genesis','__new':'New collection'}; return m[this.form.collection] || 'Collection'; },
+              marketFee(){ const p=this.num(this.form.price); return (p*0.025).toFixed(4) + ' ETH'; },
+              netReceive(){ const p=this.num(this.form.price); const r=this.num(this.form.royalty)/100; const net=p - p*0.025; return net>0 ? net.toFixed(4) + ' ETH' : '—'; },
+              canMint(){ return this.uploaded && this.form.name.trim() && this.form.collection && this.form.collection!=='__new' && this.agree; },
+              mint(){ if(!this.canMint()) return; this.minted=true; window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>{ this.minted=false; }, 5000); },
+              saveDraft(){ this.draftSaved=true; setTimeout(()=>{ this.draftSaved=false; }, 3000); },
+              doUpload(){ this.uploaded=true; },
+            };
+          }
+        </script>
+{% endblock %}

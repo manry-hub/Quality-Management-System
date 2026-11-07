@@ -1,0 +1,336 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axSellers()" x-init="restoreView()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Sellers</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">128</span> vendors on the marketplace — <span class="ax-num">6</span> pending approval, <span class="ax-num">3</span> suspended.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Add seller</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI STRIP ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total sellers 128, up 4.8%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4"/><path d="M5 21l0 -10.15"/><path d="M19 21l0 -10.15"/><path d="M9 21v-4a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v4"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.8%</span>
+              </div>
+              <div class="ax-kpi__label">Total sellers</div>
+              <div class="ax-kpi__value ax-num">128</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Active sellers 119">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.1%</span>
+              </div>
+              <div class="ax-kpi__label">Active</div>
+              <div class="ax-kpi__value ax-num">119</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Average rating 4.6 out of 5">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>0.2</span>
+              </div>
+              <div class="ax-kpi__label">Avg. rating</div>
+              <div class="ax-kpi__value ax-num">4.6</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total revenue $2.41M, up 11.3%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>11.3%</span>
+              </div>
+              <div class="ax-kpi__label">Total revenue</div>
+              <div class="ax-kpi__value ax-num">$2.41M</div>
+            </div>
+          </div>
+
+          <!-- ───── MAIN PANEL ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Seller directory">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div style="position:relative;flex:1 1 240px;max-width:340px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                <input type="search" class="ax-input" placeholder="Search store or owner…" x-model="q" style="padding-inline-start:36px;" aria-label="Search sellers">
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <select class="ax-select ax-select--sm" x-model="fStatus" aria-label="Filter by status" style="min-width:130px;">
+                  <option value="">All statuses</option>
+                  <option value="active">Active</option>
+                  <option value="pending">Pending</option>
+                  <option value="suspended">Suspended</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+                <select class="ax-select ax-select--sm" x-model="fCategory" aria-label="Filter by category" style="min-width:140px;">
+                  <option value="">All categories</option>
+                  <option value="Lighting">Lighting</option>
+                  <option value="Furniture">Furniture</option>
+                  <option value="Drinkware">Drinkware</option>
+                  <option value="Stationery">Stationery</option>
+                  <option value="Tech">Tech</option>
+                  <option value="Textiles">Textiles</option>
+                </select>
+                <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort sellers" style="min-width:150px;">
+                  <option value="top">Top-rated</option>
+                  <option value="revenue">Most revenue</option>
+                  <option value="products">Most products</option>
+                  <option value="orders">Most orders</option>
+                  <option value="newest">Newest</option>
+                  <option value="az">Name: A–Z</option>
+                </select>
+                <div class="ax-segment" role="group" aria-label="View mode">
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='grid').toString()" @click="setView('grid')" aria-label="Grid view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></svg>
+                  </button>
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='table').toString()" @click="setView('table')" aria-label="Table view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- status tabs -->
+            <div class="ax-card__body" style="padding-top:0;padding-bottom:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-1);border-bottom:1px solid var(--ax-border);flex-wrap:wrap;">
+                <template x-for="t in statusTabs" :key="t.id">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="fStatus=t.id"
+                    :style="fStatus===t.id ? 'box-shadow:inset 0 -2px 0 var(--ax-accent);color:var(--ax-accent);border-radius:0;' : 'border-radius:0;'">
+                    <span x-text="t.label"></span>
+                    <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm ax-num" style="margin-inline-start:6px;" x-text="t.count"></span>
+                  </button>
+                </template>
+              </div>
+            </div>
+
+            <!-- bulk bar -->
+            <div x-show="selected.length" x-cloak x-transition
+              style="display:flex;align-items:center;gap:var(--ax-space-3);margin:var(--ax-space-4) var(--ax-space-5) 0;padding:var(--ax-space-2) var(--ax-space-4);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);border-radius:var(--ax-radius-md);flex-wrap:wrap;">
+              <b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-sm);"><span x-text="selected.length"></span> selected</b>
+              <span style="width:1px;height:18px;background:var(--ax-border-strong);"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Approve</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Suspend</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Tag</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Export</button>
+              <span style="flex:1 1 auto;"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Clear selection" @click="selected=[]"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+
+            <div class="ax-card__body">
+
+              <!-- GRID VIEW -->
+              <div class="ax-grid" x-show="view==='grid'" style="grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:var(--ax-space-4);">
+                <template x-for="s in filtered()" :key="s.id">
+                  <article class="ax-card ax-card--interactive" style="margin:0;" :style="selected.includes(s.id) ? 'border-color:var(--ax-accent);box-shadow:0 0 0 1px var(--ax-accent);' : (s.status==='suspended' ? 'opacity:.72;' : '')">
+                    <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                      <!-- header: logo + select -->
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                        <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="flex:none;" :style="`background:color-mix(in oklab,${s.color} 18%,var(--ax-surface-subtle));color:${s.color};`"><span class="ax-avatar__initials" x-text="s.initials"></span></span>
+                        <div style="flex:1 1 auto;min-width:0;">
+                          <a href="/ecommerce/customer-details/" class="ax-text-truncate" style="display:block;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);text-decoration:none;font-size:var(--ax-text-md);line-height:1.3;" x-text="s.store"></a>
+                          <div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:1px;">by <span x-text="s.owner"></span> · <span x-text="s.category"></span></div>
+                        </div>
+                        <input type="checkbox" class="ax-checkbox" :value="s.id" x-model.number="selected" :aria-label="'Select ' + s.store">
+                      </div>
+
+                      <!-- rating -->
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                        <span class="ax-rating ax-rating--sm" :aria-label="s.rating + ' out of 5'"><template x-for="st in 5" :key="st"><svg class="ax-rating__star" :class="st<=Math.round(s.rating) ? 'ax-rating__star--full' : ''" viewBox="0 0 24 24" :fill="st<=Math.round(s.rating) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span>
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-semibold);" x-text="s.rating.toFixed(1)"></span>
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="'(' + s.reviews + ')'"></span>
+                      </div>
+
+                      <!-- 3 stat cells -->
+                      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-2);border-top:1px solid var(--ax-border);border-bottom:1px solid var(--ax-border);padding:var(--ax-space-3) 0;">
+                        <div style="text-align:center;"><div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="s.products"></div><div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;color:var(--ax-text-subtle);margin-top:2px;">Products</div></div>
+                        <div style="text-align:center;border-inline:1px solid var(--ax-border);"><div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="moneyShort(s.revenue)"></div><div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;color:var(--ax-text-subtle);margin-top:2px;">Revenue</div></div>
+                        <div style="text-align:center;"><div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="s.orders.toLocaleString('en-US')"></div><div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;color:var(--ax-text-subtle);margin-top:2px;">Orders</div></div>
+                      </div>
+
+                      <!-- status + actions -->
+                      <div class="ax-cluster" style="justify-content:space-between;">
+                        <span x-html="statusPill(s.status)"></span>
+                        <!-- pending → inline approve / reject -->
+                        <div class="ax-cluster" style="gap:var(--ax-space-2);" x-show="s.status==='pending'">
+                          <button type="button" class="ax-btn ax-btn--soft-success ax-btn--sm">Approve</button>
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="color:var(--ax-danger-500);">Reject</button>
+                        </div>
+                        <!-- suspended → reinstate -->
+                        <button type="button" class="ax-btn ax-btn--soft-warning ax-btn--sm" x-show="s.status==='suspended'">Reinstate</button>
+                        <!-- active → view store -->
+                        <div class="ax-cluster" style="gap:var(--ax-space-1);" x-show="s.status==='active' || s.status==='inactive'">
+                          <a href="/ecommerce/customer-details/" class="ax-btn ax-btn--secondary ax-btn--sm">View store</a>
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'More actions for ' + s.store"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></button>
+                        </div>
+                      </div>
+                    </div>
+                  </article>
+                </template>
+              </div>
+
+              <!-- TABLE VIEW -->
+              <div x-show="view==='table'" x-cloak class="ax-table-wrap" style="margin:0 calc(-1 * var(--ax-space-5));">
+                <table class="ax-table ax-table--hover">
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col" style="width:38px;"><input type="checkbox" class="ax-checkbox" aria-label="Select all" :checked="allSelected()" @change="toggleAll($event.target.checked)"></th>
+                      <th class="ax-table__th" scope="col">Seller</th>
+                      <th class="ax-table__th" scope="col">Rating</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Products</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Revenue</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Orders</th>
+                      <th class="ax-table__th" scope="col">Joined</th>
+                      <th class="ax-table__th" scope="col">Status</th>
+                      <th class="ax-table__th" scope="col" style="width:44px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="s in filtered()" :key="s.id">
+                      <tr class="ax-table__row" :style="selected.includes(s.id) ? 'background:var(--ax-accent-wash);' : (s.status==='suspended' ? 'opacity:.7;' : '')">
+                        <td class="ax-table__td"><input type="checkbox" class="ax-checkbox" :value="s.id" x-model.number="selected" :aria-label="'Select ' + s.store"></td>
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                            <span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${s.color} 18%,transparent);color:${s.color};`"><span class="ax-avatar__initials" x-text="s.initials"></span></span>
+                            <div style="min-width:0;">
+                              <a href="/ecommerce/customer-details/" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);text-decoration:none;" x-text="s.store"></a>
+                              <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">by <span x-text="s.owner"></span> · <span x-text="s.category"></span></div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                            <span class="ax-rating ax-rating--sm" :aria-label="s.rating + ' out of 5'"><template x-for="st in 5" :key="st"><svg class="ax-rating__star" :class="st<=Math.round(s.rating) ? 'ax-rating__star--full' : ''" viewBox="0 0 24 24" :fill="st<=Math.round(s.rating) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span>
+                            <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-muted);" x-text="s.rating.toFixed(1)"></span>
+                          </div>
+                        </td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="s.products"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="money(s.revenue)"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="s.orders.toLocaleString('en-US')"></td>
+                        <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="s.joined"></td>
+                        <td class="ax-table__td"><span x-html="statusPill(s.status)"></span></td>
+                        <td class="ax-table__td">
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Actions for ' + s.store"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></button>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- empty state -->
+              <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+                <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 21l18 0"/><path d="M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4"/><path d="M5 21l0 -10.15"/><path d="M19 21l0 -10.15"/></svg></span>
+                <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No sellers found</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Adjust your search or filters to see more vendors.</p>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="q='';fStatus='';fCategory='';">Clear filters</button>
+              </div>
+            </div>
+
+            <!-- footer / pagination -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">Showing <span x-text="filtered().length"></span> of 128 sellers</span>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" disabled aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <li><a href="#" class="ax-pagination__page is-active" aria-current="page">1</a></li>
+                  <li><a href="#" class="ax-pagination__page">2</a></li>
+                  <li><a href="#" class="ax-pagination__page">3</a></li>
+                  <li><span class="ax-pagination__ellipsis">…</span></li>
+                  <li><a href="#" class="ax-pagination__page">9</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axSellers(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',red:'var(--ax-viz-red)',accent:'var(--ax-accent)'};
+            return {
+              q:'', fStatus:'', fCategory:'', sort:'top', view:'grid', selected:[],
+              statusTabs:[
+                { id:'', label:'All', count:128 },
+                { id:'active', label:'Active', count:119 },
+                { id:'pending', label:'Pending', count:6 },
+                { id:'suspended', label:'Suspended', count:3 },
+              ],
+              sellers:[
+                { id:1, store:'Lumière Studio', owner:'Élise Moreau', initials:'LS', category:'Lighting', rating:4.9, reviews:1204, products:86, revenue:412800, orders:5240, joined:'Mar 2021', status:'active', color:C.accent },
+                { id:2, store:'Northwind Furniture', owner:'Henrik Sørensen', initials:'NF', category:'Furniture', rating:4.8, reviews:864, products:142, revenue:689400, orders:3180, joined:'Jan 2020', status:'active', color:C.cyan },
+                { id:3, store:'Clayhouse Ceramics', owner:'Mei-Ling Chen', initials:'CC', category:'Drinkware', rating:4.7, reviews:2341, products:54, revenue:248600, orders:8120, joined:'Sep 2021', status:'active', color:C.pink },
+                { id:4, store:'Paperleaf Goods', owner:'Tobias Werner', initials:'PG', category:'Stationery', rating:4.6, reviews:712, products:118, revenue:156200, orders:4660, joined:'Nov 2022', status:'active', color:C.violet },
+                { id:5, store:'Voltic Supply Co.', owner:'Aisha Karim', initials:'VS', category:'Tech', rating:4.5, reviews:489, products:73, revenue:298100, orders:2210, joined:'Feb 2023', status:'active', color:C.amber },
+                { id:6, store:'Flaxen Textiles', owner:'Mateo Rossi', initials:'FT', category:'Textiles', rating:4.4, reviews:356, products:64, revenue:132400, orders:1880, joined:'Jun 2026', status:'pending', color:C.emerald },
+                { id:7, store:'Brassworks Atelier', owner:'Priya Nair', initials:'BA', category:'Lighting', rating:4.8, reviews:903, products:41, revenue:184700, orders:2940, joined:'Apr 2022', status:'active', color:C.cyan },
+                { id:8, store:'Tundra Outdoors', owner:'Lars Eklund', initials:'TO', category:'Furniture', rating:3.9, reviews:124, products:29, revenue:42300, orders:610, joined:'Jun 2026', status:'pending', color:C.violet },
+                { id:9, store:'Driftwood Decor', owner:'Camila Rossi', initials:'DD', category:'Furniture', rating:4.2, reviews:267, products:88, revenue:97800, orders:1340, joined:'Aug 2023', status:'suspended', color:C.red },
+                { id:10, store:'Inkwell Press', owner:'Devon Okafor', initials:'IP', category:'Stationery', rating:4.7, reviews:1502, products:96, revenue:211900, orders:6080, joined:'Dec 2020', status:'active', color:C.pink },
+                { id:11, store:'Copperline Mugs', owner:'Yuki Tanaka', initials:'CM', category:'Drinkware', rating:4.3, reviews:198, products:33, revenue:58600, orders:980, joined:'May 2024', status:'inactive', color:C.amber },
+                { id:12, store:'Slate & Pine', owner:'Marta Alvarez', initials:'SP', category:'Furniture', rating:4.6, reviews:641, products:107, revenue:374500, orders:2760, joined:'Oct 2021', status:'active', color:C.emerald },
+              ],
+              money(n){ return '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              moneyShort(n){ return n>=1000000 ? '$'+(n/1000000).toFixed(2)+'M' : (n>=1000 ? '$'+Math.round(n/1000)+'K' : '$'+n); },
+              statusPill(st){
+                const map={
+                  active:['ax-badge--success','In stock','Active','M5 12l5 5l10 -10'],
+                  pending:['ax-badge--warning','','Pending','M12 7v5l3 3M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0'],
+                  suspended:['ax-badge--danger','','Suspended','M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0M5.7 5.7l12.6 12.6'],
+                  inactive:['ax-badge--neutral','','Inactive','M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0M9 10l.01 0M15 10l.01 0M9.5 15.05a3.5 3.5 0 0 1 5 0'],
+                };
+                const m=map[st]||map.inactive;
+                return '<span class="ax-badge ax-badge--soft '+m[0]+' ax-badge--pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="'+m[3]+'"/></svg>'+m[2]+'</span>';
+              },
+              filtered(){
+                let r = this.sellers.filter(s=>{
+                  const term=this.q.trim().toLowerCase();
+                  if(term && !(s.store.toLowerCase().includes(term) || s.owner.toLowerCase().includes(term))) return false;
+                  if(this.fStatus && s.status!==this.fStatus) return false;
+                  if(this.fCategory && s.category!==this.fCategory) return false;
+                  return true;
+                });
+                const by={
+                  top:(a,b)=>b.rating-a.rating,
+                  revenue:(a,b)=>b.revenue-a.revenue,
+                  products:(a,b)=>b.products-a.products,
+                  orders:(a,b)=>b.orders-a.orders,
+                  az:(a,b)=>a.store.localeCompare(b.store),
+                  newest:(a,b)=>b.id-a.id,
+                };
+                if(by[this.sort]) r=[...r].sort(by[this.sort]);
+                return r;
+              },
+              allSelected(){ const ids=this.filtered().map(s=>s.id); return ids.length>0 && ids.every(id=>this.selected.includes(id)); },
+              toggleAll(on){ this.selected = on ? this.filtered().map(s=>s.id) : []; },
+              setView(v){ this.view=v; try{ localStorage.setItem('ax:ecom:sellers:view', v); }catch(e){} },
+              restoreView(){ try{ const v=localStorage.getItem('ax:ecom:sellers:view'); if(v==='grid'||v==='table') this.view=v; }catch(e){} },
+            };
+          }
+        </script>
+{% endblock %}

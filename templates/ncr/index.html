@@ -1,0 +1,294 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Non-Conformance &amp; Quality Holds{% endblock %}
+
+{% block content %}
+<div x-data="{ openDeclareModal: false, closeNcrModalId: null }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Non-Conformance &amp; Quality Holds</h1>
+        <p class="ax-page-head__subtitle">Multi-System Quarantine Ledger &amp; Containment Isolation · IATF 16949 §8.7 &amp; 21 CFR Part 11</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <button type="button" class="ax-btn ax-btn--danger ax-btn--sm ax-btn--pill" @click="openDeclareModal = true">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true">
+            <path d="M12 9v2m0 4v.01" />
+            <path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" />
+          </svg>
+          Declare Quality Hold
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ METRICS SUMMARY ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Total Ledgers</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ total_ncrs }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Cumulative non-conformance records</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-danger-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-danger-500);">Active Quality Holds</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-danger-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ active_holds_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Physical &amp; MES/WMS quarantine locked</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-warning-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Critical Severity</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-warning-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ critical_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Immediate safety / dimensional breach</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Closed &amp; Resolved</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-success-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ closed_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Verified containment &amp; CAPA</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ FILTER CHIPS ════════════════ -->
+  <div style="display:flex;gap:var(--ax-space-2);margin-bottom:var(--ax-space-4);flex-wrap:wrap;">
+    <a href="{% url 'ncr:index' %}" class="ax-btn {% if not status_filter %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      All NCRs
+    </a>
+    <a href="{% url 'ncr:index' %}?status=OPEN_CONTAINED" class="ax-btn {% if status_filter == 'OPEN_CONTAINED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Open Contained
+    </a>
+    <a href="{% url 'ncr:index' %}?status=IN_MRB_REVIEW" class="ax-btn {% if status_filter == 'IN_MRB_REVIEW' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      In MRB Review
+    </a>
+    <a href="{% url 'ncr:index' %}?status=DISPOSITIONED" class="ax-btn {% if status_filter == 'DISPOSITIONED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Dispositioned
+    </a>
+    <a href="{% url 'ncr:index' %}?status=CLOSED" class="ax-btn {% if status_filter == 'CLOSED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Closed
+    </a>
+  </div>
+
+  <!-- ════════════════ NCR LEDGER TABLE ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="NCR Ledger">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Enterprise Defect Register</span>
+          <h2 class="ax-card__title">Non-Conformance Reports (NCR)</h2>
+          <p class="ax-card__subtitle">Quarantine lockouts with 21 CFR Part 11 audit stamps and cross-system event bus broadcast</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">NCR NUMBER</th>
+                <th class="ax-table__th" scope="col">SEVERITY / DOMAIN</th>
+                <th class="ax-table__th" scope="col">TARGET ASSET</th>
+                <th class="ax-table__th" scope="col">HOLD STATUS</th>
+                <th class="ax-table__th" scope="col">LIFECYCLE STATUS</th>
+                <th class="ax-table__th" scope="col">CONTAINMENT &amp; DEFECT</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ncr in ncrs %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ ncr.ncr_number }}
+                  <div style="font-size:11px;color:var(--ax-text-subtle);">{{ ncr.created_at|date:"Y-m-d H:i" }}</div>
+                </td>
+                <td class="ax-table__td">
+                  {% if ncr.severity == 'CRITICAL' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">CRITICAL</span>
+                  {% elif ncr.severity == 'MAJOR' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">MAJOR</span>
+                  {% else %}
+                  <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">MINOR</span>
+                  {% endif %}
+                  <div class="ax-mono" style="font-size:11px;color:var(--ax-text-muted);margin-top:2px;">{{ ncr.source_domain }}</div>
+                </td>
+                <td class="ax-table__td">
+                  <span class="ax-badge ax-badge--soft ax-badge--secondary" style="font-size:10px;text-transform:uppercase;">{{ ncr.target_type }}</span>
+                  <div class="ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-top:2px;">
+                    {{ ncr.target_identifier }}
+                  </div>
+                </td>
+                <td class="ax-table__td">
+                  {% if ncr.hold_declared %}
+                  <span class="ax-badge ax-badge--solid ax-badge--danger ax-badge--pill">
+                    <span class="ax-badge__dot"></span>QA HOLD ACTIVE
+                  </span>
+                  {% else %}
+                  <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+                    RELEASED
+                  </span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td">
+                  {% if ncr.status == 'CLOSED' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">CLOSED</span>
+                  {% elif ncr.status == 'IN_MRB_REVIEW' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">IN MRB REVIEW</span>
+                  {% elif ncr.status == 'DISPOSITIONED' %}
+                  <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">DISPOSITIONED</span>
+                  {% else %}
+                  <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">OPEN CONTAINED</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td" style="max-width:280px;">
+                  <div style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);line-height:1.3;">{{ ncr.defect_description|truncatewords:10 }}</div>
+                  <div style="font-size:11px;color:var(--ax-text-muted);margin-top:4px;">{{ ncr.containment_actions|truncatewords:8 }}</div>
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  <div style="display:flex;gap:var(--ax-space-2);justify-content:flex-end;">
+                    {% if ncr.status != 'CLOSED' %}
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="closeNcrModalId = '{{ ncr.id }}'">
+                      Close
+                    </button>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+
+              <!-- Close NCR Modal -->
+              <div x-show="closeNcrModalId === '{{ ncr.id }}'" x-cloak style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+                <div class="ax-card" @click.outside="closeNcrModalId = null" style="max-width:500px;width:100%;background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-xl);padding:var(--ax-space-6);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-4);">
+                    <h3 style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin:0;">
+                      Close NCR {{ ncr.ncr_number }}
+                    </h3>
+                    <button type="button" class="ax-icon-btn" @click="closeNcrModalId = null" aria-label="Close modal">
+                      <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+                    </button>
+                  </div>
+                  <form method="POST" action="{% url 'ncr:close' ncr.id %}">
+                    {% csrf_token %}
+                    <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                      <div class="ax-field">
+                        <label class="ax-label">Resolution &amp; Corrective Notes <span class="ax-field__required">*</span></label>
+                        <textarea name="resolution_notes" class="ax-input" rows="3" required placeholder="Detail the root-cause elimination and verification evidence..."></textarea>
+                      </div>
+                      <div class="ax-field">
+                        <label class="ax-label">Digital Signer Badge Number</label>
+                        <input type="text" name="badge_number" class="ax-input ax-mono" placeholder="e.g. QA-MGR-001">
+                        <span class="ax-help">21 CFR Part 11 Electronic Signature stamp</span>
+                      </div>
+                    </div>
+                    <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);margin-top:var(--ax-space-6);">
+                      <button type="button" class="ax-btn ax-btn--secondary" @click="closeNcrModalId = null">Cancel</button>
+                      <button type="submit" class="ax-btn ax-btn--primary">Seal &amp; Close NCR</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+
+              {% empty %}
+              <tr class="ax-table__row">
+                <td colspan="7" style="text-align:center;padding:var(--ax-space-8);color:var(--ax-text-muted);">
+                  No non-conformance records found matching the filter criteria.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ DECLARE HOLD MODAL ════════════════ -->
+  <div x-show="openDeclareModal" x-cloak style="position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:100;display:flex;align-items:center;justify-content:center;padding:var(--ax-space-4);">
+    <div class="ax-card" @click.outside="openDeclareModal = false" style="max-width:580px;width:100%;background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-xl);padding:var(--ax-space-6);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-4);">
+        <h3 style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-danger-500);margin:0;display:flex;align-items:center;gap:var(--ax-space-2);">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="22" height="22"><path d="M12 9v2m0 4v.01" /><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75" /></svg>
+          Declare Enterprise Quality Hold
+        </h3>
+        <button type="button" class="ax-icon-btn" @click="openDeclareModal = false" aria-label="Close modal">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" width="20" height="20"><path d="M18 6l-12 12" /><path d="M6 6l12 12" /></svg>
+        </button>
+      </div>
+
+      <form method="POST" action="{% url 'ncr:declare_hold' %}">
+        {% csrf_token %}
+        <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+            <div class="ax-field">
+              <label class="ax-label">Source Domain <span class="ax-field__required">*</span></label>
+              <select name="source_domain" class="ax-input" required>
+                {% for code, label in source_domains %}
+                <option value="{{ code }}">{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="ax-field">
+              <label class="ax-label">Severity Level <span class="ax-field__required">*</span></label>
+              <select name="severity" class="ax-input" required>
+                {% for code, label in severities %}
+                <option value="{{ code }}" {% if code == 'MAJOR' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+            <div class="ax-field">
+              <label class="ax-label">Target Asset Type <span class="ax-field__required">*</span></label>
+              <select name="target_type" class="ax-input" required>
+                {% for code, label in target_types %}
+                <option value="{{ code }}" {% if code == 'IN_PROCESS_RUN' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="ax-field">
+              <label class="ax-label">Target Identifier <span class="ax-field__required">*</span></label>
+              <input type="text" name="target_identifier" class="ax-input ax-mono" placeholder="e.g. IMM-02-RUN-104" required>
+            </div>
+          </div>
+
+          <div class="ax-field">
+            <label class="ax-label">Defect Description <span class="ax-field__required">*</span></label>
+            <textarea name="defect_description" class="ax-input" rows="2" placeholder="Describe the non-conforming condition, dimension deviation, or defect..." required></textarea>
+          </div>
+
+          <div class="ax-field">
+            <label class="ax-label">Immediate Containment Actions <span class="ax-field__required">*</span></label>
+            <textarea name="containment_actions" class="ax-input" rows="2" placeholder="e.g. Machine halted, parts segregated in Quarantine Cage A, MES job frozen..." required></textarea>
+          </div>
+
+          <div class="ax-field">
+            <label class="ax-label">Digital Signer Badge Number</label>
+            <input type="text" name="badge_number" class="ax-input ax-mono" placeholder="e.g. QA-SUP-001">
+            <span class="ax-help">21 CFR Part 11 Electronic Signature stamp</span>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);margin-top:var(--ax-space-6);">
+          <button type="button" class="ax-btn ax-btn--secondary" @click="openDeclareModal = false">Cancel</button>
+          <button type="submit" class="ax-btn ax-btn--danger">Seal Hold &amp; Broadcast</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

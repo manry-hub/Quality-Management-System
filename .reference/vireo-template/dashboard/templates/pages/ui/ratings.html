@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Ratings</h1>
+              <p class="ax-page-head__subtitle">Star ratings — read-only, interactive, half-steps and three sizes.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ecommerce/product-details/#reviews">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z"/></svg>
+                <span class="ax-btn__label">Reviews</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Read-only ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Read-only ratings">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Static</span>
+                <h2 class="ax-card__title">Read-only</h2>
+                <p class="ax-card__subtitle">Display a stored score with an optional numeric value.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- 5 of 5 -->
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Brass Task Light</span>
+                <span class="ax-rating" role="img" aria-label="Rated 5 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <span class="ax-rating__value ax-num">4.9</span>
+                </span>
+              </div>
+
+              <!-- 4 of 5 -->
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Aperture Desk Lamp</span>
+                <span class="ax-rating" role="img" aria-label="Rated 4 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <span class="ax-rating__value ax-num">4.0</span>
+                </span>
+              </div>
+
+              <!-- 3 of 5 -->
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Cork Desk Mat</span>
+                <span class="ax-rating" role="img" aria-label="Rated 3 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <span class="ax-rating__value ax-num">3.0</span>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Half steps ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Half-step ratings">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Precision</span>
+                <h2 class="ax-card__title">Half Steps</h2>
+                <p class="ax-card__subtitle">A half-filled star renders fractional averages accurately.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- 4.5 -->
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Matte Ceramic Mug</span>
+                <span class="ax-rating" role="img" aria-label="Rated 4.5 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--half" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M12 1a.993 .993 0 0 1 .823 .443l.067 .116l2.852 5.781l6.38 .925c.741 .108 1.08 .94 .703 1.526l-.07 .095l-.078 .086l-4.624 4.499l1.09 6.355a1.001 1.001 0 0 1 -1.249 1.135l-.101 -.035l-.101 -.046l-5.693 -3l-5.706 3c-.105 .055 -.212 .09 -.32 .106l-.106 .01a1.003 1.003 0 0 1 -1.038 -1.06l.013 -.11l1.09 -6.355l-4.623 -4.5a1.001 1.001 0 0 1 .328 -1.647l.113 -.036l.114 -.023l6.379 -.925l2.853 -5.78a.968 .968 0 0 1 .904 -.56zm0 3.274v12.476a1 1 0 0 1 .239 .029l.115 .036l.112 .05l4.363 2.299l-.836 -4.873a1 1 0 0 1 .136 -.696l.07 -.099l.082 -.09l3.546 -3.453l-4.891 -.708a1 1 0 0 1 -.62 -.344l-.073 -.097l-.06 -.106l-2.183 -4.424z"/></svg>
+                  <span class="ax-rating__value ax-num">4.5</span>
+                </span>
+              </div>
+
+              <!-- 3.5 -->
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Felt Laptop Sleeve</span>
+                <span class="ax-rating" role="img" aria-label="Rated 3.5 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--half" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M12 1a.993 .993 0 0 1 .823 .443l.067 .116l2.852 5.781l6.38 .925c.741 .108 1.08 .94 .703 1.526l-.07 .095l-.078 .086l-4.624 4.499l1.09 6.355a1.001 1.001 0 0 1 -1.249 1.135l-.101 -.035l-.101 -.046l-5.693 -3l-5.706 3c-.105 .055 -.212 .09 -.32 .106l-.106 .01a1.003 1.003 0 0 1 -1.038 -1.06l.013 -.11l1.09 -6.355l-4.623 -4.5a1.001 1.001 0 0 1 .328 -1.647l.113 -.036l.114 -.023l6.379 -.925l2.853 -5.78a.968 .968 0 0 1 .904 -.56zm0 3.274v12.476a1 1 0 0 1 .239 .029l.115 .036l.112 .05l4.363 2.299l-.836 -4.873a1 1 0 0 1 .136 -.696l.07 -.099l.082 -.09l3.546 -3.453l-4.891 -.708a1 1 0 0 1 -.62 -.344l-.073 -.097l-.06 -.106l-2.183 -4.424z"/></svg>
+                  <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <span class="ax-rating__value ax-num">3.5</span>
+                </span>
+              </div>
+
+              <!-- Summary -->
+              <div class="ax-divider" style="margin-block:var(--ax-space-1);"></div>
+              <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;">
+                <div style="text-align:center;flex:0 0 auto;">
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:700;line-height:1;color:var(--ax-text-strong);">4.6</div>
+                  <span class="ax-rating ax-rating--sm" role="img" aria-label="Average 4.6 out of 5" style="margin-top:var(--ax-space-1);">
+                    <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                    <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                    <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                    <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                    <svg class="ax-rating__star ax-rating__star--half" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M12 1a.993 .993 0 0 1 .823 .443l.067 .116l2.852 5.781l6.38 .925c.741 .108 1.08 .94 .703 1.526l-.07 .095l-.078 .086l-4.624 4.499l1.09 6.355a1.001 1.001 0 0 1 -1.249 1.135l-.101 -.035l-.101 -.046l-5.693 -3l-5.706 3c-.105 .055 -.212 .09 -.32 .106l-.106 .01a1.003 1.003 0 0 1 -1.038 -1.06l.013 -.11l1.09 -6.355l-4.623 -4.5a1.001 1.001 0 0 1 .328 -1.647l.113 -.036l.114 -.023l6.379 -.925l2.853 -5.78a.968 .968 0 0 1 .904 -.56zm0 3.274v12.476a1 1 0 0 1 .239 .029l.115 .036l.112 .05l4.363 2.299l-.836 -4.873a1 1 0 0 1 .136 -.696l.07 -.099l.082 -.09l3.546 -3.453l-4.891 -.708a1 1 0 0 1 -.62 -.344l-.073 -.097l-.06 -.106l-2.183 -4.424z"/></svg>
+                  </span>
+                </div>
+                <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:6px;min-width:0;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:1.2ch;">5</small><div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:72%;background:var(--ax-warning-500);"></div></div></div><small class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);width:4ch;text-align:end;">389</small></div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:1.2ch;">4</small><div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:20%;background:var(--ax-warning-500);"></div></div></div><small class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);width:4ch;text-align:end;">108</small></div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:1.2ch;">3</small><div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:6%;background:var(--ax-warning-500);"></div></div></div><small class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);width:4ch;text-align:end;">31</small></div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:1.2ch;">2</small><div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:2%;background:var(--ax-warning-500);"></div></div></div><small class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);width:4ch;text-align:end;">9</small></div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><small style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:1.2ch;">1</small><div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:1%;background:var(--ax-warning-500);"></div></div></div><small class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);width:4ch;text-align:end;">3</small></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Sizes ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Rating sizes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Scale</span>
+                <h2 class="ax-card__title">Sizes</h2>
+                <p class="ax-card__subtitle">Small, default and large stars.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Small · sm</span>
+                <span class="ax-rating ax-rating--sm" role="img" aria-label="4 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                </span>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Default</span>
+                <span class="ax-rating" role="img" aria-label="4 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                </span>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Large · lg</span>
+                <span class="ax-rating ax-rating--lg" role="img" aria-label="4 out of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" aria-hidden="true" style="fill:currentColor;"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                  <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                </span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Interactive ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Interactive rating"
+                   x-data="{ rating: 0, preview: 0, labels: ['','Terrible','Poor','OK','Good','Excellent'], set(n){ this.rating = n } }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Input</span>
+                <h2 class="ax-card__title">Interactive</h2>
+                <p class="ax-card__subtitle">Hover to preview, click to set — fully keyboard operable.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0 0 var(--ax-space-3);">How was your experience?</p>
+              <div class="ax-rating ax-rating--input ax-rating--lg" role="radiogroup" aria-label="Rate your experience" @mouseleave="preview=0">
+                <template x-for="n in 5" :key="n">
+                  <button type="button" class="ax-rating__star" role="radio"
+                          :class="{ 'is-selected': n <= rating, 'is-preview': preview && n <= preview }"
+                          :aria-checked="n === rating ? 'true' : 'false'"
+                          :aria-label="n + (n===1 ? ' star' : ' stars')"
+                          @click="set(n)" @mouseenter="preview=n" @focus="preview=n" @blur="preview=0"
+                          @keydown.arrow-right.prevent="set(Math.min(5, rating+1))" @keydown.arrow-left.prevent="set(Math.max(1, rating-1))"
+                          style="background:none;border:0;padding:0;cursor:pointer;">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" style="width:100%;height:100%;fill:currentColor;" x-show="(preview ? n<=preview : n<=rating)"><path d="M8.243 7.34l-6.38 .925l-.113 .023a1 1 0 0 0 -.44 1.684l4.622 4.499l-1.09 6.355l-.013 .11a1 1 0 0 0 1.464 .944l5.706 -3l5.693 3l.1 .046a1 1 0 0 0 1.352 -1.1l-1.091 -6.355l4.624 -4.5l.078 -.085a1 1 0 0 0 -.633 -1.62l-6.38 -.926l-2.852 -5.78a1 1 0 0 0 -1.794 0l-2.853 5.78z"/></svg>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:100%;height:100%;" x-show="!(preview ? n<=preview : n<=rating)"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  </button>
+                </template>
+              </div>
+              <p style="font-size:var(--ax-text-sm);min-height:1.4em;margin:var(--ax-space-4) 0 0;color:var(--ax-text);">
+                <span x-show="rating || preview" x-cloak>You selected <b style="color:var(--ax-accent);" x-text="(preview||rating) + ' — ' + labels[preview||rating]"></b></span>
+                <span x-show="!rating && !preview" style="color:var(--ax-text-subtle);">Tap a star to rate.</span>
+              </p>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

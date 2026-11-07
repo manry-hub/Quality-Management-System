@@ -1,0 +1,458 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Stocks &amp; Trading</h1>
+              <p class="ax-page-head__subtitle">Markets are open — your portfolio is up 1.9% today.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
+                <span class="ax-btn__label">Market open</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Statements</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New Order</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── INDEX STRIP (full width) ───── -->
+          <section class="ax-card ax-col-full" role="region" aria-label="Market indices">
+            <div class="ax-card__body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:var(--ax-space-5);padding-block:var(--ax-space-4);">
+              <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;justify-content:space-between;">
+                <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">S&amp;P 500</div><div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">5,487.03</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">+0.62%</div></div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="32" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[8,10,9,15,14,20,19,25]}]' style="width:72px;height:32px;flex:none" aria-hidden="true"></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;justify-content:space-between;">
+                <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Nasdaq</div><div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">17,862.30</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">+0.94%</div></div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="32" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[6,9,8,14,16,19,21,27]}]' style="width:72px;height:32px;flex:none" aria-hidden="true"></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;justify-content:space-between;">
+                <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Dow Jones</div><div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">38,910.40</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-red);">−0.18%</div></div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="32" data-ax-chart-color="--ax-viz-red" data-ax-chart-series='[{"name":"Trend","data":[22,20,23,18,19,15,16,12]}]' style="width:72px;height:32px;flex:none" aria-hidden="true"></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:nowrap;justify-content:space-between;">
+                <div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Russell 2000</div><div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">2,041.88</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">+0.41%</div></div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="32" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[12,14,13,17,16,20,18,23]}]' style="width:72px;height:32px;flex:none" aria-hidden="true"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi" role="region" aria-label="Portfolio Value $248,300, up 1.9% today">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 9a1.5 1.5 0 0 1 1.5 -1.5h2a1.5 1.5 0 0 1 0 3h-1a1.5 1.5 0 0 0 0 3h2a1.5 1.5 0 0 0 1.5 -1.5"/><path d="M12 6v1.5m0 9v1.5"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.9%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Portfolio Value</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$248,300</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[8,11,10,16,18,22,25,29]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi" role="region" aria-label="Today's profit and loss positive $4,610, up 1.9%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.9%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Today's P / L</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num" style="color:var(--ax-viz-emerald);">+$4,610</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[6,10,8,15,13,20,18,27]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi" role="region" aria-label="Buying power $36,200, neutral">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>
+                </span>
+                <span class="ax-kpi__delta" style="color:var(--ax-text-subtle);">—</span>
+              </div>
+              <div class="ax-kpi__label">Buying Power</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$36,200</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[17,18,16,19,17,19,18,19]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi" role="region" aria-label="Day's best AAPL up 3.4%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>3.4%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Day's Best</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">AAPL</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[5,8,7,14,16,20,24,30]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Portfolio Performance (8) + Allocation by Sector (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col-hero" role="region" aria-label="Portfolio performance versus benchmark">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Performance</span>
+                <h2 class="ax-card__title">Portfolio vs. S&amp;P 500</h2>
+                <p class="ax-card__subtitle">Indexed growth, your portfolio vs. benchmark</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Timeframe">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1D</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1W</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">1M</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1Y</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">My portfolio</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">S&amp;P 500</small></span>
+              </div>
+              <div
+                data-ax-chart="apex"
+                data-ax-chart-type="area"
+                data-ax-chart-height="300"
+                data-ax-chart-legend="none"
+                data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"My portfolio","data":[100,101.2,100.6,102.4,103.1,102.8,104.2,105.6,106.1,107.4,108.2,109.1]},{"name":"S&P 500","data":[100,100.6,100.2,101.1,101.4,101.0,101.8,102.4,102.1,103.0,103.4,103.9]}]'
+                aria-label="Area chart comparing portfolio growth against the S and P 500">
+              </div>
+            </div>
+          </section>
+
+          <!-- Allocation by Sector (4) -->
+          <section class="ax-card ax-col-side" role="region" aria-label="Allocation by sector">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Allocation by Sector</h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Allocation options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-sector-donut" aria-label="Donut chart of allocation by sector: technology 38%, healthcare 22%, financials 18%, energy 12%, consumer 10%"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#38BDF8;display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Technology</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">38%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#A78BFA;display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Healthcare</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">22%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#F472B6;display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Financials</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">18%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#FBBF24;display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Energy</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">12%</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#34D399;display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Consumer</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">10%</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── CANDLESTICK (8) + ORDER TICKET (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col-hero" role="region" aria-label="Apple stock price chart" x-data="{ symbol: 'AAPL' }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow" x-text="symbol + ' · NASDAQ'">AAPL · NASDAQ</span>
+                <h2 class="ax-card__title">Apple Inc.</h2>
+                <p class="ax-card__subtitle">$214.30 <span style="color:var(--ax-viz-emerald);">+$7.04 (3.4%)</span> today</p>
+              </div>
+              <div class="ax-card__actions" style="gap:var(--ax-space-2);">
+                <label class="ax-visually" for="stk-symbol">Symbol search</label>
+                <div style="position:relative;max-width:170px;">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;"><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input id="stk-symbol" class="ax-input ax-input--sm" type="search" placeholder="Search symbol" x-model="symbol" autocomplete="off" style="padding-inline-start:32px;">
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-stock-candle" aria-label="Candlestick chart of Apple daily price"></div>
+              <div id="ax-stock-vol" aria-label="Volume bars for Apple" style="margin-top:calc(-1 * var(--ax-space-4));"></div>
+            </div>
+          </section>
+
+          <!-- Order Ticket (4) -->
+          <section class="ax-card ax-col-side" role="region" aria-label="Order ticket" x-data="{ side:'buy', symbol:'AAPL', qty:'25', type:'market', limit:'214.00', sent:false }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Order Ticket</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Order side" style="width:100%;margin-bottom:var(--ax-space-4);">
+                <button type="button" class="ax-btn ax-btn--sm ax-btn--block" role="radio" :aria-checked="side==='buy'" :class="{ 'is-selected': side==='buy' }" @click="side='buy'">Buy</button>
+                <button type="button" class="ax-btn ax-btn--sm ax-btn--block" role="radio" :aria-checked="side==='sell'" :class="{ 'is-selected': side==='sell' }" @click="side='sell'">Sell</button>
+              </div>
+              <form @submit.prevent="sent=true" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-field">
+                  <label class="ax-label" for="stk-sym">Symbol</label>
+                  <input class="ax-input" id="stk-sym" type="text" x-model="symbol">
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+                  <div class="ax-field">
+                    <label class="ax-label" for="stk-qty">Quantity</label>
+                    <input class="ax-input ax-num" id="stk-qty" type="text" inputmode="numeric" x-model="qty">
+                  </div>
+                  <div class="ax-field">
+                    <label class="ax-label" for="stk-type">Order type</label>
+                    <select class="ax-select" id="stk-type" x-model="type">
+                      <option value="market">Market</option>
+                      <option value="limit">Limit</option>
+                      <option value="stop">Stop</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="ax-field" x-show="type!=='market'" x-transition x-cloak>
+                  <label class="ax-label" for="stk-limit">Limit price</label>
+                  <input class="ax-input ax-num" id="stk-limit" type="text" inputmode="decimal" x-model="limit">
+                </div>
+                <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Est. cost</span>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$5,357.50</b>
+                </div>
+                <button type="submit" class="ax-btn ax-btn--primary ax-btn--block" :class="{ 'ax-btn--danger': side==='sell' }">
+                  <span class="ax-btn__label" x-text="(side==='buy'?'Place Buy Order':'Place Sell Order')">Place Buy Order</span>
+                </button>
+                <p class="ax-note" x-show="sent" x-transition x-cloak style="margin:0;color:var(--ax-viz-emerald);font-size:var(--ax-text-sm);" role="status">
+                  Order placed — confirmation sent to your inbox.
+                </p>
+              </form>
+            </div>
+          </section>
+
+          <!-- ───── HOLDINGS (8) + WATCHLIST RAIL (4) ───── -->
+          <section class="ax-card ax-col-wide" role="region" aria-label="Holdings">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Holdings</h2>
+                <p class="ax-card__subtitle">Positions &amp; unrealized P&amp;L</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Symbol</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Qty</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Avg cost</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Mkt value</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">P&amp;L</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div><div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">AAPL</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Apple Inc.</div></div></td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">120</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$182.40</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$25,716</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$3,828</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div><div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">MSFT</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Microsoft</div></div></td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">64</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$398.10</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$28,704</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$3,222</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div><div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">NVDA</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">NVIDIA</div></div></td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">210</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$96.20</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$25,830</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$6,628</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div><div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">TSLA</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Tesla</div></div></td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">90</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$248.70</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$20,718</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-red);">−$1,665</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div><div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">AMZN</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Amazon</div></div></td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">140</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$172.30</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$25,564</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$1,442</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Watchlist + News rail (4) -->
+          <div class="ax-col-narrow" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <section class="ax-card" role="region" aria-label="Watchlist">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Watchlist</h2></div>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Add to watchlist">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                </button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--ax-warning-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="fill:var(--ax-warning-500);"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <div style="flex:1;min-width:0;"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">GOOGL</b></div>
+                  <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="24" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[6,9,8,13,15,19]}]' style="width:48px;height:24px;flex:none" aria-hidden="true"></div>
+                  <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$178.4</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);">+1.2%</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <div style="flex:1;min-width:0;"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">META</b></div>
+                  <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="24" data-ax-chart-color="--ax-viz-red" data-ax-chart-series='[{"name":"Trend","data":[16,14,15,11,10,7]}]' style="width:48px;height:24px;flex:none" aria-hidden="true"></div>
+                  <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$502.1</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-red);">−0.7%</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <div style="flex:1;min-width:0;"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">AMD</b></div>
+                  <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="24" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[7,10,9,14,16,20]}]' style="width:48px;height:24px;flex:none" aria-hidden="true"></div>
+                  <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$162.8</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);">+2.6%</div></div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                  <div style="flex:1;min-width:0;"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">NFLX</b></div>
+                  <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="24" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[8,10,9,12,13,16]}]' style="width:48px;height:24px;flex:none" aria-hidden="true"></div>
+                  <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$648.3</div><div class="ax-num" style="font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);">+0.9%</div></div>
+                </div>
+              </div>
+            </section>
+
+            <section class="ax-card" role="region" aria-label="Market news">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Market News</h2></div>
+                <a class="ax-btn ax-btn--link" href="#">More</a>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <ul class="ax-list ax-list--compact">
+                  <li class="ax-list__row" style="padding-inline:0;align-items:flex-start;">
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Fed holds rates steady, signals one cut in Q4</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:2px;">Reuters · 12m ago</span></span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;align-items:flex-start;">
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Nvidia tops $3T as AI demand stays red-hot</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:2px;">Bloomberg · 48m ago</span></span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;align-items:flex-start;">
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Apple unveils on-device AI at WWDC keynote</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:2px;">CNBC · 2h ago</span></span>
+                  </li>
+                  <li class="ax-list__row" style="padding-inline:0;align-items:flex-start;border-bottom:0;">
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Oil slips as OPEC+ weighs supply boost</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:2px;">WSJ · 3h ago</span></span>
+                  </li>
+                </ul>
+              </div>
+            </section>
+          </div>
+
+        </div>
+
+        <style>
+          .ax-dash-grid > * { grid-column: 1 / -1; }
+          @media (min-width: 768px) {
+            .ax-dash-grid > .ax-kpi { grid-column: span 6; }
+          }
+          @media (min-width: 1200px) {
+            .ax-dash-grid > .ax-kpi { grid-column: span 3; }
+            .ax-dash-grid > .ax-col-full { grid-column: span 12; }
+            .ax-dash-grid > .ax-col-hero { grid-column: span 8; }
+            .ax-dash-grid > .ax-col-side { grid-column: span 4; }
+            .ax-dash-grid > .ax-col-wide { grid-column: span 8; }
+            .ax-dash-grid > .ax-col-narrow { grid-column: span 4; }
+          }
+        </style>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+          const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+          // Sector donut
+          const sec = document.getElementById('ax-sector-donut');
+          if (sec) {
+            renderChart(sec, 'donut', [38, 22, 18, 12, 10], {
+              height: 220, legend: 'none',
+              apex: {
+                labels: ['Technology', 'Healthcare', 'Financials', 'Energy', 'Consumer'],
+                colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber'), cv('--ax-viz-emerald')],
+                stroke: { width: 0 },
+                plotOptions: { pie: { donut: { size: '72%', labels: { show: true,
+                  name: { fontFamily: cv('--ax-font-sans') },
+                  value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 },
+                  total: { show: true, label: 'Sectors', formatter: () => '5' } } } } },
+              },
+            });
+          }
+
+          // AAPL candlestick + volume
+          const candle = document.getElementById('ax-stock-candle');
+          const vol = document.getElementById('ax-stock-vol');
+          const ohlc = [
+            [1718150400000, 196.2, 198.4, 195.1, 197.8],
+            [1718236800000, 197.8, 200.1, 197.0, 199.6],
+            [1718323200000, 199.6, 201.2, 198.2, 198.9],
+            [1718409600000, 198.9, 202.6, 198.5, 202.1],
+            [1718496000000, 202.1, 204.8, 201.3, 204.2],
+            [1718582400000, 204.2, 205.1, 202.4, 203.0],
+            [1718668800000, 203.0, 206.7, 202.6, 206.2],
+            [1718755200000, 206.2, 209.4, 205.8, 208.9],
+            [1718841600000, 208.9, 210.2, 206.1, 207.3],
+            [1718928000000, 207.3, 211.8, 207.0, 211.2],
+            [1719014400000, 211.2, 213.4, 209.6, 213.1],
+            [1719100800000, 213.1, 215.6, 211.9, 214.3],
+          ];
+          if (candle) {
+            renderChart(candle, 'candlestick', [{ data: ohlc.map((c) => ({ x: c[0], y: [c[1], c[2], c[3], c[4]] })) }], {
+              height: 260, legend: 'none',
+              apex: {
+                plotOptions: { candlestick: { colors: { upward: cv('--ax-success-500'), downward: cv('--ax-danger-500') } } },
+                xaxis: { type: 'datetime', labels: { show: false } },
+                yaxis: { tooltip: { enabled: true }, labels: { formatter: (v) => '$' + v.toFixed(0) } },
+              },
+            });
+          }
+          if (vol) {
+            const volData = [22, 28, 19, 34, 31, 24, 38, 42, 29, 45, 40, 36];
+            renderChart(vol, 'bar', [{ name: 'Volume', data: ohlc.map((c, i) => ({ x: c[0], y: volData[i] })) }], {
+              height: 110, legend: 'none',
+              apex: {
+                colors: [cv('--ax-viz-cyan')],
+                plotOptions: { bar: { columnWidth: '60%', borderRadius: 2 } },
+                fill: { opacity: 0.55 },
+                xaxis: { type: 'datetime' },
+                yaxis: { labels: { formatter: (v) => v + 'M' } },
+                grid: { yaxis: { lines: { show: false } } },
+              },
+            });
+          }
+        </script>
+{% endblock %}

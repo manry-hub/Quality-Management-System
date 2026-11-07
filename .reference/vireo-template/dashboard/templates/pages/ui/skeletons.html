@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Skeletons</h1>
+              <p class="ax-page-head__subtitle">Loading placeholders that mirror the exact shape of the content they replace — cards, lists, tables, avatars and media.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/spinners/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg>
+                <span class="ax-btn__label">Spinners</span>
+              </a>
+              <!-- demo toggle: swap skeletons for the real content -->
+              <button type="button" class="ax-btn ax-btn--primary" x-data="{ loading:true }" x-init="$watch('loading', v => document.querySelectorAll('[data-skeleton-scope]').forEach(s => s.setAttribute('data-loading', v)))" @click="loading=!loading" :aria-pressed="loading">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+                <span class="ax-btn__label" x-text="loading ? 'Show loaded' : 'Show loading'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ═══════ PRIMITIVES ═══════ -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Skeleton primitives">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Primitives</span>
+                <h2 class="ax-card__title">Shapes &amp; animations</h2>
+                <p class="ax-card__subtitle">Line, circle and rectangle blocks — animated with a shimmer sweep or a pulse fade.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:var(--ax-space-6);" aria-busy="true" aria-label="Skeleton shape examples">
+              <!-- lines -->
+              <div>
+                <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);margin-bottom:var(--ax-space-3);">Lines</div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <div class="ax-skeleton ax-skeleton--line" style="width:100%;"></div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:85%;"></div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:60%;"></div>
+                </div>
+              </div>
+              <!-- circle -->
+              <div>
+                <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);margin-bottom:var(--ax-space-3);">Circle</div>
+                <div class="ax-cluster" style="gap:var(--ax-space-4);align-items:center;">
+                  <div class="ax-skeleton ax-skeleton--circle" style="width:32px;height:32px;"></div>
+                  <div class="ax-skeleton ax-skeleton--circle" style="width:44px;height:44px;"></div>
+                  <div class="ax-skeleton ax-skeleton--circle" style="width:60px;height:60px;"></div>
+                </div>
+              </div>
+              <!-- rect -->
+              <div>
+                <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);margin-bottom:var(--ax-space-3);">Rectangle</div>
+                <div class="ax-skeleton ax-skeleton--rect" style="width:100%;height:88px;"></div>
+              </div>
+              <!-- pulse -->
+              <div>
+                <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);margin-bottom:var(--ax-space-3);">Pulse fade</div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <div class="ax-skeleton ax-skeleton--pulse ax-skeleton--line" style="width:100%;"></div>
+                  <div class="ax-skeleton ax-skeleton--pulse ax-skeleton--line" style="width:72%;"></div>
+                  <div class="ax-skeleton ax-skeleton--pulse ax-skeleton--rect" style="width:100%;height:40px;"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ CARD SKELETON ═══════ -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Card skeleton" data-skeleton-scope data-loading="true">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Media card</span>
+                <h2 class="ax-card__title">Article card</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- loading -->
+              <div data-skel style="display:flex;flex-direction:column;gap:var(--ax-space-4);" aria-busy="true" aria-label="Loading article">
+                <div class="ax-skeleton ax-skeleton--rect" style="width:100%;height:148px;"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:30%;height:0.6em;"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:90%;height:1.1em;"></div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                  <div class="ax-skeleton ax-skeleton--line" style="width:100%;"></div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:80%;"></div>
+                </div>
+                <div class="ax-skeleton-row" style="margin-top:var(--ax-space-2);">
+                  <div class="ax-skeleton ax-skeleton--circle" style="width:28px;height:28px;flex:0 0 auto;"></div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:40%;"></div>
+                </div>
+              </div>
+              <!-- loaded -->
+              <div data-real hidden style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <div class="ax-ratio" style="--ax-ratio:16/9;border-radius:var(--ax-radius-md);background:linear-gradient(135deg,color-mix(in oklab,var(--ax-viz-violet) 30%,var(--ax-surface)),color-mix(in oklab,var(--ax-viz-cyan) 24%,var(--ax-surface)));"></div>
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill" style="align-self:flex-start;">Product</span>
+                <h3 style="margin:0;font-size:var(--ax-text-md);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Aurora 3.0 ships twelve accents</h3>
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.55;">A live customizer, 200+ pages and a data-viz palette that re-themes in 200ms.</p>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;margin-top:var(--ax-space-1);">
+                  <span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);">LB</span>
+                  <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Lena Brandt · 4 min read</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ STAT / KPI SKELETON ═══════ -->
+          <section class="ax-card ax-col--4" role="region" aria-label="KPI skeletons" data-skeleton-scope data-loading="true">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Stat blocks</span>
+                <h2 class="ax-card__title">KPI placeholders</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <!-- loading -->
+              <div data-skel style="display:flex;flex-direction:column;gap:var(--ax-space-5);" aria-busy="true" aria-label="Loading metrics">
+                <div class="ax-skeleton-stat">
+                  <div class="ax-cluster" style="justify-content:space-between;">
+                    <div class="ax-skeleton ax-skeleton--rect" style="width:40px;height:40px;border-radius:var(--ax-radius-md);"></div>
+                    <div class="ax-skeleton ax-skeleton--line" style="width:48px;height:1.2em;"></div>
+                  </div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:55%;"></div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:75%;height:1.6em;"></div>
+                </div>
+                <div class="ax-divider"></div>
+                <div class="ax-skeleton-stat">
+                  <div class="ax-cluster" style="justify-content:space-between;">
+                    <div class="ax-skeleton ax-skeleton--rect" style="width:40px;height:40px;border-radius:var(--ax-radius-md);"></div>
+                    <div class="ax-skeleton ax-skeleton--line" style="width:48px;height:1.2em;"></div>
+                  </div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:60%;"></div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:70%;height:1.6em;"></div>
+                </div>
+              </div>
+              <!-- loaded -->
+              <div data-real hidden style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div>
+                  <div class="ax-kpi__top">
+                    <span class="ax-kpi__icon ax-kpi__icon--c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                    <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>12.4%</span>
+                  </div>
+                  <div class="ax-kpi__label">Total Revenue</div>
+                  <div class="ax-kpi__value ax-num">$748.2K</div>
+                </div>
+                <div class="ax-divider"></div>
+                <div>
+                  <div class="ax-kpi__top">
+                    <span class="ax-kpi__icon ax-kpi__icon--c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg></span>
+                    <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>8.1%</span>
+                  </div>
+                  <div class="ax-kpi__label">Orders</div>
+                  <div class="ax-kpi__value ax-num">1,248</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ AVATAR / LIST SKELETON ═══════ -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Avatar list skeleton" data-skeleton-scope data-loading="true">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Avatars &amp; list</span>
+                <h2 class="ax-card__title">Team members</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- loading -->
+              <div data-skel style="display:flex;flex-direction:column;gap:var(--ax-space-4);" aria-busy="true" aria-label="Loading team">
+                <div class="ax-skeleton-row">
+                  <div class="ax-skeleton ax-skeleton--circle" style="width:40px;height:40px;flex:0 0 auto;"></div>
+                  <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <div class="ax-skeleton ax-skeleton--line" style="width:50%;"></div>
+                    <div class="ax-skeleton ax-skeleton--line" style="width:70%;"></div>
+                  </div>
+                  <div class="ax-skeleton ax-skeleton--rect" style="width:54px;height:22px;border-radius:var(--ax-radius-pill);flex:0 0 auto;"></div>
+                </div>
+                <div class="ax-skeleton-row">
+                  <div class="ax-skeleton ax-skeleton--circle" style="width:40px;height:40px;flex:0 0 auto;"></div>
+                  <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <div class="ax-skeleton ax-skeleton--line" style="width:60%;"></div>
+                    <div class="ax-skeleton ax-skeleton--line" style="width:45%;"></div>
+                  </div>
+                  <div class="ax-skeleton ax-skeleton--rect" style="width:54px;height:22px;border-radius:var(--ax-radius-pill);flex:0 0 auto;"></div>
+                </div>
+                <div class="ax-skeleton-row">
+                  <div class="ax-skeleton ax-skeleton--circle" style="width:40px;height:40px;flex:0 0 auto;"></div>
+                  <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <div class="ax-skeleton ax-skeleton--line" style="width:55%;"></div>
+                    <div class="ax-skeleton ax-skeleton--line" style="width:65%;"></div>
+                  </div>
+                  <div class="ax-skeleton ax-skeleton--rect" style="width:54px;height:22px;border-radius:var(--ax-radius-pill);flex:0 0 auto;"></div>
+                </div>
+              </div>
+              <!-- loaded -->
+              <ul data-real hidden class="ax-list ax-list--compact" style="margin:0;">
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-avatar" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);">AS</span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Ava Sutton</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Operations Lead</span></span>
+                  <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Online</span></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-avatar" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);">DO</span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Devon Okafor</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Backend Engineer</span></span>
+                  <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Online</span></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-avatar" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);">LB</span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Lena Brandt</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Product Designer</span></span>
+                  <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Away</span></span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ═══════ TABLE SKELETON ═══════ -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Table skeleton" data-skeleton-scope data-loading="true">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Data table</span>
+                <h2 class="ax-card__title">Recent orders</h2>
+                <p class="ax-card__subtitle">The header stays put; rows shimmer until the data arrives.</p>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Order</th>
+                    <th class="ax-table__th" scope="col">Customer</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Total</th>
+                  </tr>
+                </thead>
+                <!-- loading rows -->
+                <tbody data-skel aria-busy="true">
+                  <tr class="ax-table__row"><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--line" style="width:72px;"></div></td><td class="ax-table__td"><div class="ax-skeleton-row"><div class="ax-skeleton ax-skeleton--circle" style="width:28px;height:28px;flex:0 0 auto;"></div><div class="ax-skeleton ax-skeleton--line" style="width:120px;"></div></div></td><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--rect" style="width:78px;height:22px;border-radius:var(--ax-radius-pill);"></div></td><td class="ax-table__td ax-table__td--num"><div class="ax-skeleton ax-skeleton--line" style="width:64px;margin-inline-start:auto;"></div></td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--line" style="width:72px;"></div></td><td class="ax-table__td"><div class="ax-skeleton-row"><div class="ax-skeleton ax-skeleton--circle" style="width:28px;height:28px;flex:0 0 auto;"></div><div class="ax-skeleton ax-skeleton--line" style="width:140px;"></div></div></td><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--rect" style="width:78px;height:22px;border-radius:var(--ax-radius-pill);"></div></td><td class="ax-table__td ax-table__td--num"><div class="ax-skeleton ax-skeleton--line" style="width:64px;margin-inline-start:auto;"></div></td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--line" style="width:72px;"></div></td><td class="ax-table__td"><div class="ax-skeleton-row"><div class="ax-skeleton ax-skeleton--circle" style="width:28px;height:28px;flex:0 0 auto;"></div><div class="ax-skeleton ax-skeleton--line" style="width:100px;"></div></div></td><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--rect" style="width:78px;height:22px;border-radius:var(--ax-radius-pill);"></div></td><td class="ax-table__td ax-table__td--num"><div class="ax-skeleton ax-skeleton--line" style="width:64px;margin-inline-start:auto;"></div></td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--line" style="width:72px;"></div></td><td class="ax-table__td"><div class="ax-skeleton-row"><div class="ax-skeleton ax-skeleton--circle" style="width:28px;height:28px;flex:0 0 auto;"></div><div class="ax-skeleton ax-skeleton--line" style="width:130px;"></div></div></td><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--rect" style="width:78px;height:22px;border-radius:var(--ax-radius-pill);"></div></td><td class="ax-table__td ax-table__td--num"><div class="ax-skeleton ax-skeleton--line" style="width:64px;margin-inline-start:auto;"></div></td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--line" style="width:72px;"></div></td><td class="ax-table__td"><div class="ax-skeleton-row"><div class="ax-skeleton ax-skeleton--circle" style="width:28px;height:28px;flex:0 0 auto;"></div><div class="ax-skeleton ax-skeleton--line" style="width:110px;"></div></div></td><td class="ax-table__td"><div class="ax-skeleton ax-skeleton--rect" style="width:78px;height:22px;border-radius:var(--ax-radius-pill);"></div></td><td class="ax-table__td ax-table__td--num"><div class="ax-skeleton ax-skeleton--line" style="width:64px;margin-inline-start:auto;"></div></td></tr>
+                </tbody>
+                <!-- loaded rows -->
+                <tbody data-real hidden>
+                  <tr class="ax-table__row"><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#10482</td><td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);">CR</span><span style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Camila Rossi</span></div></td><td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill"><span class="ax-badge__dot"></span>Shipped</span></td><td class="ax-table__td ax-table__td--num">$312.00</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#10481</td><td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);">HW</span><span style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Henry Whitlock</span></div></td><td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Processing</span></td><td class="ax-table__td ax-table__td--num">$129.00</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#10480</td><td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);">AB</span><span style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Aisha Bello</span></div></td><td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Delivered</span></td><td class="ax-table__td ax-table__td--num">$80.00</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#10479</td><td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);">EL</span><span style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Erik Lindqvist</span></div></td><td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Delivered</span></td><td class="ax-table__td ax-table__td--num">$1,544.00</td></tr>
+                  <tr class="ax-table__row"><td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#10477</td><td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);">OP</span><span style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Olivia Penrose</span></div></td><td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Delivered</span></td><td class="ax-table__td ax-table__td--num">$200.00</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- ═══════ PROFILE / DETAIL SKELETON ═══════ -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Profile skeleton" data-skeleton-scope data-loading="true">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Profile</span>
+                <h2 class="ax-card__title">User detail</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- loading -->
+              <div data-skel style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-4);text-align:center;" aria-busy="true" aria-label="Loading profile">
+                <div class="ax-skeleton ax-skeleton--circle" style="width:72px;height:72px;"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:55%;height:1.1em;"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:38%;"></div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);width:100%;margin-top:var(--ax-space-2);">
+                  <div class="ax-skeleton ax-skeleton--rect" style="height:52px;"></div>
+                  <div class="ax-skeleton ax-skeleton--rect" style="height:52px;"></div>
+                  <div class="ax-skeleton ax-skeleton--rect" style="height:52px;"></div>
+                </div>
+                <div class="ax-skeleton ax-skeleton--rect" style="width:100%;height:38px;border-radius:var(--ax-radius-md);margin-top:var(--ax-space-2);"></div>
+              </div>
+              <!-- loaded -->
+              <div data-real hidden style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);text-align:center;">
+                <span class="ax-avatar ax-avatar--xl" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);">PN</span>
+                <div><div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Priya Nair</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Data Analyst</div></div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);width:100%;margin-top:var(--ax-space-1);">
+                  <div style="padding:var(--ax-space-3);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-md);"><div class="ax-num" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">128</div><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Reports</div></div>
+                  <div style="padding:var(--ax-space-3);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-md);"><div class="ax-num" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">42</div><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Boards</div></div>
+                  <div style="padding:var(--ax-space-3);background:var(--ax-surface-subtle);border-radius:var(--ax-radius-md);"><div class="ax-num" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">9</div><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Teams</div></div>
+                </div>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--block ax-btn--sm" style="margin-top:var(--ax-space-2);"><span class="ax-btn__label">View profile</span></button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Skeleton ⇆ content toggle. The "Show loaded" button flips every
+             [data-skeleton-scope]'s data-loading; this CSS swaps the [data-skel]
+             placeholder for the [data-real] content. No colour lives here. -->
+        <style>
+          [data-skeleton-scope][data-loading="false"] [data-skel] { display:none !important; }
+          [data-skeleton-scope][data-loading="false"] [data-real] { display:revert !important; }
+          [data-skeleton-scope][data-loading="false"] [data-real][hidden] { display:revert !important; }
+          [data-skeleton-scope][data-loading="true"]  [data-real] { display:none !important; }
+        </style>
+
+{% endblock %}

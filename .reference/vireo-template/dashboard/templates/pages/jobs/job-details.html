@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{ saved:false, applied:false, showApply:false, sent:false, resume:false }">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Senior Product Designer</h1>
+              <p class="ax-page-head__subtitle">Northwind Labs · Design · Posted <span class="ax-num">Jun 24, 2026</span> · <span class="ax-num">38</span> applicants.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/jobs/list/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+                <span class="ax-btn__label">All jobs</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="saved=!saved" :class="saved ? 'ax-btn--soft-success' : ''">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="saved ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg>
+                <span class="ax-btn__label" x-text="saved ? 'Saved' : 'Save'"></span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" :disabled="applied" @click="showApply=true">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                <span class="ax-btn__label" x-text="applied ? 'Applied' : 'Apply now'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- applied banner -->
+        <div x-show="applied" x-cloak x-transition class="ax-alert ax-alert--success" role="status" style="margin-bottom:var(--ax-space-6);">
+          <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+          <div class="ax-alert__content"><p class="ax-alert__title">Application submitted</p><p class="ax-alert__message">Northwind Labs has received your application — you'll hear back within 5 business days.</p></div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───────────────── MAIN (8) ───────────────── -->
+          <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-6);min-width:0;">
+
+            <!-- ░░ HEADER CARD ░░ -->
+            <section class="ax-card" role="region" aria-label="Job summary">
+              <div class="ax-card__body">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);align-items:flex-start;flex-wrap:wrap;">
+                  <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);flex:none;">
+                    <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:26px;height:26px;"><path d="M3 21l18 0"/><path d="M9 8l1 0"/><path d="M9 12l1 0"/><path d="M9 16l1 0"/><path d="M14 8l1 0"/><path d="M14 12l1 0"/><path d="M14 16l1 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg>
+                  </span>
+                  <div style="flex:1 1 240px;min-width:0;">
+                    <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:700;color:var(--ax-text-strong);line-height:1.2;">Senior Product Designer</h2>
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-2);">
+                      <span style="font-weight:var(--ax-weight-medium);color:var(--ax-text);">Northwind Labs</span>
+                      <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Actively hiring</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- fact strip -->
+                <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--ax-space-4);margin-top:var(--ax-space-5);" class="ax-jd-facts">
+                  <div style="display:flex;flex-direction:column;gap:4px;">
+                    <span class="ax-cluster" style="gap:6px;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>Location</span>
+                    <b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Remote (EU)</b>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:4px;">
+                    <span class="ax-cluster" style="gap:6px;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v9a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2l0 -9"/><path d="M8 7v-2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v2"/></svg>Type</span>
+                    <b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Full-time</b>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:4px;">
+                    <span class="ax-cluster" style="gap:6px;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg>Salary</span>
+                    <b class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-strong);">$95K – $120K</b>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:4px;">
+                    <span class="ax-cluster" style="gap:6px;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8v4l3 3"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/></svg>Experience</span>
+                    <b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Senior · 6+ yrs</b>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ DESCRIPTION + REQUIREMENTS ░░ -->
+            <section class="ax-card" role="region" aria-label="Job description">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+                <!-- about -->
+                <div>
+                  <h3 style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin-bottom:var(--ax-space-3);">About the role</h3>
+                  <p style="color:var(--ax-text);line-height:1.75;font-size:var(--ax-text-sm);">We're looking for a Senior Product Designer to shape the next generation of Northwind's design platform. You'll own end-to-end product flows — from early discovery and prototyping to polished, accessible production UI — partnering daily with PMs and engineers across the Surface team. This is a high-ownership role where your design decisions ship to <span class="ax-num" style="font-family:var(--ax-font-mono);">40,000+</span> teams.</p>
+                </div>
+
+                <!-- responsibilities -->
+                <div>
+                  <h3 style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin-bottom:var(--ax-space-3);">What you'll do</h3>
+                  <ul style="display:flex;flex-direction:column;gap:var(--ax-space-3);list-style:none;padding:0;">
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:2px;color:var(--ax-accent);"><path d="M5 12l5 5l10 -10"/></svg><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Lead the design of core workspace surfaces — navigation, dashboards, and the token-driven theming system.</span></li>
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:2px;color:var(--ax-accent);"><path d="M5 12l5 5l10 -10"/></svg><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Run discovery — interviews, journey mapping, and concept testing — and turn insight into shippable bets.</span></li>
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:2px;color:var(--ax-accent);"><path d="M5 12l5 5l10 -10"/></svg><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Contribute to and steward the design system, ensuring WCAG 2.2 AA across light and dark themes.</span></li>
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:none;margin-top:2px;color:var(--ax-accent);"><path d="M5 12l5 5l10 -10"/></svg><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Mentor two mid-level designers and raise the craft bar through critique and pairing.</span></li>
+                  </ul>
+                </div>
+
+                <!-- requirements -->
+                <div>
+                  <h3 style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin-bottom:var(--ax-space-3);">Requirements</h3>
+                  <ul style="display:flex;flex-direction:column;gap:var(--ax-space-3);list-style:none;padding:0;">
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ax-text-subtle);"></span><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;"><b style="color:var(--ax-text-strong);">6+ years</b> designing complex SaaS or developer products, with a portfolio that shows shipped work.</span></li>
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ax-text-subtle);"></span><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Fluency in <b style="color:var(--ax-text-strong);">Figma</b>, component-driven design, and design-token systems.</span></li>
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ax-text-subtle);"></span><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">A real accessibility practice — you can reason about contrast, focus order, and semantics.</span></li>
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ax-text-subtle);"></span><span style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Comfortable working async across European time zones with strong written communication.</span></li>
+                  </ul>
+                </div>
+
+                <!-- skills -->
+                <div>
+                  <h3 style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin-bottom:var(--ax-space-3);">Skills</h3>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;">
+                    <span class="ax-badge ax-badge--soft ax-badge--accent" style="border-radius:var(--ax-radius-xs);">Design Systems</span>
+                    <span class="ax-badge ax-badge--soft ax-badge--accent" style="border-radius:var(--ax-radius-xs);">Figma</span>
+                    <span class="ax-badge ax-badge--soft ax-badge--accent" style="border-radius:var(--ax-radius-xs);">Accessibility</span>
+                    <span class="ax-badge ax-badge--soft ax-badge--accent" style="border-radius:var(--ax-radius-xs);">Prototyping</span>
+                    <span class="ax-badge ax-badge--soft ax-badge--accent" style="border-radius:var(--ax-radius-xs);">UX Research</span>
+                    <span class="ax-badge ax-badge--soft ax-badge--accent" style="border-radius:var(--ax-radius-xs);">Design Tokens</span>
+                  </div>
+                </div>
+
+                <!-- benefits -->
+                <div>
+                  <h3 style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:600;color:var(--ax-text-strong);margin-bottom:var(--ax-space-3);">Benefits &amp; perks</h3>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);" class="ax-jd-perks">
+                    <span class="ax-cluster" style="gap:var(--ax-space-3);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-emerald);flex:none;"><path d="M12 3l2.582 6.953l7.418 .382l-5.755 4.704l1.91 7.961l-6.155 -4.318l-6.155 4.318l1.91 -7.961l-5.755 -4.704l7.418 -.382z"/></svg><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Fully remote, async-first</span></span>
+                    <span class="ax-cluster" style="gap:var(--ax-space-3);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-cyan);flex:none;"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Equity + annual bonus</span></span>
+                    <span class="ax-cluster" style="gap:var(--ax-space-3);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-violet);flex:none;"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">30 days paid leave</span></span>
+                    <span class="ax-cluster" style="gap:var(--ax-space-3);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-amber);flex:none;"><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">$2K yearly learning budget</span></span>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ SIMILAR JOBS ░░ -->
+            <section class="ax-card" role="region" aria-label="Similar jobs">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Similar roles</h2></div>
+                <a class="ax-btn ax-btn--link" href="/jobs/list/">View all</a>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <a href="/jobs/job-details/" class="ax-list__row" style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);text-decoration:none;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="color:var(--ax-text-strong);">UX Research Lead</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Northwind Labs · London, UK</span></span>
+                  <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-strong);">$105K – $135K</span>
+                </a>
+                <a href="/jobs/job-details/" class="ax-list__row" style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);text-decoration:none;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="color:var(--ax-text-strong);">Design Systems Engineer</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Helios Cloud · Remote (EU)</span></span>
+                  <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-strong);">$120K – $150K</span>
+                </a>
+                <a href="/jobs/job-details/" class="ax-list__row" style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);text-decoration:none;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="color:var(--ax-text-strong);">Senior Product Manager</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Vela Systems · Berlin, DE</span></span>
+                  <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-strong);">$110K – $140K</span>
+                </a>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───────────────── RAIL (4) ───────────────── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);min-width:0;">
+
+            <!-- ░░ STICKY APPLY PANEL ░░ -->
+            <section class="ax-card ax-card--accent-edge" role="region" aria-label="Apply" style="align-self:start;">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);line-height:1.1;">$95K – $120K</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Base salary · per year</div>
+                </div>
+                <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+                <!-- application stat -->
+                <div>
+                  <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Applicants</span><b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">38 / 60</b></div>
+                  <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:63%;background:var(--ax-accent);"></div></div></div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:6px;">Position closes when 60 applications are reached.</div>
+                </div>
+                <button type="button" class="ax-btn ax-btn--primary ax-btn--block ax-btn--lg" :disabled="applied" @click="showApply=true">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                  <span class="ax-btn__label" x-text="applied ? 'Application sent' : 'Apply for this job'"></span>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--block" @click="saved=!saved">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" :fill="saved ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 7v14l-6 -4l-6 4v-14a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4"/></svg>
+                  <span class="ax-btn__label" x-text="saved ? 'Saved to your list' : 'Save for later'"></span>
+                </button>
+                <div class="ax-cluster" style="justify-content:center;gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                  <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12a7 7 0 0 1 14 0a7 7 0 0 1 -14 0"/><path d="M12 9v3l1.5 1.5"/></svg>
+                  <span>Typical reply within 5 days</span>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ COMPANY CARD ░░ -->
+            <section class="ax-card" role="region" aria-label="About the company">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">About Northwind Labs</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                  <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16"/></svg></span>
+                  <div>
+                    <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Northwind Labs</div>
+                    <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Developer tools · Series B</div>
+                  </div>
+                </div>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.6;">Northwind builds the workspace platform trusted by modern product teams. Remote-first, 140 people across 18 countries.</p>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+                  <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3);text-align:center;">
+                    <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-md);">140</div>
+                    <div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Employees</div>
+                  </div>
+                  <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3);text-align:center;">
+                    <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-md);">12</div>
+                    <div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Open roles</div>
+                  </div>
+                </div>
+                <a href="/jobs/list/" class="ax-btn ax-btn--ghost ax-btn--block">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>
+                  <span class="ax-btn__label">View company profile</span>
+                </a>
+              </div>
+            </section>
+
+            <!-- ░░ KEY DETAILS ░░ -->
+            <section class="ax-card" role="region" aria-label="At a glance">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">At a glance</h2></div></div>
+              <ul class="ax-list ax-list--compact" style="padding:0 var(--ax-space-5) var(--ax-space-4);">
+                <li class="ax-list__row"><span class="ax-list__content"><span class="ax-list__title" style="color:var(--ax-text-muted);font-weight:400;">Job ID</span></span><span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">JOB-120</span></li>
+                <li class="ax-list__row"><span class="ax-list__content"><span class="ax-list__title" style="color:var(--ax-text-muted);font-weight:400;">Posted</span></span><span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">Jun 24, 2026</span></li>
+                <li class="ax-list__row"><span class="ax-list__content"><span class="ax-list__title" style="color:var(--ax-text-muted);font-weight:400;">Closes</span></span><span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">Jul 22, 2026</span></li>
+                <li class="ax-list__row"><span class="ax-list__content"><span class="ax-list__title" style="color:var(--ax-text-muted);font-weight:400;">Visa sponsorship</span></span><span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--success" style="border-radius:var(--ax-radius-xs);">Available</span></span></li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+
+        <!-- ════════════════ APPLY MODAL ════════════════ -->
+        <div x-show="showApply" x-cloak class="ax-backdrop ax-grid" @click="showApply=false" style="position:fixed;inset:0;z-index:60;place-items:center;padding:var(--ax-space-4);background:color-mix(in oklab,var(--ax-canvas) 60%,transparent);backdrop-filter:blur(6px);" x-transition.opacity>
+          <div class="ax-card" @click.stop role="dialog" aria-modal="true" aria-labelledby="apply-title" style="width:100%;max-width:520px;margin:0;max-height:90vh;overflow:auto;box-shadow:var(--ax-shadow-lg);" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><span class="ax-card__eyebrow">Northwind Labs</span><h2 class="ax-card__title" id="apply-title">Apply — Senior Product Designer</h2></div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="showApply=false" aria-label="Close"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <form @submit.prevent="applied=true;showApply=false" class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                <div class="ax-field" style="margin:0;"><label class="ax-label" for="a-first">First name <span class="ax-field__required">*</span></label><input id="a-first" type="text" class="ax-input" placeholder="Aria" required></div>
+                <div class="ax-field" style="margin:0;"><label class="ax-label" for="a-last">Last name <span class="ax-field__required">*</span></label><input id="a-last" type="text" class="ax-input" placeholder="Voss" required></div>
+              </div>
+              <div class="ax-field" style="margin:0;"><label class="ax-label" for="a-email">Email <span class="ax-field__required">*</span></label><input id="a-email" type="email" class="ax-input" placeholder="aria@example.com" required></div>
+              <div class="ax-field" style="margin:0;"><label class="ax-label" for="a-link">Portfolio / LinkedIn</label><input id="a-link" type="url" class="ax-input" placeholder="https://"></div>
+              <div class="ax-field" style="margin:0;">
+                <label class="ax-label">Resume <span class="ax-field__required">*</span></label>
+                <div class="ax-dropzone">
+                  <label class="ax-dropzone__area" for="a-resume" @change="resume=true" style="cursor:pointer;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M9 15l3 -3l3 3"/><path d="M12 12l0 9"/></svg>
+                    <div x-show="!resume"><b style="color:var(--ax-text);">Upload your resume</b> — PDF or DOCX</div>
+                    <div x-show="resume" x-cloak class="ax-cluster" style="gap:6px;color:var(--ax-viz-emerald);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg><b class="ax-num" style="font-family:var(--ax-font-mono);">aria-voss-resume.pdf</b></div>
+                    <input id="a-resume" type="file" accept=".pdf,.doc,.docx" class="ax-visually-hidden">
+                  </label>
+                </div>
+              </div>
+              <div class="ax-field" style="margin:0;"><label class="ax-label" for="a-cover">Why are you a fit?</label><textarea id="a-cover" class="ax-textarea" rows="3" placeholder="A few lines on why this role excites you…"></textarea></div>
+              <div class="ax-cluster" style="justify-content:flex-end;gap:var(--ax-space-2);margin-top:var(--ax-space-1);">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="showApply=false">Cancel</button>
+                <button type="submit" class="ax-btn ax-btn--primary">Submit application</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <style>
+          @media (max-width: 640px) {
+            .ax-jd-facts { grid-template-columns: repeat(2, minmax(0,1fr)) !important; }
+            .ax-jd-perks { grid-template-columns: 1fr !important; }
+          }
+        </style>
+      
+</div>
+{% endblock %}

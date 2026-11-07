@@ -1,0 +1,264 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axTodo()"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">Stay on top of today — <span class="ax-num" x-text="activeCount()"></span> tasks left, <span class="ax-num" x-text="doneCount()"></span> done.</p>
+          <div class="ax-apphead__actions">
+            <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l4 -4l4 4m-4 -4v14"/><path d="M21 15l-4 4l-4 -4m4 4v-14"/></svg>
+              <span class="ax-btn__label">Sort</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="ax-dash-grid">
+
+          <!-- ───── RAIL ───── -->
+          <aside class="ax-card ax-col--3" role="region" aria-label="Lists and views">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- smart views -->
+              <ul class="ax-list ax-list--compact">
+                <template x-for="v in views" :key="v.id">
+                  <li class="ax-list__row" :class="{ 'is-selected': view===v.id }" @click="view=v.id" style="cursor:pointer;border:0;border-radius:var(--ax-radius-md);padding-inline:var(--ax-space-3);" :aria-selected="view===v.id">
+                    <span class="ax-list__leading" :style="`color:${v.color};`" x-html="v.icon"></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);" x-text="v.label"></span></span>
+                    <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);" x-text="countFor(v.id)"></span>
+                  </li>
+                </template>
+              </ul>
+
+              <hr style="margin:0;border:0;border-top:1px solid var(--ax-border);">
+
+              <!-- user lists -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <small style="color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;">My lists</small>
+                </div>
+                <ul class="ax-list ax-list--compact">
+                  <template x-for="l in lists" :key="l.id">
+                    <li class="ax-list__row" :class="{ 'is-selected': view===l.id }" @click="view=l.id" style="cursor:pointer;border:0;border-radius:var(--ax-radius-md);padding-inline:var(--ax-space-3);" :aria-selected="view===l.id">
+                      <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;" :style="`background:${l.color};`"></i></span>
+                      <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);" x-text="l.label"></span></span>
+                      <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);" x-text="countFor(l.id)"></span>
+                    </li>
+                  </template>
+                </ul>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm ax-btn--block" style="justify-content:flex-start;margin-top:var(--ax-space-2);color:var(--ax-text-muted);">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  <span class="ax-btn__label">New list</span>
+                </button>
+              </div>
+
+              <hr style="margin:0;border:0;border-top:1px solid var(--ax-border);">
+
+              <!-- progress -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;">
+                  <small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Today's progress</small>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-strong);" x-text="pct()+'%'"></b>
+                </div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" :style="`width:${pct()}%;`"></div></div></div>
+              </div>
+
+            </div>
+          </aside>
+
+          <!-- ───── MAIN ───── -->
+          <section class="ax-card ax-col--9" role="region" aria-label="Task list">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title" x-text="viewLabel()"></h2>
+                <p class="ax-card__subtitle"><span class="ax-num" x-text="activeInView()"></span> remaining</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-segment" role="radiogroup" aria-label="Filter tasks">
+                  <button type="button" class="ax-segment__option" role="radio" :aria-checked="filter==='all'" :class="{ 'is-active': filter==='all' }" @click="filter='all'">All</button>
+                  <button type="button" class="ax-segment__option" role="radio" :aria-checked="filter==='active'" :class="{ 'is-active': filter==='active' }" @click="filter='active'">Active</button>
+                  <button type="button" class="ax-segment__option" role="radio" :aria-checked="filter==='done'" :class="{ 'is-active': filter==='done' }" @click="filter='done'">Done</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- add input -->
+              <form @submit.prevent="add()" style="position:relative;margin-bottom:var(--ax-space-4);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:12px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-accent);"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <input type="text" class="ax-input" x-model="draft" placeholder="Add a task and press Enter…" style="padding-inline-start:38px;" aria-label="Add a task">
+              </form>
+
+              <!-- empty state -->
+              <div x-show="!shown().length" x-cloak style="text-align:center;padding:var(--ax-space-8) var(--ax-space-4);">
+                <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);margin:0 auto var(--ax-space-4);">
+                  <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2l4 -4"/><path d="M12 3a9 9 0 1 0 9 9"/></svg>
+                </span>
+                <p style="color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);">All clear here</p>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Add a task above to get started.</p>
+              </div>
+
+              <!-- list -->
+              <ul class="ax-list" x-show="shown().length">
+                <template x-for="t in shown()" :key="t.id">
+                  <li class="ax-list__row ax-todo-row" :style="t.done ? 'opacity:.62;' : ''">
+                    <span class="ax-list__leading">
+                      <input type="checkbox" class="ax-checkbox" :checked="t.done" @change="t.done=!t.done" :aria-label="'Complete ' + t.title">
+                    </span>
+                    <span class="ax-list__content">
+                      <span class="ax-list__title" :style="t.done ? 'color:var(--ax-text-subtle);text-decoration:line-through;font-weight:var(--ax-weight-regular);' : ''" x-text="t.title"></span>
+                      <span class="ax-list__meta ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);">
+                        <span class="ax-cluster" style="gap:4px;"><i style="width:7px;height:7px;border-radius:2px;" :style="`background:${listColor(t.list)};`"></i><span x-text="listLabel(t.list)"></span></span>
+                        <template x-if="t.due">
+                          <span class="ax-num" style="font-family:var(--ax-font-mono);" :style="t.overdue ? 'color:var(--ax-danger-500);' : (t.today ? 'color:var(--ax-accent);' : 'color:var(--ax-text-subtle);')" x-text="t.due"></span>
+                        </template>
+                        <template x-if="t.subtasks">
+                          <span class="ax-num ax-cluster" style="gap:3px;font-family:var(--ax-font-mono);color:var(--ax-text-subtle);">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8"/><path d="M14 19l2 2l4 -4"/><path d="M9 8h4"/><path d="M9 12h2"/></svg>
+                            <span x-text="t.subtasks"></span>
+                          </span>
+                        </template>
+                      </span>
+                    </span>
+                    <span class="ax-list__trailing">
+                      <button type="button" class="ax-icon-btn" :style="t.important ? 'color:var(--ax-warning-500);' : 'color:var(--ax-text-subtle);'" @click="t.important=!t.important" :aria-label="t.important ? 'Remove from Important' : 'Mark Important'" :aria-pressed="t.important">
+                        <svg viewBox="0 0 24 24" :fill="t.important ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg>
+                      </button>
+                      <button type="button" class="ax-icon-btn" style="color:var(--ax-text-subtle);" @click="remove(t.id)" :aria-label="'Delete ' + t.title">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:17px;height:17px;"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                      </button>
+                    </span>
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <style>
+          .ax-todo-row { transition:opacity var(--ax-motion-base) var(--ax-ease-standard); }
+          .ax-todo-row .ax-list__trailing .ax-icon-btn { opacity:0; }
+          .ax-todo-row:hover .ax-list__trailing .ax-icon-btn,
+          .ax-todo-row .ax-list__trailing .ax-icon-btn[aria-pressed="true"] { opacity:1; }
+          .ax-icon-btn { display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border:0; background:transparent; border-radius:var(--ax-radius-sm); cursor:pointer; transition:background var(--ax-motion-fast), opacity var(--ax-motion-fast); }
+          .ax-icon-btn:hover { background:var(--ax-fill-hover); }
+          .ax-icon-btn:focus-visible { outline:none; opacity:1; box-shadow:0 0 0 2px var(--ax-canvas), 0 0 0 4px var(--ax-focus-ring); }
+          @media (prefers-reduced-motion: reduce){ .ax-todo-row { transition:none; } }
+        </style>
+
+        <script>
+          function axTodo(){
+            return {
+              view:'today', filter:'all', draft:'', nextId:100,
+              views:[
+                { id:'today', label:'Today', color:'var(--ax-accent)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12'/><path d='M16 3l0 4'/><path d='M8 3l0 4'/><path d='M4 11l16 0'/><path d='M8 15h2v2h-2l0 -2'/></svg>` },
+                { id:'upcoming', label:'Upcoming', color:'var(--ax-viz-cyan)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0'/><path d='M12 7v5l3 3'/></svg>` },
+                { id:'important', label:'Important', color:'var(--ax-warning-500)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245'/></svg>` },
+                { id:'completed', label:'Completed', color:'var(--ax-viz-emerald)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0'/><path d='M9 12l2 2l4 -4'/></svg>` },
+              ],
+              lists:[
+                { id:'work', label:'Work', color:'var(--ax-viz-violet)' },
+                { id:'personal', label:'Personal', color:'var(--ax-viz-cyan)' },
+                { id:'shopping', label:'Shopping', color:'var(--ax-viz-pink)' },
+              ],
+              items:[
+                { id:1, title:'Reply to investor update thread', list:'work', done:false, important:true, due:'Today', today:true, subtasks:'' },
+                { id:2, title:'Finalize Q3 OKRs draft', list:'work', done:false, important:false, due:'Today', today:true, subtasks:'1/3' },
+                { id:3, title:'Book flights for the offsite', list:'personal', done:false, important:false, due:'Jun 26', overdue:true, subtasks:'' },
+                { id:4, title:'Renew gym membership', list:'personal', done:false, important:false, due:'Jul 1', subtasks:'' },
+                { id:5, title:'Pick up dry cleaning', list:'shopping', done:true, important:false, due:'', subtasks:'' },
+                { id:6, title:'Buy oat milk and coffee beans', list:'shopping', done:false, important:false, due:'Today', today:true, subtasks:'' },
+                { id:7, title:'Review pull request #482', list:'work', done:false, important:true, due:'Jun 28', subtasks:'' },
+                { id:8, title:'Schedule dentist appointment', list:'personal', done:true, important:false, due:'', subtasks:'' },
+                { id:9, title:'Outline blog post on Aurora design', list:'work', done:false, important:false, due:'Jul 4', subtasks:'0/4' },
+              ],
+              inView(t){
+                if(this.view==='today') return t.today || t.overdue;
+                if(this.view==='upcoming') return !t.today && !t.overdue && !t.done && t.due;
+                if(this.view==='important') return t.important;
+                if(this.view==='completed') return t.done;
+                return t.list===this.view;
+              },
+              shown(){ return this.items.filter(t=>this.inView(t) && (this.filter==='all' || (this.filter==='done'?t.done:!t.done))); },
+              countFor(id){
+                const f=(fn)=>this.items.filter(fn).length;
+                if(id==='today') return f(t=>(t.today||t.overdue)&&!t.done);
+                if(id==='upcoming') return f(t=>!t.today&&!t.overdue&&!t.done&&t.due);
+                if(id==='important') return f(t=>t.important&&!t.done);
+                if(id==='completed') return f(t=>t.done);
+                return f(t=>t.list===id&&!t.done);
+              },
+              activeInView(){ return this.items.filter(t=>this.inView(t)&&!t.done).length; },
+              activeCount(){ return this.items.filter(t=>!t.done).length; },
+              doneCount(){ return this.items.filter(t=>t.done).length; },
+              pct(){ const total=this.items.length; return total ? Math.round(this.doneCount()/total*100) : 0; },
+              listLabel(id){ const l=this.lists.find(x=>x.id===id); return l?l.label:id; },
+              listColor(id){ const l=this.lists.find(x=>x.id===id); return l?l.color:'var(--ax-text-subtle)'; },
+              viewLabel(){ const v=this.views.find(x=>x.id===this.view)||this.lists.find(x=>x.id===this.view); return v?v.label:''; },
+              add(){ const v=this.draft.trim(); if(!v) return; const list=this.lists.find(l=>l.id===this.view)?this.view:'work'; this.items.unshift({ id:this.nextId++, title:v, list, done:false, important:this.view==='important', due:this.view==='today'?'Today':'', today:this.view==='today', subtasks:'' }); this.draft=''; },
+              remove(id){ this.items = this.items.filter(t=>t.id!==id); },
+            };
+          }
+        </script>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axTodo(){
+            return {
+              view:'today', filter:'all', draft:'', nextId:100,
+              views:[
+                { id:'today', label:'Today', color:'var(--ax-accent)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12'/><path d='M16 3l0 4'/><path d='M8 3l0 4'/><path d='M4 11l16 0'/><path d='M8 15h2v2h-2l0 -2'/></svg>` },
+                { id:'upcoming', label:'Upcoming', color:'var(--ax-viz-cyan)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0'/><path d='M12 7v5l3 3'/></svg>` },
+                { id:'important', label:'Important', color:'var(--ax-warning-500)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245'/></svg>` },
+                { id:'completed', label:'Completed', color:'var(--ax-viz-emerald)', icon:`<svg viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round' aria-hidden='true' style='width:18px;height:18px;'><path d='M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0'/><path d='M9 12l2 2l4 -4'/></svg>` },
+              ],
+              lists:[
+                { id:'work', label:'Work', color:'var(--ax-viz-violet)' },
+                { id:'personal', label:'Personal', color:'var(--ax-viz-cyan)' },
+                { id:'shopping', label:'Shopping', color:'var(--ax-viz-pink)' },
+              ],
+              items:[
+                { id:1, title:'Reply to investor update thread', list:'work', done:false, important:true, due:'Today', today:true, subtasks:'' },
+                { id:2, title:'Finalize Q3 OKRs draft', list:'work', done:false, important:false, due:'Today', today:true, subtasks:'1/3' },
+                { id:3, title:'Book flights for the offsite', list:'personal', done:false, important:false, due:'Jun 26', overdue:true, subtasks:'' },
+                { id:4, title:'Renew gym membership', list:'personal', done:false, important:false, due:'Jul 1', subtasks:'' },
+                { id:5, title:'Pick up dry cleaning', list:'shopping', done:true, important:false, due:'', subtasks:'' },
+                { id:6, title:'Buy oat milk and coffee beans', list:'shopping', done:false, important:false, due:'Today', today:true, subtasks:'' },
+                { id:7, title:'Review pull request #482', list:'work', done:false, important:true, due:'Jun 28', subtasks:'' },
+                { id:8, title:'Schedule dentist appointment', list:'personal', done:true, important:false, due:'', subtasks:'' },
+                { id:9, title:'Outline blog post on Aurora design', list:'work', done:false, important:false, due:'Jul 4', subtasks:'0/4' },
+              ],
+              inView(t){
+                if(this.view==='today') return t.today || t.overdue;
+                if(this.view==='upcoming') return !t.today && !t.overdue && !t.done && t.due;
+                if(this.view==='important') return t.important;
+                if(this.view==='completed') return t.done;
+                return t.list===this.view;
+              },
+              shown(){ return this.items.filter(t=>this.inView(t) && (this.filter==='all' || (this.filter==='done'?t.done:!t.done))); },
+              countFor(id){
+                const f=(fn)=>this.items.filter(fn).length;
+                if(id==='today') return f(t=>(t.today||t.overdue)&&!t.done);
+                if(id==='upcoming') return f(t=>!t.today&&!t.overdue&&!t.done&&t.due);
+                if(id==='important') return f(t=>t.important&&!t.done);
+                if(id==='completed') return f(t=>t.done);
+                return f(t=>t.list===id&&!t.done);
+              },
+              activeInView(){ return this.items.filter(t=>this.inView(t)&&!t.done).length; },
+              activeCount(){ return this.items.filter(t=>!t.done).length; },
+              doneCount(){ return this.items.filter(t=>t.done).length; },
+              pct(){ const total=this.items.length; return total ? Math.round(this.doneCount()/total*100) : 0; },
+              listLabel(id){ const l=this.lists.find(x=>x.id===id); return l?l.label:id; },
+              listColor(id){ const l=this.lists.find(x=>x.id===id); return l?l.color:'var(--ax-text-subtle)'; },
+              viewLabel(){ const v=this.views.find(x=>x.id===this.view)||this.lists.find(x=>x.id===this.view); return v?v.label:''; },
+              add(){ const v=this.draft.trim(); if(!v) return; const list=this.lists.find(l=>l.id===this.view)?this.view:'work'; this.items.unshift({ id:this.nextId++, title:v, list, done:false, important:this.view==='important', due:this.view==='today'?'Today':'', today:this.view==='today', subtasks:'' }); this.draft=''; },
+              remove(id){ this.items = this.items.filter(t=>t.id!==id); },
+            };
+          }
+        </script>
+{% endblock %}

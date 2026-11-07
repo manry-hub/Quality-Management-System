@@ -1,0 +1,420 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Projects</h1>
+              <p class="ax-page-head__subtitle">Delivery health, throughput &amp; team workload — last 30 days.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg>
+                <span class="ax-btn__label">Last 30 days</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Refresh dashboard">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New project</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Active Projects 42, up 5.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>5.0%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Active Projects</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">42</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[8,10,9,15,17,20,24,28]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Tasks Completed 1,860, up 9.4%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3l8 -8"/><path d="M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>9.4%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Tasks Completed (30D)</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">1,860</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Trend","data":[7,10,9,16,18,22,26,30]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Overdue Tasks 73, down 12.0 percent which is an improvement">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>12.0%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Overdue Tasks</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">73</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[26,23,24,20,18,15,12,8]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Team Utilization 81 percent, up 2.2%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.2%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Team Utilization</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">81%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[12,14,12,17,16,20,19,23]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Task Throughput (column burn-up) + Project Status donut ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Task throughput">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Velocity</span>
+                <h2 class="ax-card__title">Task Throughput</h2>
+                <p class="ax-card__subtitle">Tasks created vs. completed per week</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Date range">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">6W</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">12W</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">QTD</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Created</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Completed</small></span>
+              </div>
+              <div id="ax-throughput-col" aria-label="Column chart of tasks created versus completed by week"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Project status">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Project Status</h2></div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-status-donut" aria-label="Donut chart of project status: on-track 24, at-risk 9, delayed 5, done 4"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-emerald);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">On track</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">24</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">At risk</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">9</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-red);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Delayed</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">5</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Done</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">4</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── Project Schedule (gantt-ish bars) + Workload by Member ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Project schedule">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Project Schedule</h2><p class="ax-card__subtitle">Active timelines · Q2–Q3</p></div>
+              <a class="ax-btn ax-btn--link" href="#">Open timeline</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <!-- month scale -->
+              <div class="ax-cluster" style="justify-content:space-between;padding-left:148px;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);font-family:var(--ax-font-mono);">
+                <span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span><span>Sep</span>
+              </div>
+              <!-- gantt row template: label + track + bar -->
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <div style="width:136px;flex:0 0 136px;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Aurora Redesign</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Design</div></div>
+                <div style="flex:1 1 auto;height:18px;border-radius:var(--ax-radius-pill);background:var(--ax-surface-subtle);position:relative;">
+                  <span style="position:absolute;left:4%;width:46%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:var(--ax-accent);" aria-hidden="true"></span>
+                  <span style="position:absolute;left:4%;width:34%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:color-mix(in oklab,var(--ax-on-accent) 35%,var(--ax-accent));" aria-hidden="true"></span>
+                </div>
+                <span class="ax-num" style="width:42px;text-align:right;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">74%</span>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <div style="width:136px;flex:0 0 136px;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Mobile App v3</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Engineering</div></div>
+                <div style="flex:1 1 auto;height:18px;border-radius:var(--ax-radius-pill);background:var(--ax-surface-subtle);position:relative;">
+                  <span style="position:absolute;left:20%;width:62%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:var(--ax-viz-cyan);" aria-hidden="true"></span>
+                  <span style="position:absolute;left:20%;width:30%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:color-mix(in oklab,#fff 30%,var(--ax-viz-cyan));" aria-hidden="true"></span>
+                </div>
+                <span class="ax-num" style="width:42px;text-align:right;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">48%</span>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <div style="width:136px;flex:0 0 136px;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Billing Migration</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Platform</div></div>
+                <div style="flex:1 1 auto;height:18px;border-radius:var(--ax-radius-pill);background:var(--ax-surface-subtle);position:relative;">
+                  <span style="position:absolute;left:36%;width:50%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:var(--ax-viz-violet);" aria-hidden="true"></span>
+                  <span style="position:absolute;left:36%;width:14%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:color-mix(in oklab,#fff 30%,var(--ax-viz-violet));" aria-hidden="true"></span>
+                </div>
+                <span class="ax-num" style="width:42px;text-align:right;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">28%</span>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <div style="width:136px;flex:0 0 136px;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Data Warehouse</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Analytics</div></div>
+                <div style="flex:1 1 auto;height:18px;border-radius:var(--ax-radius-pill);background:var(--ax-surface-subtle);position:relative;">
+                  <span style="position:absolute;left:52%;width:44%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:var(--ax-viz-pink);" aria-hidden="true"></span>
+                  <span style="position:absolute;left:52%;width:8%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:color-mix(in oklab,#fff 30%,var(--ax-viz-pink));" aria-hidden="true"></span>
+                </div>
+                <span class="ax-num" style="width:42px;text-align:right;color:var(--ax-text-strong);font-size:var(--ax-text-sm);">12%</span>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <div style="width:136px;flex:0 0 136px;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Brand Refresh</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Marketing</div></div>
+                <div style="flex:1 1 auto;height:18px;border-radius:var(--ax-radius-pill);background:var(--ax-surface-subtle);position:relative;">
+                  <span style="position:absolute;left:2%;width:30%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:var(--ax-viz-amber);" aria-hidden="true"></span>
+                  <span style="position:absolute;left:2%;width:30%;top:0;bottom:0;border-radius:var(--ax-radius-pill);background:color-mix(in oklab,#fff 30%,var(--ax-viz-amber));" aria-hidden="true"></span>
+                </div>
+                <span class="ax-num" style="width:42px;text-align:right;color:var(--ax-viz-emerald);font-size:var(--ax-text-sm);">100%</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Team Workload (horizontal bar) -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Workload by member">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Team Workload</h2><p class="ax-card__subtitle">Assigned tasks per member</p></div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-workload-bar" aria-label="Horizontal bar chart of assigned tasks per team member"></div>
+            </div>
+          </section>
+
+          <!-- ───── Project Health (multi-goal) + Milestones + Time/Budget mini ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Project health">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Project Health</h2><p class="ax-card__subtitle">Percent complete</p></div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Aurora Redesign</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">74%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:74%;background:var(--ax-accent);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Mobile App v3</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">48%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:48%;background:var(--ax-viz-cyan);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Billing Migration</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">28%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:28%;background:var(--ax-viz-violet);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Data Warehouse</span><b class="ax-num" style="color:var(--ax-viz-amber);font-size:var(--ax-text-sm);">12% · at risk</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:12%;background:var(--ax-viz-amber);"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Budget vs Actual + Time Tracked (mini metrics) -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Budget and time">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Budget &amp; Time</h2></div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Budget vs. actual</span>
+                  <span class="ax-num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$418K / $460K</span>
+                </div>
+                <div style="display:flex;height:12px;border-radius:var(--ax-radius-pill);overflow:hidden;">
+                  <span style="width:91%;background:var(--ax-accent);" aria-hidden="true"></span>
+                  <span style="width:9%;background:var(--ax-surface-subtle);" aria-hidden="true"></span>
+                </div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-top:6px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);"><span>91% spent</span><span>$42K remaining</span></div>
+              </div>
+              <div class="ax-divider"></div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Time tracked (30D)</span>
+                  <span class="ax-num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">3,420 h</span>
+                </div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="44" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Time tracked","data":[12,18,16,24,22,30,26,34,30,36,32,40,36]}]' style="min-height:44px;" aria-hidden="true"></div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-top:6px;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);"><span>Billable 81%</span><span>+184h vs. last month</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Milestones -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Upcoming milestones">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Milestones</h2></div>
+              <a class="ax-btn ax-btn--link" href="#">All</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-timeline">
+                <li class="ax-timeline__item ax-timeline__item--success">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Design freeze</b> — Aurora Redesign</p><span class="ax-timeline__time">Jun 30 · 3 days</span></div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Beta release</b> — Mobile App v3</p><span class="ax-timeline__time">Jul 12 · 15 days</span></div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16h.01"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Cutover</b> — Billing Migration</p><span class="ax-timeline__time">Jul 28 · at risk</span></div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1 -1 1h-7l-4 4v-4h-3a1 1 0 0 1 -1 -1v-9a1 1 0 0 1 1 -1"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Stakeholder review</b> — Data Warehouse</p><span class="ax-timeline__time">Aug 05 · 39 days</span></div>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── Recent Projects table (12) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Recent projects">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Recent Projects</h2><p class="ax-card__subtitle">Status, progress &amp; deadlines</p></div>
+              <a class="ax-btn ax-btn--link" href="#">All projects</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Project</th>
+                    <th class="ax-table__th" scope="col">Lead</th>
+                    <th class="ax-table__th" scope="col">Progress</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Tasks</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Deadline</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Aurora Redesign</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Design system overhaul</div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-accent) 22%,transparent);color:var(--ax-accent);font-weight:600;">LB</span><span style="color:var(--ax-text-muted);">Lena Brandt</span></div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><div class="ax-progress ax-progress--sm" style="min-width:96px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:74%;background:var(--ax-accent);"></div></div></div><span class="ax-num" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">74%</span></div></td>
+                    <td class="ax-table__td ax-table__td--num">38 / 52</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jul 18</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>On track</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Mobile App v3</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">React Native rebuild</div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 22%,transparent);color:var(--ax-viz-cyan);font-weight:600;">DO</span><span style="color:var(--ax-text-muted);">Devon Okafor</span></div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><div class="ax-progress ax-progress--sm" style="min-width:96px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:48%;background:var(--ax-viz-cyan);"></div></div></div><span class="ax-num" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">48%</span></div></td>
+                    <td class="ax-table__td ax-table__td--num">61 / 128</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Aug 12</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>On track</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Billing Migration</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Stripe → in-house</div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 22%,transparent);color:var(--ax-viz-violet);font-weight:600;">TH</span><span style="color:var(--ax-text-muted);">Tomás Herrera</span></div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><div class="ax-progress ax-progress--sm" style="min-width:96px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:28%;background:var(--ax-viz-violet);"></div></div></div><span class="ax-num" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">28%</span></div></td>
+                    <td class="ax-table__td ax-table__td--num">22 / 96</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jul 28</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>At risk</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Data Warehouse</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Snowflake pipeline</div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 22%,transparent);color:var(--ax-viz-pink);font-weight:600;">PN</span><span style="color:var(--ax-text-muted);">Priya Nair</span></div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><div class="ax-progress ax-progress--sm" style="min-width:96px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:12%;background:var(--ax-viz-pink);"></div></div></div><span class="ax-num" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">12%</span></div></td>
+                    <td class="ax-table__td ax-table__td--num">9 / 74</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Sep 02</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill"><span class="ax-badge__dot"></span>Delayed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Brand Refresh</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Logo &amp; guidelines</div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 22%,transparent);color:var(--ax-viz-amber);font-weight:600;">AS</span><span style="color:var(--ax-text-muted);">Ava Sutton</span></div></td>
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><div class="ax-progress ax-progress--sm" style="min-width:96px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:100%;background:var(--ax-viz-emerald);"></div></div></div><span class="ax-num" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">100%</span></div></td>
+                    <td class="ax-table__td ax-table__td--num">44 / 44</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 10</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill"><span class="ax-badge__dot"></span>Done</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    const col = document.getElementById('ax-throughput-col');
+    if (col) renderChart(col, 'bar', [
+      { name: 'Created', data: [180,164,192,158,176,148,168,140,156,132,144,128] },
+      { name: 'Completed', data: [142,150,166,170,158,172,180,176,188,182,196,204] },
+    ], {
+      height: 320, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-cyan'), cv('--ax-accent')],
+        plotOptions: { bar: { borderRadius: 4, columnWidth: '60%' } },
+        xaxis: { categories: ['W1','W2','W3','W4','W5','W6','W7','W8','W9','W10','W11','W12'] },
+      },
+    });
+
+    const status = document.getElementById('ax-status-donut');
+    if (status) renderChart(status, 'donut', [24,9,5,4], {
+      height: 230, legend: 'none',
+      apex: {
+        labels: ['On track','At risk','Delayed','Done'],
+        colors: [cv('--ax-viz-emerald'), cv('--ax-viz-amber'), cv('--ax-viz-red'), cv('--ax-viz-cyan')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: {
+          show: true, name: { fontFamily: cv('--ax-font-sans') },
+          value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 },
+          total: { show: true, label: 'Projects', formatter: () => '42' } } } } },
+      },
+    });
+
+    const work = document.getElementById('ax-workload-bar');
+    if (work) renderChart(work, 'bar', [
+      { name: 'Tasks', data: [34, 28, 26, 21, 17, 12] },
+    ], {
+      height: 280, legend: 'none', accent: true,
+      apex: {
+        plotOptions: { bar: { horizontal: true, borderRadius: 4, barHeight: '56%', distributed: true } },
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber'), cv('--ax-viz-emerald')],
+        xaxis: { categories: ['Lena B.','Devon O.','Tomás H.','Priya N.','Ava S.','Marc R.'] },
+        tooltip: { y: { title: { formatter: () => 'Assigned' } } },
+      },
+    });
+  </script>
+{% endblock %}

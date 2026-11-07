@@ -1,0 +1,524 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Crypto</h1>
+              <p class="ax-page-head__subtitle">Your portfolio is up 4.8% in the last 24 hours.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">Last 24 hours</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/><path d="M9 18l0 3"/><path d="M13 18l0 3"/></svg>
+                <span class="ax-btn__label">Buy Crypto</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <!-- 1 · Portfolio Value -->
+          <div class="ax-card ax-kpi" role="region" aria-label="Portfolio Value $86,420, up 4.8% over 24 hours">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4h4"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.8%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Portfolio Value</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$86,420</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[7,10,9,15,18,22,26,29]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2 · 24h P/L -->
+          <div class="ax-card ax-kpi" role="region" aria-label="24 hour profit and loss positive $3,940, up 4.8%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.8%
+                </span>
+              </div>
+              <div class="ax-kpi__label">24h Profit / Loss</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num" style="color:var(--ax-viz-emerald);">+$3,940</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[8,12,10,17,15,22,20,28]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3 · Best Performer -->
+          <div class="ax-card ax-kpi" role="region" aria-label="Best performer SOL up 18.2%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h12l4 -4h-12l-4 4"/><path d="M8 14l-4 -4h12l4 4"/><path d="M16 10l4 -4h-12l-4 4"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>18.2%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Best Performer</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">SOL</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[4,7,11,10,18,20,25,31]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 4 · Available Balance -->
+          <div class="ax-card ax-kpi" role="region" aria-label="Available balance $12,300, down 1.1%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--down">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>1.1%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Available Balance</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$12,300</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[22,20,23,18,20,15,17,13]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── MARKET MOVERS STRIP (full width) ───── -->
+          <section class="ax-card ax-col-full" role="region" aria-label="Market movers">
+            <div class="ax-card__body" style="display:flex;gap:var(--ax-space-3);overflow-x:auto;padding-block:var(--ax-space-4);">
+              <!-- ticker template -->
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex:0 0 auto;min-width:178px;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);background:var(--ax-surface-subtle);">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#FBBF24 18%,transparent);color:#FBBF24;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/><path d="M9 18l0 3"/><path d="M13 18l0 3"/></svg></span>
+                <div style="min-width:0;flex:1;">
+                  <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">BTC</b><span class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-xs);">+2.1%</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);font-size:var(--ax-text-sm);">$67,840</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex:0 0 auto;min-width:178px;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);background:var(--ax-surface-subtle);">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#A78BFA 18%,transparent);color:#A78BFA;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12l6 -9l6 9l-6 9l-6 -9"/><path d="M6 12l6 -3l6 3l-6 2l-6 -2"/></svg></span>
+                <div style="min-width:0;flex:1;">
+                  <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">ETH</b><span class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-xs);">+3.7%</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);font-size:var(--ax-text-sm);">$3,512</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex:0 0 auto;min-width:178px;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);background:var(--ax-surface-subtle);">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#34D399 18%,transparent);color:#34D399;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h12l4 -4h-12l-4 4"/><path d="M8 14l-4 -4h12l4 4"/><path d="M16 10l4 -4h-12l-4 4"/></svg></span>
+                <div style="min-width:0;flex:1;">
+                  <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">SOL</b><span class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-xs);">+18.2%</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);font-size:var(--ax-text-sm);">$184.20</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex:0 0 auto;min-width:178px;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);background:var(--ax-surface-subtle);">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#38BDF8 18%,transparent);color:#38BDF8;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/><path d="M5 9l3 3l-3 3"/></svg></span>
+                <div style="min-width:0;flex:1;">
+                  <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">AVAX</b><span class="ax-num" style="color:var(--ax-viz-red);font-size:var(--ax-text-xs);">−2.4%</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);font-size:var(--ax-text-sm);">$38.10</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex:0 0 auto;min-width:178px;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);background:var(--ax-surface-subtle);">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#F472B6 18%,transparent);color:#F472B6;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 12l9 -3"/></svg></span>
+                <div style="min-width:0;flex:1;">
+                  <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">ADA</b><span class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-xs);">+1.3%</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);font-size:var(--ax-text-sm);">$0.452</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex:0 0 auto;min-width:178px;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);background:var(--ax-surface-subtle);">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#FB7185 18%,transparent);color:#FB7185;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/><path d="M8 12h8"/></svg></span>
+                <div style="min-width:0;flex:1;">
+                  <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);"><b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">DOT</b><span class="ax-num" style="color:var(--ax-viz-red);font-size:var(--ax-text-xs);">−0.8%</span></div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);font-size:var(--ax-text-sm);">$6.94</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── HERO: Portfolio Performance (8) + Asset Allocation (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col-hero" role="region" aria-label="Portfolio performance">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Performance</span>
+                <h2 class="ax-card__title">Portfolio Performance</h2>
+                <p class="ax-card__subtitle">Total holdings value over time</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Timeframe">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">24H</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">7D</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">30D</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1Y</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);">
+                <div><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Current value</span><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);">$86,420.55</div></div>
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill" style="align-self:center;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>+$3,940 (4.8%)</span>
+              </div>
+              <div
+                data-ax-chart="apex"
+                data-ax-chart-type="area"
+                data-ax-chart-height="300"
+                data-ax-chart-legend="none"
+                data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"Portfolio","data":[78200,79100,77600,81400,80200,83100,82400,85600,84100,86420]}]'
+                aria-label="Area chart of total portfolio value over the last 7 days">
+              </div>
+            </div>
+          </section>
+
+          <!-- Asset Allocation (4) -->
+          <section class="ax-card ax-col-side" role="region" aria-label="Asset allocation">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Asset Allocation</h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Allocation options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-alloc-donut" aria-label="Donut chart of asset allocation: Bitcoin 46%, Ethereum 28%, Solana 16%, Tether 10%"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#FBBF24;display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Bitcoin</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">46%</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#A78BFA;display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Ethereum</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">28%</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#34D399;display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Solana</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">16%</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:#38BDF8;display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Tether</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">10%</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── PRICE CANDLESTICK (8) + BUY/SELL + FEAR&GREED (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col-hero" role="region" aria-label="Bitcoin price chart">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">BTC / USD</span>
+                <h2 class="ax-card__title">Bitcoin Price</h2>
+                <p class="ax-card__subtitle">$67,840.20 <span style="color:var(--ax-viz-emerald);">+2.1%</span> · 24h vol $28.4B</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Candle interval">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1H</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">1D</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">1W</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-btc-candle" aria-label="Candlestick chart of Bitcoin daily price"></div>
+            </div>
+          </section>
+
+          <!-- Buy / Sell + Fear & Greed (4) -->
+          <div class="ax-col-side" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <!-- Buy / Sell W-ACTION -->
+            <section class="ax-card" role="region" aria-label="Buy or sell crypto" x-data="{ side:'buy', asset:'BTC', amount:'0.05', sent:false }">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Trade</h2>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Order side" style="width:100%;margin-bottom:var(--ax-space-4);">
+                  <button type="button" class="ax-btn ax-btn--sm ax-btn--block" role="radio" :aria-checked="side==='buy'" :class="{ 'is-selected': side==='buy' }" @click="side='buy'">Buy</button>
+                  <button type="button" class="ax-btn ax-btn--sm ax-btn--block" role="radio" :aria-checked="side==='sell'" :class="{ 'is-selected': side==='sell' }" @click="side='sell'">Sell</button>
+                </div>
+                <form @submit.prevent="sent=true" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                  <div class="ax-field">
+                    <label class="ax-label" for="cx-asset">Asset</label>
+                    <select class="ax-select" id="cx-asset" x-model="asset">
+                      <option value="BTC">Bitcoin · BTC</option>
+                      <option value="ETH">Ethereum · ETH</option>
+                      <option value="SOL">Solana · SOL</option>
+                      <option value="ADA">Cardano · ADA</option>
+                    </select>
+                  </div>
+                  <div class="ax-field">
+                    <label class="ax-label" for="cx-amount">Amount</label>
+                    <input class="ax-input ax-num" id="cx-amount" type="text" x-model="amount" inputmode="decimal">
+                    <span class="ax-help">Available: 1.284 <span x-text="asset"></span></span>
+                  </div>
+                  <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                    <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Est. total</span>
+                    <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$3,392.00</b>
+                  </div>
+                  <button type="submit" class="ax-btn ax-btn--primary ax-btn--block" :class="{ 'ax-btn--danger': side==='sell' }">
+                    <span class="ax-btn__label" x-text="(side==='buy'?'Buy ':'Sell ') + asset"></span>
+                  </button>
+                  <p class="ax-note" x-show="sent" x-transition x-cloak style="margin:0;color:var(--ax-viz-emerald);font-size:var(--ax-text-sm);" role="status">
+                    Trade submitted — your order is being processed.
+                  </p>
+                </form>
+              </div>
+            </section>
+
+            <!-- Fear & Greed semi-gauge -->
+            <section class="ax-card" role="region" aria-label="Fear and greed index">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Fear &amp; Greed</h2>
+                </div>
+                <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">Greed</span>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;text-align:center;">
+                <div id="ax-feargreed" style="margin-top:calc(-1 * var(--ax-space-3));"></div>
+                <p style="margin:0;color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Index at <b style="color:var(--ax-text-strong);">68</b> — market sentiment leans greedy. Yesterday 61.</p>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───── HOLDINGS / WATCHLIST TABLE (8) + WATCHLIST RAIL (4) ───── -->
+          <section class="ax-card ax-col-wide" role="region" aria-label="Holdings">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Holdings</h2>
+                <p class="ax-card__subtitle">Your assets &amp; 24h movement</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Asset</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Holdings</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Price</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">24h</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Value</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#FBBF24 18%,transparent);color:#FBBF24;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/><path d="M9 18l0 3"/><path d="M13 18l0 3"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Bitcoin</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">BTC</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">0.586</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$67,840</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+2.1%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$39,754</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#A78BFA 18%,transparent);color:#A78BFA;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12l6 -9l6 9l-6 9l-6 -9"/><path d="M6 12l6 -3l6 3l-6 2l-6 -2"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Ethereum</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">ETH</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">6.892</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$3,512</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+3.7%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$24,205</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#34D399 18%,transparent);color:#34D399;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h12l4 -4h-12l-4 4"/><path d="M8 14l-4 -4h12l4 4"/><path d="M16 10l4 -4h-12l-4 4"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Solana</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">SOL</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">74.50</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$184.20</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+18.2%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$13,723</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#38BDF8 18%,transparent);color:#38BDF8;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/><path d="M9 9h6"/><path d="M9 15h6"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Tether</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">USDT</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">8,738</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$1.00</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-subtle);">0.0%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$8,738</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,#FB7185 18%,transparent);color:#FB7185;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 12l9 -3"/></svg></span>
+                        <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Avalanche</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">AVAX</div></div>
+                      </div>
+                    </td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">42.10</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">$38.10</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-red);">−2.4%</td>
+                    <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$1,604</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Watchlist rail (4) -->
+          <section class="ax-card ax-col-narrow" role="region" aria-label="Watchlist">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Watchlist</h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Add to watchlist">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#38BDF8 18%,transparent);color:#38BDF8;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 12l9 -3"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Cardano</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">ADA</div></div>
+                <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$0.452</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">+1.3%</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#FB7185 18%,transparent);color:#FB7185;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/><path d="M8 12h8"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Polkadot</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">DOT</div></div>
+                <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$6.94</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-red);">−0.8%</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#A78BFA 18%,transparent);color:#A78BFA;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/><path d="M5 9l3 3l-3 3"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Chainlink</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">LINK</div></div>
+                <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$14.82</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">+5.4%</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#FBBF24 18%,transparent);color:#FBBF24;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M7 12h10"/><path d="M12 7v10"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Polygon</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">MATIC</div></div>
+                <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$0.728</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-emerald);">+2.9%</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,#34D399 18%,transparent);color:#34D399;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 6l-8 12l-8 -12z"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Litecoin</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">LTC</div></div>
+                <div style="text-align:right;"><div class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$84.10</div><div class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-viz-red);">−1.2%</div></div>
+              </div>
+            </div>
+            <div class="ax-card__footer"><a class="ax-link" href="#">Manage watchlist →</a></div>
+          </section>
+
+        </div>
+
+        <style>
+          .ax-dash-grid > * { grid-column: 1 / -1; }
+          @media (min-width: 768px) {
+            .ax-dash-grid > .ax-kpi { grid-column: span 6; }
+            .ax-dash-grid > .ax-col-third { grid-column: span 6; }
+          }
+          @media (min-width: 1200px) {
+            .ax-dash-grid > .ax-kpi { grid-column: span 3; }
+            .ax-dash-grid > .ax-col-full { grid-column: span 12; }
+            .ax-dash-grid > .ax-col-hero { grid-column: span 8; }
+            .ax-dash-grid > .ax-col-side { grid-column: span 4; }
+            .ax-dash-grid > .ax-col-third { grid-column: span 4; }
+            .ax-dash-grid > .ax-col-wide { grid-column: span 8; }
+            .ax-dash-grid > .ax-col-narrow { grid-column: span 4; }
+          }
+        </style>
+
+        <script type="module">
+          const { renderChart } = window.Vireo.charts;
+          const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+          // Asset allocation donut
+          const donut = document.getElementById('ax-alloc-donut');
+          if (donut) {
+            renderChart(donut, 'donut', [46, 28, 16, 10], {
+              height: 220, legend: 'none',
+              apex: {
+                labels: ['Bitcoin', 'Ethereum', 'Solana', 'Tether'],
+                colors: [cv('--ax-viz-amber'), cv('--ax-viz-violet'), cv('--ax-viz-emerald'), cv('--ax-viz-cyan')],
+                stroke: { width: 0 },
+                plotOptions: { pie: { donut: { size: '72%', labels: { show: true,
+                  name: { fontFamily: cv('--ax-font-sans') },
+                  value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 },
+                  total: { show: true, label: 'Total', formatter: () => '$86.4K' } } } } },
+              },
+            });
+          }
+
+          // BTC candlestick
+          const candle = document.getElementById('ax-btc-candle');
+          if (candle) {
+            const ohlc = [
+              [1718150400000, 64200, 65100, 63800, 64900],
+              [1718236800000, 64900, 66200, 64500, 65800],
+              [1718323200000, 65800, 66100, 64200, 64600],
+              [1718409600000, 64600, 65900, 64100, 65500],
+              [1718496000000, 65500, 67200, 65300, 66900],
+              [1718582400000, 66900, 67100, 65800, 66100],
+              [1718668800000, 66100, 66800, 64900, 65200],
+              [1718755200000, 65200, 67400, 65000, 67100],
+              [1718841600000, 67100, 68200, 66800, 67900],
+              [1718928000000, 67900, 68100, 66400, 66700],
+              [1719014400000, 66700, 68400, 66500, 68200],
+              [1719100800000, 68200, 68900, 67200, 67840],
+            ].map((c) => ({ x: c[0], y: [c[1], c[2], c[3], c[4]] }));
+            renderChart(candle, 'candlestick', [{ data: ohlc }], {
+              height: 320, legend: 'none',
+              apex: {
+                plotOptions: { candlestick: { colors: { upward: cv('--ax-success-500'), downward: cv('--ax-danger-500') } } },
+                xaxis: { type: 'datetime' },
+                yaxis: { tooltip: { enabled: true }, labels: { formatter: (v) => '$' + (v / 1000).toFixed(1) + 'K' } },
+              },
+            });
+          }
+
+          // Fear & Greed semi-gauge
+          const fg = document.getElementById('ax-feargreed');
+          if (fg) {
+            renderChart(fg, 'radialBar', [68], {
+              height: 230, legend: 'none',
+              apex: {
+                colors: [cv('--ax-warning-500')],
+                plotOptions: { radialBar: {
+                  startAngle: -110, endAngle: 110, hollow: { size: '62%' },
+                  track: { background: cv('--ax-fill-hover'), strokeWidth: '100%' },
+                  dataLabels: {
+                    name: { show: true, offsetY: 22, color: cv('--ax-text-muted'), fontSize: '13px', fontFamily: cv('--ax-font-sans') },
+                    value: { show: true, offsetY: -16, color: cv('--ax-text-strong'), fontSize: '34px', fontFamily: cv('--ax-font-mono'), fontWeight: 700, formatter: (v) => v },
+                  },
+                } },
+                labels: ['Greed'],
+                fill: { type: 'solid' },
+              },
+            });
+          }
+        </script>
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Pagination</h1>
+              <p class="ax-page-head__subtitle">Page controls in every flavour — numbered, with icons, compact, with summary and a live table pager.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/list-group/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+                <span class="ax-btn__label">List groups</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ═══════ BASIC + ICONS ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Basic and icon pagination">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Numbered</span>
+                <h2 class="ax-card__title">Basic &amp; with icons</h2>
+                <p class="ax-card__subtitle">Prev/next as text labels or as chevron icons, with an ellipsis gap.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <!-- text prev/next -->
+              <nav class="ax-pagination" aria-label="Search results, text controls">
+                <button type="button" class="ax-pagination__prev" disabled aria-disabled="true">Previous</button>
+                <ul class="ax-pagination__pages">
+                  <li><a class="ax-pagination__page" href="#" aria-current="page" aria-label="Page 1">1</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 2">2</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 3">3</a></li>
+                  <li aria-hidden="true"><span class="ax-pagination__ellipsis">…</span></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 12">12</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next">Next</button>
+              </nav>
+              <!-- icon prev/next -->
+              <nav class="ax-pagination" aria-label="Search results, icon controls">
+                <button type="button" class="ax-pagination__prev" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 1">1</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 2">2</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-current="page" aria-label="Page 3">3</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 4">4</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 5">5</a></li>
+                  <li aria-hidden="true"><span class="ax-pagination__ellipsis">…</span></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 24">24</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+              <!-- first / last jump -->
+              <nav class="ax-pagination" aria-label="Search results, first and last jumps">
+                <button type="button" class="ax-pagination__prev" aria-label="First page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 7l-5 5l5 5"/><path d="M17 7l-5 5l5 5"/></svg></button>
+                <button type="button" class="ax-pagination__prev" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 6">6</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-current="page" aria-label="Page 7">7</a></li>
+                  <li><a class="ax-pagination__page" href="#" aria-label="Page 8">8</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                <button type="button" class="ax-pagination__next" aria-label="Last page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 7l5 5l-5 5"/><path d="M13 7l5 5l-5 5"/></svg></button>
+              </nav>
+            </div>
+          </section>
+
+          <!-- ═══════ COMPACT + PILL ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Compact pagination">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Minimal</span>
+                <h2 class="ax-card__title">Compact &amp; pill</h2>
+                <p class="ax-card__subtitle">Just position and arrows — for tight toolbars and cards.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <!-- compact "page x of y" -->
+              <nav class="ax-pagination" aria-label="Compact pager">
+                <button type="button" class="ax-pagination__prev" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <span class="ax-pagination__summary ax-num" aria-current="page" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">Page 3 of 24</span>
+                <button type="button" class="ax-pagination__next" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+              <!-- pill buttons (using ax-btn) -->
+              <nav class="ax-cluster" style="gap:var(--ax-space-2);" aria-label="Pill pager">
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill ax-btn--sm" disabled aria-disabled="true">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                  <span class="ax-btn__label">Newer</span>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill ax-btn--sm">
+                  <span class="ax-btn__label">Older</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+              </nav>
+              <!-- dots-style (mini) -->
+              <nav class="ax-cluster" style="gap:var(--ax-space-2);align-items:center;" aria-label="Step pager">
+                <button type="button" class="ax-pagination__prev" aria-label="Previous step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);" role="group" aria-label="Step indicator">
+                  <i style="width:8px;height:8px;border-radius:50%;background:var(--ax-border-strong);"></i>
+                  <i style="width:22px;height:8px;border-radius:var(--ax-radius-pill);background:var(--ax-accent);"></i>
+                  <i style="width:8px;height:8px;border-radius:50%;background:var(--ax-border-strong);"></i>
+                  <i style="width:8px;height:8px;border-radius:50%;background:var(--ax-border-strong);"></i>
+                </span>
+                <button type="button" class="ax-pagination__next" aria-label="Next step"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+
+          <!-- ═══════ WITH SUMMARY + PAGE SIZE ═══════ -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Pagination with summary and page size">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Full bar</span>
+                <h2 class="ax-card__title">With summary &amp; page size</h2>
+                <p class="ax-card__subtitle">The complete table footer — result count, rows-per-page and numbered pages.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-4);">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                  <span class="ax-pagination__summary ax-num">Showing <b style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">21–40</b> of <b style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">1,248</b></span>
+                  <label class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Rows
+                    <select class="ax-select ax-select--sm" aria-label="Rows per page" style="width:auto;"><option>10</option><option selected>20</option><option>50</option><option>100</option></select>
+                  </label>
+                </div>
+                <nav class="ax-pagination" aria-label="Transactions pages">
+                  <button type="button" class="ax-pagination__prev" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                  <ul class="ax-pagination__pages">
+                    <li><a class="ax-pagination__page" href="#" aria-label="Page 1">1</a></li>
+                    <li><a class="ax-pagination__page" href="#" aria-current="page" aria-label="Page 2">2</a></li>
+                    <li><a class="ax-pagination__page" href="#" aria-label="Page 3">3</a></li>
+                    <li><a class="ax-pagination__page" href="#" aria-label="Page 4">4</a></li>
+                    <li aria-hidden="true"><span class="ax-pagination__ellipsis">…</span></li>
+                    <li><a class="ax-pagination__page" href="#" aria-label="Page 63">63</a></li>
+                  </ul>
+                  <button type="button" class="ax-pagination__next" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                </nav>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ LIVE TABLE PAGER (Alpine) ═══════ -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Live paginated orders table"
+            x-data="{
+              page:0, size:5,
+              rows:[
+                {n:'10482', who:'Camila Rossi', total:'$312.00', status:'Shipped', tone:'info'},
+                {n:'10481', who:'Henry Whitlock', total:'$129.00', status:'Processing', tone:'warning'},
+                {n:'10480', who:'Aisha Bello', total:'$80.00', status:'Delivered', tone:'success'},
+                {n:'10479', who:'Erik Lindqvist', total:'$1,544.00', status:'Delivered', tone:'success'},
+                {n:'10478', who:'Daniel Cho', total:'$24.00', status:'Cancelled', tone:'danger'},
+                {n:'10477', who:'Olivia Penrose', total:'$200.00', status:'Delivered', tone:'success'},
+                {n:'10476', who:'Sofia Marchetti', total:'$104.00', status:'Shipped', tone:'info'},
+                {n:'10475', who:'Yuki Tanaka', total:'$225.00', status:'Pending', tone:'warning'},
+                {n:'10474', who:'Rahul Menon', total:'$80.00', status:'Delivered', tone:'success'},
+                {n:'10473', who:'Nadia Haddad', total:'$238.00', status:'Refunded', tone:'danger'},
+                {n:'10472', who:'Greta Hoffmann', total:'$640.00', status:'Delivered', tone:'success'},
+                {n:'10471', who:'Mateo Alvarez', total:'$210.00', status:'Processing', tone:'warning'}
+              ],
+              get pages(){ return Math.ceil(this.rows.length / this.size); },
+              get view(){ return this.rows.slice(this.page*this.size, this.page*this.size + this.size); },
+              get from(){ return this.rows.length ? this.page*this.size + 1 : 0; },
+              get to(){ return Math.min((this.page+1)*this.size, this.rows.length); },
+              go(p){ this.page = Math.max(0, Math.min(this.pages-1, p)); }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Interactive</span>
+                <h2 class="ax-card__title">Recent orders — paged</h2>
+                <p class="ax-card__subtitle">A working pager; page size updates the view live.</p>
+              </div>
+              <div class="ax-card__actions">
+                <label class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Rows
+                  <select class="ax-select ax-select--sm" aria-label="Rows per page" x-model.number="size" @change="page=0" style="width:auto;"><option :value="3">3</option><option :value="5">5</option><option :value="10">10</option></select>
+                </label>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Order</th>
+                    <th class="ax-table__th" scope="col">Customer</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Total</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="row in view" :key="row.n">
+                    <tr class="ax-table__row">
+                      <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#<span x-text="row.n"></span></td>
+                      <td class="ax-table__td" x-text="row.who"></td>
+                      <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);" x-text="row.total"></td>
+                      <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" :class="'ax-badge--'+row.tone"><span class="ax-badge__dot"></span><span x-text="row.status"></span></span></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="ax-card__footer" style="justify-content:space-between;">
+              <span class="ax-pagination__summary ax-num">Showing <b style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="from"></b>–<b style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="to"></b> of <b style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="rows.length"></b></span>
+              <nav class="ax-pagination" aria-label="Orders pages">
+                <button type="button" class="ax-pagination__prev" @click="go(page-1)" :disabled="page===0" :aria-disabled="page===0" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <template x-for="p in pages" :key="p">
+                    <li><button type="button" class="ax-pagination__page" @click="go(p-1)" :aria-current="page===(p-1) ? 'page' : false" :class="{'is-active':page===(p-1)}" :aria-label="'Page ' + p" x-text="p"></button></li>
+                  </template>
+                </ul>
+                <button type="button" class="ax-pagination__next" @click="go(page+1)" :disabled="page===pages-1" :aria-disabled="page===pages-1" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

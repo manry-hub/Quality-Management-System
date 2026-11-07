@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axMarketcap()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Marketcap</h1>
+              <p class="ax-page-head__subtitle">Live prices across <span class="ax-num">10,482</span> coins — total cap <span class="ax-num">$2.41T</span>.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <span class="ax-btn__label">Watchlist</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="$dispatch('go-buy')" onclick="window.location.href='/crypto/buy-sell/'">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/><path d="M9 18l0 3"/><path d="M13 18l0 3"/></svg>
+                <span class="ax-btn__label">Buy crypto</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CRYPTO SUB-NAV ════════════════ -->
+        <nav class="ax-tabs ax-tabs--pill" aria-label="Crypto sections" style="margin-bottom:var(--ax-space-5);">
+          <div class="ax-tabs__list" role="tablist">
+            <a class="ax-tabs__tab" role="tab" href="/crypto/wallet/">Wallet</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/exchange/">Exchange</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/buy-sell/">Buy &amp; Sell</a>
+            <a class="ax-tabs__tab is-active" role="tab" aria-selected="true" aria-current="page" href="/crypto/marketcap/">Marketcap</a>
+            <a class="ax-tabs__tab" role="tab" href="/crypto/transactions/">Transactions</a>
+          </div>
+        </nav>
+
+        <!-- ════════════════ GLOBAL STAT STRIP ════════════════ -->
+        <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total market cap">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 12l9 -3"/><path d="M12 12v9"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.9%</span>
+              </div>
+              <div class="ax-kpi__label">Total Market Cap</div>
+              <div class="ax-kpi__value ax-num">$2.41T</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="24 hour volume">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3 8l4 -16l3 8h4"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>2.4%</span>
+              </div>
+              <div class="ax-kpi__label">24h Volume</div>
+              <div class="ax-kpi__value ax-num">$94.6B</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Bitcoin dominance">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>0.3%</span>
+              </div>
+              <div class="ax-kpi__label">BTC Dominance</div>
+              <div class="ax-kpi__value ax-num">52.4%</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Fear and greed index">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 12l3 -2"/><path d="M12 7v5"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>7 pts</span>
+              </div>
+              <div class="ax-kpi__label">Fear &amp; Greed</div>
+              <div class="ax-kpi__value ax-num">68 <span style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-viz-amber);">Greed</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ COINS TABLE ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Cryptocurrency market table">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Cryptocurrency Prices</h2>
+                <p class="ax-card__subtitle ax-num" style="font-family:var(--ax-font-mono);"><span x-text="filtered().length"></span> of <span x-text="coins.length"></span> coins</p>
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <div style="position:relative;flex:1 1 220px;max-width:280px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input ax-input--sm" placeholder="Search coin or symbol…" x-model.debounce.200ms="q" aria-label="Search coins" style="padding-inline-start:34px;">
+                </div>
+                <div class="ax-segment" role="group" aria-label="Filter">
+                  <button type="button" class="ax-segment__option" :class="tab==='all' && 'is-active'" :aria-checked="tab==='all'" @click="tab='all'">All</button>
+                  <button type="button" class="ax-segment__option" :class="tab==='gainers' && 'is-active'" :aria-checked="tab==='gainers'" @click="tab='gainers'">Gainers</button>
+                  <button type="button" class="ax-segment__option" :class="tab==='watch' && 'is-active'" :aria-checked="tab==='watch'" @click="tab='watch'">Watchlist</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col" style="width:40px;"><span class="ax-visually">Watchlist</span></th>
+                    <th class="ax-table__th ax-table__th--num" scope="col" style="width:48px;">#</th>
+                    <th class="ax-table__th" scope="col">Name</th>
+                    <th class="ax-table__th ax-table__th--num ax-table__th--sort" scope="col" :aria-sort="sortBy==='price' ? (sortDir==='asc'?'ascending':'descending') : 'none'">
+                      <button type="button" class="ax-btn ax-btn--link" @click="sort('price')" style="color:inherit;font:inherit;">Price <span aria-hidden="true" x-text="sortBy==='price' ? (sortDir==='asc'?'↑':'↓') : ''"></span></button>
+                    </th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">1h</th>
+                    <th class="ax-table__th ax-table__th--num ax-table__th--sort" scope="col" :aria-sort="sortBy==='change' ? (sortDir==='asc'?'ascending':'descending') : 'none'">
+                      <button type="button" class="ax-btn ax-btn--link" @click="sort('change')" style="color:inherit;font:inherit;">24h <span aria-hidden="true" x-text="sortBy==='change' ? (sortDir==='asc'?'↑':'↓') : ''"></span></button>
+                    </th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">7d</th>
+                    <th class="ax-table__th ax-table__th--num ax-table__th--sort" scope="col" :aria-sort="sortBy==='cap' ? (sortDir==='asc'?'ascending':'descending') : 'none'">
+                      <button type="button" class="ax-btn ax-btn--link" @click="sort('cap')" style="color:inherit;font:inherit;">Market Cap <span aria-hidden="true" x-text="sortBy==='cap' ? (sortDir==='asc'?'↑':'↓') : ''"></span></button>
+                    </th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Volume (24h)</th>
+                    <th class="ax-table__th" scope="col" style="width:130px;">Last 7 days</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="c in filtered()" :key="c.sym">
+                    <tr class="ax-table__row">
+                      <td class="ax-table__td">
+                        <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="c.watch=!c.watch" :aria-label="(c.watch?'Remove ':'Add ')+c.name+' to watchlist'" :aria-pressed="c.watch">
+                          <svg viewBox="0 0 24 24" width="17" height="17" :fill="c.watch ? 'var(--ax-viz-amber)' : 'none'" :stroke="c.watch ? 'var(--ax-viz-amber)' : 'currentColor'" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                        </button>
+                      </td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);" x-text="c.rank"></td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                          <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="'background:color-mix(in oklab,'+c.color+' 18%,transparent);color:'+c.color+';'" x-html="c.icon"></span>
+                          <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="c.name"></div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="c.sym"></div></div>
+                        </div>
+                      </td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="'$'+c.price.toLocaleString('en-US',{minimumFractionDigits:c.price<1?4:2,maximumFractionDigits:c.price<1?4:2})"></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" :style="'color:'+(c.h1>=0?'var(--ax-viz-emerald)':'var(--ax-viz-red)')" x-text="(c.h1>=0?'+':'−')+Math.abs(c.h1).toFixed(1)+'%'"></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" :style="'color:'+(c.change>=0?'var(--ax-viz-emerald)':'var(--ax-viz-red)')" x-text="(c.change>=0?'+':'−')+Math.abs(c.change).toFixed(1)+'%'"></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" :style="'color:'+(c.d7>=0?'var(--ax-viz-emerald)':'var(--ax-viz-red)')" x-text="(c.d7>=0?'+':'−')+Math.abs(c.d7).toFixed(1)+'%'"></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="c.cap"></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="c.vol"></td>
+                      <td class="ax-table__td">
+                        <svg viewBox="0 0 110 34" width="110" height="34" fill="none" preserveAspectRatio="none" :style="'color:'+(c.d7>=0?'var(--ax-viz-emerald)':'var(--ax-viz-red)')" aria-hidden="true">
+                          <path :d="c.spark" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- footer / pagination -->
+            <div class="ax-card__footer" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:var(--ax-space-3);">
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">Showing <span x-text="filtered().length"></span> of <span x-text="coins.length"></span> coins</span>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" disabled aria-disabled="true" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <li><a href="#" class="ax-pagination__page is-active" aria-current="page">1</a></li>
+                  <li><a href="#" class="ax-pagination__page">2</a></li>
+                  <li><a href="#" class="ax-pagination__page">3</a></li>
+                  <li><span class="ax-pagination__ellipsis">…</span></li>
+                  <li><a href="#" class="ax-pagination__page">87</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axMarketcap() {
+            const I = {
+              btc: '<svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6h8a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-8"/><path d="M8 6l0 12"/><path d="M8 12l6 0"/><path d="M9 3l0 3"/><path d="M13 3l0 3"/><path d="M9 18l0 3"/><path d="M13 18l0 3"/></svg>',
+              eth: '<svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 12l6 -9l6 9l-6 9l-6 -9"/><path d="M6 12l6 -3l6 3l-6 2l-6 -2"/></svg>',
+              sol: '<svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 18h12l4 -4h-12l-4 4"/><path d="M8 14l-4 -4h12l4 4"/><path d="M16 10l4 -4h-12l-4 4"/></svg>',
+              gen: '<svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/><path d="M9 9h6"/><path d="M9 15h6"/></svg>',
+            };
+            const sUp = 'M2 30 16 26 30 28 44 20 58 22 72 14 86 12 108 4';
+            const sDn = 'M2 6 16 9 30 8 44 14 58 12 72 19 86 22 108 30';
+            const sWv = 'M2 18 16 12 30 22 44 14 58 24 72 16 86 20 108 12';
+            return {
+              q: '', tab: 'all', sortBy: 'cap', sortDir: 'desc',
+              coins: [
+                { rank: 1, name: 'Bitcoin', sym: 'BTC', color: 'var(--ax-viz-amber)', icon: I.btc, price: 67840.20, h1: 0.4, change: 2.1, d7: 6.8, cap: '$1.34T', vol: '$28.4B', watch: true, spark: sUp },
+                { rank: 2, name: 'Ethereum', sym: 'ETH', color: 'var(--ax-viz-violet)', icon: I.eth, price: 3512.00, h1: 0.2, change: 3.7, d7: 9.2, cap: '$422.1B', vol: '$14.8B', watch: true, spark: sUp },
+                { rank: 3, name: 'Tether', sym: 'USDT', color: 'var(--ax-viz-cyan)', icon: I.gen, price: 1.0001, h1: 0.0, change: 0.0, d7: 0.1, cap: '$112.4B', vol: '$41.2B', watch: false, spark: sWv },
+                { rank: 4, name: 'Solana', sym: 'SOL', color: 'var(--ax-viz-emerald)', icon: I.sol, price: 184.20, h1: 1.1, change: 18.2, d7: 24.6, cap: '$84.9B', vol: '$6.2B', watch: true, spark: sUp },
+                { rank: 5, name: 'BNB', sym: 'BNB', color: 'var(--ax-viz-amber)', icon: I.gen, price: 592.40, h1: -0.3, change: 1.4, d7: 3.1, cap: '$87.6B', vol: '$1.9B', watch: false, spark: sWv },
+                { rank: 6, name: 'XRP', sym: 'XRP', color: 'var(--ax-viz-cyan)', icon: I.gen, price: 0.5240, h1: 0.6, change: -1.8, d7: -4.2, cap: '$29.1B', vol: '$1.1B', watch: false, spark: sDn },
+                { rank: 7, name: 'Cardano', sym: 'ADA', color: 'var(--ax-viz-cyan)', icon: I.gen, price: 0.4520, h1: 0.3, change: 1.3, d7: 5.7, cap: '$16.0B', vol: '$0.42B', watch: false, spark: sUp },
+                { rank: 8, name: 'Avalanche', sym: 'AVAX', color: 'var(--ax-viz-pink)', icon: I.gen, price: 38.10, h1: -0.8, change: -2.4, d7: -6.1, cap: '$15.2B', vol: '$0.58B', watch: false, spark: sDn },
+                { rank: 9, name: 'Dogecoin', sym: 'DOGE', color: 'var(--ax-viz-amber)', icon: I.gen, price: 0.1620, h1: 0.9, change: 4.6, d7: 11.3, cap: '$23.4B', vol: '$1.4B', watch: false, spark: sUp },
+                { rank: 10, name: 'Polkadot', sym: 'DOT', color: 'var(--ax-viz-red)', icon: I.gen, price: 6.940, h1: -0.2, change: -0.8, d7: 2.4, cap: '$9.8B', vol: '$0.31B', watch: true, spark: sWv },
+                { rank: 11, name: 'Chainlink', sym: 'LINK', color: 'var(--ax-viz-cyan)', icon: I.gen, price: 14.820, h1: 0.7, change: 5.4, d7: 8.9, cap: '$8.7B', vol: '$0.39B', watch: false, spark: sUp },
+                { rank: 12, name: 'Polygon', sym: 'MATIC', color: 'var(--ax-viz-violet)', icon: I.gen, price: 0.7280, h1: 0.4, change: 2.9, d7: 6.2, cap: '$7.1B', vol: '$0.28B', watch: false, spark: sUp },
+                { rank: 13, name: 'Litecoin', sym: 'LTC', color: 'var(--ax-viz-emerald)', icon: I.gen, price: 84.10, h1: -0.5, change: -1.2, d7: -2.8, cap: '$6.3B', vol: '$0.34B', watch: false, spark: sDn },
+                { rank: 14, name: 'Shiba Inu', sym: 'SHIB', color: 'var(--ax-viz-pink)', icon: I.gen, price: 0.0000241, h1: 1.4, change: 7.1, d7: 14.8, cap: '$14.2B', vol: '$0.62B', watch: false, spark: sUp },
+              ],
+              sort(key) {
+                if (this.sortBy === key) { this.sortDir = this.sortDir === 'asc' ? 'desc' : 'asc'; }
+                else { this.sortBy = key; this.sortDir = 'desc'; }
+              },
+              filtered() {
+                let r = this.coins.filter((c) => {
+                  const m = (c.name + ' ' + c.sym).toLowerCase().includes(this.q.toLowerCase());
+                  const t = this.tab === 'all' || (this.tab === 'gainers' && c.change > 0) || (this.tab === 'watch' && c.watch);
+                  return m && t;
+                });
+                const dir = this.sortDir === 'asc' ? 1 : -1;
+                const k = { price: 'price', change: 'change', cap: 'rank' }[this.sortBy] || 'rank';
+                r = [...r].sort((a, b) => {
+                  if (this.sortBy === 'cap') return (a.rank - b.rank) * (dir === 1 ? 1 : -1) * -1;
+                  return (a[k] - b[k]) * dir;
+                });
+                return r;
+              },
+            };
+          }
+        </script>
+{% endblock %}
