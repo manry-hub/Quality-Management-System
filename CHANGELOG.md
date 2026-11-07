@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [0.5.0] - 2026-11-08
+
+### Added
+- **Supplier Quality Assurance (SQA) Portal (`apps/sqa`):**
+  - IATF 16949 Section 8.4 external provider governance, supplier profiling, and quality certification management (ISO 9001 / IATF 16949).
+  - Automated Certificate of Analysis (CoA) validation engine checking raw polymer test payloads (`moisture_pct`, `mfi_g_10min`, `density_g_cm3`) against material technical datasheets.
+  - Automated 21 CFR Part 11 audit event generation for rejected lots and out-of-spec chemical parameter deviations.
+  - Periodic supplier quality scorecards tracking total lots supplied, lot acceptance/rejection statistics, PPM defect rates, and dock on-time delivery percentages with composite grade evaluations (Grade A Preferred, Grade B Qualified, Grade C Conditional, Grade D Disqualified).
+  - SQA Executive Terminal at `/sqa/` and individual supplier performance profiles at `/sqa/supplier/<id>/`.
+- **AI Vision Inspection & Defect Classification (`apps/vision`):**
+  - Edge AI camera station registry tracking GigE optical cameras on active injection molding press cells (`VisionInspectionStation`).
+  - Automated visual defect inference engine (`classify_molding_defect`) supporting Flash, Short Shot, Sink Mark, Splay, Burn, Jetting, Void, and Warpage.
+  - Neural confidence threshold gating and bounding box coordinate telemetry storage.
+  - Automated emergency Quality Hold trigger: high-severity critical defects exceeding confidence thresholds invoke `declare_quality_hold`, producing an instant contained Non-Conformance Report (NCR) directly linked to the vision inspection shot.
+  - Interactive AI Vision Console at `/vision/` featuring synthetic optical camera viewfinder preview, defect distribution analytics, live shot telemetry stream, shot simulation modal, and station telemetry details at `/vision/station/<id>/`.
+- **Operational Integration & Navigation:**
+  - Integrated SQA and AI Vision terminals directly into the *Operational Quality* section of the Vireo navigation sidebar and `nav-manifest.json`.
+  - Extended `seed_factory_demo` to seed 4 raw resin suppliers (BASF, Covestro, Celanese, DuPont), 5 historical CoAs, 3 camera stations, and 22 vision shot inspections.
+
+---
+
 ## [0.4.0] - 2026-11-08
 
 ### Added
