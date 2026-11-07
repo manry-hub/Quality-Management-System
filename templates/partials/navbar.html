@@ -1,63 +1,143 @@
-<div class="navbar-header">
-    <div class="row align-items-center justify-content-between">
-        <div class="col-auto">
-            <div class="d-flex flex-wrap align-items-center gap-4">
-                <button type="button" class="sidebar-toggle">
-                    <iconify-icon icon="heroicons:bars-3-solid" class="icon text-2xl non-active"></iconify-icon>
-                    <iconify-icon icon="iconoir:arrow-right" class="icon text-2xl active"></iconify-icon>
-                </button>
-                <button type="button" class="sidebar-mobile-toggle">
-                    <iconify-icon icon="heroicons:bars-3-solid" class="icon"></iconify-icon>
-                </button>
-                <div class="d-none d-md-flex align-items-center gap-2">
-                    <span class="badge bg-neutral-200 text-secondary-light px-3 py-2 radius-8 font-monospace">
-                        <i class="ri-building-line text-primary-600 me-1"></i> FACILITY: IMM-PLANT-01
-                    </span>
-                    <span class="badge bg-success-subtle text-success-main px-3 py-2 radius-8">
-                        <i class="ri-checkbox-circle-fill me-1"></i> IATF 16949 COMPLIANT
-                    </span>
-                </div>
-            </div>
+<header class="ax-header" role="banner" x-data="{
+  collapsed: document.documentElement.hasAttribute('data-ax-collapsed'),
+  theme: document.documentElement.getAttribute('data-ax-theme') || 'light',
+  full: false,
+  toggleSidebar() {
+    this.collapsed = document.documentElement.toggleAttribute('data-ax-collapsed');
+    try {
+      if (this.collapsed) localStorage.setItem('ax:collapsed', '1');
+      else localStorage.removeItem('ax:collapsed');
+    } catch(e){}
+    document.dispatchEvent(new CustomEvent('ax:sidebar-collapsed', { detail: { collapsed: this.collapsed } }));
+  },
+  toggleTheme() {
+    this.theme = this.theme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-ax-theme', this.theme);
+    try {
+      localStorage.setItem('ax:theme', this.theme);
+    } catch(e){}
+    document.dispatchEvent(new CustomEvent('ax:change', { detail: { reason: 'theme', mode: this.theme } }));
+  },
+  toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen().catch(()=>{});
+        this.full = true;
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(()=>{});
+        this.full = false;
+      }
+    }
+  }
+}">
+  <!-- 1 · SIDEBAR TOGGLE -->
+  <button type="button" class="ax-nav-toggle ax-icon-btn" @click="toggleSidebar()" aria-label="Toggle menu" :aria-expanded="!collapsed">
+    <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+      <path d="M4 6l16 0" />
+      <path d="M4 12l16 0" />
+      <path d="M4 18l16 0" />
+    </svg>
+  </button>
+
+  <!-- 2 · COMMAND SEARCH (⌘K trigger) -->
+  <button type="button" class="ax-search" @click="$dispatch('ax-command-open')" aria-haspopup="dialog" aria-controls="ax-command" aria-label="Search or jump to">
+    <svg class="ax-icon ax-search__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+      <path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
+      <path d="M21 21l-6 -6" />
+    </svg>
+    <span class="ax-search__placeholder">Search lots, parts, molds, telemetry…</span>
+    <kbd class="ax-search__keycap">⌘K</kbd>
+  </button>
+
+  <!-- 3 · PLANT FACILITY & CELL INDICATOR -->
+  <div style="display: flex; align-items: center; gap: var(--ax-space-3); margin-inline-start: var(--ax-space-3);">
+    <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+      <span class="ax-badge__dot"></span>
+      <span style="font-weight: var(--ax-weight-semibold); letter-spacing: 0.04em;">PLANT 01</span>
+    </span>
+    <span class="ax-badge ax-badge--soft ax-badge--pill" style="color: var(--ax-text-muted);">
+      SHIFT A (06:00 – 14:00)
+    </span>
+  </div>
+
+  <span class="ax-header__spacer"></span>
+
+  <!-- 4 · RIGHT UTILITY CLUSTER -->
+  <div class="ax-header__utils">
+    <!-- FULLSCREEN TOGGLE -->
+    <button type="button" class="ax-fullscreen ax-icon-btn" @click="toggleFullscreen()" :aria-pressed="full" aria-label="Toggle fullscreen">
+      <svg class="ax-icon" x-show="!full" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+        <path d="M4 8v-2a2 2 0 0 1 2 -2h2" />
+        <path d="M4 16v2a2 2 0 0 0 2 2h2" />
+        <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+        <path d="M16 20h2a2 2 0 0 0 2 -2v-2" />
+      </svg>
+      <svg class="ax-icon" x-show="full" x-cloak viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+        <path d="M15 19v-2a2 2 0 0 1 2 -2h2" />
+        <path d="M15 5v2a2 2 0 0 0 2 2h2" />
+        <path d="M5 15h2a2 2 0 0 1 2 2v2" />
+        <path d="M5 9h2a2 2 0 0 0 2 -2v-2" />
+      </svg>
+    </button>
+
+    <!-- LIGHT / DARK MODE TOGGLE (Instant switch with zero gradient) -->
+    <button type="button" class="ax-theme-toggle ax-icon-btn" data-ax-toggle="theme" @click="toggleTheme()" :aria-pressed="theme==='dark'" aria-label="Toggle dark mode">
+      <!-- Sun icon (shown in dark mode to switch to light) -->
+      <svg class="ax-icon" x-show="theme==='dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+        <path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+        <path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7" />
+      </svg>
+      <!-- Moon icon (shown in light mode to switch to dark) -->
+      <svg class="ax-icon" x-show="theme!=='dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" aria-hidden="true">
+        <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008" />
+      </svg>
+    </button>
+
+    <!-- USER INSPECTOR BADGE PROFILE -->
+    <div class="ax-profile" x-data="axDropdown()" @keydown.escape="close()" @click.outside="close()">
+      <button type="button" class="ax-profile__trigger" @click="toggle()" aria-haspopup="menu" :aria-expanded="open" aria-controls="ax-profile-menu" aria-label="Inspector profile">
+        <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background: var(--ax-accent); color: var(--ax-on-accent); font-weight: 700; width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--ax-radius-md);">
+          {{ request.user.username|slice:":2"|upper|default:"QA" }}
+        </span>
+      </button>
+      <div id="ax-profile-menu" class="ax-dropdown ax-profile__menu" role="menu" x-show="open" x-transition.opacity.duration.150ms x-cloak>
+        <div class="ax-profile__card">
+          <span class="ax-avatar ax-avatar--md ax-avatar--squircle" style="background: var(--ax-accent); color: var(--ax-on-accent); font-weight: 700; width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; border-radius: var(--ax-radius-md);">
+            {{ request.user.username|slice:":2"|upper|default:"QA" }}
+          </span>
+          <span class="ax-profile__card-meta">
+            <b style="color: var(--ax-text-strong);">{{ request.user.get_full_name|default:request.user.username }}</b>
+            <small class="ax-mono" style="color: var(--ax-accent); font-weight: 600;">Badge: {{ request.user.badge_number|default:"QA-ADMIN-001" }}</small>
+            <small style="color: var(--ax-text-muted);">Dept: {{ request.user.department|default:"Quality Assurance" }}</small>
+          </span>
         </div>
-        <div class="col-auto">
-            <div class="d-flex flex-wrap align-items-center gap-3">
-                <button type="button" data-theme-toggle class="w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center text-secondary-light">
-                    <i class="ri-moon-line"></i>
-                </button>
-                <div class="dropdown">
-                    <button class="d-flex align-items-center gap-2 border-0 bg-transparent p-0" type="button" data-bs-toggle="dropdown">
-                        <div class="w-40-px h-40-px bg-primary-subtle text-primary-600 rounded-circle d-flex justify-content-center align-items-center fw-bold">
-                            {{ request.user.username|default:"QA"|slice:":2"|upper }}
-                        </div>
-                        <div class="d-none d-sm-block text-start">
-                            <span class="text-sm fw-semibold text-primary-light d-block line-height-1">
-                                {{ request.user.username|default:"Quality Inspector" }}
-                            </span>
-                            <span class="text-xs text-secondary-light font-monospace">
-                                BADGE: {{ request.user.badge_number|default:"QA-OPERATOR" }}
-                            </span>
-                        </div>
-                    </button>
-                    <div class="dropdown-menu to-top dropdown-menu-sm">
-                        <div class="py-12 px-16 radius-8 bg-primary-50 mb-8">
-                            <h6 class="text-md text-primary-light fw-semibold mb-0">{{ request.user.username }}</h6>
-                            <span class="text-xs text-secondary-light">Dept: {{ request.user.department|default:"Quality Assurance" }}</span>
-                        </div>
-                        <ul class="list-unstyled mb-0">
-                            <li>
-                                <a class="dropdown-item px-16 py-8 rounded text-secondary-light hover-bg-neutral-200" href="/admin/">
-                                    <i class="ri-settings-line me-2"></i> Django Admin
-                                </a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item px-16 py-8 rounded text-danger-main hover-bg-neutral-200" href="/admin/logout/">
-                                    <i class="ri-logout-box-r-line me-2"></i> Log Out
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="ax-dropdown__divider" role="separator"></div>
+        <a class="ax-dropdown__item" role="menuitem" href="/admin/core/audittrailevent/">
+          <svg class="ax-icon ax-dropdown__lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true">
+            <path d="M12 8l0 4l2 2" />
+            <path d="M3.05 11a9 9 0 1 1 .5 4m-.5 5v-5h5" />
+          </svg>
+          Audit Trail Log
+        </a>
+        <a class="ax-dropdown__item" role="menuitem" href="/admin/">
+          <svg class="ax-icon ax-dropdown__lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true">
+            <path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065" />
+            <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+          </svg>
+          Master Data & System Admin
+        </a>
+        <div class="ax-dropdown__divider" role="separator"></div>
+        <a class="ax-dropdown__item ax-dropdown__item--danger" role="menuitem" href="/admin/logout/">
+          <svg class="ax-icon ax-dropdown__lead" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true">
+            <path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" />
+            <path d="M9 12h12l-3 -3" />
+            <path d="M18 15l3 -3" />
+          </svg>
+          Sign Out Terminal
+        </a>
+      </div>
     </div>
-</div>
+  </div>
+</header>

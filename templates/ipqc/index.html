@@ -3,153 +3,174 @@
 {% block title %}In-Process Quality Control (IPQC){% endblock %}
 
 {% block content %}
-<div class="row gy-4 mb-4">
-    <div class="col-12 d-flex flex-wrap align-items-center justify-content-between gap-3">
-        <div>
-            <h4 class="mb-1 text-primary-light fw-bold">Shopfloor Machine Surveillance &amp; FAI Hard-Gating</h4>
-            <p class="text-secondary-light mb-0">10 Injection Molding Machines &bull; Sub-200ms Cryptographic Authorization</p>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-            <span class="badge bg-success-subtle text-success-main font-monospace px-3 py-2">
-                <i class="ri-checkbox-circle-fill me-1"></i> FAI RELEASE ENFORCED
-            </span>
-            <span class="badge bg-primary-subtle text-primary-600 font-monospace px-3 py-2">
-                <i class="ri-pulse-line me-1"></i> TELEMETRY WINDOW &plusmn;0.5mm
-            </span>
-        </div>
+<!-- ════════════════ PAGE HEAD ════════════════ -->
+<div class="ax-page-head">
+  <div class="ax-page-head__row">
+    <div>
+      <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+      <h1 class="ax-page-head__title">Shopfloor Machine Surveillance &amp; FAI Hard-Gating</h1>
+      <p class="ax-page-head__subtitle">10 Injection Molding Workcells · Sub-200ms Cryptographic Release to MES (IATF 16949 §8.5.1)</p>
     </div>
+    <div class="ax-page-head__actions">
+      <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+        <span class="ax-badge__dot"></span>FAI RELEASE ENFORCED
+      </span>
+      <span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">
+        <span class="ax-badge__dot"></span>TELEMETRY WINDOW &plusmn;0.5mm
+      </span>
+    </div>
+  </div>
 </div>
 
-<!-- 10 Machine Status Grid -->
-<div class="row g-3 mb-4">
-    {% for m in machines %}
-    <div class="col-xxl-2 col-lg-3 col-sm-6">
-        <div class="card radius-12 p-16 h-100 bg-base border {% if m.is_andon %}border-danger border-2 shadow-sm{% elif m.is_fai_released %}border-success border-1 shadow-sm{% else %}border-warning border-1{% endif %}">
-            <div class="d-flex align-items-center justify-content-between mb-8">
-                <span class="fw-bold text-primary-light font-monospace text-md">{{ m.code }}</span>
-                {% if m.is_andon %}
-                <span class="badge bg-danger text-white font-monospace animate-pulse">ANDON STOP</span>
-                {% elif m.is_fai_released %}
-                <span class="badge bg-success-subtle text-success-main font-monospace">RUNNING</span>
-                {% else %}
-                <span class="badge bg-warning-subtle text-warning-main font-monospace">SETUP</span>
-                {% endif %}
-            </div>
-
-            {% if m.latest_shot %}
-            <div class="font-monospace text-xs mb-8">
-                <div class="d-flex justify-content-between text-secondary-light">
-                    <span>Cushion:</span>
-                    <strong class="{% if m.latest_shot.cushion_drift_alert %}text-danger{% else %}text-primary-light{% endif %}">
-                        {{ m.latest_shot.cushion_mm }} mm
-                    </strong>
-                </div>
-                <div class="d-flex justify-content-between text-secondary-light">
-                    <span>Pressure:</span>
-                    <span>{{ m.latest_shot.peak_pressure_bar }} bar</span>
-                </div>
-                <div class="d-flex justify-content-between text-secondary-light">
-                    <span>Shot Count:</span>
-                    <span>#{{ m.latest_shot.shot_number }}</span>
-                </div>
-            </div>
-            {% else %}
-            <div class="text-xs text-secondary-light py-12 text-center">
-                Standby &bull; No active shot
-            </div>
-            {% endif %}
-
-            <div class="border-top pt-8 mt-auto d-flex align-items-center justify-content-between">
-                <span class="text-xxs text-secondary-light">FAI:</span>
-                {% if m.active_fai %}
-                    {% if m.active_fai.disposition == 'RELEASED' %}
-                    <span class="text-xs text-success-main fw-semibold">Gated OK</span>
-                    {% else %}
-                    <span class="text-xs text-warning-main fw-semibold">Pending</span>
-                    {% endif %}
-                {% else %}
-                <span class="text-xs text-secondary-light">&mdash;</span>
-                {% endif %}
-            </div>
-        </div>
+<!-- ════════════════ 10 MACHINE IMM STATUS GRID ════════════════ -->
+<div style="display:grid;grid-template-columns:repeat(auto-fill, minmax(210px, 1fr));gap:var(--ax-space-3);margin-bottom:var(--ax-space-6);">
+  {% for m in machines %}
+  <div class="ax-card" style="padding:var(--ax-space-4);{% if m.is_andon %}border:2px solid var(--ax-danger-500);box-shadow:0 0 12px rgba(239,68,68,0.25);{% elif m.is_fai_released %}border:1px solid rgba(16,185,129,0.3);{% else %}border:1px solid rgba(245,158,11,0.3);{% endif %}">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--ax-space-3);">
+      <span class="ax-mono" style="font-weight:var(--ax-weight-bold);font-size:var(--ax-text-md);color:var(--ax-text-strong);">{{ m.code }}</span>
+      {% if m.is_andon %}
+      <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">
+        <span class="ax-badge__dot"></span>ANDON
+      </span>
+      {% elif m.is_fai_released %}
+      <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+        <span class="ax-badge__dot"></span>RUNNING
+      </span>
+      {% else %}
+      <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">
+        <span class="ax-badge__dot"></span>SETUP
+      </span>
+      {% endif %}
     </div>
-    {% endfor %}
+
+    {% if m.latest_shot %}
+    <div class="ax-mono" style="font-size:var(--ax-text-xs);display:flex;flex-direction:column;gap:4px;margin-bottom:var(--ax-space-3);">
+      <div style="display:flex;justify-content:space-between;color:var(--ax-text-muted);">
+        <span>Cushion:</span>
+        <strong style="{% if m.latest_shot.cushion_drift_alert %}color:var(--ax-danger-500);font-weight:700;{% else %}color:var(--ax-text-strong);{% endif %}">
+          {{ m.latest_shot.cushion_mm }} mm
+        </strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;color:var(--ax-text-muted);">
+        <span>Pressure:</span>
+        <span style="color:var(--ax-text-strong);">{{ m.latest_shot.peak_pressure_bar }} bar</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;color:var(--ax-text-muted);">
+        <span>Shot:</span>
+        <span style="color:var(--ax-text-strong);">#{{ m.latest_shot.shot_number }}</span>
+      </div>
+    </div>
+    {% else %}
+    <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);text-align:center;padding:var(--ax-space-3) 0;">
+      Standby · No shot data
+    </div>
+    {% endif %}
+
+    <div style="border-top:1px solid var(--ax-border);padding-top:var(--ax-space-2);display:flex;align-items:center;justify-content:space-between;font-size:var(--ax-text-xs);">
+      <span style="color:var(--ax-text-subtle);">FAI Status:</span>
+      {% if m.active_fai %}
+        {% if m.active_fai.disposition == 'RELEASED' %}
+        <span style="color:var(--ax-success-500);font-weight:var(--ax-weight-semibold);">Gated OK</span>
+        {% else %}
+        <span style="color:var(--ax-warning-500);font-weight:var(--ax-weight-semibold);">Pending</span>
+        {% endif %}
+      {% else %}
+      <span style="color:var(--ax-text-subtle);">&mdash;</span>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
 </div>
 
-<!-- FAI Inspection Ledger & Approval Actions -->
-<div class="row">
-    <div class="col-12">
-        <div class="card radius-12 border-0 shadow-sm p-20 bg-base">
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-20">
-                <h6 class="mb-0 text-primary-light fw-bold">First Article Inspection (FAI) Approval Log</h6>
-                <span class="text-xs text-secondary-light">Sub-200ms cryptographic release handshake to MES</span>
-            </div>
-
-            <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0 text-sm">
-                    <thead class="bg-neutral-100 text-secondary-light font-monospace">
-                        <tr>
-                            <th class="py-12 px-16">MACHINE</th>
-                            <th class="py-12 px-16">MES RUN ID</th>
-                            <th class="py-12 px-16">PART NUMBER</th>
-                            <th class="py-12 px-16">MOLD CODE</th>
-                            <th class="py-12 px-16">DISPOSITION</th>
-                            <th class="py-12 px-16">MES TOKEN</th>
-                            <th class="py-12 px-16 text-end">ACTION</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for insp in inspections %}
-                        <tr>
-                            <td class="py-12 px-16 fw-bold text-primary-light font-monospace">{{ insp.machine_code }}</td>
-                            <td class="py-12 px-16 font-monospace text-xs text-secondary-light">{{ insp.mes_run_id }}</td>
-                            <td class="py-12 px-16">
-                                <span class="fw-semibold text-primary-light d-block">{{ insp.part.part_number }}</span>
-                                <span class="text-xs text-secondary-light">{{ insp.part.part_name }}</span>
-                            </td>
-                            <td class="py-12 px-16 font-monospace">{{ insp.mold_code }}</td>
-                            <td class="py-12 px-16">
-                                {% if insp.disposition == 'RELEASED' %}
-                                <span class="badge bg-success-subtle text-success-main font-monospace">RELEASED</span>
-                                {% elif insp.disposition == 'REJECTED' %}
-                                <span class="badge bg-danger-subtle text-danger-main font-monospace">REJECTED</span>
-                                {% else %}
-                                <span class="badge bg-warning-subtle text-warning-main font-monospace">PENDING</span>
-                                {% endif %}
-                            </td>
-                            <td class="py-12 px-16 font-monospace text-xs">
-                                {% if insp.signature_token %}
-                                <span class="text-success-main" title="{{ insp.signature_token }}">
-                                    <i class="ri-shield-keyhole-line me-1"></i>{{ insp.signature_token|slice:":12" }}...
-                                </span>
-                                {% else %}
-                                <span class="text-secondary-light">Not Signed</span>
-                                {% endif %}
-                            </td>
-                            <td class="py-12 px-16 text-end">
-                                {% if insp.disposition == 'PENDING' %}
-                                <form method="POST" action="{% url 'ipqc:fai_approve' insp.id %}" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-sm btn-success-600 radius-6 px-16">
-                                        <i class="ri-checkbox-circle-line me-1"></i> Sign-Off FAI
-                                    </button>
-                                </form>
-                                {% else %}
-                                <span class="text-xs text-secondary-light font-monospace">{{ insp.signed_at|date:"H:i:s"|default:"&mdash;" }}</span>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="7" class="text-center py-24 text-secondary-light">
-                                No active FAI inspections in queue.
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+<!-- ════════════════ FAI INSPECTION LEDGER ════════════════ -->
+<div class="ax-dash-grid">
+  <section class="ax-card ax-col--12" role="region" aria-label="First Article Inspection Ledger">
+    <div class="ax-card__header">
+      <div class="ax-card__titles">
+        <span class="ax-card__eyebrow">Production Gate Authorization</span>
+        <h2 class="ax-card__title">First Article Inspection (FAI) Handshake Log</h2>
+        <p class="ax-card__subtitle">Sub-200ms cryptographic release token sent to MES to unlock machine clamping</p>
+      </div>
     </div>
+    <div class="ax-card__body" style="padding:0;">
+      <div class="ax-table-wrap">
+        <table class="ax-table ax-table--hover">
+          <thead class="ax-table__head">
+            <tr>
+              <th class="ax-table__th" scope="col">MACHINE</th>
+              <th class="ax-table__th" scope="col">MES RUN ID</th>
+              <th class="ax-table__th" scope="col">PART NUMBER</th>
+              <th class="ax-table__th" scope="col">MOLD CODE</th>
+              <th class="ax-table__th" scope="col">DISPOSITION</th>
+              <th class="ax-table__th" scope="col">MES CRYPTO TOKEN</th>
+              <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for insp in inspections %}
+            <tr class="ax-table__row">
+              <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);">
+                {{ insp.machine_code }}
+              </td>
+              <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">
+                {{ insp.mes_run_id }}
+              </td>
+              <td class="ax-table__td">
+                <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">{{ insp.part.part_number }}</div>
+                <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ insp.part.part_name }}</div>
+              </td>
+              <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-sm);">{{ insp.mold_code }}</td>
+              <td class="ax-table__td">
+                {% if insp.disposition == 'RELEASED' %}
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">
+                  <span class="ax-badge__dot"></span>RELEASED
+                </span>
+                {% elif insp.disposition == 'REJECTED' %}
+                <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">
+                  <span class="ax-badge__dot"></span>REJECTED
+                </span>
+                {% else %}
+                <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">
+                  <span class="ax-badge__dot"></span>PENDING
+                </span>
+                {% endif %}
+              </td>
+              <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                {% if insp.signature_token %}
+                <span style="color:var(--ax-success-500);display:inline-flex;align-items:center;gap:4px;" title="{{ insp.signature_token }}">
+                  <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3" /></svg>
+                  {{ insp.signature_token|slice:":12" }}...
+                </span>
+                {% else %}
+                <span style="color:var(--ax-text-subtle);">Unsigned</span>
+                {% endif %}
+              </td>
+              <td class="ax-table__td ax-table__td--num">
+                {% if insp.disposition == 'PENDING' %}
+                <form method="POST" action="{% url 'ipqc:fai_approve' insp.id %}" style="display:inline;">
+                  {% csrf_token %}
+                  <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm">
+                    Sign-Off FAI
+                  </button>
+                </form>
+                {% else %}
+                <span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">
+                  {{ insp.signed_at|date:"H:i:s"|default:"Signed" }}
+                </span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr class="ax-table__row">
+              <td colspan="7" style="text-align:center;padding:var(--ax-space-8);color:var(--ax-text-muted);">
+                No active FAI inspections in queue.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 </div>
 {% endblock %}

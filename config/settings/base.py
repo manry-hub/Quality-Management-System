@@ -117,7 +117,9 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
-    BASE_DIR / ".reference" / "wowdash-template" / "static",
+    BASE_DIR / "static",
+    BASE_DIR / ".reference" / "vireo-template" / "static",
+    BASE_DIR / ".reference" / "vireo-template" / "static_src",
 ]
 
 MEDIA_URL = "/media/"
