@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axEditor()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Editors</h1>
+              <p class="ax-page-head__subtitle">Rich-text and code editing surfaces — WYSIWYG chrome, Markdown and a syntax-highlighted source view.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/><path d="M9 17l0 .01"/><path d="M9 13l6 0"/></svg>
+                <span class="ax-btn__label">Save draft</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="publish()" :aria-busy="publishing">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                <span class="ax-btn__label" x-text="publishing ? 'Publishing…' : 'Publish'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- toast -->
+        <div x-show="toast" x-transition x-cloak style="position:fixed;bottom:24px;right:24px;z-index:60;">
+          <div class="ax-cluster" style="gap:var(--ax-space-2);padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-lg);">
+            <span style="color:var(--ax-viz-emerald);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+            <span style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Article published</span>
+          </div>
+        </div>
+
+        <div class="ax-dash-grid">
+
+          <!-- ───── RICH TEXT EDITOR (Quill chrome) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Rich text editor">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">WYSIWYG</span>
+                <h2 class="ax-card__title">Article body</h2>
+                <p class="ax-card__subtitle">Format with the toolbar — output is sanitized HTML.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">248 words · ~1 min read</span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- toolbar -->
+              <div role="toolbar" aria-label="Formatting" style="display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:var(--ax-space-2);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-bottom:0;border-radius:var(--ax-radius-md) var(--ax-radius-md) 0 0;">
+                <!-- block style select -->
+                <select class="ax-select ax-select--sm" aria-label="Block style" style="width:auto;min-width:130px;margin-inline-end:var(--ax-space-1);">
+                  <option>Paragraph</option><option>Heading 1</option><option>Heading 2</option><option>Heading 3</option><option>Quote</option><option>Code block</option>
+                </select>
+                <span class="ax-divider ax-divider--vertical" style="height:22px;margin-inline:var(--ax-space-1);"></span>
+                <!-- inline format toggles -->
+                <template x-for="b in inlineBtns" :key="b.k">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :class="active[b.k] ? 'is-selected' : ''" :aria-pressed="!!active[b.k]" :aria-label="b.label" @click="active[b.k]=!active[b.k]">
+                    <span x-html="b.icon"></span>
+                  </button>
+                </template>
+                <span class="ax-divider ax-divider--vertical" style="height:22px;margin-inline:var(--ax-space-1);"></span>
+                <!-- lists -->
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bulleted list"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Numbered list"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6h9"/><path d="M11 12h9"/><path d="M12 18h8"/><path d="M4 16a2 2 0 1 1 4 0c0 .591 -.5 1 -1 1.5l-3 2.5h4"/><path d="M6 10v-6l-2 2"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Checklist"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 6l9 0"/><path d="M11 12l9 0"/><path d="M11 18l9 0"/><path d="M3 6l2 2l3 -3"/></svg></button>
+                <span class="ax-divider ax-divider--vertical" style="height:22px;margin-inline:var(--ax-space-1);"></span>
+                <!-- block inserts -->
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Quote"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15h15"/><path d="M21 19h-15"/><path d="M15 11h6"/><path d="M21 7h-6"/><path d="M9 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2"/><path d="M3 9h1a1 1 0 1 1 -1 1v-2.5a2 2 0 0 1 2 -2"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Insert link"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6 -6"/><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"/><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Insert image"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Inline code"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 8l-4 4l4 4"/><path d="M17 8l4 4l-4 4"/><path d="M14 4l-4 16"/></svg></button>
+                <span class="ax-spacer"></span>
+                <!-- color swatches -->
+                <div class="ax-cluster" style="gap:4px;margin-inline-end:var(--ax-space-1);">
+                  <button type="button" aria-label="Text color accent" style="width:18px;height:18px;border-radius:5px;border:1px solid var(--ax-border-strong);background:var(--ax-accent);cursor:pointer;"></button>
+                  <button type="button" aria-label="Text color cyan" style="width:18px;height:18px;border-radius:5px;border:1px solid var(--ax-border-strong);background:var(--ax-viz-cyan);cursor:pointer;"></button>
+                  <button type="button" aria-label="Text color pink" style="width:18px;height:18px;border-radius:5px;border:1px solid var(--ax-border-strong);background:var(--ax-viz-pink);cursor:pointer;"></button>
+                </div>
+                <span class="ax-divider ax-divider--vertical" style="height:22px;margin-inline:var(--ax-space-1);"></span>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Undo"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14l-4 -4l4 -4"/><path d="M5 10h11a4 4 0 1 1 0 8h-1"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Redo"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 14l4 -4l-4 -4"/><path d="M19 10h-11a4 4 0 1 0 0 8h1"/></svg></button>
+              </div>
+              <!-- editable surface (contenteditable demo content) -->
+              <div contenteditable="true" spellcheck="false" role="textbox" aria-multiline="true" aria-label="Article body"
+                   style="min-height:360px;padding:var(--ax-space-6);background:var(--ax-surface);border:1px solid var(--ax-border);border-radius:0 0 var(--ax-radius-md) var(--ax-radius-md);color:var(--ax-text);line-height:1.7;font-size:var(--ax-text-md);outline:none;">
+                <h2 style="font-family:var(--ax-font-display);color:var(--ax-text-strong);font-size:var(--ax-text-xl);margin:0 0 .5em;">Designing for both light and dark</h2>
+                <p style="margin:0 0 1em;">A resilient interface earns its <strong style="color:var(--ax-text-strong);">contrast</strong> from role tokens, not hard-coded hex. When every color resolves through a semantic variable, flipping the theme becomes a one-attribute change — and the same markup carries <em>twelve</em> accent presets for free.</p>
+                <blockquote style="margin:0 0 1em;padding:var(--ax-space-2) var(--ax-space-5);border-inline-start:2px solid var(--ax-accent);color:var(--ax-text-muted);font-style:italic;">"The fastest way to ship a dark mode is to never write a literal color in the first place."</blockquote>
+                <p style="margin:0 0 1em;">Use <code class="ax-code">var(--ax-surface)</code> for panels and <code class="ax-code">var(--ax-text-muted)</code> for supporting copy. The glass surfaces below blur whatever sits behind them, so the canvas tint reads through.</p>
+                <ul style="margin:0;padding-inline-start:1.25em;color:var(--ax-text);">
+                  <li>Surfaces and borders read on both <code class="ax-code">#F6F8FC</code> and <code class="ax-code">#0A0C11</code>.</li>
+                  <li>Numerics stay tabular for clean column alignment.</li>
+                  <li>Decorative icons are hidden from assistive tech.</li>
+                </ul>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-3);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                <span class="ax-cluster" style="gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:var(--ax-viz-emerald);"></span>Autosaved 12s ago</span>
+                <span>Sanitized HTML · paste cleaned automatically</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── EDITOR SIDE RAIL ───── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <!-- meta -->
+            <section class="ax-card" role="region" aria-label="Article meta">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Document</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div class="ax-field">
+                  <label class="ax-label" for="ed-title">Title</label>
+                  <input id="ed-title" type="text" class="ax-input" value="Designing for both light and dark">
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="ed-slug">Slug</label>
+                  <div class="ax-input-group">
+                    <span class="ax-input-group__addon">/blog/</span>
+                    <input id="ed-slug" type="text" class="ax-input" value="designing-for-light-and-dark">
+                  </div>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="ed-excerpt">Excerpt</label>
+                  <textarea id="ed-excerpt" class="ax-textarea" rows="3" maxlength="160">A field guide to token-driven theming that ships dark mode and twelve accents from a single source of truth.</textarea>
+                  <span class="ax-help">Used for previews &amp; meta description · 119 / 160</span>
+                </div>
+              </div>
+            </section>
+            <!-- counters -->
+            <section class="ax-card" role="region" aria-label="Document statistics">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Statistics</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                <div><div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Words</div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);color:var(--ax-text-strong);">248</div></div>
+                <div><div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Characters</div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);color:var(--ax-text-strong);">1,486</div></div>
+                <div><div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Read time</div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);color:var(--ax-text-strong);">1m</div></div>
+                <div><div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);">Headings</div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);color:var(--ax-text-strong);">1</div></div>
+              </div>
+            </section>
+          </aside>
+
+          <!-- ───── SOURCE / CODE VIEW (CodeMirror chrome) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Source editor">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">CodeMirror</span>
+                <h2 class="ax-card__title">Source view</h2>
+                <p class="ax-card__subtitle">Edit the underlying markup directly with syntax highlighting.</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-segment" role="tablist" aria-label="Source language">
+                  <button type="button" class="ax-segment__option" :class="lang==='html'?'is-active':''" @click="lang='html'" :aria-selected="lang==='html'" role="tab">HTML</button>
+                  <button type="button" class="ax-segment__option" :class="lang==='md'?'is-active':''" @click="lang='md'" :aria-selected="lang==='md'" role="tab">Markdown</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- code surface with gutter -->
+              <div style="display:flex;background:var(--ax-surface-solid);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);line-height:1.7;">
+                <!-- line-number gutter -->
+                <div aria-hidden="true" style="flex:0 0 auto;padding:var(--ax-space-4) var(--ax-space-3);text-align:end;color:var(--ax-text-subtle);background:var(--ax-surface-subtle);border-inline-end:1px solid var(--ax-border);user-select:none;">
+                  <template x-for="n in (lang==='html' ? 9 : 7)" :key="n"><div x-text="n"></div></template>
+                </div>
+                <!-- code -->
+                <div class="ax-scroll-x" style="flex:1 1 auto;padding:var(--ax-space-4) var(--ax-space-4);overflow-x:auto;">
+                  <pre x-show="lang==='html'" style="margin:0;white-space:pre;color:var(--ax-text);"><span style="color:var(--ax-text-subtle);">&lt;</span><span style="color:var(--ax-viz-pink);">article</span> <span style="color:var(--ax-viz-amber);">class</span><span style="color:var(--ax-text-subtle);">=</span><span style="color:var(--ax-viz-emerald);">"post"</span><span style="color:var(--ax-text-subtle);">&gt;</span>
+  <span style="color:var(--ax-text-subtle);">&lt;</span><span style="color:var(--ax-viz-pink);">h2</span><span style="color:var(--ax-text-subtle);">&gt;</span>Designing for both light and dark<span style="color:var(--ax-text-subtle);">&lt;/</span><span style="color:var(--ax-viz-pink);">h2</span><span style="color:var(--ax-text-subtle);">&gt;</span>
+  <span style="color:var(--ax-text-subtle);">&lt;</span><span style="color:var(--ax-viz-pink);">p</span><span style="color:var(--ax-text-subtle);">&gt;</span>A resilient interface earns its <span style="color:var(--ax-text-subtle);">&lt;</span><span style="color:var(--ax-viz-pink);">strong</span><span style="color:var(--ax-text-subtle);">&gt;</span>contrast<span style="color:var(--ax-text-subtle);">&lt;/</span><span style="color:var(--ax-viz-pink);">strong</span><span style="color:var(--ax-text-subtle);">&gt;</span>
+  from role tokens, not hard-coded hex.<span style="color:var(--ax-text-subtle);">&lt;/</span><span style="color:var(--ax-viz-pink);">p</span><span style="color:var(--ax-text-subtle);">&gt;</span>
+  <span style="color:var(--ax-text-subtle);">&lt;</span><span style="color:var(--ax-viz-pink);">blockquote</span><span style="color:var(--ax-text-subtle);">&gt;</span>
+    The fastest way to ship dark mode is to never
+    write a literal color in the first place.
+  <span style="color:var(--ax-text-subtle);">&lt;/</span><span style="color:var(--ax-viz-pink);">blockquote</span><span style="color:var(--ax-text-subtle);">&gt;</span>
+<span style="color:var(--ax-text-subtle);">&lt;/</span><span style="color:var(--ax-viz-pink);">article</span><span style="color:var(--ax-text-subtle);">&gt;</span></pre>
+                  <pre x-show="lang==='md'" x-cloak style="margin:0;white-space:pre;color:var(--ax-text);"><span style="color:var(--ax-viz-cyan);">## </span><span style="color:var(--ax-text-strong);">Designing for both light and dark</span>
+
+A resilient interface earns its <span style="color:var(--ax-viz-amber);">**contrast**</span> from
+role tokens, not hard-coded hex.
+
+<span style="color:var(--ax-viz-cyan);">&gt; </span>The fastest way to ship dark mode is to never
+<span style="color:var(--ax-viz-cyan);">&gt; </span>write a literal color in the first place.</pre>
+                </div>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-3);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                <span class="ax-mono">Ln 3, Col 18 · spaces: 2</span>
+                <span class="ax-mono" x-text="lang==='html' ? 'text/html · UTF-8' : 'text/markdown · UTF-8'"></span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+        <script>
+          function axEditor(){
+            return {
+              publishing:false, toast:false, lang:'html',
+              active:{ bold:false, italic:false, underline:false, strike:false },
+              inlineBtns:[
+                {k:'bold',label:'Bold',icon:'<svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6l0 -7"/><path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"/></svg>'},
+                {k:'italic',label:'Italic',icon:'<svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5l6 0"/><path d="M7 19l6 0"/><path d="M14 5l-4 14"/></svg>'},
+                {k:'underline',label:'Underline',icon:'<svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5v5a5 5 0 0 0 10 0v-5"/><path d="M5 19h14"/></svg>'},
+                {k:'strike',label:'Strikethrough',icon:'<svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M16 6.5a4 2 0 0 0 -4 -1.5h-1a3.5 3.5 0 0 0 0 7h2a3.5 3.5 0 0 1 0 7h-1.5a4 2 0 0 1 -4 -1.5"/></svg>'},
+              ],
+              publish(){ this.publishing=true; setTimeout(()=>{ this.publishing=false; this.toast=true; setTimeout(()=>this.toast=false,2600); },700); },
+            };
+          }
+        </script>
+{% endblock %}

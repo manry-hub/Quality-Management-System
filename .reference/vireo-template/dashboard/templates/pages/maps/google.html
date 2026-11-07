@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{
+              q: '',
+              activeId: 'loc-1',
+              mapType: 'map',
+              places: [
+                { id:'loc-1', name:'Aperture Goods — Flagship', addr:'214 Market St, San Francisco, CA', type:'Retail store', open:true, dist:'0.4 mi', c:'--ax-accent',       ll:'37.7929,-122.3971' },
+                { id:'loc-2', name:'Northwind Labs HQ', addr:'88 Spear St, Floor 12, San Francisco, CA', type:'Office', open:true, dist:'0.9 mi', c:'--ax-viz-violet',  ll:'37.7919,-122.3934' },
+                { id:'loc-3', name:'Mission Fulfilment Center', addr:'1500 Bryant St, San Francisco, CA', type:'Warehouse', open:true, dist:'1.6 mi', c:'--ax-viz-cyan',  ll:'37.7690,-122.4106' },
+                { id:'loc-4', name:'Aperture Goods — Embarcadero', addr:'1 Ferry Building, San Francisco, CA', type:'Retail store', open:false, dist:'2.1 mi', c:'--ax-viz-amber', ll:'37.7955,-122.3937' },
+                { id:'loc-5', name:'Bayside Pickup Point', addr:'Pier 39, Beach St, San Francisco, CA', type:'Locker', open:true, dist:'2.8 mi', c:'--ax-viz-emerald', ll:'37.8087,-122.4098' },
+                { id:'loc-6', name:'Sunset Service Depot', addr:'1290 Irving St, San Francisco, CA', type:'Service', open:false, dist:'3.5 mi', c:'--ax-viz-pink',  ll:'37.7640,-122.4682' }
+              ],
+              get filtered(){ const t=this.q.trim().toLowerCase(); return t ? this.places.filter(p=>(p.name+' '+p.addr+' '+p.type).toLowerCase().includes(t)) : this.places; },
+              get active(){ return this.places.find(p => p.id === this.activeId) || this.places[0]; },
+              get embedSrc(){ const t = this.mapType==='satellite' ? '&t=k' : this.mapType==='terrain' ? '&t=p' : ''; return `https://www.google.com/maps?q=${this.active.ll}&z=14&hl=en&output=embed${t}`; }
+            }">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Google Maps</h1>
+              <p class="ax-page-head__subtitle">Styled Google-Maps integration — searchable locations, custom accent pins, info windows and route overlays.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M4 12a8 8 0 1 0 16 0a8 8 0 1 0 -16 0"/><path d="M12 2l0 2"/><path d="M12 20l0 2"/><path d="M20 12l2 0"/><path d="M2 12l2 0"/></svg>
+                <span class="ax-btn__label">San Francisco</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export pins</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Add location</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── MAP CANVAS (hero) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Map of company locations in San Francisco" style="overflow:hidden;">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Live map</span>
+                <h2 class="ax-card__title">Locations — San Francisco</h2>
+                <p class="ax-card__subtitle">6 places · centered on the Financial District</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-segment" role="group" aria-label="Map type">
+                  <button type="button" class="ax-segment__option" :class="{ 'is-active': mapType==='map' }" :aria-pressed="mapType==='map'" @click="mapType='map'">Map</button>
+                  <button type="button" class="ax-segment__option" :class="{ 'is-active': mapType==='satellite' }" :aria-pressed="mapType==='satellite'" @click="mapType='satellite'">Satellite</button>
+                  <button type="button" class="ax-segment__option" :class="{ 'is-active': mapType==='terrain' }" :aria-pressed="mapType==='terrain'" @click="mapType='terrain'">Terrain</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- real Google Maps embed (no API key) — recenters on the active location -->
+              <div aria-label="Google map of San Francisco company locations"
+                   style="position:relative;height:440px;border-radius:var(--ax-radius-lg);overflow:hidden;border:1px solid var(--ax-border);background:var(--ax-surface-subtle);">
+                <iframe :src="embedSrc" title="Google map of company locations"
+                        loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                        style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>
+
+                <!-- floating info panel for the active location (over the map) -->
+                <div x-transition.opacity
+                     style="position:absolute;left:var(--ax-space-4);top:var(--ax-space-4);min-width:240px;max-width:280px;
+                            background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);
+                            box-shadow:var(--ax-shadow-md);padding:var(--ax-space-4);z-index:6;pointer-events:none;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);margin-bottom:var(--ax-space-1);flex-wrap:nowrap;">
+                    <span :style="`width:8px;height:8px;border-radius:50%;background:var(${active.c});flex:none;`"></span>
+                    <b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="active.name"></b>
+                  </div>
+                  <p style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-muted);" x-text="active.addr"></p>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-3);">
+                    <span class="ax-badge ax-badge--soft ax-badge--pill" :class="active.open ? 'ax-badge--success' : 'ax-badge--danger'"><span class="ax-badge__dot"></span><span x-text="active.open ? 'Open now' : 'Closed'"></span></span>
+                    <span class="ax-badge ax-badge--soft ax-badge--pill ax-num" x-text="active.dist"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── LOCATIONS RAIL (search + list) ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Searchable list of locations">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Locations</h2>
+                <p class="ax-card__subtitle"><span class="ax-num" x-text="filtered.length"></span> shown · click to focus the map</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <!-- search -->
+              <div class="ax-field__control">
+                <span class="ax-field__affix ax-field__affix--leading" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                </span>
+                <input type="search" class="ax-input ax-input--with-leading-icon" placeholder="Search places…" aria-label="Search locations" x-model.debounce.150ms="q">
+              </div>
+
+              <!-- list -->
+              <ul class="ax-list ax-list--compact" style="max-height:392px;overflow:auto;">
+                <template x-for="p in filtered" :key="p.id">
+                  <li class="ax-list__row" role="button" tabindex="0"
+                      @click="activeId = p.id" @keydown.enter="activeId = p.id"
+                      :class="{ 'is-selected': activeId === p.id }"
+                      style="cursor:pointer;border-radius:var(--ax-radius-sm);">
+                    <span class="ax-list__leading">
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab, var(${p.c}) 18%, transparent); color:var(${p.c});`">
+                        <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg>
+                      </span>
+                    </span>
+                    <span class="ax-list__content" style="min-width:0;">
+                      <span class="ax-list__title ax-truncate" style="font-weight:var(--ax-weight-medium);" x-text="p.name"></span>
+                      <span class="ax-truncate" style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="p.type + ' · ' + p.addr"></span>
+                    </span>
+                    <span class="ax-list__trailing" style="text-align:end;">
+                      <span class="ax-num" style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-muted);" x-text="p.dist"></span>
+                      <span :style="`display:inline-block;width:7px;height:7px;border-radius:50%;margin-top:4px;background:var(${p.open ? '--ax-success-500' : '--ax-danger-500'});`"></span>
+                    </span>
+                  </li>
+                </template>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── COVERAGE KPIs ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Active locations 6">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2</span>
+              </div>
+              <div class="ax-kpi__label">Active locations</div>
+              <div class="ax-kpi__value ax-num">6</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Open now 4">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v5l3 3"/></svg></span>
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Live</span>
+              </div>
+              <div class="ax-kpi__label">Open now</div>
+              <div class="ax-kpi__value ax-num">4</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Average distance 1.9 miles">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M19 7a2 2 0 1 0 0 -4a2 2 0 0 0 0 4"/><path d="M11 19h5.5a3.5 3.5 0 0 0 0 -7h-8a3.5 3.5 0 0 1 0 -7h4.5"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>0.3</span>
+              </div>
+              <div class="ax-kpi__label">Avg. distance</div>
+              <div class="ax-kpi__value ax-num">1.9 mi</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Pickups today 138">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>9.4%</span>
+              </div>
+              <div class="ax-kpi__label">Pickups today</div>
+              <div class="ax-kpi__value ax-num">138</div>
+            </div>
+          </div>
+
+          <!-- ───── DIRECTIONS / ROUTE PLANNER ───── -->
+          <section class="ax-card ax-col--7" role="region" aria-label="Route planner">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Directions</span>
+                <h2 class="ax-card__title">Route planner</h2>
+                <p class="ax-card__subtitle">Fastest path overlaid on the map · 3 stops</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21v-4"/><path d="M12 13v-4"/><path d="M12 5v-2"/><path d="M10 21h4"/><path d="M8 5v4h11l2 -2l-2 -2l-11 0"/><path d="M14 13v4h-8l-2 -2l2 -2l8 0"/></svg>
+                <span class="ax-btn__label">Reroute</span>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-timeline">
+                <li class="ax-timeline__item ax-timeline__item--success">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Northwind Labs HQ</b> — depart</p>
+                    <span class="ax-timeline__time">88 Spear St · 9:05 AM</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7v1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1m0 1a3 3 0 0 0 6 0v-1h-18l2 -4h14l2 4"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Aperture Goods — Flagship</b> — restock drop</p>
+                    <span class="ax-timeline__time">214 Market St · 9:18 AM · <span class="ax-num">1.3 mi</span></span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Mission Fulfilment Center</b> — arrive</p>
+                    <span class="ax-timeline__time">1500 Bryant St · 9:41 AM · <span class="ax-num">3.0 mi total</span></span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="ax-card__footer">
+              <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Total <b class="ax-num" style="color:var(--ax-text-strong);">36 min</b> · <span class="ax-num">3.0 mi</span> · light traffic</span>
+            </div>
+          </section>
+
+          <!-- ───── PIN STYLE LEGEND ───── -->
+          <section class="ax-card ax-col--5" role="region" aria-label="Pin legend and map options">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Pin legend</h2>
+                <p class="ax-card__subtitle">Marker colours by location type</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="justify-content:space-between;"><span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:10px;height:10px;border-radius:50% 50% 50% 2px;transform:rotate(45deg);background:var(--ax-accent);"></i><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Retail store</span></span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">2</b></div>
+              <div class="ax-cluster" style="justify-content:space-between;"><span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:10px;height:10px;border-radius:50% 50% 50% 2px;transform:rotate(45deg);background:var(--ax-viz-violet);"></i><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Office</span></span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">1</b></div>
+              <div class="ax-cluster" style="justify-content:space-between;"><span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:10px;height:10px;border-radius:50% 50% 50% 2px;transform:rotate(45deg);background:var(--ax-viz-cyan);"></i><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Warehouse</span></span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">1</b></div>
+              <div class="ax-cluster" style="justify-content:space-between;"><span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:10px;height:10px;border-radius:50% 50% 50% 2px;transform:rotate(45deg);background:var(--ax-viz-emerald);"></i><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Locker / pickup</span></span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">1</b></div>
+              <div class="ax-divider" style="margin:var(--ax-space-2) 0;"></div>
+              <label class="ax-cluster" style="justify-content:space-between;cursor:pointer;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Marker clustering</span>
+                <input type="checkbox" class="ax-switch" checked aria-label="Toggle marker clustering">
+              </label>
+              <label class="ax-cluster" style="justify-content:space-between;cursor:pointer;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Show traffic layer</span>
+                <input type="checkbox" class="ax-switch" aria-label="Toggle traffic layer">
+              </label>
+              <label class="ax-cluster" style="justify-content:space-between;cursor:pointer;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Auto-fit bounds</span>
+                <input type="checkbox" class="ax-switch" checked aria-label="Toggle auto-fit bounds">
+              </label>
+            </div>
+          </section>
+
+        </div>
+
+      
+</div>
+{% endblock %}

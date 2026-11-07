@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{# Product Tour — faithful re-expression of src/html/pages/tour.html: a guided,
+   spotlighted onboarding walkthrough. KPI/chart/checklist targets, the tour
+   overlay (spotlight + coachmark popover), and completion toast. axTour() Alpine
+   factory is defined in the scripts block; the x-data moves onto a wrapping
+   div since base.html owns the main element. #}
+
+{% block main %}
+<div x-data="axTour()">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Product Tour</h1>
+              <p class="ax-page-head__subtitle">A guided, spotlighted onboarding walkthrough — coachmarks anchor to real elements on the page.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost" @click="reset()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+                <span class="ax-btn__label">Reset tour</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" data-tour="start" @click="start()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13 -8z"/></svg>
+                <span class="ax-btn__label">Start tour</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT (the page the tour walks through) ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- KPI — tour step 1 target -->
+          <div class="ax-card ax-kpi ax-col--3" data-tour="kpi" role="region" aria-label="Monthly revenue">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>9.2%</span>
+              </div>
+              <div class="ax-kpi__label">Monthly Revenue</div>
+              <div class="ax-kpi__value ax-num">$92.4K</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Active users">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.1%</span>
+              </div>
+              <div class="ax-kpi__label">Active Users</div>
+              <div class="ax-kpi__value ax-num">8,142</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Conversion">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6 -6l4 4l8 -8"/><path d="M14 7l7 0l0 7"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>0.4%</span>
+              </div>
+              <div class="ax-kpi__label">Conversion</div>
+              <div class="ax-kpi__value ax-num">3.18%</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Open tickets">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2"/><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>12</span>
+              </div>
+              <div class="ax-kpi__label">Open Tickets</div>
+              <div class="ax-kpi__value ax-num">37</div>
+            </div>
+          </div>
+
+          <!-- Chart — tour step 2 target -->
+          <section class="ax-card ax-card--chart ax-col--8" data-tour="chart" role="region" aria-label="Revenue trend">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Last 12 weeks</span>
+                <h2 class="ax-card__title">Revenue Trend</h2>
+                <p class="ax-card__subtitle">Your headline metric over time</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div data-ax-chart="apex" data-ax-chart-type="area" data-ax-chart-height="280" data-ax-chart-legend="none" data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"Revenue","data":[31,38,35,46,42,55,52,61,58,67,64,72]}]' aria-label="Area chart of weekly revenue"></div>
+            </div>
+          </section>
+
+          <!-- Checklist — tour step 3 target -->
+          <section class="ax-card ax-col--4" data-tour="checklist" role="region" aria-label="Setup checklist">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Setup Checklist</h2>
+                <p class="ax-card__subtitle"><span class="ax-num">2</span> of <span class="ax-num">4</span> done</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-progress ax-progress--sm" style="margin-bottom:var(--ax-space-4);"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:50%;"></div></div></div>
+              <ul class="ax-list ax-list--compact" style="margin:0;">
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span></span><span class="ax-list__content"><span class="ax-list__title" style="text-decoration:line-through;color:var(--ax-text-muted);">Create your workspace</span></span></li>
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span></span><span class="ax-list__content"><span class="ax-list__title" style="text-decoration:line-through;color:var(--ax-text-muted);">Invite a teammate</span></span></li>
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/></svg></span></span><span class="ax-list__content"><span class="ax-list__title">Connect a data source</span></span></li>
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:var(--ax-fill-hover);color:var(--ax-text-subtle);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/></svg></span></span><span class="ax-list__content"><span class="ax-list__title">Publish your first report</span></span></li>
+              </ul>
+            </div>
+            <div class="ax-card__footer" data-tour="cta">
+              <button type="button" class="ax-btn ax-btn--primary ax-btn--block ax-btn--sm"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg><span class="ax-btn__label">Connect a source</span></button>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════ TOUR OVERLAY (spotlight + coachmark) ════ -->
+        <div x-show="active" x-cloak style="position:fixed;inset:0;z-index:80;" @keydown.escape.window="skip()" @keydown.arrow-right.window="next()" @keydown.arrow-left.window="prev()" @resize.window="position()" @scroll.window="position()">
+          <!-- scrim with a transparent cut-out via box-shadow spread on the spotlight rect -->
+          <div aria-hidden="true"
+            :style="`position:absolute;border-radius:var(--ax-radius-lg);transition:all var(--ax-motion-base) var(--ax-ease-standard);box-shadow:0 0 0 9999px rgba(8,10,16,.62), 0 0 0 2px rgba(var(--ax-accent-rgb),.9);top:${spot.top}px;left:${spot.left}px;width:${spot.width}px;height:${spot.height}px;`"></div>
+
+          <!-- coachmark popover -->
+          <div class="ax-popover" x-ref="card" role="dialog" aria-modal="true" :aria-labelledby="'tour-step-title'" x-trap.noscroll="active"
+            :style="`position:absolute;width:320px;max-width:calc(100vw - 32px);transition:top var(--ax-motion-base) var(--ax-ease-standard), left var(--ax-motion-base) var(--ax-ease-standard);top:${card.top}px;left:${card.left}px;`" aria-live="polite">
+            <div class="ax-popover__panel">
+              <div class="ax-popover__header" style="display:flex;align-items:center;justify-content:space-between;">
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill ax-num"><span x-text="index+1"></span> of <span x-text="steps.length"></span></span>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="skip()" aria-label="Skip tour"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+              </div>
+              <div class="ax-popover__body">
+                <h3 id="tour-step-title" style="margin:0 0 var(--ax-space-2);font-family:var(--ax-font-display);font-size:var(--ax-text-md);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="steps[index].title"></h3>
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.55;" x-text="steps[index].body"></p>
+                <!-- progress dots -->
+                <div class="ax-cluster" style="gap:6px;margin-top:var(--ax-space-4);" aria-hidden="true">
+                  <template x-for="(s,i) in steps" :key="'dot'+i">
+                    <span style="width:7px;height:7px;border-radius:50%;transition:background var(--ax-motion-fast);" :style="i===index ? 'background:var(--ax-accent);width:18px;border-radius:var(--ax-radius-pill);' : 'background:var(--ax-border-strong);'"></span>
+                  </template>
+                </div>
+              </div>
+              <div class="ax-popover__footer" style="display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-2);">
+                <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="skip()"><span class="ax-btn__label">Skip</span></button>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="prev()" :disabled="index===0"><span class="ax-btn__label">Back</span></button>
+                  <button type="button" class="ax-btn ax-btn--primary ax-btn--sm" @click="next()"><span class="ax-btn__label" x-text="index===steps.length-1 ? 'Done' : 'Next'"></span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- completion toast -->
+        <div x-show="done" x-cloak x-transition class="ax-toast ax-toast--success" role="status"
+          style="position:fixed;inset-block-end:var(--ax-space-6);inset-inline-end:var(--ax-space-6);z-index:90;">
+          <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+          <div class="ax-toast__content"><p class="ax-toast__title">You're all set</p><p class="ax-toast__message">Tour complete — explore your dashboard.</p></div>
+          <button type="button" class="ax-toast__dismiss" @click="done=false" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+        </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    function axTour() {
+      return {
+        active:false, done:false, index:0,
+        spot:{ top:0, left:0, width:0, height:0 },
+        card:{ top:0, left:0 },
+        steps: [
+          { sel:'[data-tour="kpi"]',       title:'Your headline metrics', body:'These KPI cards summarise revenue, users and conversion at a glance. Each delta shows the trend versus last period.' },
+          { sel:'[data-tour="chart"]',     title:'Track the trend',        body:'The revenue chart re-themes with your accent and works in light or dark. Hover any point for the exact figure.' },
+          { sel:'[data-tour="checklist"]', title:'Finish your setup',      body:'Complete these onboarding steps to unlock the full workspace. You can return here any time.' },
+          { sel:'[data-tour="cta"]',       title:'Take the next step',     body:'Connect a data source to populate your first live report. That\'s it — you\'re ready.' },
+        ],
+        prefersReduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){ return false; } },
+        start() {
+          this.index = 0; this.done = false; this.active = true;
+          this.$nextTick(() => this.position());
+        },
+        position() {
+          if (!this.active) return;
+          const el = document.querySelector(this.steps[this.index].sel);
+          if (!el) return;
+          el.scrollIntoView({ block:'center', behavior: this.prefersReduced() ? 'auto' : 'smooth' });
+          const pad = 8;
+          const r = el.getBoundingClientRect();
+          this.spot = { top: r.top - pad, left: r.left - pad, width: r.width + pad*2, height: r.height + pad*2 };
+          // measure the real card so clamping accounts for its actual rendered size.
+          // The visible card is .ax-popover__panel (position:absolute); the .ax-popover
+          // wrapper is a 0×0 anchor, so we must measure the panel, not the wrapper.
+          const margin = 16, gap = 14;
+          const cardEl = this.$refs.card;
+          const panel = cardEl ? cardEl.querySelector('.ax-popover__panel') : null;
+          const measureEl = panel || cardEl;
+          const cardW = measureEl ? measureEl.offsetWidth : 320;
+          const cardH = measureEl ? measureEl.offsetHeight : 220;
+          // prefer below the target; flip above if it overflows the bottom; clamp within viewport
+          let top = r.bottom + gap;
+          if (top + cardH + margin > window.innerHeight) {
+            const above = r.top - cardH - gap;
+            top = above >= margin ? above : Math.max(margin, window.innerHeight - cardH - margin);
+          }
+          let left = r.left;
+          if (left + cardW + margin > window.innerWidth) left = window.innerWidth - cardW - margin;
+          this.card = { top: Math.max(margin, top), left: Math.max(margin, left) };
+        },
+        next() {
+          if (this.index < this.steps.length - 1) { this.index++; this.$nextTick(() => this.position()); }
+          else this.finish();
+        },
+        prev() { if (this.index > 0) { this.index--; this.$nextTick(() => this.position()); } },
+        finish() { this.active = false; this.done = true; try { localStorage.setItem('ax:tour:dashboard','done'); } catch(e){} setTimeout(()=>{ this.done=false; }, 4000); },
+        skip() { this.active = false; try { localStorage.setItem('ax:tour:dashboard','skipped'); } catch(e){} },
+        reset() { try { localStorage.removeItem('ax:tour:dashboard'); } catch(e){} this.start(); },
+        init() {
+          // First-run auto-start (never re-triggers once completed or dismissed)
+          let seen = null;
+          try { seen = localStorage.getItem('ax:tour:dashboard'); } catch(e){}
+          if (!seen) this.$nextTick(() => setTimeout(() => this.start(), 600));
+        },
+      };
+    }
+  </script>
+{% endblock %}

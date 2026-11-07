@@ -1,0 +1,228 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Carousel</h1>
+              <p class="ax-page-head__subtitle">Sliders the Aurora way — arrows, dots, autoplay, thumbnails and a multi-slide track.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/cards/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M3 14h18"/></svg>
+                <span class="ax-btn__label">Cards</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ═══════ HERO CAROUSEL (arrows + dots + autoplay) ═══════ -->
+          <section class="ax-card ax-col--8" role="region" aria-roledescription="carousel" aria-label="Featured announcements" style="align-self:start;"
+            x-data="{
+              i:0, total:3, playing:true, timer:null,
+              go(n){ this.i = (n + this.total) % this.total; },
+              next(){ this.go(this.i + 1); },
+              prev(){ this.go(this.i - 1); },
+              start(){ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) return; this.timer = setInterval(()=>{ if(this.playing) this.next(); }, 4500); },
+              stop(){ clearInterval(this.timer); }
+            }" x-init="start()" @mouseenter="playing=false" @mouseleave="playing=true" @keydown.right.prevent="next()" @keydown.left.prevent="prev()" tabindex="0">
+            <div class="ax-card__media" style="position:relative;">
+              <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-xl) var(--ax-radius-xl) 0 0;">
+                <!-- track -->
+                <div style="display:flex;transition:transform var(--ax-motion-slow) var(--ax-ease-standard);" :style="{ transform: 'translateX(-' + (i*100) + '%)' }">
+                  <!-- slide 1 -->
+                  <div role="group" aria-roledescription="slide" aria-label="1 of 3" style="flex:0 0 100%;">
+                    <div class="ax-ratio" style="--ax-ratio:16/7;border-radius:0;background:linear-gradient(120deg,color-mix(in oklab,var(--ax-viz-violet) 34%,var(--ax-surface)),color-mix(in oklab,var(--ax-viz-cyan) 26%,var(--ax-surface)));display:flex;align-items:flex-end;">
+                      <div style="padding:var(--ax-space-7);">
+                        <span class="ax-badge ax-badge--solid ax-badge--accent ax-badge--pill" style="margin-bottom:var(--ax-space-3);">New release</span>
+                        <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Vireo 3.0 is here</h2>
+                        <p style="margin:var(--ax-space-1) 0 0;color:var(--ax-text-muted);max-width:46ch;">Twelve Aurora accents, a live customizer and 200+ pages — shipped.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- slide 2 -->
+                  <div role="group" aria-roledescription="slide" aria-label="2 of 3" style="flex:0 0 100%;">
+                    <div class="ax-ratio" style="--ax-ratio:16/7;border-radius:0;background:linear-gradient(120deg,color-mix(in oklab,var(--ax-viz-amber) 32%,var(--ax-surface)),color-mix(in oklab,var(--ax-viz-pink) 28%,var(--ax-surface)));display:flex;align-items:flex-end;">
+                      <div style="padding:var(--ax-space-7);">
+                        <span class="ax-badge ax-badge--solid ax-badge--warning ax-badge--pill" style="margin-bottom:var(--ax-space-3);">Workshop</span>
+                        <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Data-viz that retheme live</h2>
+                        <p style="margin:var(--ax-space-1) 0 0;color:var(--ax-text-muted);max-width:46ch;">Switch accent or mode and every chart re-colours in 200ms — no reload.</p>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- slide 3 -->
+                  <div role="group" aria-roledescription="slide" aria-label="3 of 3" style="flex:0 0 100%;">
+                    <div class="ax-ratio" style="--ax-ratio:16/7;border-radius:0;background:linear-gradient(120deg,color-mix(in oklab,var(--ax-viz-emerald) 32%,var(--ax-surface)),color-mix(in oklab,var(--ax-viz-cyan) 24%,var(--ax-surface)));display:flex;align-items:flex-end;">
+                      <div style="padding:var(--ax-space-7);">
+                        <span class="ax-badge ax-badge--solid ax-badge--success ax-badge--pill" style="margin-bottom:var(--ax-space-3);">Performance</span>
+                        <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">98 Lighthouse, zero jank</h2>
+                        <p style="margin:var(--ax-space-1) 0 0;color:var(--ax-text-muted);max-width:46ch;">Lazy-loaded plugins and token-only styling keep the bundle lean.</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- arrows -->
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" @click="prev()" aria-label="Previous slide" style="position:absolute;inset-block-start:50%;inset-inline-start:var(--ax-space-4);transform:translateY(-50%);">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" @click="next()" aria-label="Next slide" style="position:absolute;inset-block-start:50%;inset-inline-end:var(--ax-space-4);transform:translateY(-50%);">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+              </div>
+            </div>
+            <!-- dots + autoplay control -->
+            <div class="ax-card__footer">
+              <div class="ax-cluster" style="gap:var(--ax-space-2);" role="tablist" aria-label="Choose slide">
+                <template x-for="(s,n) in total" :key="n">
+                  <button type="button" @click="go(n)" role="tab" :aria-selected="i===n" :aria-label="'Go to slide ' + (n+1)"
+                    :style="'width:'+(i===n?'22px':'8px')+';height:8px;border-radius:var(--ax-radius-pill);border:0;cursor:pointer;transition:all var(--ax-motion-base) var(--ax-ease-standard);background:'+(i===n?'var(--ax-accent)':'var(--ax-border-strong)')"></button>
+                </template>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="playing=!playing" :aria-label="playing ? 'Pause autoplay' : 'Resume autoplay'" style="margin-inline-start:auto;">
+                <svg x-show="playing" class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 5v14"/><path d="M14 5v14"/></svg>
+                <svg x-show="!playing" x-cloak class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13 -8z"/></svg>
+              </button>
+              <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="(i+1) + ' / ' + total"></span>
+            </div>
+          </section>
+
+          <!-- ═══════ FADE / THUMBNAIL CAROUSEL ═══════ -->
+          <section class="ax-card ax-col--4" role="region" aria-roledescription="carousel" aria-label="Product gallery"
+            x-data="{ i:0, slides:[
+              {n:'Aperture Desk Lamp', m:'Lighting · $129', c1:'var(--ax-viz-amber)', c2:'var(--ax-viz-pink)'},
+              {n:'Walnut Monitor Riser', m:'Desk · $96', c1:'var(--ax-viz-emerald)', c2:'var(--ax-viz-cyan)'},
+              {n:'Matte Ceramic Mug', m:'Drinkware · $24', c1:'var(--ax-viz-violet)', c2:'var(--ax-viz-cyan)'}
+            ] }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Fade · thumbnails</span>
+                <h2 class="ax-card__title">Product gallery</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <!-- fading stage -->
+              <div style="position:relative;">
+                <div class="ax-ratio" style="--ax-ratio:4/3;">
+                  <template x-for="(s,n) in slides" :key="n">
+                    <div class="ax-grid" x-show="i===n" x-transition.opacity.duration.350ms :style="'position:absolute;inset:0;place-items:center;background:linear-gradient(135deg,color-mix(in oklab,'+s.c1+' 30%,var(--ax-surface)),color-mix(in oklab,'+s.c2+' 24%,var(--ax-surface)))'">
+                      <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--ax-text-strong)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.8;"><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v14a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z"/><path d="M9 9a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M21 15l-5 -5l-9 9"/></svg>
+                    </div>
+                  </template>
+                </div>
+              </div>
+              <div>
+                <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="slides[i].n"></div>
+                <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="slides[i].m"></div>
+              </div>
+              <!-- thumbnails -->
+              <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                <template x-for="(s,n) in slides" :key="n">
+                  <button type="button" @click="i=n" :aria-label="'View ' + s.n" :aria-current="i===n"
+                    :style="'flex:1;height:48px;border-radius:var(--ax-radius-md);cursor:pointer;background:linear-gradient(135deg,color-mix(in oklab,'+s.c1+' 30%,var(--ax-surface)),color-mix(in oklab,'+s.c2+' 24%,var(--ax-surface)));border:2px solid '+(i===n?'var(--ax-accent)':'transparent')"></button>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ MULTI-SLIDE TRACK (scroll-snap testimonial carousel) ═══════ -->
+          <section class="ax-card ax-col--12" role="region" aria-roledescription="carousel" aria-label="Customer testimonials"
+            x-data="{
+              page:0, pages:2,
+              scroll(p){ const t=this.$refs.track; t.scrollTo({left: p * t.clientWidth, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'}); this.page=p; }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Multi-slide · scroll-snap</span>
+                <h2 class="ax-card__title">What customers say</h2>
+                <p class="ax-card__subtitle">Three cards per view, snap-scrolled</p>
+              </div>
+              <div class="ax-card__actions">
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon ax-btn--sm" @click="scroll(Math.max(0,page-1))" :aria-disabled="page===0" :disabled="page===0" aria-label="Previous testimonials">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon ax-btn--sm" @click="scroll(Math.min(pages-1,page+1))" :aria-disabled="page===pages-1" :disabled="page===pages-1" aria-label="Next testimonials">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div x-ref="track" class="ax-scroll" style="display:flex;gap:var(--ax-space-5);overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:var(--ax-space-2);">
+                <!-- testimonial slide -->
+                <figure style="flex:0 0 calc(33.333% - var(--ax-space-5)*2/3);min-width:240px;scroll-snap-align:start;margin:0;padding:var(--ax-space-5);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);">
+                  <div class="ax-cluster" style="gap:3px;color:var(--ax-viz-amber);margin-bottom:var(--ax-space-3);" aria-label="Rated 5 of 5">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  <blockquote style="margin:0;color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">"We migrated our whole ops dashboard in a weekend. The customizer alone sold the team."</blockquote>
+                  <figcaption class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-4);flex-wrap:nowrap;">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);">AS</span>
+                    <div><div style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Ava Sutton</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Operations Lead</div></div>
+                  </figcaption>
+                </figure>
+                <figure style="flex:0 0 calc(33.333% - var(--ax-space-5)*2/3);min-width:240px;scroll-snap-align:start;margin:0;padding:var(--ax-space-5);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);">
+                  <div class="ax-cluster" style="gap:3px;color:var(--ax-viz-amber);margin-bottom:var(--ax-space-3);" aria-label="Rated 5 of 5">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  <blockquote style="margin:0;color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">"The dark theme is genuinely the best I've used. Charts stay legible at 2am."</blockquote>
+                  <figcaption class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-4);flex-wrap:nowrap;">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);">DO</span>
+                    <div><div style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Devon Okafor</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Backend Engineer</div></div>
+                  </figcaption>
+                </figure>
+                <figure style="flex:0 0 calc(33.333% - var(--ax-space-5)*2/3);min-width:240px;scroll-snap-align:start;margin:0;padding:var(--ax-space-5);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);">
+                  <div class="ax-cluster" style="gap:3px;color:var(--ax-viz-amber);margin-bottom:var(--ax-space-3);" aria-label="Rated 4 of 5">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  <blockquote style="margin:0;color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">"Support replied in under an hour and the docs cover almost everything."</blockquote>
+                  <figcaption class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-4);flex-wrap:nowrap;">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);">PN</span>
+                    <div><div style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Priya Nair</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Data Analyst</div></div>
+                  </figcaption>
+                </figure>
+                <figure style="flex:0 0 calc(33.333% - var(--ax-space-5)*2/3);min-width:240px;scroll-snap-align:start;margin:0;padding:var(--ax-space-5);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);">
+                  <div class="ax-cluster" style="gap:3px;color:var(--ax-viz-amber);margin-bottom:var(--ax-space-3);" aria-label="Rated 5 of 5">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  <blockquote style="margin:0;color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">"Rolled it out to nine client portals. One codebase, nine brand accents. Done."</blockquote>
+                  <figcaption class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-4);flex-wrap:nowrap;">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);">TH</span>
+                    <div><div style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Tomás Herrera</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Sales Director</div></div>
+                  </figcaption>
+                </figure>
+                <figure style="flex:0 0 calc(33.333% - var(--ax-space-5)*2/3);min-width:240px;scroll-snap-align:start;margin:0;padding:var(--ax-space-5);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);">
+                  <div class="ax-cluster" style="gap:3px;color:var(--ax-viz-amber);margin-bottom:var(--ax-space-3);" aria-label="Rated 5 of 5">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  <blockquote style="margin:0;color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">"Accessibility is taken seriously — keyboard nav and focus states just work."</blockquote>
+                  <figcaption class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-4);flex-wrap:nowrap;">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);">ML</span>
+                    <div><div style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Mei Lin</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Customer Success Lead</div></div>
+                  </figcaption>
+                </figure>
+                <figure style="flex:0 0 calc(33.333% - var(--ax-space-5)*2/3);min-width:240px;scroll-snap-align:start;margin:0;padding:var(--ax-space-5);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-lg);">
+                  <div class="ax-cluster" style="gap:3px;color:var(--ax-viz-amber);margin-bottom:var(--ax-space-3);" aria-label="Rated 4 of 5">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" stroke="none" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                  </div>
+                  <blockquote style="margin:0;color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">"Finance loves the invoice pages. Clean exports, mono numerals, tidy totals."</blockquote>
+                  <figcaption class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-4);flex-wrap:nowrap;">
+                    <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);">JF</span>
+                    <div><div style="font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Jonas Falk</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Finance Manager</div></div>
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:center;margin-top:var(--ax-space-4);" role="tablist" aria-label="Choose page">
+                <template x-for="(p,n) in pages" :key="n">
+                  <button type="button" @click="scroll(n)" role="tab" :aria-selected="page===n" :aria-label="'Page ' + (n+1)"
+                    :style="'width:'+(page===n?'22px':'8px')+';height:8px;border-radius:var(--ax-radius-pill);border:0;cursor:pointer;transition:all var(--ax-motion-base) var(--ax-ease-standard);background:'+(page===n?'var(--ax-accent)':'var(--ax-border-strong)')"></button>
+                </template>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

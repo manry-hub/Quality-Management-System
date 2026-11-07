@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axProducts()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Products</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">248</span> products in catalog — <span class="ax-num">12</span> low on stock, <span class="ax-num">2</span> out of stock.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <a class="ax-btn ax-btn--primary" href="/ecommerce/add-product/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Add product</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── FILTER RAIL (3) ───── -->
+          <aside class="ax-card ax-col--3" role="region" aria-label="Filters" style="align-self:start;position:sticky;top:var(--ax-space-5);">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Filters</h2></div>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="resetFilters()" x-show="filtersActive()" x-cloak>Clear all</button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <!-- category tree -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-3);">Category</div>
+                <ul class="ax-list ax-list--compact" style="gap:2px;">
+                  <template x-for="c in categories" :key="c.id">
+                    <li class="ax-list__row" style="border:0;padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);cursor:pointer;" :style="fCategory===c.id ? 'background:var(--ax-accent-wash);' : ''" @click="fCategory = (fCategory===c.id ? '' : c.id)">
+                      <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);" :style="fCategory===c.id ? 'color:var(--ax-accent);' : 'color:var(--ax-text);'" x-text="c.name"></span></span>
+                      <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="c.count"></span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- price range -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <span class="ax-label">Price</span>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">$0 – $<span x-text="fMaxPrice"></span></span>
+                </div>
+                <div class="ax-range">
+                  <div class="ax-range__track">
+                    <div class="ax-range__fill" :style="`width:${(fMaxPrice/250)*100}%`"></div>
+                  </div>
+                </div>
+                <input type="range" class="ax-range--native" min="0" max="250" step="2" x-model.number="fMaxPrice" style="width:100%;margin-top:var(--ax-space-3);" aria-label="Maximum price">
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- availability -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-3);">Availability</div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                  <label class="ax-check"><input type="checkbox" class="ax-checkbox" x-model="fInStock"><span style="font-size:var(--ax-text-sm);">In stock</span></label>
+                  <label class="ax-check"><input type="checkbox" class="ax-checkbox" x-model="fLowStock"><span style="font-size:var(--ax-text-sm);">Low stock</span></label>
+                  <label class="ax-check"><input type="checkbox" class="ax-checkbox" x-model="fOnSale"><span style="font-size:var(--ax-text-sm);">On sale</span></label>
+                </div>
+              </div>
+
+              <div class="ax-divider" role="separator" style="height:1px;background:var(--ax-border);"></div>
+
+              <!-- rating -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-3);">Rating</div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-1);">
+                  <template x-for="r in [4,3,2]" :key="r">
+                    <label class="ax-check" style="min-height:32px;"><input type="radio" name="rating" class="ax-radio" :value="r" x-model.number="fRating"><span class="ax-rating ax-rating--sm" aria-hidden="true"><template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="s<=r ? 'ax-rating__star--full' : ''" viewBox="0 0 24 24" :fill="s<=r ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">&amp; up</span></label>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </aside>
+
+          <!-- ───── RESULTS (9) ───── -->
+          <section class="ax-card ax-col--9" role="region" aria-label="Product results">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div style="position:relative;flex:1 1 240px;max-width:360px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                <input type="search" class="ax-input" placeholder="Search products…" x-model="q" style="padding-inline-start:36px;" aria-label="Search products">
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort products" style="min-width:150px;">
+                  <option value="featured">Featured</option>
+                  <option value="newest">Newest</option>
+                  <option value="price-asc">Price: Low to High</option>
+                  <option value="price-desc">Price: High to Low</option>
+                  <option value="best">Best-selling</option>
+                  <option value="rating">Top-rated</option>
+                  <option value="az">Name: A–Z</option>
+                </select>
+                <div class="ax-segment" role="group" aria-label="View mode">
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='grid').toString()" @click="view='grid'" aria-label="Grid view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></svg>
+                  </button>
+                  <button type="button" class="ax-segment__option" :aria-pressed="(view==='list').toString()" @click="view='list'" aria-label="List view">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- active filter chips -->
+            <div class="ax-cluster" style="gap:var(--ax-space-2);padding:0 var(--ax-space-5) var(--ax-space-3);flex-wrap:wrap;" x-show="filtersActive()" x-cloak>
+              <template x-if="fCategory">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill"><span x-text="categoryName(fCategory)"></span><button type="button" class="ax-badge__remove" aria-label="Clear category filter" @click="fCategory=''"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-if="fInStock">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill">In stock<button type="button" class="ax-badge__remove" aria-label="Clear in stock filter" @click="fInStock=false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-if="fOnSale">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill">On sale<button type="button" class="ax-badge__remove" aria-label="Clear on sale filter" @click="fOnSale=false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+              <template x-if="fRating">
+                <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill"><span class="ax-num" x-text="fRating"></span>+ stars<button type="button" class="ax-badge__remove" aria-label="Clear rating filter" @click="fRating=0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+              </template>
+            </div>
+
+            <!-- bulk bar -->
+            <div x-show="selected.length" x-cloak x-transition
+              style="display:flex;align-items:center;gap:var(--ax-space-3);margin:0 var(--ax-space-5) var(--ax-space-3);padding:var(--ax-space-2) var(--ax-space-4);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);border-radius:var(--ax-radius-md);">
+              <b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-sm);"><span x-text="selected.length"></span> selected</b>
+              <span style="width:1px;height:18px;background:var(--ax-border-strong);"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Set status</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Set category</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="color:var(--ax-danger-500);">Delete</button>
+              <span style="flex:1 1 auto;"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Clear selection" @click="selected=[]"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+
+            <div class="ax-card__body" style="padding-top:0;">
+
+              <!-- GRID VIEW -->
+              <div class="ax-grid" x-show="view==='grid'" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--ax-space-4);">
+                <template x-for="p in filtered()" :key="p.id">
+                  <article class="ax-card ax-card--interactive" style="margin:0;" :style="selected.includes(p.id) ? 'border-color:var(--ax-accent);box-shadow:0 0 0 1px var(--ax-accent);' : ''">
+                    <!-- media -->
+                    <div style="position:relative;aspect-ratio:1/1;border-radius:var(--ax-radius-md) var(--ax-radius-md) 0 0;overflow:hidden;display:flex;align-items:center;justify-content:center;" :style="`background:color-mix(in oklab,${p.color} 16%,var(--ax-surface-subtle));`">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:46px;height:46px;opacity:.55;" :style="`color:${p.color};`"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>
+                      <!-- sale / ribbon -->
+                      <span x-show="p.compareAt" class="ax-badge ax-badge--danger ax-badge--solid" style="position:absolute;top:8px;inset-inline-start:8px;border-radius:var(--ax-radius-xs);" x-text="'-' + p.discount + '%'"></span>
+                      <span x-show="p.ribbon" class="ax-badge ax-badge--accent ax-badge--solid" style="position:absolute;top:8px;inset-inline-start:8px;border-radius:var(--ax-radius-xs);" x-text="p.ribbon"></span>
+                      <!-- select + wishlist -->
+                      <input type="checkbox" class="ax-checkbox" :value="p.id" x-model.number="selected" style="position:absolute;top:8px;inset-inline-end:8px;" :aria-label="'Select ' + p.name">
+                      <!-- out of stock overlay -->
+                      <div class="ax-flex" x-show="p.stock===0" style="position:absolute;inset:0;background:color-mix(in oklab,var(--ax-canvas) 55%,transparent);align-items:center;justify-content:center;">
+                        <span class="ax-badge ax-badge--neutral ax-badge--soft">Out of stock</span>
+                      </div>
+                    </div>
+                    <!-- body -->
+                    <div style="padding:var(--ax-space-4);display:flex;flex-direction:column;gap:6px;">
+                      <span style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);font-weight:var(--ax-weight-medium);" x-text="p.category"></span>
+                      <a href="/ecommerce/product-details/" class="ax-text-truncate" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);text-decoration:none;line-height:1.35;" x-text="p.name"></a>
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                        <span class="ax-rating ax-rating--sm" :aria-label="p.rating + ' out of 5'"><template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="s<=Math.round(p.rating) ? 'ax-rating__star--full' : ''" viewBox="0 0 24 24" :fill="s<=Math.round(p.rating) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span>
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="'(' + p.reviews + ')'"></span>
+                      </div>
+                      <!-- price -->
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:2px;">
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-md);" x-text="money(p.price)"></span>
+                        <span x-show="p.compareAt" class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-subtle);text-decoration:line-through;" x-text="money(p.compareAt)"></span>
+                      </div>
+                      <!-- footer -->
+                      <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-2);">
+                        <span x-html="stockBadge(p.stock)"></span>
+                        <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon ax-btn--sm" :disabled="p.stock===0" :aria-label="'Add ' + p.name + ' to cart'">
+                          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg>
+                        </button>
+                      </div>
+                    </div>
+                  </article>
+                </template>
+              </div>
+
+              <!-- LIST VIEW -->
+              <div x-show="view==='list'" x-cloak class="ax-table-wrap" style="margin:0 calc(-1 * var(--ax-space-5));">
+                <table class="ax-table ax-table--hover">
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col" style="width:38px;"><input type="checkbox" class="ax-checkbox" aria-label="Select all" :checked="allSelected()" @change="toggleAll($event.target.checked)"></th>
+                      <th class="ax-table__th" scope="col">Product</th>
+                      <th class="ax-table__th" scope="col">Category</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Price</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Stock</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Sales</th>
+                      <th class="ax-table__th" scope="col">Status</th>
+                      <th class="ax-table__th" scope="col" style="width:44px;"></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <template x-for="p in filtered()" :key="p.id">
+                      <tr class="ax-table__row" :style="selected.includes(p.id) ? 'background:var(--ax-accent-wash);' : ''">
+                        <td class="ax-table__td"><input type="checkbox" class="ax-checkbox" :value="p.id" x-model.number="selected" :aria-label="'Select ' + p.name"></td>
+                        <td class="ax-table__td">
+                          <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                            <span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${p.color} 18%,transparent);color:${p.color};`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/></svg></span>
+                            <div style="min-width:0;">
+                              <a href="/ecommerce/product-details/" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);text-decoration:none;" x-text="p.name"></a>
+                              <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="p.sku"></div>
+                            </div>
+                          </div>
+                        </td>
+                        <td class="ax-table__td" style="color:var(--ax-text-muted);" x-text="p.category"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="money(p.price)"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);" :style="p.stock===0 ? 'color:var(--ax-danger-500);' : (p.stock<=10 ? 'color:var(--ax-warning-500);' : 'color:var(--ax-text-muted);')" x-text="p.stock"></td>
+                        <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="p.sales"></td>
+                        <td class="ax-table__td"><span x-html="stockBadge(p.stock)"></span></td>
+                        <td class="ax-table__td">
+                          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Actions for ' + p.name"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></button>
+                        </td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- empty state -->
+              <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+                <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No products match your filters</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Try widening your price range or clearing some filters.</p>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="resetFilters()">Clear all filters</button>
+              </div>
+            </div>
+
+            <!-- footer / pagination -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">Showing <span x-text="filtered().length"></span> of 248 products</span>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" disabled aria-disabled="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <li><a href="#" class="ax-pagination__page is-active" aria-current="page">1</a></li>
+                  <li><a href="#" class="ax-pagination__page">2</a></li>
+                  <li><a href="#" class="ax-pagination__page">3</a></li>
+                  <li><span class="ax-pagination__ellipsis">…</span></li>
+                  <li><a href="#" class="ax-pagination__page">14</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axProducts(){
+            return {
+              q:'', sort:'featured', view:'grid', selected:[],
+              fCategory:'', fMaxPrice:250, fInStock:false, fLowStock:false, fOnSale:false, fRating:0,
+              categories:[
+                { id:'lighting', name:'Lighting', count:34 },
+                { id:'desk', name:'Desk', count:52 },
+                { id:'drinkware', name:'Drinkware', count:28 },
+                { id:'storage', name:'Storage', count:19 },
+                { id:'stationery', name:'Stationery', count:46 },
+                { id:'tech', name:'Tech accessories', count:38 },
+                { id:'decor', name:'Decor', count:31 },
+              ],
+              products:[
+                { id:1, name:'Aperture Desk Lamp', cat:'lighting', category:'Lighting', price:129, compareAt:159, discount:19, stock:84, sales:412, rating:4.7, reviews:128, sku:'APG-0001', color:'#38BDF8', ribbon:'', new:true },
+                { id:2, name:'Brass Task Light', cat:'lighting', category:'Lighting', price:182, compareAt:0, discount:0, stock:22, sales:356, rating:4.9, reviews:204, sku:'APG-0008', color:'#A78BFA', ribbon:'Bestseller', new:false },
+                { id:3, name:'Matte Ceramic Mug', cat:'drinkware', category:'Drinkware', price:24, compareAt:0, discount:0, stock:312, sales:298, rating:4.8, reviews:341, sku:'APG-0003', color:'#F472B6', ribbon:'', new:false },
+                { id:4, name:'Walnut Monitor Riser', cat:'desk', category:'Desk', price:96, compareAt:120, discount:20, stock:41, sales:241, rating:4.6, reviews:96, sku:'APG-0004', color:'#FBBF24', ribbon:'', new:false },
+                { id:5, name:'Felt Laptop Sleeve 14"', cat:'tech', category:'Tech accessories', price:44, compareAt:0, discount:0, stock:158, sales:187, rating:4.5, reviews:73, sku:'APG-0005', color:'#34D399', ribbon:'New', new:true },
+                { id:6, name:'Grid Notebook A5', cat:'stationery', category:'Stationery', price:16, compareAt:0, discount:0, stock:540, sales:622, rating:4.7, reviews:415, sku:'APG-0006', color:'#FB7185', ribbon:'Bestseller', new:false },
+                { id:7, name:'Cork Desk Mat', cat:'desk', category:'Desk', price:38, compareAt:0, discount:0, stock:0, sales:142, rating:4.3, reviews:54, sku:'APG-0007', color:'#38BDF8', ribbon:'', new:false },
+                { id:8, name:'Stoneware Carafe', cat:'drinkware', category:'Drinkware', price:52, compareAt:64, discount:19, stock:120, sales:176, rating:4.5, reviews:88, sku:'APG-0009', color:'#F472B6', ribbon:'', new:false },
+                { id:9, name:'Linen Pinboard', cat:'storage', category:'Storage', price:58, compareAt:0, discount:0, stock:0, sales:91, rating:4.4, reviews:37, sku:'APG-0002', color:'#A78BFA', ribbon:'', new:false },
+                { id:10, name:'Oak Pen Tray', cat:'decor', category:'Decor', price:28, compareAt:35, discount:20, stock:204, sales:133, rating:4.6, reviews:61, sku:'APG-0010', color:'#FBBF24', ribbon:'', new:false },
+                { id:11, name:'Anodized Bottle 750ml', cat:'drinkware', category:'Drinkware', price:34, compareAt:0, discount:0, stock:9, sales:209, rating:4.6, reviews:112, sku:'APG-0011', color:'#34D399', ribbon:'', new:false },
+                { id:12, name:'Leather Cable Wrap', cat:'tech', category:'Tech accessories', price:18, compareAt:0, discount:0, stock:330, sales:158, rating:4.4, reviews:45, sku:'APG-0012', color:'#FB7185', ribbon:'', new:false },
+              ],
+              money(n){ return '$' + Number(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              categoryName(id){ const c=this.categories.find(x=>x.id===id); return c ? c.name : ''; },
+              filtersActive(){ return this.fCategory || this.fInStock || this.fLowStock || this.fOnSale || this.fRating || this.fMaxPrice<250; },
+              resetFilters(){ this.fCategory=''; this.fMaxPrice=250; this.fInStock=false; this.fLowStock=false; this.fOnSale=false; this.fRating=0; },
+              stockBadge(s){
+                if(s===0) return '<span class="ax-badge ax-badge--danger ax-badge--soft" style="border-radius:var(--ax-radius-xs);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></svg>Out of stock</span>';
+                if(s<=10) return '<span class="ax-badge ax-badge--warning ax-badge--soft" style="border-radius:var(--ax-radius-xs);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/></svg>'+s+' left</span>';
+                return '<span class="ax-badge ax-badge--success ax-badge--soft" style="border-radius:var(--ax-radius-xs);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M5 12l5 5l10 -10"/></svg>In stock</span>';
+              },
+              filtered(){
+                let r = this.products.filter(p=>{
+                  const term=this.q.trim().toLowerCase();
+                  if(term && !(p.name.toLowerCase().includes(term) || p.sku.toLowerCase().includes(term) || p.category.toLowerCase().includes(term))) return false;
+                  if(this.fCategory && p.cat!==this.fCategory) return false;
+                  if(p.price > this.fMaxPrice) return false;
+                  if(this.fInStock && p.stock===0) return false;
+                  if(this.fLowStock && !(p.stock>0 && p.stock<=10)) return false;
+                  if(this.fOnSale && !p.compareAt) return false;
+                  if(this.fRating && p.rating < this.fRating) return false;
+                  return true;
+                });
+                const by = {
+                  'price-asc':(a,b)=>a.price-b.price,
+                  'price-desc':(a,b)=>b.price-a.price,
+                  'best':(a,b)=>b.sales-a.sales,
+                  'rating':(a,b)=>b.rating-a.rating,
+                  'az':(a,b)=>a.name.localeCompare(b.name),
+                  'newest':(a,b)=>(b.new?1:0)-(a.new?1:0),
+                };
+                if(by[this.sort]) r=[...r].sort(by[this.sort]);
+                return r;
+              },
+              allSelected(){ const ids=this.filtered().map(p=>p.id); return ids.length>0 && ids.every(id=>this.selected.includes(id)); },
+              toggleAll(on){ this.selected = on ? this.filtered().map(p=>p.id) : []; },
+            };
+          }
+        </script>
+{% endblock %}

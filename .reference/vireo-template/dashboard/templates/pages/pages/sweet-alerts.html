@@ -1,0 +1,362 @@
+{% extends 'base.html' %}
+
+{# Sweet Alerts — faithful re-expression of src/html/pages/sweet-alerts.html: a
+   gallery of status dialogs (success/error/warning/info), confirmations (with a
+   simulated async), prompt/input alerts and corner toasts. Pure Alpine — uses the
+   runtime-registered axModal() component + $toast magic, no page script. Reference
+   hrefs converted to clean Django routes. #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Sweet Alerts</h1>
+              <p class="ax-page-head__subtitle">A gallery of status dialogs — success, error, warning, confirm, prompt and a stack of corner toasts. Pure Alpine, no library.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/modals/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4m0 2a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2z"/><path d="M9 9h6v6h-6z"/></svg>
+                <span class="ax-btn__label">Modals</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ═══════ STATUS ALERTS (success / error / warning / info) ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Status alerts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Status</span>
+                <h2 class="ax-card__title">Status alerts</h2>
+                <p class="ax-card__subtitle">A coloured status glyph, a title and a short message — one button to dismiss.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-wrap:wrap;gap:var(--ax-space-3);">
+
+              <!-- success -->
+              <div x-data="axModal()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="var(--ax-success-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                  <span class="ax-btn__label">Success</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="dialog" aria-modal="true" aria-labelledby="sa-ok-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <div class="ax-modal__body" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);padding-top:var(--ax-space-7);">
+                        <span class="ax-modal__status ax-modal__status--success"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                        <h2 class="ax-modal__title" id="sa-ok-title">Payment received</h2>
+                        <p style="margin:0;color:var(--ax-text-muted);">Order <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#10482</span> was paid and is now being prepared for shipment.</p>
+                      </div>
+                      <div class="ax-modal__footer" style="justify-content:center;"><button type="button" class="ax-btn ax-btn--primary" @click="hide()">Great</button></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- error -->
+              <div x-data="axModal()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="var(--ax-danger-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
+                  <span class="ax-btn__label">Error</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="alertdialog" aria-modal="true" aria-labelledby="sa-err-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <div class="ax-modal__body" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);padding-top:var(--ax-space-7);">
+                        <span class="ax-modal__status ax-modal__status--danger"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></span>
+                        <h2 class="ax-modal__title" id="sa-err-title">Payment failed</h2>
+                        <p style="margin:0;color:var(--ax-text-muted);">We couldn't charge the card on file. Update the payment method and try again.</p>
+                      </div>
+                      <div class="ax-modal__footer" style="justify-content:center;"><button type="button" class="ax-btn ax-btn--secondary" @click="hide()">Close</button><button type="button" class="ax-btn ax-btn--primary" @click="hide()">Update card</button></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- warning -->
+              <div x-data="axModal()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="var(--ax-warning-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 16v.01"/><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"/></svg>
+                  <span class="ax-btn__label">Warning</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="alertdialog" aria-modal="true" aria-labelledby="sa-warn-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <div class="ax-modal__body" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);padding-top:var(--ax-space-7);">
+                        <span class="ax-modal__status ax-modal__status--warning"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 16v.01"/><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"/></svg></span>
+                        <h2 class="ax-modal__title" id="sa-warn-title">Your trial ends soon</h2>
+                        <p style="margin:0;color:var(--ax-text-muted);">Just <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">3</span> days of your Scale trial remain. Add a plan to keep your reports live.</p>
+                      </div>
+                      <div class="ax-modal__footer" style="justify-content:center;"><button type="button" class="ax-btn ax-btn--ghost" @click="hide()">Remind me later</button><button type="button" class="ax-btn ax-btn--primary" @click="hide()">Choose a plan</button></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- info -->
+              <div x-data="axModal()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="var(--ax-info-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9h.01"/><path d="M11 12h1v4h1"/><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/></svg>
+                  <span class="ax-btn__label">Info</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="dialog" aria-modal="true" aria-labelledby="sa-info-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <div class="ax-modal__body" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);padding-top:var(--ax-space-7);">
+                        <span class="ax-modal__status ax-modal__status--info"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9h.01"/><path d="M11 12h1v4h1"/><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/></svg></span>
+                        <h2 class="ax-modal__title" id="sa-info-title">Weekly digest ready</h2>
+                        <p style="margin:0;color:var(--ax-text-muted);">Your Northwind Pulse digest for this week is ready to read — five highlights and two flags.</p>
+                      </div>
+                      <div class="ax-modal__footer" style="justify-content:center;"><button type="button" class="ax-btn ax-btn--primary" @click="hide()">Read digest</button></div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ═══════ CONFIRM (destructive + auto-close) ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Confirmation alerts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Confirm</span>
+                <h2 class="ax-card__title">Confirmations</h2>
+                <p class="ax-card__subtitle">Two-button decisions — destructive actions get a danger primary and a result toast.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-wrap:wrap;gap:var(--ax-space-3);">
+
+              <!-- destructive confirm -->
+              <div x-data="axModal()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                  <span class="ax-btn__label">Delete invoice</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="alertdialog" aria-modal="true" aria-labelledby="sa-del-title" aria-describedby="sa-del-desc">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <div class="ax-modal__body" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);padding-top:var(--ax-space-7);">
+                        <span class="ax-modal__status ax-modal__status--danger"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/></svg></span>
+                        <h2 class="ax-modal__title" id="sa-del-title">Delete invoice INV-2025-0118?</h2>
+                        <p id="sa-del-desc" style="margin:0;color:var(--ax-text-muted);">This permanently removes the invoice and its payment record. This action can't be undone.</p>
+                      </div>
+                      <div class="ax-modal__footer" style="justify-content:center;">
+                        <button type="button" class="ax-btn ax-btn--ghost" @click="hide()">Cancel</button>
+                        <button type="button" class="ax-btn ax-btn--primary" style="background:var(--ax-danger-500);box-shadow:none;" @click="hide(); $toast({ msg:'Invoice INV-2025-0118 deleted', ttl:3200 })">Yes, delete it</button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- positive confirm -->
+              <div x-data="axModal()">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 12l2 2l4 -4"/><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/></svg>
+                  <span class="ax-btn__label">Publish report</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="dialog" aria-modal="true" aria-labelledby="sa-pub-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <div class="ax-modal__body" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);padding-top:var(--ax-space-7);">
+                        <span class="ax-modal__status ax-modal__status--info"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg></span>
+                        <h2 class="ax-modal__title" id="sa-pub-title">Publish the weekly report?</h2>
+                        <p style="margin:0;color:var(--ax-text-muted);">Everyone in the Northwind Labs workspace will be notified once it goes live.</p>
+                      </div>
+                      <div class="ax-modal__footer" style="justify-content:center;">
+                        <button type="button" class="ax-btn ax-btn--ghost" @click="hide()">Not yet</button>
+                        <button type="button" class="ax-btn ax-btn--primary" @click="hide(); $toast({ msg:'Report published to your workspace', ttl:3200 })">Publish now</button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- loading → success (simulated async) -->
+              <div x-data="{ ...axModal(), state:'idle', run() {
+                this.show(); this.state='loading';
+                setTimeout(() => { this.state='done'; }, 1600);
+              } }">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="run()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 13l2 2l4 -4"/></svg>
+                  <span class="ax-btn__label">Sync &amp; confirm</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="state!=='loading' && hide()" role="dialog" aria-modal="true" aria-labelledby="sa-async-title" aria-busy="state==='loading'">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="state!=='loading' && hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <div class="ax-modal__body" style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-3);padding-top:var(--ax-space-7);">
+                        <template x-if="state==='loading'">
+                          <span class="ax-spinner ax-spinner--lg" role="status" aria-label="Syncing"><span class="ax-spinner__glyph"></span></span>
+                        </template>
+                        <template x-if="state==='done'">
+                          <span class="ax-modal__status ax-modal__status--success"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                        </template>
+                        <h2 class="ax-modal__title" id="sa-async-title" x-text="state==='loading' ? 'Syncing your data…' : 'All synced up'"></h2>
+                        <p style="margin:0;color:var(--ax-text-muted);" x-text="state==='loading' ? 'Pulling the latest figures from your connected sources.' : 'Your dashboard now reflects the most recent data.'"></p>
+                      </div>
+                      <div class="ax-modal__footer" style="justify-content:center;">
+                        <button type="button" class="ax-btn ax-btn--primary" x-show="state==='done'" @click="hide(); state='idle'">Done</button>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ═══════ PROMPT / INPUT ALERTS ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Prompt alerts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Prompt</span>
+                <h2 class="ax-card__title">Input alerts</h2>
+                <p class="ax-card__subtitle">Collect a value inside the dialog — text or a single choice. Submit is simulated.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-wrap:wrap;gap:var(--ax-space-3);">
+
+              <!-- text input -->
+              <div x-data="{ ...axModal(), val:'', valid() { return this.val.trim().length > 1 } }">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5z"/><path d="M13.5 6.5l4 4"/></svg>
+                  <span class="ax-btn__label">Rename board</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="dialog" aria-modal="true" aria-labelledby="sa-rename-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <form @submit.prevent="if(valid()){ hide(); $toast({ msg:'Board renamed to “'+val+'”', ttl:3200 }); val=''; }">
+                        <div class="ax-modal__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);text-align:center;align-items:center;padding-top:var(--ax-space-7);">
+                          <span class="ax-modal__status ax-modal__status--info"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4l10.5 -10.5a1.5 1.5 0 0 0 -4 -4l-10.5 10.5z"/><path d="M13.5 6.5l4 4"/></svg></span>
+                          <h2 class="ax-modal__title" id="sa-rename-title">Rename this board</h2>
+                          <div class="ax-field" style="width:100%;text-align:start;">
+                            <label class="ax-label" for="sa-rename-input">Board name</label>
+                            <input id="sa-rename-input" type="text" class="ax-input" placeholder="e.g. Q3 Roadmap" x-model="val" autocomplete="off" autofocus>
+                            <span class="ax-help">Use at least two characters.</span>
+                          </div>
+                        </div>
+                        <div class="ax-modal__footer" style="justify-content:center;">
+                          <button type="button" class="ax-btn ax-btn--ghost" @click="hide()">Cancel</button>
+                          <button type="submit" class="ax-btn ax-btn--primary" :disabled="!valid()" :aria-disabled="!valid()">Save name</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- select input -->
+              <div x-data="{ ...axModal(), choice:'shipped' }">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+                  <span class="ax-btn__label">Change status</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="dialog" aria-modal="true" aria-labelledby="sa-status-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <form @submit.prevent="hide(); $toast({ msg:'Order #10482 marked as '+choice, ttl:3200 })">
+                        <div class="ax-modal__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);padding-top:var(--ax-space-6);">
+                          <h2 class="ax-modal__title" id="sa-status-title">Update order status</h2>
+                          <p style="margin:0;color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Set a new status for order <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">#10482</span>.</p>
+                          <div class="ax-field">
+                            <label class="ax-label" for="sa-status-select">Status</label>
+                            <select id="sa-status-select" class="ax-select" x-model="choice">
+                              <option value="processing">Processing</option>
+                              <option value="shipped">Shipped</option>
+                              <option value="delivered">Delivered</option>
+                              <option value="cancelled">Cancelled</option>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="ax-modal__footer">
+                          <button type="button" class="ax-btn ax-btn--ghost" @click="hide()">Cancel</button>
+                          <button type="submit" class="ax-btn ax-btn--primary">Update status</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+              <!-- email subscribe -->
+              <div x-data="{ ...axModal(), email:'' }">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="show()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"/><path d="M3 7l9 6l9 -6"/></svg>
+                  <span class="ax-btn__label">Subscribe</span>
+                </button>
+                <template x-teleport="body">
+                  <div class="ax-modal ax-modal--centered" x-show="open" x-cloak @keydown.escape.window="hide()" role="dialog" aria-modal="true" aria-labelledby="sa-sub-title">
+                    <div class="ax-modal__backdrop" x-show="open" x-transition.opacity @click="hide()"></div>
+                    <div class="ax-modal__dialog ax-modal__dialog--sm" x-show="open" x-transition x-trap.inert.noscroll="open">
+                      <form @submit.prevent="hide(); $toast({ msg:'Subscribed '+(email||'you')+' to Northwind Pulse', ttl:3200 }); email='';">
+                        <div class="ax-modal__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);text-align:center;align-items:center;padding-top:var(--ax-space-7);">
+                          <span class="ax-modal__status ax-modal__status--info"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z"/><path d="M3 7l9 6l9 -6"/></svg></span>
+                          <h2 class="ax-modal__title" id="sa-sub-title">Get the weekly Pulse</h2>
+                          <p style="margin:0;color:var(--ax-text-muted);font-size:var(--ax-text-sm);">One email a week — product news and your headline metrics.</p>
+                          <div class="ax-field" style="width:100%;text-align:start;">
+                            <label class="ax-label" for="sa-sub-input">Work email</label>
+                            <input id="sa-sub-input" type="email" class="ax-input" placeholder="name@northwindlabs.app" x-model="email" required autocomplete="off">
+                          </div>
+                        </div>
+                        <div class="ax-modal__footer" style="justify-content:center;">
+                          <button type="button" class="ax-btn ax-btn--ghost" @click="hide()">No thanks</button>
+                          <button type="submit" class="ax-btn ax-btn--primary">Subscribe</button>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </template>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- ═══════ TOASTS (corner notifications) ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Toast notifications">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Toast</span>
+                <h2 class="ax-card__title">Corner toasts</h2>
+                <p class="ax-card__subtitle">Lightweight, auto-dismissing notifications that stack in the corner — fired through the global toast store.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-wrap:wrap;gap:var(--ax-space-3);" x-data>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="$toast({ msg:'Changes saved', ttl:3000 })">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="var(--ax-success-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                <span class="ax-btn__label">Success toast</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="$toast({ msg:'Couldn’t reach the server — retrying', ttl:3500 })">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="var(--ax-danger-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 16v.01"/><path d="M5 19h14a2 2 0 0 0 1.84 -2.75l-7.1 -12.25a2 2 0 0 0 -3.5 0l-7.1 12.25a2 2 0 0 0 1.75 2.75"/></svg>
+                <span class="ax-btn__label">Error toast</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="$toast({ msg:'New order #10483 just landed', ttl:4000 })">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="var(--ax-info-500)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2"/></svg>
+                <span class="ax-btn__label">Info toast</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="$toast({ msg:'Export ready', ttl:3000 }); $toast({ msg:'Report shared with the team', ttl:3500 }); $toast({ msg:'2 reminders scheduled', ttl:4000 })">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+                <span class="ax-btn__label">Stack three</span>
+              </button>
+            </div>
+            <div class="ax-card__footer">
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Toasts render through the app's global toast region — they stack and auto-dismiss on their own timer.</span>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

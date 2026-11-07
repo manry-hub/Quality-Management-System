@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axGrid()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Grid.js</h1>
+              <p class="ax-page-head__subtitle">The lightweight data-grid chrome — global search, sortable columns &amp; pagination — token-bound so it re-themes with the rest of the app.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/tables/data-tables/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6h-6z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6h-6z"/><path d="M14 14h6v6h-6z"/></svg>
+                <span class="ax-btn__label">Full data table</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Orders grid">
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Order Ledger</h2>
+                <p class="ax-card__subtitle ax-num" style="font-family:var(--ax-font-mono);"><span x-text="filtered().length"></span> results</p>
+              </div>
+              <div class="ax-card__actions">
+                <div style="position:relative;flex:1 1 220px;max-width:300px;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input ax-input--sm" placeholder="Search…" x-model.debounce.200ms="q" @input="page=1" style="padding-inline-start:34px;" aria-label="Search the grid">
+                </div>
+              </div>
+            </div>
+
+            <!-- grid -->
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover" style="min-width:720px;">
+                <caption class="ax-visually-hidden">Orders, sortable and searchable</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('number')" @click="sortBy('number')">Order <span x-html="glyph('number')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('customer')" @click="sortBy('customer')">Customer <span x-html="glyph('customer')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable ax-table__th--num" scope="col" :aria-sort="ariaSort('items')" @click="sortBy('items')">Items <span x-html="glyph('items')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable ax-table__th--num" scope="col" :aria-sort="ariaSort('total')" @click="sortBy('total')">Total <span x-html="glyph('total')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('status')" @click="sortBy('status')">Status <span x-html="glyph('status')"></span></th>
+                    <th class="ax-table__th ax-table__th--sortable" scope="col" :aria-sort="ariaSort('daysAgo')" @click="sortBy('daysAgo')">Placed <span x-html="glyph('daysAgo')"></span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="r in paged()" :key="r.id">
+                    <tr class="ax-table__row">
+                      <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);">#<span x-text="r.number"></span></td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                          <span class="ax-avatar ax-avatar--sm" :style="`background:color-mix(in oklab,${r.c} 18%,var(--ax-surface-solid));color:${r.c};`"><span class="ax-avatar__initials" x-text="r.initials"></span></span>
+                          <span class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="r.customer"></span>
+                        </div>
+                      </td>
+                      <td class="ax-table__td ax-table__td--num" x-text="r.items"></td>
+                      <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);" x-text="money(r.total)"></td>
+                      <td class="ax-table__td"><span class="ax-badge ax-badge--soft" :class="statusClass(r.status)" x-text="r.status"></span></td>
+                      <td class="ax-table__td" style="color:var(--ax-text-muted);" x-text="r.placed"></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- empty -->
+            <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+              <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No matches</h3>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">No rows match your search. Try a different term.</p>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="q='';page=1">Clear search</button>
+            </div>
+
+            <!-- footer / pagination -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                Showing <span x-text="rangeStart()"></span> to <span x-text="rangeEnd()"></span> of <span x-text="filtered().length"></span>
+              </span>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" :disabled="page===1" :aria-disabled="(page===1).toString()" @click="page=Math.max(1,page-1)" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <template x-for="p in pageList()" :key="p">
+                    <li>
+                      <template x-if="p === '…'"><span class="ax-pagination__ellipsis">…</span></template>
+                      <template x-if="p !== '…'"><button type="button" class="ax-pagination__page" :class="{'is-active': page===p}" :aria-current="page===p ? 'page' : null" @click="page=p" x-text="p"></button></template>
+                    </li>
+                  </template>
+                </ul>
+                <button type="button" class="ax-pagination__next" :disabled="page===totalPages()" :aria-disabled="(page===totalPages()).toString()" @click="page=Math.min(totalPages(),page+1)" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+
+        <script>
+          function axGrid(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',red:'var(--ax-viz-red)'};
+            return {
+              q:'', page:1, perPage:8, sortKey:'daysAgo', sortDir:'asc',
+              rows:[
+                { id:'ord_10482', number:'10482', customer:'Camila Rossi', initials:'CR', items:4, total:312.00, status:'Shipped', placed:'2h ago', daysAgo:0, c:C.cyan },
+                { id:'ord_10481', number:'10481', customer:'Henry Whitlock', initials:'HW', items:1, total:129.00, status:'Processing', placed:'5h ago', daysAgo:0, c:C.violet },
+                { id:'ord_10480', number:'10480', customer:'Aisha Bello', initials:'AB', items:3, total:80.00, status:'Delivered', placed:'1d ago', daysAgo:1, c:C.emerald },
+                { id:'ord_10479', number:'10479', customer:'Erik Lindqvist', initials:'EL', items:9, total:1544.00, status:'Delivered', placed:'2d ago', daysAgo:2, c:C.amber },
+                { id:'ord_10478', number:'10478', customer:'Daniel Cho', initials:'DC', items:1, total:24.00, status:'Cancelled', placed:'3d ago', daysAgo:3, c:C.red },
+                { id:'ord_10477', number:'10477', customer:'Olivia Penrose', initials:'OP', items:5, total:200.00, status:'Delivered', placed:'4d ago', daysAgo:4, c:C.pink },
+                { id:'ord_10476', number:'10476', customer:'Sofia Marchetti', initials:'SM', items:2, total:104.00, status:'Shipped', placed:'5d ago', daysAgo:5, c:C.cyan },
+                { id:'ord_10475', number:'10475', customer:'Yuki Tanaka', initials:'YT', items:5, total:225.00, status:'Pending', placed:'6d ago', daysAgo:6, c:C.violet },
+                { id:'ord_10474', number:'10474', customer:'Rahul Menon', initials:'RM', items:5, total:80.00, status:'Delivered', placed:'7d ago', daysAgo:7, c:C.amber },
+                { id:'ord_10473', number:'10473', customer:'Nadia Haddad', initials:'NH', items:3, total:238.00, status:'Refunded', placed:'8d ago', daysAgo:8, c:C.pink },
+                { id:'ord_10472', number:'10472', customer:'Greta Hoffmann', initials:'GH', items:2, total:160.00, status:'Delivered', placed:'9d ago', daysAgo:9, c:C.emerald },
+                { id:'ord_10471', number:'10471', customer:'Mateo Alvarez', initials:'MA', items:1, total:44.00, status:'Processing', placed:'10d ago', daysAgo:10, c:C.cyan },
+                { id:'ord_10470', number:'10470', customer:'Camila Rossi', initials:'CR', items:6, total:498.00, status:'Delivered', placed:'12d ago', daysAgo:12, c:C.violet },
+                { id:'ord_10469', number:'10469', customer:'Olivia Penrose', initials:'OP', items:2, total:78.00, status:'Shipped', placed:'14d ago', daysAgo:14, c:C.pink },
+                { id:'ord_10468', number:'10468', customer:'Erik Lindqvist', initials:'EL', items:8, total:1280.00, status:'Delivered', placed:'15d ago', daysAgo:15, c:C.amber },
+                { id:'ord_10467', number:'10467', customer:'Yuki Tanaka', initials:'YT', items:3, total:172.00, status:'Delivered', placed:'17d ago', daysAgo:17, c:C.emerald },
+              ],
+              money(v){ return '$' + v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              statusClass(s){ return { Delivered:'ax-badge--success', Shipped:'ax-badge--accent', Processing:'ax-badge--info', Pending:'ax-badge--warning', Cancelled:'ax-badge--neutral', Refunded:'ax-badge--danger' }[s] || 'ax-badge--neutral'; },
+              filtered(){
+                const term=this.q.trim().toLowerCase();
+                let r=this.rows.filter(x=> !term || x.number.includes(term) || x.customer.toLowerCase().includes(term) || x.status.toLowerCase().includes(term));
+                const dir=this.sortDir==='asc'?1:-1;
+                r=[...r].sort((a,b)=>{ const va=a[this.sortKey], vb=b[this.sortKey]; if(typeof va==='number') return (va-vb)*dir; return String(va).localeCompare(String(vb))*dir; });
+                return r;
+              },
+              totalPages(){ return Math.max(1, Math.ceil(this.filtered().length / this.perPage)); },
+              paged(){ if(this.page>this.totalPages()) this.page=this.totalPages(); const s=(this.page-1)*this.perPage; return this.filtered().slice(s, s+this.perPage); },
+              rangeStart(){ return this.filtered().length ? (this.page-1)*this.perPage + 1 : 0; },
+              rangeEnd(){ return Math.min(this.page*this.perPage, this.filtered().length); },
+              pageList(){ const tp=this.totalPages(); const out=[]; for(let i=1;i<=tp;i++) out.push(i); return out; },
+              sortBy(k){ if(this.sortKey===k){ this.sortDir=this.sortDir==='asc'?'desc':'asc'; } else { this.sortKey=k; this.sortDir='asc'; } this.page=1; },
+              ariaSort(k){ return this.sortKey===k ? (this.sortDir==='asc'?'ascending':'descending') : 'none'; },
+              glyph(k){
+                if(this.sortKey!==k) return '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.4;"><path d="M8 9l4 -4l4 4"/><path d="M16 15l-4 4l-4 -4"/></svg>';
+                return this.sortDir==='asc'
+                  ? '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>'
+                  : '<svg class="ax-table__sort" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>';
+              },
+            };
+          }
+        </script>
+
+      
+</div>
+{% endblock %}

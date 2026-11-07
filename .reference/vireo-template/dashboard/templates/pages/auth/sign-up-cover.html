@@ -1,0 +1,215 @@
+{% extends 'pages/auth/_standalone.html' %}
+
+{# auth/sign-up-cover — faithful port of src/html/auth/sign-up-cover.html
+   Standalone off-app page (no sidebar/header). Same DOM/classes/ARIA,
+   same demo copy, same Alpine helpers. Reference hrefs converted to
+   clean Django routes (# -> /x/, index -> /). #}
+
+{% block body_class %}{% endblock %}
+{% block body_style %}margin:0;{% endblock %}
+
+{% block auth_body %}
+  <div class="ax-auth-cover" style="position:relative;z-index:1;min-block-size:100dvh;display:grid;grid-template-columns:1fr;">
+
+    <!-- ════ COVER PANEL ════ -->
+    <aside class="ax-auth-cover__panel" aria-hidden="true"
+           style="position:relative;overflow:hidden;display:none;flex-direction:column;justify-content:space-between;padding:var(--ax-space-12);
+                  background:linear-gradient(150deg, var(--ax-accent-wash) 0%, var(--ax-surface-subtle) 65%, var(--ax-canvas) 100%);
+                  border-inline-end:1px solid var(--ax-border);">
+      <span aria-hidden="true" style="position:absolute;inset-block-start:-120px;inset-inline-end:-100px;inline-size:380px;block-size:380px;border-radius:50%;background:radial-gradient(circle, rgba(var(--ax-accent-rgb),.28), transparent 64%);filter:blur(8px);"></span>
+      <span aria-hidden="true" style="position:absolute;inset-block-end:-160px;inset-inline-start:-120px;inline-size:420px;block-size:420px;border-radius:50%;background:radial-gradient(circle, rgba(var(--ax-accent-rgb),.16), transparent 66%);filter:blur(10px);"></span>
+
+      <div class="ax-cluster" style="gap:var(--ax-space-3);position:relative;">
+        <span class="ax-center" style="inline-size:40px;block-size:40px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);">
+          <svg viewBox="0 0 32 32" width="23" height="23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+        </span>
+        <span style="font-family:var(--ax-font-display);font-weight:var(--ax-weight-semibold);font-size:var(--ax-text-lg);color:var(--ax-text-strong);">Vireo</span>
+      </div>
+
+      <div style="position:relative;max-inline-size:34ch;">
+        <h2 style="margin:0 0 var(--ax-space-4);font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);line-height:1.25;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);letter-spacing:-.015em;">Start building in minutes, not weeks.</h2>
+        <ul class="ax-stack" style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+          <li class="ax-cluster" style="gap:var(--ax-space-3);">
+            <span class="ax-center" style="inline-size:24px;block-size:24px;flex:0 0 auto;border-radius:var(--ax-radius-pill);background:var(--ax-success-50);color:var(--ax-success-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M5 12l5 5l10 -10"/></svg></span>
+            <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">14-day trial, full access — no card required</span>
+          </li>
+          <li class="ax-cluster" style="gap:var(--ax-space-3);">
+            <span class="ax-center" style="inline-size:24px;block-size:24px;flex:0 0 auto;border-radius:var(--ax-radius-pill);background:var(--ax-success-50);color:var(--ax-success-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M5 12l5 5l10 -10"/></svg></span>
+            <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">17 dashboards, 8 apps, full eCommerce suite</span>
+          </li>
+          <li class="ax-cluster" style="gap:var(--ax-space-3);">
+            <span class="ax-center" style="inline-size:24px;block-size:24px;flex:0 0 auto;border-radius:var(--ax-radius-pill);background:var(--ax-success-50);color:var(--ax-success-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M5 12l5 5l10 -10"/></svg></span>
+            <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">SSO, audit logs and SOC 2 from day one</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="ax-cluster" style="gap:var(--ax-space-5);position:relative;">
+        <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">24K+</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">teams onboard</div></div>
+        <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">120+</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">integrations</div></div>
+        <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">4.9/5</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">avg. rating</div></div>
+      </div>
+    </aside>
+
+    <!-- ════ FORM PANE ════ -->
+    <main class="ax-center" id="ax-main" style="position:relative;padding:var(--ax-space-8) var(--ax-space-6);">
+      <div class="ax-cluster" x-data="axOffappTools()" style="position:absolute;inset-block-start:var(--ax-space-5);inset-inline-end:var(--ax-space-5);gap:var(--ax-space-2);">
+        <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="cycleLocale()" aria-label="Change language">
+          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>
+          <span class="ax-btn__label ax-num" x-text="locale"></span>
+        </button>
+        <button type="button" class="ax-icon-btn" @click="toggleTheme()" :aria-pressed="theme==='dark'" aria-label="Toggle dark mode">
+          <svg class="ax-icon" x-show="theme==='dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></svg>
+          <svg class="ax-icon" x-show="theme!=='dark'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" width="22" height="22" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg>
+        </button>
+      </div>
+
+      <div x-data="axSignupForm()" style="inline-size:100%;max-inline-size:440px;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+        <a href="/" class="ax-cluster" aria-label="Vireo home" style="gap:var(--ax-space-3);text-decoration:none;">
+          <span class="ax-center" aria-hidden="true" style="inline-size:38px;block-size:38px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);">
+            <svg viewBox="0 0 32 32" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk1" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk1)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg>
+          </span>
+          <span style="font-family:var(--ax-font-display);font-weight:var(--ax-weight-semibold);font-size:var(--ax-text-lg);color:var(--ax-text-strong);">Vireo</span>
+        </a>
+
+        <header style="display:flex;flex-direction:column;gap:var(--ax-space-1);">
+          <h1 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);letter-spacing:-.015em;">Create your account</h1>
+          <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Start your 14-day trial. No card required.</p>
+        </header>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);">
+          <button type="button" class="ax-btn ax-btn--secondary" aria-label="Sign up with Google"><svg class="ax-btn__icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></button>
+          <button type="button" class="ax-btn ax-btn--secondary" aria-label="Sign up with Apple"><svg class="ax-btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M16.365 1.43c0 1.14-.493 2.27-1.177 3.08-.744.9-1.99 1.57-2.987 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.572-2.27 1.206-2.98.804-.94 2.142-1.64 3.248-1.68.03.13.05.28.05.43zm4.565 15.71c-.03.07-.463 1.58-1.518 3.12-.945 1.34-1.94 2.71-3.43 2.71-1.517 0-1.9-.88-3.63-.88-1.698 0-2.302.91-3.67.91-1.377 0-2.332-1.26-3.428-2.8-1.287-1.82-2.323-4.63-2.323-7.28 0-4.28 2.797-6.55 5.552-6.55 1.448 0 2.675.95 3.6.95.865 0 2.222-1.01 3.902-1.01.613 0 2.886.06 4.374 2.19-.13.09-2.383 1.37-2.383 4.19 0 3.26 2.854 4.42 2.955 4.45z"/></svg></button>
+          <button type="button" class="ax-btn ax-btn--secondary" aria-label="Sign up with GitHub"><svg class="ax-btn__icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12z"/></svg></button>
+        </div>
+
+        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+          <hr class="ax-divider" style="flex:1 1 auto;" aria-hidden="true">
+          <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);white-space:nowrap;">or sign up with email</span>
+          <hr class="ax-divider" style="flex:1 1 auto;" aria-hidden="true">
+        </div>
+
+        <div role="alert" x-show="error" x-cloak x-transition class="ax-alert ax-alert--danger" style="padding:var(--ax-space-3) var(--ax-space-4);">
+          <svg class="ax-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          <div class="ax-alert__content"><p class="ax-alert__message" style="color:var(--ax-danger-500);">That email is already in use. Try signing in instead.</p></div>
+        </div>
+
+        <form @submit.prevent="submit()" style="display:flex;flex-direction:column;gap:var(--ax-space-4);" novalidate>
+          <div class="ax-field">
+            <label class="ax-label" for="su-name">Full name</label>
+            <input id="su-name" type="text" class="ax-input" autocomplete="name" placeholder="Ada Lovelace"
+                   x-model="name" :class="nameErr && 'is-invalid'" :aria-invalid="nameErr ? 'true':'false'" aria-describedby="su-name-msg" required>
+            <p id="su-name-msg" class="ax-field__message ax-field__message--error" x-show="nameErr" x-cloak x-text="nameErr"></p>
+          </div>
+          <div class="ax-field">
+            <label class="ax-label" for="su-email">Email</label>
+            <input id="su-email" type="email" class="ax-input" autocomplete="email" placeholder="you@vireo.io"
+                   x-model="email" :class="emailErr && 'is-invalid'" :aria-invalid="emailErr ? 'true':'false'" aria-describedby="su-email-msg" required>
+            <p id="su-email-msg" class="ax-field__message ax-field__message--error" x-show="emailErr" x-cloak x-text="emailErr"></p>
+          </div>
+          <div class="ax-field">
+            <label class="ax-label" for="su-pass">Password</label>
+            <div class="ax-field__control">
+              <input id="su-pass" class="ax-input ax-input--with-trailing" autocomplete="new-password" placeholder="At least 8 characters"
+                     :type="reveal ? 'text':'password'" x-model="password" @input="scorePassword()" :class="passErr && 'is-invalid'" :aria-invalid="passErr ? 'true':'false'" aria-describedby="su-pass-msg su-strength" required>
+              <button type="button" class="ax-field__affix ax-field__affix--trailing ax-field__affix--button" @click="reveal=!reveal" :aria-pressed="reveal" :aria-label="reveal ? 'Hide password':'Show password'">
+                <svg x-show="!reveal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>
+                <svg x-show="reveal" x-cloak viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"/><path d="M3 3l18 18"/></svg>
+              </button>
+            </div>
+            <div id="su-strength" class="ax-strength" x-show="password.length" x-cloak aria-live="polite">
+              <div class="ax-strength__bars">
+                <span class="ax-strength__bar" :class="barClass(0)"></span>
+                <span class="ax-strength__bar" :class="barClass(1)"></span>
+                <span class="ax-strength__bar" :class="barClass(2)"></span>
+                <span class="ax-strength__bar" :class="barClass(3)"></span>
+              </div>
+              <span class="ax-strength__label" x-text="'Password strength: ' + strengthLabel"></span>
+            </div>
+            <p id="su-pass-msg" class="ax-field__message ax-field__message--error" x-show="passErr" x-cloak x-text="passErr"></p>
+          </div>
+          <div class="ax-field">
+            <label class="ax-label" for="su-confirm">Confirm password</label>
+            <input id="su-confirm" type="password" class="ax-input" autocomplete="new-password" placeholder="Re-enter your password"
+                   x-model="confirm" :class="confirmErr && 'is-invalid'" :aria-invalid="confirmErr ? 'true':'false'" aria-describedby="su-confirm-msg" required>
+            <p id="su-confirm-msg" class="ax-field__message ax-field__message--error" x-show="confirmErr" x-cloak x-text="confirmErr"></p>
+          </div>
+          <div class="ax-field" style="gap:var(--ax-space-1);">
+            <label class="ax-check" style="font-size:var(--ax-text-sm);color:var(--ax-text);align-items:center;line-height:1.45;">
+              <input type="checkbox" class="ax-checkbox" x-model="terms">
+              <span>I agree to the <a class="ax-link" href="/pages/terms/">Terms of Service</a> and <a class="ax-link" href="/pages/privacy/">Privacy Policy</a>.</span>
+            </label>
+            <p class="ax-field__hint" x-show="!terms && termsTouched" x-cloak style="color:var(--ax-danger-500);">You must accept the terms to continue.</p>
+          </div>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--lg ax-btn--block" :class="loading && 'is-loading'" :disabled="!terms" :aria-busy="loading">
+            <span class="ax-btn__spinner" aria-hidden="true"></span>
+            <span class="ax-btn__label">Create account</span>
+          </button>
+        </form>
+
+        <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+          Already have an account? <a class="ax-link" href="/auth/sign-in-cover/" style="font-weight:var(--ax-weight-medium);">Sign in</a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  
+{% endblock %}
+
+{% block auth_scripts %}
+  <style>
+    @media (min-width: 992px) {
+      .ax-auth-cover { grid-template-columns: 52% 48%; }
+      .ax-auth-cover__panel { display: flex !important; }
+    }
+  </style>
+  <script>
+    function axOffappTools() {
+      return {
+        theme: document.documentElement.getAttribute('data-ax-theme') || 'light',
+        locale: (localStorage.getItem('ax:lang') || 'EN').toUpperCase(),
+        toggleTheme() { this.theme = this.theme === 'dark' ? 'light' : 'dark'; document.documentElement.setAttribute('data-ax-theme', this.theme); try { localStorage.setItem('ax:theme', this.theme); } catch (e) {} },
+        cycleLocale() { const o = ['EN','FR','DE','ES','AR']; this.locale = o[(o.indexOf(this.locale)+1)%o.length]; try { localStorage.setItem('ax:lang', this.locale); } catch (e) {} },
+      };
+    }
+    function axSignupForm() {
+      return {
+        name: '', email: '', password: '', confirm: '', terms: false, termsTouched: false,
+        reveal: false, score: 0, loading: false, error: false,
+        nameErr: '', emailErr: '', passErr: '', confirmErr: '',
+        get strengthLabel() { return ['Weak','Weak','Fair','Good','Strong'][this.score] || 'Weak'; },
+        scorePassword() {
+          const p = this.password; let s = 0;
+          if (p.length >= 8) s++;
+          if (/[A-Z]/.test(p) && /[a-z]/.test(p)) s++;
+          if (/\d/.test(p)) s++;
+          if (/[^A-Za-z0-9]/.test(p)) s++;
+          this.score = p.length < 8 ? Math.min(s, 1) : s;
+        },
+        barClass(i) {
+          if (i >= this.score) return '';
+          if (this.score <= 2) return 'is-weak';
+          if (this.score === 3) return 'is-medium';
+          return 'is-strong';
+        },
+        validate() {
+          const n = this.name.trim();
+          this.nameErr = !n ? 'Enter your full name.' : (n.length < 2 || n.length > 60 ? 'Name must be 2–60 characters.' : '');
+          this.emailErr = !this.email.trim() ? 'Enter your email.' : (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(this.email.trim()) ? 'Enter a valid email address.' : '');
+          this.passErr = this.password.length < 8 ? 'Use at least 8 characters.' : '';
+          this.confirmErr = this.confirm !== this.password ? 'Passwords do not match.' : '';
+          this.termsTouched = true;
+          return !this.nameErr && !this.emailErr && !this.passErr && !this.confirmErr && this.terms;
+        },
+        submit() {
+          this.error = false;
+          if (!this.validate()) return;
+          this.loading = true;
+          // Demo only — never hits the network.
+          setTimeout(() => { this.loading = false; this.error = true; }, 900);
+        },
+      };
+    }
+  </script>
+{% endblock %}

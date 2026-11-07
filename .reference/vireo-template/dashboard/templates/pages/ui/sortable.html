@@ -1,0 +1,218 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Sortable</h1>
+              <p class="ax-page-head__subtitle">Reorderable lists and grids — grab a handle and drag, or move with the keyboard. Pure Alpine, no drag library.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/draggable-cards/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4m0 2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2z"/><path d="M14 4m0 2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2z"/><path d="M4 14m0 2a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-4a2 2 0 0 1 -2 -2z"/></svg>
+                <span class="ax-btn__label">Draggable cards</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ═══════ SORTABLE LIST (drag handle + keyboard) ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Sortable task list"
+            x-data="axSortable([
+              { id:1, title:'Connect a data source', meta:'Setup · due today', tone:'var(--ax-viz-cyan)' },
+              { id:2, title:'Invite the design team', meta:'People · 3 pending', tone:'var(--ax-viz-violet)' },
+              { id:3, title:'Publish the weekly report', meta:'Reports · draft', tone:'var(--ax-viz-emerald)' },
+              { id:4, title:'Review churn-risk accounts', meta:'CRM · 4 flagged', tone:'var(--ax-viz-amber)' },
+              { id:5, title:'Approve June payroll', meta:'Finance · $18.4K', tone:'var(--ax-viz-pink)' }
+            ])">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">List · vertical</span>
+                <h2 class="ax-card__title">Reorder tasks</h2>
+                <p class="ax-card__subtitle">Drag by the handle, or focus a row and press the arrow keys.</p>
+              </div>
+              <div class="ax-card__actions">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="reset()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+                  <span class="ax-btn__label">Reset</span>
+                </button>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--ax-space-3);" aria-label="Task list, sortable">
+                <template x-for="(item, idx) in items" :key="item.id">
+                  <li draggable="true"
+                    @dragstart="onDragStart(idx, $event)" @dragend="onDragEnd()"
+                    @dragover.prevent="onDragOver(idx)" @drop.prevent="onDrop(idx)"
+                    tabindex="0" role="button"
+                    :aria-label="'Reorder ' + item.title + '. Position ' + (idx+1) + ' of ' + items.length"
+                    @keydown.arrow-up.prevent="moveUp(idx)" @keydown.arrow-down.prevent="moveDown(idx)"
+                    style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);transition:opacity var(--ax-motion-fast),box-shadow var(--ax-motion-fast),border-color var(--ax-motion-fast);cursor:default;"
+                    :style="{ opacity: dragIndex===idx ? '.45' : '1', boxShadow: overIndex===idx && dragIndex!==null && dragIndex!==idx ? 'inset 0 0 0 2px var(--ax-accent)' : 'none', borderColor: overIndex===idx && dragIndex!==null && dragIndex!==idx ? 'var(--ax-accent)' : 'var(--ax-border)' }">
+                    <span style="cursor:grab;color:var(--ax-text-subtle);display:inline-flex;flex:0 0 auto;" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M8 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M8 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                    </span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);width:1.4em;text-align:center;flex:0 0 auto;" x-text="idx+1"></span>
+                    <span style="width:8px;height:8px;border-radius:3px;flex:0 0 auto;" :style="'background:'+item.tone"></span>
+                    <span style="flex:1 1 auto;min-width:0;">
+                      <span style="display:block;font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" class="ax-text-truncate" x-text="item.title"></span>
+                      <span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="item.meta"></span>
+                    </span>
+                  </li>
+                </template>
+              </ul>
+            </div>
+            <div class="ax-card__footer">
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Order: <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="items.map(i=>i.id).join(' · ')"></span></span>
+            </div>
+          </section>
+
+          <!-- ═══════ TWO-COLUMN KANBAN-LITE (move between lists) ═══════ -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Move items between lists"
+            x-data="axBoards({
+              backlog:[
+                { id:11, title:'Dark-mode chart audit' },
+                { id:12, title:'Empty-state illustrations' },
+                { id:13, title:'Export to CSV polish' }
+              ],
+              active:[
+                { id:21, title:'Customizer accent presets' },
+                { id:22, title:'Editable table validation' }
+              ]
+            })">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">List · across columns</span>
+                <h2 class="ax-card__title">Move between lists</h2>
+                <p class="ax-card__subtitle">Drag a card from one column into the other.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+              <template x-for="col in ['backlog','active']" :key="col">
+                <div @dragover.prevent="onOver(col)" @drop.prevent="onDrop(col)"
+                  style="display:flex;flex-direction:column;gap:var(--ax-space-3);padding:var(--ax-space-3);border-radius:var(--ax-radius-md);min-height:180px;transition:background var(--ax-motion-fast),box-shadow var(--ax-motion-fast);"
+                  :style="{ background: overCol===col ? 'var(--ax-accent-wash)' : 'var(--ax-surface-subtle)', boxShadow: overCol===col ? 'inset 0 0 0 1.5px var(--ax-accent)' : 'inset 0 0 0 1px var(--ax-border)' }">
+                  <div class="ax-cluster" style="justify-content:space-between;">
+                    <span style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);" x-text="col==='backlog' ? 'Backlog' : 'In progress'"></span>
+                    <span class="ax-badge ax-badge--soft ax-badge--pill ax-num" x-text="lists[col].length"></span>
+                  </div>
+                  <template x-for="(card, idx) in lists[col]" :key="card.id">
+                    <div draggable="true" @dragstart="onStart(col, idx, $event)" @dragend="onEnd()"
+                      style="display:flex;align-items:center;gap:var(--ax-space-2);padding:var(--ax-space-3);background:var(--ax-surface-solid);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);box-shadow:var(--ax-shadow-sm);cursor:grab;transition:opacity var(--ax-motion-fast);"
+                      :style="{ opacity: from.col===col && from.idx===idx ? '.4' : '1' }">
+                      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--ax-text-subtle)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M8 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M8 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                      <span style="font-size:var(--ax-text-sm);color:var(--ax-text);" x-text="card.title"></span>
+                    </div>
+                  </template>
+                  <p x-show="lists[col].length===0" style="margin:auto 0;text-align:center;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Drop a card here</p>
+                </div>
+              </template>
+            </div>
+          </section>
+
+          <!-- ═══════ SORTABLE GRID (reorderable tiles) ═══════ -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Sortable image grid"
+            x-data="axSortable([
+              { id:1, n:'Aperture Desk Lamp', m:'Lighting', c1:'var(--ax-viz-amber)', c2:'var(--ax-viz-pink)' },
+              { id:2, n:'Walnut Monitor Riser', m:'Desk', c1:'var(--ax-viz-emerald)', c2:'var(--ax-viz-cyan)' },
+              { id:3, n:'Matte Ceramic Mug', m:'Drinkware', c1:'var(--ax-viz-violet)', c2:'var(--ax-viz-cyan)' },
+              { id:4, n:'Brass Task Light', m:'Lighting', c1:'var(--ax-viz-cyan)', c2:'var(--ax-viz-violet)' },
+              { id:5, n:'Grid Notebook A5', m:'Stationery', c1:'var(--ax-viz-pink)', c2:'var(--ax-viz-amber)' },
+              { id:6, n:'Stoneware Carafe', m:'Drinkware', c1:'var(--ax-viz-emerald)', c2:'var(--ax-viz-amber)' },
+              { id:7, n:'Oak Pen Tray', m:'Decor', c1:'var(--ax-viz-violet)', c2:'var(--ax-viz-pink)' },
+              { id:8, n:'Felt Laptop Sleeve', m:'Tech', c1:'var(--ax-viz-cyan)', c2:'var(--ax-viz-emerald)' }
+            ])">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Grid · 2D</span>
+                <h2 class="ax-card__title">Reorder gallery</h2>
+                <p class="ax-card__subtitle">Drag any tile to a new spot — the grid reflows around it.</p>
+              </div>
+              <div class="ax-card__actions">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="reset()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+                  <span class="ax-btn__label">Reset</span>
+                </button>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:var(--ax-space-4);">
+                <template x-for="(item, idx) in items" :key="item.id">
+                  <figure draggable="true"
+                    @dragstart="onDragStart(idx, $event)" @dragend="onDragEnd()"
+                    @dragover.prevent="onDragOver(idx)" @drop.prevent="onDrop(idx)"
+                    :aria-label="item.n + ', position ' + (idx+1)"
+                    style="margin:0;border-radius:var(--ax-radius-lg);overflow:hidden;border:1px solid var(--ax-border);background:var(--ax-surface-subtle);cursor:grab;transition:opacity var(--ax-motion-fast),box-shadow var(--ax-motion-fast),transform var(--ax-motion-fast);"
+                    :style="{ opacity: dragIndex===idx ? '.4' : '1', boxShadow: overIndex===idx && dragIndex!==null && dragIndex!==idx ? '0 0 0 2px var(--ax-accent)' : 'none', transform: overIndex===idx && dragIndex!==null && dragIndex!==idx ? 'scale(1.02)' : 'scale(1)' }">
+                    <div class="ax-ratio" style="--ax-ratio:4/3;position:relative;" :style="'background:linear-gradient(135deg,color-mix(in oklab,'+item.c1+' 32%,var(--ax-surface)),color-mix(in oklab,'+item.c2+' 24%,var(--ax-surface)))'">
+                      <span style="position:absolute;inset-block-start:var(--ax-space-2);inset-inline-end:var(--ax-space-2);width:26px;height:26px;display:grid;place-items:center;border-radius:var(--ax-radius-sm);background:var(--ax-surface-overlay);color:var(--ax-text-subtle);box-shadow:var(--ax-shadow-sm);" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M8 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M8 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M14 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                      </span>
+                    </div>
+                    <figcaption style="padding:var(--ax-space-3) var(--ax-space-4);">
+                      <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" class="ax-text-truncate" x-text="item.n"></div>
+                      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="item.m"></div>
+                    </figcaption>
+                  </figure>
+                </template>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ════ Page-local Alpine components for the sortable demos ════ -->
+        <script>
+          function axSortable(initial) {
+            return {
+              original: JSON.parse(JSON.stringify(initial)),
+              items: JSON.parse(JSON.stringify(initial)),
+              dragIndex: null,
+              overIndex: null,
+              onDragStart(idx, e) {
+                this.dragIndex = idx;
+                if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', String(idx)); } catch (err) {} }
+              },
+              onDragOver(idx) { this.overIndex = idx; },
+              onDrop(idx) {
+                if (this.dragIndex === null || this.dragIndex === idx) { this.onDragEnd(); return; }
+                const moved = this.items.splice(this.dragIndex, 1)[0];
+                this.items.splice(idx, 0, moved);
+                this.onDragEnd();
+              },
+              onDragEnd() { this.dragIndex = null; this.overIndex = null; },
+              moveUp(idx) { if (idx > 0) { const m = this.items.splice(idx, 1)[0]; this.items.splice(idx - 1, 0, m); this.$nextTick(() => this.focusAt(idx - 1)); } },
+              moveDown(idx) { if (idx < this.items.length - 1) { const m = this.items.splice(idx, 1)[0]; this.items.splice(idx + 1, 0, m); this.$nextTick(() => this.focusAt(idx + 1)); } },
+              focusAt(i) { const els = this.$root.querySelectorAll('[draggable="true"]'); if (els[i]) els[i].focus(); },
+              reset() { this.items = JSON.parse(JSON.stringify(this.original)); },
+            };
+          }
+
+          function axBoards(initial) {
+            return {
+              lists: JSON.parse(JSON.stringify(initial)),
+              from: { col: null, idx: null },
+              overCol: null,
+              onStart(col, idx, e) {
+                this.from = { col, idx };
+                if (e.dataTransfer) { e.dataTransfer.effectAllowed = 'move'; try { e.dataTransfer.setData('text/plain', col + ':' + idx); } catch (err) {} }
+              },
+              onOver(col) { this.overCol = col; },
+              onDrop(col) {
+                if (this.from.col === null) { this.overCol = null; return; }
+                const card = this.lists[this.from.col].splice(this.from.idx, 1)[0];
+                this.lists[col].push(card);
+                this.onEnd();
+              },
+              onEnd() { this.from = { col: null, idx: null }; this.overCol = null; },
+            };
+          }
+        </script>
+
+{% endblock %}

@@ -1,0 +1,378 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="{
+          view: 'month',
+          editorOpen: false,
+          editor: { id: null, title: '', cat: 'work', start: '', end: '', allday: false, repeat: 'none', location: '', desc: '' },
+          openNew(date){ this.editor = { id:null, title:'', cat:'work', start: (date||'2026-06-27')+'T10:00', end: (date||'2026-06-27')+'T11:00', allday:false, repeat:'none', location:'', desc:'' }; this.editorOpen = true; },
+          openEdit(ev){ this.editor = Object.assign({ allday:false, repeat:'none', location:'', desc:'' }, ev); this.editorOpen = true; },
+          save(){ this.editorOpen = false; },
+        }"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">June 2026 — 6 events scheduled this week across your calendars.</p>
+          <div class="ax-apphead__actions">
+            <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+              <span class="ax-btn__label">Trash</span>
+            </button>
+            <button type="button" class="ax-btn ax-btn--ghost">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+              <span class="ax-btn__label">Export</span>
+            </button>
+            <button type="button" class="ax-btn ax-btn--primary" @click="openNew()">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+              <span class="ax-btn__label">New event</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ════════════════ CALENDAR LAYOUT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── SIDE RAIL ───── -->
+          <aside class="ax-card ax-col--3" role="region" aria-label="Calendar navigation">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+              <button type="button" class="ax-btn ax-btn--primary ax-btn--block" @click="openNew()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 21h-6.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v5"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M16 19h6"/><path d="M19 16v6"/></svg>
+                <span class="ax-btn__label">Create event</span>
+              </button>
+
+              <!-- mini-month -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                  <b style="color:var(--ax-text-strong);font-family:var(--ax-font-display);font-size:var(--ax-text-md);">June 2026</b>
+                  <span class="ax-cluster" style="gap:2px;">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Previous month"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Next month"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                  </span>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;">
+                  <template x-for="d in ['M','T','W','T','F','S','S']"><small style="color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);padding:4px 0;" x-text="d"></small></template>
+                </div>
+                <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;">
+                  <!-- leading days -->
+                  <template x-for="n in [26,27,28,29,30,31]"><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);padding:5px 0;" x-text="n"></span></template>
+                  <template x-for="n in 30" :key="n">
+                    <button type="button"
+                      class="ax-num"
+                      :style="`font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);padding:5px 0;border:0;cursor:pointer;border-radius:var(--ax-radius-sm);` + (n===27 ? 'background:var(--ax-accent);color:var(--ax-on-accent);font-weight:600;' : ([4,12,18,23].includes(n) ? 'color:var(--ax-text-strong);background:var(--ax-accent-wash);' : 'color:var(--ax-text);background:transparent;'))"
+                      @click="openNew('2026-06-'+String(n).padStart(2,'0'))"
+                      x-text="n"></button>
+                  </template>
+                </div>
+              </div>
+
+              <hr class="ax-divider" style="margin:0;border:0;border-top:1px solid var(--ax-border);">
+
+              <!-- my calendars -->
+              <div>
+                <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--ax-space-3);">My calendars</small>
+                <ul class="ax-list ax-list--compact">
+                  <li class="ax-list__row" style="border:0;padding-inline:0;">
+                    <span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked style="accent-color:var(--ax-accent);"></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);display:flex;align-items:center;gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i>Work</span></span>
+                    <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);">12</span>
+                  </li>
+                  <li class="ax-list__row" style="border:0;padding-inline:0;">
+                    <span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);display:flex;align-items:center;gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i>Personal</span></span>
+                    <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);">5</span>
+                  </li>
+                  <li class="ax-list__row" style="border:0;padding-inline:0;">
+                    <span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);display:flex;align-items:center;gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i>Design team</span></span>
+                    <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);">8</span>
+                  </li>
+                  <li class="ax-list__row" style="border:0;padding-inline:0;">
+                    <span class="ax-list__leading"><input type="checkbox" class="ax-checkbox"></span>
+                    <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);display:flex;align-items:center;gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);"></i>Holidays</span></span>
+                    <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);">3</span>
+                  </li>
+                </ul>
+              </div>
+
+              <hr class="ax-divider" style="margin:0;border:0;border-top:1px solid var(--ax-border);">
+
+              <!-- upcoming -->
+              <div>
+                <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--ax-space-3);">Upcoming</small>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                    <span style="width:3px;align-self:stretch;border-radius:2px;background:var(--ax-accent);flex:0 0 auto;"></span>
+                    <div style="min-width:0;flex:1 1 auto;">
+                      <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Sprint planning</div>
+                      <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Today · 10:00 AM</div>
+                    </div>
+                  </div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                    <span style="width:3px;align-self:stretch;border-radius:2px;background:var(--ax-viz-violet);flex:0 0 auto;"></span>
+                    <div style="min-width:0;flex:1 1 auto;">
+                      <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Design critique</div>
+                      <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Today · 2:30 PM</div>
+                    </div>
+                  </div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                    <span style="width:3px;align-self:stretch;border-radius:2px;background:var(--ax-viz-cyan);flex:0 0 auto;"></span>
+                    <div style="min-width:0;flex:1 1 auto;">
+                      <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Dentist appointment</div>
+                      <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Tomorrow · 9:00 AM</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </aside>
+
+          <!-- ───── CALENDAR CANVAS ───── -->
+          <section class="ax-card ax-col--9" role="region" aria-label="Month calendar">
+            <div class="ax-card__header">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <span class="ax-cluster" style="gap:2px;">
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Previous period"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm">Today</button>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Next period"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                </span>
+                <h2 class="ax-card__title" style="margin:0;">June 2026</h2>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-segment" role="radiogroup" aria-label="Calendar view">
+                  <button type="button" class="ax-segment__option" role="radio" :aria-checked="view==='month'" :class="{ 'is-active': view==='month' }" @click="view='month'">Month</button>
+                  <button type="button" class="ax-segment__option" role="radio" :aria-checked="view==='week'" :class="{ 'is-active': view==='week' }" @click="view='week'">Week</button>
+                  <button type="button" class="ax-segment__option" role="radio" :aria-checked="view==='day'" :class="{ 'is-active': view==='day' }" @click="view='day'">Day</button>
+                  <button type="button" class="ax-segment__option" role="radio" :aria-checked="view==='list'" :class="{ 'is-active': view==='list' }" @click="view='list'">List</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- MONTH GRID -->
+            <div class="ax-card__body" style="padding-top:0;" x-show="view==='month'">
+              <!-- weekday header -->
+              <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border:1px solid var(--ax-border);border-radius:var(--ax-radius-md) var(--ax-radius-md) 0 0;overflow:hidden;">
+                <template x-for="(d,i) in ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']" :key="d">
+                  <div :style="`padding:var(--ax-space-2) var(--ax-space-3);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;color:var(--ax-text-subtle);text-align:center;` + (i<6 ? 'border-inline-end:1px solid var(--ax-border);' : '') + 'background:var(--ax-surface-subtle);'" x-text="d"></div>
+                </template>
+              </div>
+              <!-- weeks -->
+              <div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-inline:1px solid var(--ax-border);border-block-end:1px solid var(--ax-border);border-radius:0 0 var(--ax-radius-md) var(--ax-radius-md);overflow:hidden;">
+
+                <!-- helper cell builder via static markup; min-height tuned for ~6 rows -->
+                <!-- Week 1 -->
+                <button type="button" class="ax-cal-cell" style="--n:'26'" @click="openNew('2026-05-26')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">26</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-05-27')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">27</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-05-28')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">28</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-05-29')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">29</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-05-30')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">30</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-05-31')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">31</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-01')"><span class="ax-cal-cell__n ax-num">1</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:1,title:'Team standup',cat:'work',start:'2026-06-01T09:30',end:'2026-06-01T09:45'})"><b class="ax-num">09:30</b> Standup</span>
+                </button>
+
+                <!-- Week 2 -->
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-02')"><span class="ax-cal-cell__n ax-num">2</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-violet);" @click.stop="openEdit({id:2,title:'Design critique',cat:'design',start:'2026-06-02T14:30',end:'2026-06-02T15:30'})"><b class="ax-num">14:30</b> Critique</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-03')"><span class="ax-cal-cell__n ax-num">3</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-04')"><span class="ax-cal-cell__n ax-num">4</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-cyan);" @click.stop="openEdit({id:3,title:'1:1 with Maya',cat:'personal',start:'2026-06-04T11:00',end:'2026-06-04T11:30'})"><b class="ax-num">11:00</b> 1:1 Maya</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:4,title:'Release review',cat:'work',start:'2026-06-04T16:00',end:'2026-06-04T17:00'})"><b class="ax-num">16:00</b> Release</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-05')"><span class="ax-cal-cell__n ax-num">5</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-06')"><span class="ax-cal-cell__n ax-num">6</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-amber);" @click.stop="openEdit({id:5,title:'Cabin weekend',cat:'personal',start:'2026-06-06',end:'2026-06-07',allday:true})">Cabin trip</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-07')"><span class="ax-cal-cell__n ax-num">7</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-08')"><span class="ax-cal-cell__n ax-num">8</span></button>
+
+                <!-- Week 3 -->
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-09')"><span class="ax-cal-cell__n ax-num">9</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:6,title:'Roadmap sync',cat:'work',start:'2026-06-09T10:00',end:'2026-06-09T11:00'})"><b class="ax-num">10:00</b> Roadmap</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-10')"><span class="ax-cal-cell__n ax-num">10</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-11')"><span class="ax-cal-cell__n ax-num">11</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-violet);" @click.stop="openEdit({id:7,title:'Brand workshop',cat:'design',start:'2026-06-11T13:00',end:'2026-06-11T15:00'})"><b class="ax-num">13:00</b> Workshop</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-12')"><span class="ax-cal-cell__n ax-num">12</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:8,title:'All-hands',cat:'work',start:'2026-06-12T15:00',end:'2026-06-12T16:00'})"><b class="ax-num">15:00</b> All-hands</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-13')"><span class="ax-cal-cell__n ax-num">13</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-14')"><span class="ax-cal-cell__n ax-num">14</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-15')"><span class="ax-cal-cell__n ax-num">15</span></button>
+
+                <!-- Week 4 -->
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-16')"><span class="ax-cal-cell__n ax-num">16</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-cyan);" @click.stop="openEdit({id:9,title:'Yearly checkup',cat:'personal',start:'2026-06-16T09:00',end:'2026-06-16T10:00'})"><b class="ax-num">09:00</b> Checkup</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-17')"><span class="ax-cal-cell__n ax-num">17</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-18')"><span class="ax-cal-cell__n ax-num">18</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:10,title:'QA sign-off',cat:'work',start:'2026-06-18T11:00',end:'2026-06-18T12:00'})"><b class="ax-num">11:00</b> QA sign-off</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-violet);" @click.stop="openEdit({id:11,title:'Icon review',cat:'design',start:'2026-06-18T14:00',end:'2026-06-18T15:00'})"><b class="ax-num">14:00</b> Icons</span>
+                  <span class="ax-cal-more">+2 more</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-19')"><span class="ax-cal-cell__n ax-num">19</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-20')"><span class="ax-cal-cell__n ax-num">20</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-21')"><span class="ax-cal-cell__n ax-num">21</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-amber);" @click.stop="openEdit({id:12,title:'Father\'s Day',cat:'holiday',start:'2026-06-21',allday:true})">Father's Day</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-22')"><span class="ax-cal-cell__n ax-num">22</span></button>
+
+                <!-- Week 5 -->
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-23')"><span class="ax-cal-cell__n ax-num">23</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:13,title:'Customer call — Northwind',cat:'work',start:'2026-06-23T10:30',end:'2026-06-23T11:00'})"><b class="ax-num">10:30</b> Northwind</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-24')"><span class="ax-cal-cell__n ax-num">24</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-25')"><span class="ax-cal-cell__n ax-num">25</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-violet);" @click.stop="openEdit({id:14,title:'Portfolio review',cat:'design',start:'2026-06-25T15:30',end:'2026-06-25T16:30'})"><b class="ax-num">15:30</b> Portfolio</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-26')"><span class="ax-cal-cell__n ax-num">26</span></button>
+                <!-- today -->
+                <button type="button" class="ax-cal-cell ax-cal-cell--today" @click="openNew('2026-06-27')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--today">27</span>
+                  <span class="ax-cal-now" aria-hidden="true"></span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:15,title:'Sprint planning',cat:'work',start:'2026-06-27T10:00',end:'2026-06-27T11:00'})"><b class="ax-num">10:00</b> Sprint planning</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-violet);" @click.stop="openEdit({id:16,title:'Design critique',cat:'design',start:'2026-06-27T14:30',end:'2026-06-27T15:30'})"><b class="ax-num">14:30</b> Critique</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-28')"><span class="ax-cal-cell__n ax-num">28</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-viz-cyan);" @click.stop="openEdit({id:17,title:'Dentist',cat:'personal',start:'2026-06-28T09:00',end:'2026-06-28T09:45'})"><b class="ax-num">09:00</b> Dentist</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-29')"><span class="ax-cal-cell__n ax-num">29</span></button>
+
+                <!-- Week 6 -->
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-06-30')"><span class="ax-cal-cell__n ax-num">30</span>
+                  <span class="ax-cal-event" style="--c:var(--ax-accent);" @click.stop="openEdit({id:18,title:'Month-end review',cat:'work',start:'2026-06-30T16:00',end:'2026-06-30T17:00'})"><b class="ax-num">16:00</b> Month-end</span>
+                </button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-07-01')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">1</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-07-02')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">2</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-07-03')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">3</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-07-04')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">4</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-07-05')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">5</span></button>
+                <button type="button" class="ax-cal-cell" @click="openNew('2026-07-06')"><span class="ax-cal-cell__n ax-num ax-cal-cell__n--muted">6</span></button>
+              </div>
+            </div>
+
+            <!-- LIST / WEEK / DAY fallback view (agenda) -->
+            <div class="ax-card__body" style="padding-top:0;" x-show="view!=='month'" x-cloak>
+              <p class="ax-card__subtitle" style="margin-bottom:var(--ax-space-4);" x-text="view==='list' ? 'Agenda — upcoming events' : (view.charAt(0).toUpperCase()+view.slice(1))+' view'"></p>
+              <ul class="ax-list">
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Sprint planning</span><span class="ax-list__meta">Work · Conference room B</span></span>
+                  <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">Today · 10:00 AM</span>
+                </li>
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Design critique</span><span class="ax-list__meta">Design team · Figjam</span></span>
+                  <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">Today · 2:30 PM</span>
+                </li>
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Dentist appointment</span><span class="ax-list__meta">Personal · Bright Smile Clinic</span></span>
+                  <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">Tomorrow · 9:00 AM</span>
+                </li>
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Month-end review</span><span class="ax-list__meta">Work · Zoom</span></span>
+                  <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">Jun 30 · 4:00 PM</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- ════════════════ EVENT EDITOR MODAL ════════════════ -->
+        <div x-show="editorOpen" x-cloak class="ax-modal-scrim" @click="editorOpen=false"
+          x-transition.opacity>
+          <div class="ax-card" role="dialog" aria-modal="true" aria-label="Event editor" @click.stop style="width:min(520px,100%);max-height:84vh;overflow:auto;" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title" x-text="editor.id ? 'Edit event' : 'New event'"></h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Close editor" @click="editorOpen=false"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <form class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);" @submit.prevent="save()">
+              <div class="ax-field">
+                <label class="ax-label" for="ev-title">Title</label>
+                <input id="ev-title" type="text" class="ax-input" x-model="editor.title" placeholder="Add a title" required>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                <div class="ax-field">
+                  <label class="ax-label" for="ev-cat">Calendar</label>
+                  <select id="ev-cat" class="ax-select" x-model="editor.cat">
+                    <option value="work">Work</option>
+                    <option value="personal">Personal</option>
+                    <option value="design">Design team</option>
+                    <option value="holiday">Holidays</option>
+                  </select>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="ev-repeat">Repeat</label>
+                  <select id="ev-repeat" class="ax-select" x-model="editor.repeat">
+                    <option value="none">Does not repeat</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                  </select>
+                </div>
+              </div>
+              <label class="ax-check" style="gap:var(--ax-space-3);">
+                <input type="checkbox" class="ax-switch" x-model="editor.allday">
+                <span style="color:var(--ax-text);font-size:var(--ax-text-sm);">All-day event</span>
+              </label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                <div class="ax-field">
+                  <label class="ax-label" for="ev-start">Starts</label>
+                  <input id="ev-start" type="datetime-local" class="ax-input ax-num" style="font-family:var(--ax-font-mono);" x-model="editor.start">
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="ev-end">Ends</label>
+                  <input id="ev-end" type="datetime-local" class="ax-input ax-num" style="font-family:var(--ax-font-mono);" x-model="editor.end">
+                </div>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="ev-loc">Location</label>
+                <input id="ev-loc" type="text" class="ax-input" x-model="editor.location" placeholder="Add a location or video link">
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="ev-desc">Description</label>
+                <textarea id="ev-desc" class="ax-textarea" rows="3" x-model="editor.desc" placeholder="Add notes, agenda or links"></textarea>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-2);">
+                <button type="button" class="ax-btn ax-btn--ghost" x-show="editor.id" @click="editorOpen=false" style="color:var(--ax-danger-500);">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                  <span class="ax-btn__label">Delete</span>
+                </button>
+                <span style="flex:1 1 auto;"></span>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="editorOpen=false">Cancel</button>
+                <button type="submit" class="ax-btn ax-btn--primary">Save event</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- page-local calendar cell composition (role tokens only) -->
+        <style>
+          .ax-modal-scrim { position:fixed; inset:0; z-index:120; display:flex; align-items:flex-start; justify-content:center; padding:8vh var(--ax-space-5); background:var(--ax-backdrop); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px); }
+          .ax-cal-cell { position:relative; display:flex; flex-direction:column; gap:3px; align-items:stretch; text-align:left; min-height:104px; padding:var(--ax-space-2); background:var(--ax-surface-solid); border:0; border-inline-end:1px solid var(--ax-border); border-block-start:1px solid var(--ax-border); cursor:pointer; transition:background var(--ax-motion-instant) var(--ax-ease-standard); }
+          .ax-cal-cell:nth-child(7n) { border-inline-end:0; }
+          .ax-cal-cell:hover { background:var(--ax-fill-hover); }
+          .ax-cal-cell--today { background:var(--ax-accent-wash); }
+          .ax-cal-cell__n { align-self:flex-start; font-family:var(--ax-font-mono); font-size:var(--ax-text-xs); color:var(--ax-text-strong); padding:1px 2px; }
+          .ax-cal-cell__n--muted { color:var(--ax-text-subtle); }
+          .ax-cal-cell__n--today { display:inline-flex; align-items:center; justify-content:center; min-width:22px; height:22px; border-radius:var(--ax-radius-pill); background:var(--ax-accent); color:var(--ax-on-accent); font-weight:600; }
+          .ax-cal-now { position:absolute; inset-inline:0; top:38px; height:2px; background:var(--ax-accent); }
+          .ax-cal-now::before { content:""; position:absolute; inset-inline-start:0; top:-3px; width:8px; height:8px; border-radius:50%; background:var(--ax-accent); }
+          .ax-cal-event { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:2px 7px; font-size:var(--ax-text-xs); color:var(--ax-text-strong); border-radius:var(--ax-radius-sm); background:color-mix(in oklab, var(--c) 16%, transparent); border-inline-start:3px solid var(--c); cursor:pointer; }
+          .ax-cal-event b { font-family:var(--ax-font-mono); font-weight:600; color:var(--c); margin-inline-end:3px; }
+          .ax-cal-event:hover { background:color-mix(in oklab, var(--c) 26%, transparent); }
+          .ax-cal-more { font-size:var(--ax-text-2xs); color:var(--ax-text-muted); padding:1px 7px; font-weight:var(--ax-weight-medium); }
+          @media (max-width:768px){ .ax-cal-cell { min-height:74px; } }
+        </style>
+
+      
+{% endblock %}
+

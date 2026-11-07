@@ -1,0 +1,87 @@
+<aside class="sidebar">
+    <button type="button" class="sidebar-close-btn">
+        <iconify-icon icon="radix-icons:cross-2"></iconify-icon>
+    </button>
+    <div>
+        <a href="{% url 'dashboard' %}" class="sidebar-logo d-flex align-items-center gap-2 px-3 py-3 text-decoration-none">
+            <div class="w-36-px h-36-px bg-primary-600 rounded-circle d-flex justify-content-center align-items-center text-white fw-bold">
+                QMS
+            </div>
+            <div>
+                <span class="text-lg fw-bold text-primary-light d-block line-height-1">QMS Automotive</span>
+                <span class="text-xs text-secondary-light">IATF 16949 / CFR 11</span>
+            </div>
+        </a>
+    </div>
+    <div class="sidebar-menu-area">
+        <ul class="sidebar-menu" id="sidebar-menu">
+            <li class="sidebar-menu-group-title">Executive Control</li>
+            <li>
+                <a href="{% url 'dashboard' %}" class="{% if request.path == '/' %}active-page{% endif %}">
+                    <iconify-icon icon="solar:chart-square-outline" class="menu-icon"></iconify-icon>
+                    <span>Quality Dashboard</span>
+                </a>
+            </li>
+
+            <li class="sidebar-menu-group-title">Operational Quality</li>
+            <li>
+                <a href="{% url 'iqc:index' %}" class="{% if '/iqc/' in request.path %}active-page{% endif %}">
+                    <iconify-icon icon="solar:box-minimalistic-outline" class="menu-icon"></iconify-icon>
+                    <span>Incoming QC (IQC)</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'ipqc:index' %}" class="{% if '/ipqc/' in request.path %}active-page{% endif %}">
+                    <iconify-icon icon="solar:settings-minimalistic-outline" class="menu-icon"></iconify-icon>
+                    <span>In-Process QC (IPQC)</span>
+                </a>
+            </li>
+            <li>
+                <a href="{% url 'oqc:index' %}" class="{% if '/oqc/' in request.path %}active-page{% endif %}">
+                    <iconify-icon icon="solar:shield-check-outline" class="menu-icon"></iconify-icon>
+                    <span>Outgoing QC (OQC)</span>
+                </a>
+            </li>
+
+            <li class="sidebar-menu-group-title">Master Data & Planning</li>
+            <li>
+                <a href="/admin/quality_planning/controlplan/" target="_blank">
+                    <iconify-icon icon="solar:document-text-outline" class="menu-icon"></iconify-icon>
+                    <span>Control Plans (CTQ)</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/master_data/part/" target="_blank">
+                    <iconify-icon icon="solar:widget-outline" class="menu-icon"></iconify-icon>
+                    <span>Part Catalog</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/master_data/resinmaterial/" target="_blank">
+                    <iconify-icon icon="solar:beaker-outline" class="menu-icon"></iconify-icon>
+                    <span>Resin Specifications</span>
+                </a>
+            </li>
+
+            <li class="sidebar-menu-group-title">Compliance & Outbox</li>
+            <li>
+                <a href="/admin/core/audittrailevent/" target="_blank">
+                    <iconify-icon icon="solar:lock-keyhole-outline" class="menu-icon"></iconify-icon>
+                    <span>21 CFR Part 11 Audit</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/core/outboxevent/" target="_blank">
+                    <iconify-icon icon="solar:transfer-horizontal-outline" class="menu-icon"></iconify-icon>
+                    <span>Transactional Outbox</span>
+                </a>
+            </li>
+            <li>
+                <a href="/admin/" target="_blank">
+                    <iconify-icon icon="solar:user-id-outline" class="menu-icon"></iconify-icon>
+                    <span>Admin Management</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</aside>

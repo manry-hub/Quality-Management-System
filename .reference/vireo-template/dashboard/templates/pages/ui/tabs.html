@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Tabs</h1>
+              <p class="ax-page-head__subtitle">Line, pill, segmented and vertical tabs — with icons, badges and live panels.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/accordions/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M4 12h16"/><path d="M4 18h16"/></svg>
+                <span class="ax-btn__label">Accordions</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Line (underline) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Line tabs">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Default</span>
+                <h2 class="ax-card__title">Line</h2>
+                <p class="ax-card__subtitle">An animated underline tracks the active tab.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-tabs"
+                   x-data="{ active:0, ind:{}, move(i){ this.active=i; this.$nextTick(()=>{ const t=this.$refs.list.children[i]; if(t) this.ind={ w:t.offsetWidth+'px', x:t.offsetLeft+'px' }; }) }, init(){ this.$nextTick(()=>this.move(0)) } }"
+                   :style="`--ax-tabs-ind-w:${ind.w||'0'};--ax-tabs-ind-x:${ind.x||'0'}`">
+                <div class="ax-tabs__list" role="tablist" aria-label="Account sections" x-ref="list">
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===0" :tabindex="active===0?0:-1" @click="move(0)">Overview</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===1" :tabindex="active===1?0:-1" @click="move(1)">Activity</button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===2" :tabindex="active===2?0:-1" @click="move(2)">Settings</button>
+                  <span class="ax-tabs__indicator" aria-hidden="true"></span>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===0" x-transition.opacity>
+                  <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">Workspace <b style="color:var(--ax-text-strong);">Northwind Labs</b> has 9 members across 4 teams. Last deploy shipped 8 minutes ago.</p>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===1" x-cloak x-transition.opacity>
+                  <ul class="ax-list ax-list--compact" style="margin:0;">
+                    <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__content"><span class="ax-list__title">Devon closed TSK-241</span></span><span class="ax-list__trailing" style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">8m</span></li>
+                    <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__content"><span class="ax-list__title">Lena uploaded illustrations</span></span><span class="ax-list__trailing" style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">18m</span></li>
+                  </ul>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===2" x-cloak x-transition.opacity>
+                  <div class="ax-field" style="margin:0;display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-4);">
+                    <label class="ax-label" for="tb-2fa" style="margin:0;">Require two-factor auth</label>
+                    <input id="tb-2fa" type="checkbox" class="ax-switch" checked aria-label="Require two-factor auth">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Pill ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Pill tabs">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Rounded</span>
+                <h2 class="ax-card__title">Pill</h2>
+                <p class="ax-card__subtitle">Active tab fills with an accent wash.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-tabs ax-tabs--pill" x-data="axTabs(0)">
+                <div class="ax-tabs__list" role="tablist" aria-label="Plan filter">
+                  <button type="button" class="ax-tabs__tab" :class="{'is-active':isActive(0)}" role="tab" :aria-selected="isActive(0)" :tabindex="isActive(0)?0:-1" @click="select(0)">All <span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">128</span></button>
+                  <button type="button" class="ax-tabs__tab" :class="{'is-active':isActive(1)}" role="tab" :aria-selected="isActive(1)" :tabindex="isActive(1)?0:-1" @click="select(1)">Active <span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--success ax-badge--pill">96</span></button>
+                  <button type="button" class="ax-tabs__tab" :class="{'is-active':isActive(2)}" role="tab" :aria-selected="isActive(2)" :tabindex="isActive(2)?0:-1" @click="select(2)">Trial <span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">24</span></button>
+                  <button type="button" class="ax-tabs__tab" :class="{'is-active':isActive(3)}" role="tab" :aria-selected="isActive(3)" :tabindex="isActive(3)?0:-1" @click="select(3)">Churned <span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">8</span></button>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="isActive(0)" x-transition.opacity><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">Every account, regardless of state.</p></div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="isActive(1)" x-cloak x-transition.opacity><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">96 paying customers in good standing.</p></div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="isActive(2)" x-cloak x-transition.opacity><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">24 workspaces still on a 14-day trial.</p></div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="isActive(3)" x-cloak x-transition.opacity><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">8 accounts lapsed in the last 90 days.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Segmented ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Segmented tabs">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Grouped</span>
+                <h2 class="ax-card__title">Segmented</h2>
+                <p class="ax-card__subtitle">A boxed control for a short, exclusive set.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-tabs ax-tabs--segmented" x-data="axTabs(1)">
+                <div class="ax-tabs__list" role="tablist" aria-label="Range" style="max-width:320px;">
+                  <button type="button" class="ax-tabs__tab" :class="{'is-active':isActive(0)}" role="tab" :aria-selected="isActive(0)" :tabindex="isActive(0)?0:-1" @click="select(0)" style="flex:1;justify-content:center;">Day</button>
+                  <button type="button" class="ax-tabs__tab" :class="{'is-active':isActive(1)}" role="tab" :aria-selected="isActive(1)" :tabindex="isActive(1)?0:-1" @click="select(1)" style="flex:1;justify-content:center;">Week</button>
+                  <button type="button" class="ax-tabs__tab" :class="{'is-active':isActive(2)}" role="tab" :aria-selected="isActive(2)" :tabindex="isActive(2)?0:-1" @click="select(2)" style="flex:1;justify-content:center;">Month</button>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="isActive(0)" x-cloak x-transition.opacity><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">$2,480</div><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">today</span></div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="isActive(1)" x-transition.opacity><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">$18.2K</div><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">this week</span></div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="isActive(2)" x-cloak x-transition.opacity><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);color:var(--ax-text-strong);">$74.8K</div><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">this month</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── With icons ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Tabs with icons">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Iconed</span>
+                <h2 class="ax-card__title">With Icons</h2>
+                <p class="ax-card__subtitle">Leading glyphs aid scanning in dense headers.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-tabs"
+                   x-data="{ active:0, ind:{}, move(i){ this.active=i; this.$nextTick(()=>{ const t=this.$refs.list.children[i]; if(t) this.ind={ w:t.offsetWidth+'px', x:t.offsetLeft+'px' }; }) }, init(){ this.$nextTick(()=>this.move(0)) } }"
+                   :style="`--ax-tabs-ind-w:${ind.w||'0'};--ax-tabs-ind-x:${ind.x||'0'}`">
+                <div class="ax-tabs__list" role="tablist" aria-label="Profile sections" x-ref="list">
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===0" :tabindex="active===0?0:-1" @click="move(0)">
+                    <svg class="ax-tabs__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+                    Profile
+                  </button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===1" :tabindex="active===1?0:-1" @click="move(1)">
+                    <svg class="ax-tabs__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/></svg>
+                    Settings
+                  </button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===2" :tabindex="active===2?0:-1" @click="move(2)">
+                    <svg class="ax-tabs__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+                    Alerts
+                    <span class="ax-tabs__badge ax-badge ax-badge--solid ax-badge--danger ax-badge--count">3</span>
+                  </button>
+                  <span class="ax-tabs__indicator" aria-hidden="true"></span>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===0" x-transition.opacity><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">Public name, avatar and bio for your profile card.</p></div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===1" x-cloak x-transition.opacity><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">Language, timezone and notification defaults.</p></div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===2" x-cloak x-transition.opacity><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">You have 3 unread security alerts.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Vertical ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Vertical tabs">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Side rail</span>
+                <h2 class="ax-card__title">Vertical</h2>
+                <p class="ax-card__subtitle">A leading list with a moving side marker — ideal for settings.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-tabs ax-tabs--vertical"
+                   x-data="{ active:0, ind:{}, move(i){ this.active=i; this.$nextTick(()=>{ const t=this.$refs.list.children[i]; if(t) this.ind={ h:t.offsetHeight+'px', y:t.offsetTop+'px' }; }) }, init(){ this.$nextTick(()=>this.move(0)) } }"
+                   :style="`--ax-tabs-ind-h:${ind.h||'0'};--ax-tabs-ind-y:${ind.y||'0'}`">
+                <div class="ax-tabs__list" role="tablist" aria-label="Settings" x-ref="list" style="min-width:200px;">
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===0" :tabindex="active===0?0:-1" @click="move(0)">
+                    <svg class="ax-tabs__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+                    General
+                  </button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===1" :tabindex="active===1?0:-1" @click="move(1)">
+                    <svg class="ax-tabs__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>
+                    Security
+                  </button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===2" :tabindex="active===2?0:-1" @click="move(2)">
+                    <svg class="ax-tabs__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-8z"/><path d="M3 10h18"/><path d="M7 15v2"/></svg>
+                    Billing
+                  </button>
+                  <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="active===3" :tabindex="active===3?0:-1" @click="move(3)">
+                    <svg class="ax-tabs__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4z"/><path d="M9 8h6"/><path d="M9 12h6"/><path d="M9 16h4"/></svg>
+                    Team
+                  </button>
+                  <span class="ax-tabs__indicator" aria-hidden="true"></span>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===0" x-transition.opacity>
+                  <h3 style="margin:0 0 var(--ax-space-2);font-size:var(--ax-text-md);color:var(--ax-text-strong);">General</h3>
+                  <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">Workspace name, default locale and the avatar shown across Vireo.</p>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===1" x-cloak x-transition.opacity>
+                  <h3 style="margin:0 0 var(--ax-space-2);font-size:var(--ax-text-md);color:var(--ax-text-strong);">Security</h3>
+                  <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">Two-factor enforcement, session length and a live device list.</p>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===2" x-cloak x-transition.opacity>
+                  <h3 style="margin:0 0 var(--ax-space-2);font-size:var(--ax-text-md);color:var(--ax-text-strong);">Billing</h3>
+                  <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">Plan <b style="color:var(--ax-text-strong);">Business</b> · next invoice <b class="ax-num" style="color:var(--ax-text-strong);">$99.00</b> on Jul 12.</p>
+                </div>
+                <div class="ax-tabs__panel" role="tabpanel" x-show="active===3" x-cloak x-transition.opacity>
+                  <h3 style="margin:0 0 var(--ax-space-2);font-size:var(--ax-text-md);color:var(--ax-text-strong);">Team</h3>
+                  <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin:0;">9 members · 3 pending invites · 2 admins.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+{% endblock %}

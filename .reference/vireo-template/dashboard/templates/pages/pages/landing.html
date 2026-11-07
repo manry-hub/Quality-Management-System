@@ -1,0 +1,389 @@
+{% extends 'pages/auth/_standalone.html' %}
+
+{# Landing — off-app MARKETING page (no app shell; its own sticky nav + footer).
+   Faithful re-expression of src/html/pages/landing.html: hero + product mockup,
+   logo strip, alternating feature blocks (live accent picker), stats band,
+   pricing (monthly/annual toggle), FAQ accordion and a CTA band. Extends the
+   shared _standalone.html (anti-flash head, ambient, runtime). The reference's
+   marketing body is bare (not ax-standalone), so body_class is emptied and the
+   axLanding() x-data moves onto a wrapping <div>. The hero chart uses the
+   window.Vireo.charts bridge; theme toggle uses axLanding()'s built-in
+   fallback path. Reference hrefs converted to clean Django routes. #}
+
+{% block body_class %}{% endblock %}
+
+{% block auth_body %}
+  <div x-data="axLanding()">
+
+  <!-- ════════════════ MARKETING NAV (sticky) ════════════════ -->
+  <header class="ax-glass" :class="scrolled && 'is-scrolled'" role="banner"
+    style="position:sticky;top:0;z-index:40;border-radius:0;border-inline:0;border-block-start:0;border-block-end:1px solid transparent;transition:background-color var(--ax-motion-base) var(--ax-ease-standard),box-shadow var(--ax-motion-base) var(--ax-ease-standard),border-color var(--ax-motion-base) var(--ax-ease-standard);"
+    :style="'position:sticky;top:0;z-index:40;border-radius:0;border-inline:0;border-block-start:0;transition:background-color var(--ax-motion-base) var(--ax-ease-standard),box-shadow var(--ax-motion-base) var(--ax-ease-standard),border-color var(--ax-motion-base) var(--ax-ease-standard);' + (scrolled ? 'border-block-end:1px solid var(--ax-border);' : 'border-block-end:1px solid transparent;background:transparent;box-shadow:none;')"
+    @scroll.window="scrolled = window.scrollY > 8">
+    <nav class="ax-cluster" aria-label="Primary" style="max-width:1200px;margin-inline:auto;padding:var(--ax-space-4) var(--ax-space-6);justify-content:space-between;flex-wrap:nowrap;">
+      <a href="/pages/landing/" class="ax-cluster" aria-label="Vireo home" style="gap:var(--ax-space-3);text-decoration:none;flex-wrap:nowrap;">
+        <span aria-hidden="true" style="display:grid;place-items:center;width:38px;height:38px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 8px 22px -8px rgba(var(--ax-accent-rgb),.7);"><svg viewBox="0 0 32 32" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk0" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk0)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg></span>
+        <span style="font-family:var(--ax-font-display);font-weight:var(--ax-weight-semibold);font-size:var(--ax-text-lg);color:var(--ax-text-strong);">Vireo</span>
+      </a>
+      <div class="ax-cluster" style="gap:var(--ax-space-5);flex-wrap:nowrap;" :style="menuOpen ? '' : ''">
+        <div class="ax-cluster" style="gap:var(--ax-space-5);" :class="!menuOpen && 'ax-nav-desktop'">
+          <a class="ax-link" href="#features" style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);" @click="smoothTo($event,'features')">Features</a>
+          <a class="ax-link" href="#stats" style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);" @click="smoothTo($event,'stats')">Showcase</a>
+          <a class="ax-link" href="#pricing" style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);" @click="smoothTo($event,'pricing')">Pricing</a>
+          <a class="ax-link" href="#faq" style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);" @click="smoothTo($event,'faq')">FAQ</a>
+        </div>
+      </div>
+      <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+        <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" @click="toggleTheme()" :aria-pressed="theme==='dark'" aria-label="Toggle dark mode">
+          <svg x-show="theme==='dark'" class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 12h1m8 -9v1m8 8h1m-9 8v1m-6.4 -15.4l.7 .7m12.1 -.7l-.7 .7m0 11.4l.7 .7m-12.1 -.7l-.7 .7"/></svg>
+          <svg x-show="theme!=='dark'" class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454l0 .008"/></svg>
+        </button>
+        <a class="ax-btn ax-btn--ghost ax-btn--sm" href="/auth/sign-in-basic/"><span class="ax-btn__label">Sign in</span></a>
+        <a class="ax-btn ax-btn--primary ax-btn--sm" href="/auth/sign-up-basic/"><span class="ax-btn__label">Get started</span></a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="ax-main" style="position:relative;z-index:1;">
+
+    <!-- ════════════════ HERO ════════════════ -->
+    <section style="max-width:1200px;margin-inline:auto;padding:var(--ax-space-12) var(--ax-space-6) var(--ax-space-10);text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-5);">
+      <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill"><span class="ax-badge__dot"></span>Aurora 2.4 is live</span>
+      <h1 style="margin:0;max-width:18ch;font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:700;line-height:1.08;letter-spacing:-.02em;color:var(--ax-text-strong);">
+        The admin dashboard your team will <span style="position:relative;white-space:nowrap;color:var(--ax-accent);">actually use<svg viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true" style="position:absolute;left:0;bottom:-6px;width:100%;height:10px;"><path d="M2 8 Q 50 2 100 6 T 198 5" fill="none" stroke="var(--ax-accent)" stroke-width="3" stroke-linecap="round"/></svg></span>.
+      </h1>
+      <p style="margin:0;max-width:54ch;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.6;">
+        Vireo ships 17 dashboards, 8 web apps and a full eCommerce suite in one glassy, token-driven design system — light, dark and twelve accents, all out of the box.
+      </p>
+      <div class="ax-cluster" style="gap:var(--ax-space-3);justify-content:center;">
+        <a class="ax-btn ax-btn--primary ax-btn--lg" href="/auth/sign-up-basic/"><span class="ax-btn__label">Start free trial</span><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M13 18l6 -6"/><path d="M13 6l6 6"/></svg></a>
+        <a class="ax-btn ax-btn--secondary ax-btn--lg" href="/"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16l13 -8z"/></svg><span class="ax-btn__label">Live demo</span></a>
+      </div>
+      <p class="ax-num" style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">No card required · 14-day trial · cancel anytime</p>
+
+      <!-- product mockup in a hairline browser frame -->
+      <div class="ax-glass" style="margin-top:var(--ax-space-6);width:100%;max-width:980px;border-radius:var(--ax-radius-xl);overflow:hidden;box-shadow:var(--ax-shadow-card);">
+        <div class="ax-cluster" style="gap:var(--ax-space-2);padding:var(--ax-space-3) var(--ax-space-4);border-block-end:1px solid var(--ax-border);">
+          <span style="width:11px;height:11px;border-radius:50%;background:var(--ax-viz-red);"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:var(--ax-viz-amber);"></span>
+          <span style="width:11px;height:11px;border-radius:50%;background:var(--ax-viz-emerald);"></span>
+          <span class="ax-num" style="margin-inline-start:var(--ax-space-3);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);">app.vireo.io/dashboards/sales</span>
+        </div>
+        <div style="padding:var(--ax-space-5);background:var(--ax-canvas);">
+          <!-- mini dashboard composition (real tokens, not an image) -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--ax-space-3);margin-bottom:var(--ax-space-4);">
+            <div class="ax-card" style="padding:var(--ax-space-3);"><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Revenue</div><div class="ax-num" style="font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);color:var(--ax-text-strong);">$748K</div></div>
+            <div class="ax-card" style="padding:var(--ax-space-3);"><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Customers</div><div class="ax-num" style="font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);color:var(--ax-text-strong);">3,920</div></div>
+            <div class="ax-card" style="padding:var(--ax-space-3);"><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Orders</div><div class="ax-num" style="font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);color:var(--ax-text-strong);">9,812</div></div>
+            <div class="ax-card" style="padding:var(--ax-space-3);"><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);">Refunds</div><div class="ax-num" style="font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);color:var(--ax-text-strong);">1.2%</div></div>
+          </div>
+          <div class="ax-card" style="padding:var(--ax-space-4);">
+            <div id="landing-hero-chart" aria-label="Sample revenue chart" style="min-height:200px;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ LOGO STRIP ════════════════ -->
+    <section aria-label="Trusted by" style="max-width:1100px;margin-inline:auto;padding:0 var(--ax-space-6) var(--ax-space-10);text-align:center;">
+      <p style="margin:0 0 var(--ax-space-5);font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.1em;color:var(--ax-text-subtle);">Trusted by product teams at</p>
+      <div class="ax-cluster" style="gap:var(--ax-space-8);justify-content:center;flex-wrap:wrap;color:var(--ax-text-subtle);">
+        <span class="ax-cluster" style="gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-md);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 4.5v9l-9 4.5l-9 -4.5v-9z"/></svg>Northwind</span>
+        <span class="ax-cluster" style="gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-md);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 3v18"/></svg>Helio</span>
+        <span class="ax-cluster" style="gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-md);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l4 6"/><path d="M14 11l-4 6"/></svg>Vantage</span>
+        <span class="ax-cluster" style="gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-md);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l4 7h-8z"/><path d="M12 21l-4 -7h8z"/></svg>Quanta</span>
+        <span class="ax-cluster" style="gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:600;font-size:var(--ax-text-md);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12a7 7 0 1 0 14 0a7 7 0 0 0 -14 0"/><path d="M12 5v14"/></svg>Lumen</span>
+      </div>
+    </section>
+
+    <!-- ════════════════ FEATURE BLOCKS (alternating) ════════════════ -->
+    <section id="features" style="max-width:1100px;margin-inline:auto;padding:var(--ax-space-10) var(--ax-space-6);scroll-margin-top:80px;">
+      <div style="text-align:center;margin-bottom:var(--ax-space-9);">
+        <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">Why Vireo</span>
+        <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);letter-spacing:-.015em;">Everything is a token away</h2>
+        <p style="margin:var(--ax-space-3) auto 0;max-width:50ch;font-size:var(--ax-text-md);color:var(--ax-text-muted);">A single role-token layer drives every surface — so themes, accents and dark mode just work.</p>
+      </div>
+
+      <!-- Row 1 -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--ax-space-8);align-items:center;margin-bottom:var(--ax-space-10);">
+        <div>
+          <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);margin-bottom:var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3h7v9h-7z"/><path d="M14 3h7v5h-7z"/><path d="M14 12h7v9h-7z"/><path d="M3 16h7v5h-7z"/></svg></span>
+          <h3 style="margin:0 0 var(--ax-space-2);font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">17 ready-made dashboards</h3>
+          <p style="margin:0;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.6;">Sales, analytics, CRM, crypto, healthcare, HR and more — each a complete, considered layout you can ship today or remix tomorrow.</p>
+          <ul style="margin:var(--ax-space-4) 0 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+            <li class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Real demo data on every screen</li>
+            <li class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Charts that re-theme automatically</li>
+          </ul>
+        </div>
+        <div class="ax-glass" style="border-radius:var(--ax-radius-xl);padding:var(--ax-space-5);">
+          <div data-ax-chart="apex" data-ax-chart-type="bar" data-ax-chart-height="220" data-ax-chart-legend="none" data-ax-chart-accent="true" data-ax-chart-series='[{"name":"Active","data":[44,55,41,67,52,72,58]}]' aria-label="Sample bar chart"></div>
+        </div>
+      </div>
+
+      <!-- Row 2 (reversed) -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--ax-space-8);align-items:center;">
+        <div class="ax-glass" style="border-radius:var(--ax-radius-xl);padding:var(--ax-space-5);order:2;" x-data="{ accent: document.documentElement.getAttribute('data-ax-accent') || 'verdigris',
+              set(a){ this.accent=a; if(a==='verdigris'){document.documentElement.removeAttribute('data-ax-accent')} else {document.documentElement.setAttribute('data-ax-accent',a)} try{localStorage.setItem('ax:accent',a)}catch(e){} },
+              list:['verdigris','cobalt','indigo','amethyst','magenta','terracotta','amber','olive','forest','teal','slate','graphite'] }">
+          <p style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Try an accent — the whole page retheme is live:</p>
+          <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;" role="group" aria-label="Accent preset picker">
+            <template x-for="a in list" :key="a">
+              <button type="button" @click="set(a)" :aria-pressed="accent===a" :aria-label="'Use ' + a + ' accent'"
+                :style="`width:40px;height:40px;border-radius:var(--ax-radius-md);cursor:pointer;border:1px solid var(--ax-border);background:var(--ax-accent);`"
+                :data-ax-accent="a" style="position:relative;">
+                <span class="ax-grid" x-show="accent===a" aria-hidden="true" style="position:absolute;inset:0;place-items:center;color:var(--ax-on-accent);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg></span>
+              </button>
+            </template>
+          </div>
+          <p class="ax-num" style="margin:var(--ax-space-4) 0 0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);font-family:var(--ax-font-mono);">12 accent presets · light + dark · WCAG AA</p>
+        </div>
+        <div style="order:1;">
+          <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);margin-bottom:var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 0 1 0 -18a9 8 0 0 1 9 8a4.5 4 0 0 1 -4.5 4h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25"/><path d="M8.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M12.5 7.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M16.5 10.5m-1 0a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg></span>
+          <h3 style="margin:0 0 var(--ax-space-2);font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Themeable to the pixel</h3>
+          <p style="margin:0;font-size:var(--ax-text-md);color:var(--ax-text-muted);line-height:1.6;">Pick from twelve curated accents or set your own brand color in the live customizer. Every component, chart and badge follows instantly — no overrides.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ STATS BAND ════════════════ -->
+    <section id="stats" aria-label="By the numbers" style="border-block:1px solid var(--ax-border);scroll-margin-top:80px;">
+      <div style="max-width:1100px;margin-inline:auto;padding:var(--ax-space-9) var(--ax-space-6);display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:var(--ax-space-6);text-align:center;">
+        <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:700;color:var(--ax-text-strong);">210+</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">pre-built pages</div></div>
+        <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:700;color:var(--ax-text-strong);">9</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">framework editions</div></div>
+        <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:700;color:var(--ax-text-strong);">12</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">accent presets</div></div>
+        <div><div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-3xl);font-weight:700;color:var(--ax-text-strong);">100</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Lighthouse a11y</div></div>
+      </div>
+    </section>
+
+    <!-- ════════════════ PRICING ════════════════ -->
+    <section id="pricing" style="max-width:1100px;margin-inline:auto;padding:var(--ax-space-10) var(--ax-space-6);scroll-margin-top:80px;">
+      <div style="text-align:center;margin-bottom:var(--ax-space-7);">
+        <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">Pricing</span>
+        <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);letter-spacing:-.015em;">Simple, honest pricing</h2>
+        <p style="margin:var(--ax-space-3) auto var(--ax-space-5);max-width:46ch;font-size:var(--ax-text-md);color:var(--ax-text-muted);">One license, all editions. Switch to annual and save 20%.</p>
+        <div class="ax-segment" role="radiogroup" aria-label="Billing period" style="margin-inline:auto;">
+          <button type="button" class="ax-segment__option" :class="billing==='monthly' && 'is-active'" :aria-checked="billing==='monthly'" role="radio" @click="billing='monthly'">Monthly</button>
+          <button type="button" class="ax-segment__option" :class="billing==='annual' && 'is-active'" :aria-checked="billing==='annual'" role="radio" @click="billing='annual'">Annual <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--sm" style="margin-inline-start:6px;">−20%</span></button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--ax-space-5);align-items:stretch;">
+        <!-- Starter -->
+        <div class="ax-card" role="region" aria-label="Starter plan" style="margin:0;display:flex;flex-direction:column;">
+          <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);flex:1 1 auto;">
+            <div>
+              <h3 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-md);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Starter</h3>
+              <p style="margin:var(--ax-space-1) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">For solo builders & prototypes.</p>
+            </div>
+            <div><span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);">$<span x-text="billing==='annual' ? '23' : '29'"></span></span><span style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);"> /mo</span><div class="ax-num" x-show="billing==='annual'" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">$276 billed annually</div></div>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>1 project</li>
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>HTML edition</li>
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Community support</li>
+            </ul>
+            <a class="ax-btn ax-btn--secondary ax-btn--block" href="/auth/sign-up-basic/" style="margin-top:auto;"><span class="ax-btn__label">Choose Starter</span></a>
+          </div>
+        </div>
+
+        <!-- Pro (most popular — quiet accent top-border) -->
+        <div class="ax-card ax-card--accent-edge" role="region" aria-label="Pro plan, most popular" style="margin:0;display:flex;flex-direction:column;position:relative;">
+          <span style="position:absolute;top:var(--ax-space-4);inset-inline-end:var(--ax-space-4);"><span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill">Most popular</span></span>
+          <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);flex:1 1 auto;">
+            <div>
+              <h3 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-md);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Pro</h3>
+              <p style="margin:var(--ax-space-1) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">For teams shipping product.</p>
+            </div>
+            <div><span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);">$<span x-text="billing==='annual' ? '63' : '79'"></span></span><span style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);"> /mo</span><div class="ax-num" x-show="billing==='annual'" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">$756 billed annually</div></div>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Unlimited projects</li>
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>All 9 framework editions</li>
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Priority email support</li>
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Figma source files</li>
+            </ul>
+            <a class="ax-btn ax-btn--primary ax-btn--block" href="/auth/sign-up-basic/" style="margin-top:auto;"><span class="ax-btn__label">Choose Pro</span></a>
+          </div>
+        </div>
+
+        <!-- Business -->
+        <div class="ax-card" role="region" aria-label="Business plan" style="margin:0;display:flex;flex-direction:column;">
+          <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);flex:1 1 auto;">
+            <div>
+              <h3 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-md);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Business</h3>
+              <p style="margin:var(--ax-space-1) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">For organizations at scale.</p>
+            </div>
+            <div><span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);">$<span x-text="billing==='annual' ? '159' : '199'"></span></span><span style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);"> /mo</span><div class="ax-num" x-show="billing==='annual'" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">$1,908 billed annually</div></div>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text);">
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Everything in Pro</li>
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>SSO & audit log</li>
+              <li class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="var(--ax-viz-emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>Dedicated success manager</li>
+            </ul>
+            <a class="ax-btn ax-btn--secondary ax-btn--block" href="/pages/support/" style="margin-top:auto;"><span class="ax-btn__label">Contact sales</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ FAQ ════════════════ -->
+    <section id="faq" style="max-width:760px;margin-inline:auto;padding:var(--ax-space-10) var(--ax-space-6);scroll-margin-top:80px;">
+      <div style="text-align:center;margin-bottom:var(--ax-space-7);">
+        <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">FAQ</span>
+        <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);letter-spacing:-.015em;">Questions, answered</h2>
+      </div>
+      <div class="ax-accordion ax-accordion--bordered" x-data="{ open: 0 }">
+        <template x-for="(q,i) in faqs" :key="i">
+          <div class="ax-accordion__item">
+            <button type="button" class="ax-accordion__header" :aria-expanded="open===i" @click="open = open===i ? -1 : i" :aria-controls="'faq-panel-'+i">
+              <span class="ax-accordion__title" x-text="q.q"></span>
+              <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+            </button>
+            <div class="ax-accordion__panel" :id="'faq-panel-'+i" x-show="open===i" x-collapse>
+              <p style="margin:0;line-height:1.6;" x-text="q.a"></p>
+            </div>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- ════════════════ CTA BAND (the ONE saturated surface) ════════════════ -->
+    <section aria-label="Get started" style="max-width:1100px;margin-inline:auto;padding:0 var(--ax-space-6) var(--ax-space-10);">
+      <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-xl);padding:var(--ax-space-10) var(--ax-space-6);text-align:center;background:var(--ax-gradient-accent);color:var(--ax-on-accent);box-shadow:0 24px 60px -24px rgba(var(--ax-accent-rgb),.6);">
+        <span aria-hidden="true" style="position:absolute;top:-60px;right:-40px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.14);"></span>
+        <span aria-hidden="true" style="position:absolute;bottom:-80px;left:-30px;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.10);"></span>
+        <h2 style="margin:0;position:relative;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;letter-spacing:-.015em;color:var(--ax-on-accent);">Start building today</h2>
+        <p style="margin:var(--ax-space-3) auto var(--ax-space-5);position:relative;max-width:46ch;font-size:var(--ax-text-md);opacity:.92;">Join thousands of teams shipping beautiful, accessible admin interfaces with Vireo.</p>
+        <div class="ax-cluster" style="gap:var(--ax-space-3);justify-content:center;position:relative;">
+          <a class="ax-btn ax-btn--solid ax-btn--lg" href="/auth/sign-up-basic/"><span class="ax-btn__label">Get started free</span></a>
+          <a class="ax-btn ax-btn--lg" href="/" style="background:rgba(255,255,255,.16);color:var(--ax-on-accent);border-color:rgba(255,255,255,.28);"><span class="ax-btn__label">View live demo</span></a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ FOOTER (marketing) ════════════════ -->
+    <footer role="contentinfo" style="border-block-start:1px solid var(--ax-border);">
+      <div style="max-width:1100px;margin-inline:auto;padding:var(--ax-space-9) var(--ax-space-6) var(--ax-space-6);">
+        <div style="display:grid;grid-template-columns:1.6fr repeat(4,1fr);gap:var(--ax-space-6);align-items:start;">
+          <div>
+            <a href="/pages/landing/" class="ax-cluster" aria-label="Vireo home" style="gap:var(--ax-space-3);text-decoration:none;margin-bottom:var(--ax-space-3);">
+              <span aria-hidden="true" style="display:grid;place-items:center;width:34px;height:34px;border-radius:var(--ax-radius-md);background:var(--ax-gradient-accent);color:var(--ax-on-accent);"><svg viewBox="0 0 32 32" width="20" height="20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="axmk1" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#2BC4B0"/><stop offset="0.55" stop-color="#1E9E96"/><stop offset="1" stop-color="#6D5CF0"/></linearGradient></defs><path d="M4 4 H16 A12 12 0 0 1 28 16 V28 A0 0 0 0 1 28 28 H16 A12 12 0 0 1 4 16 V4 Z" fill="url(#axmk1)" stroke="none"/><circle cx="20.5" cy="11.5" r="2.6" fill="#0A0C11" fill-opacity="0.92" stroke="none"/></svg></span>
+              <span style="font-family:var(--ax-font-display);font-weight:var(--ax-weight-semibold);font-size:var(--ax-text-md);color:var(--ax-text-strong);">Vireo</span>
+            </a>
+            <p style="margin:0;max-width:32ch;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">The token-driven admin template for teams who care about craft.</p>
+            <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-4);">
+              <a href="#" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Vireo on X"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg></a>
+              <a href="#" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Vireo on GitHub"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.3 1.4 -4.3 -2.5 -6 -3m12 5v-3.5c0 -1 .1 -1.4 -.5 -2c2.8 -.3 5.5 -1.4 5.5 -6a4.6 4.6 0 0 0 -1.3 -3.2a4.2 4.2 0 0 0 -.1 -3.2s-1.1 -.3 -3.5 1.3a12.3 12.3 0 0 0 -6.2 0c-2.4 -1.6 -3.5 -1.3 -3.5 -1.3a4.2 4.2 0 0 0 -.1 3.2a4.6 4.6 0 0 0 -1.3 3.2c0 4.6 2.7 5.7 5.5 6c-.6 .6 -.6 1.2 -.5 2v3.5"/></svg></a>
+              <a href="#" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Vireo on Dribbble"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 3.6c5 6 7 10.5 7.5 16.2"/><path d="M6.4 19c3.5 -3.5 6 -6.5 14.5 -6.4"/><path d="M3.1 10.75c5 0 9.814 -.38 15.314 -5"/></svg></a>
+            </div>
+          </div>
+          <nav aria-label="Product">
+            <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--ax-text-subtle);">Product</h3>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+              <li><a class="ax-link" href="#features" @click="smoothTo($event,'features')" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Features</a></li>
+              <li><a class="ax-link" href="#pricing" @click="smoothTo($event,'pricing')" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Pricing</a></li>
+              <li><a class="ax-link" href="/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Live demo</a></li>
+              <li><a class="ax-link" href="/auth/sign-up-basic/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Changelog</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Resources">
+            <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--ax-text-subtle);">Resources</h3>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+              <li><a class="ax-link" href="/pages/support/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Documentation</a></li>
+              <li><a class="ax-link" href="/pages/faq/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Help center</a></li>
+              <li><a class="ax-link" href="/pages/support/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Support</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Company">
+            <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--ax-text-subtle);">Company</h3>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+              <li><a class="ax-link" href="#" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">About</a></li>
+              <li><a class="ax-link" href="/pages/events/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Events</a></li>
+              <li><a class="ax-link" href="#" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Careers</a></li>
+            </ul>
+          </nav>
+          <nav aria-label="Legal">
+            <h3 style="margin:0 0 var(--ax-space-3);font-size:var(--ax-text-xs);text-transform:uppercase;letter-spacing:.08em;color:var(--ax-text-subtle);">Legal</h3>
+            <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+              <li><a class="ax-link" href="/pages/terms/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Terms</a></li>
+              <li><a class="ax-link" href="/pages/privacy/" style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Privacy</a></li>
+            </ul>
+          </nav>
+        </div>
+        <hr class="ax-divider" style="margin-block:var(--ax-space-6);" aria-hidden="true">
+        <div class="ax-cluster" style="justify-content:space-between;flex-wrap:wrap;gap:var(--ax-space-3);">
+          <span class="ax-num" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">© 2026 Vireo · v1.0.0</span>
+          <div class="ax-cluster" style="gap:var(--ax-space-3);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+            <span class="ax-cluster" style="gap:var(--ax-space-1);"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>English</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  </div>
+
+  <style>
+    @media (max-width: 768px) { .ax-nav-desktop { display: none !important; } }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto !important; } }
+  </style>
+{% endblock %}
+
+{% block auth_scripts %}
+  <script type="module">
+    // The app runtime exposes the shared ApexCharts wrapper on window.Vireo.charts.
+    // Landing has no customizer panel, so the shared quick-theme handler doesn't
+    // exist here; axLanding().toggleTheme() falls back to writing storage + the
+    // attribute directly (same net effect). Render the hero chart via the bridge.
+    const bridge = window.Vireo && window.Vireo.charts;
+    const el = document.getElementById('landing-hero-chart');
+    if (bridge && el) {
+      const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+      bridge.renderChart(el, 'area', [{ name:'This year', data:[28,34,30,42,38,52,48,60,56,68,64,74] }], {
+        height: 200, legend: 'none',
+        apex: { colors: [cv('--ax-chart-1')], stroke: { width: 2.5 } },
+      });
+    }
+  </script>
+
+  <script>
+    function axLanding() {
+      return {
+        scrolled: false, menuOpen: false, billing: 'monthly',
+        theme: document.documentElement.getAttribute('data-ax-theme') || 'light',
+        faqs: [
+          { q:'Which frameworks are included?', a:'Vireo ships in eight editions — plain HTML, React, Next.js, Vue, Nuxt, Laravel, Django and PHP — all sharing one token-driven design system.' },
+          { q:'Do dark mode and accents really work everywhere?', a:'Yes. Every surface reads from role tokens, so light, dark and all twelve accents apply to components, charts and badges with zero per-component overrides.' },
+          { q:'Can I use Vireo in a commercial product?', a:'Absolutely. A single license covers unlimited end products you build and sell, across every framework edition.' },
+          { q:'Is it accessible out of the box?', a:'Components ship with semantic landmarks, focus-visible rings, ARIA wiring and AA contrast in both themes — verified at a 100 Lighthouse accessibility score.' },
+        ],
+        init() {
+          // Keep the local `theme` mirror (drives the sun/moon icon + aria-pressed)
+          // locked to the REAL attribute. Re-sync on the shared toggle's
+          // ax-theme-change event, an OS change while ax:theme === 'system', and
+          // bfcache restores (pageshow).
+          const sync = () => {
+            this.theme = document.documentElement.getAttribute('data-ax-theme') === 'dark' ? 'dark' : 'light';
+          };
+          document.addEventListener('ax-theme-change', sync);
+          window.addEventListener('pageshow', sync);
+          sync();
+        },
+        toggleTheme() {
+          // Landing has no customizer, so flip the theme directly: read the live
+          // attribute, write storage, set the attribute, and mirror locally for
+          // the icon. vireo.js reacts to the attribute change for chart retheme.
+          const current = document.documentElement.getAttribute('data-ax-theme') === 'dark' ? 'dark' : 'light';
+          this.theme = current === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-ax-theme', this.theme);
+          try { localStorage.setItem('ax:theme', this.theme); } catch (e) {}
+        },
+        smoothTo(e, id) {
+          e.preventDefault();
+          const target = document.getElementById(id);
+          if (!target) return;
+          const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+          this.menuOpen = false;
+        },
+      };
+    }
+  </script>
+{% endblock %}

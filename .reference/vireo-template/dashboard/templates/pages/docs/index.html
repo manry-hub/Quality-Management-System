@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{# docs/index — faithful port of src/html/docs/index.html. Same DOM/classes/ARIA,
+   same demo copy, same Alpine helpers + declarative data-ax-chart. The reference
+   put x-data on <main>; base.html owns <main>, so page-root x-data moves to a
+   wrapper div (edition convention). Reference href -> clean Django route. #}
+
+{% block main %}
+<div x-data="{ active:'introduction', copied:'' }">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Documentation</h1>
+              <p class="ax-page-head__subtitle">Everything you need to install, theme &amp; extend Vireo. Version <span class="ax-num">1.0.0</span>.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 8v4l3 3"/></svg>
+                <span class="ax-btn__label">Changelog</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Download v1.0.0</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───────── TOC SIDEBAR (3) ───────── -->
+          <aside class="ax-card ax-col--3" role="navigation" aria-label="On this page" style="align-self:start;position:sticky;top:var(--ax-space-5);">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <!-- search -->
+              <div style="position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                <input type="search" class="ax-input ax-input--sm" placeholder="Search docs…" style="padding-inline-start:34px;" aria-label="Search documentation">
+                <kbd class="ax-kbd" style="position:absolute;inset-inline-end:8px;top:50%;transform:translateY(-50%);">⌘K</kbd>
+              </div>
+              <!-- getting started group -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Getting started</div>
+                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1px;">
+                  <li><a href="#introduction" @click="active='introduction'" class="ax-cluster" :style="active==='introduction' ? 'background:var(--ax-accent-wash);color:var(--ax-accent);' : 'color:var(--ax-text-muted);'" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Introduction</a></li>
+                  <li><a href="#installation" @click="active='installation'" class="ax-cluster" :style="active==='installation' ? 'background:var(--ax-accent-wash);color:var(--ax-accent);' : 'color:var(--ax-text-muted);'" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Installation</a></li>
+                  <li><a href="#structure" @click="active='structure'" class="ax-cluster" :style="active==='structure' ? 'background:var(--ax-accent-wash);color:var(--ax-accent);' : 'color:var(--ax-text-muted);'" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Project structure</a></li>
+                </ul>
+              </div>
+              <!-- customization group -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Customization</div>
+                <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:1px;">
+                  <li><a href="#theming" @click="active='theming'" class="ax-cluster" :style="active==='theming' ? 'background:var(--ax-accent-wash);color:var(--ax-accent);' : 'color:var(--ax-text-muted);'" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Theming &amp; tokens</a></li>
+                  <li><a href="#components" @click="active='components'" class="ax-cluster" :style="active==='components' ? 'background:var(--ax-accent-wash);color:var(--ax-accent);' : 'color:var(--ax-text-muted);'" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Components</a></li>
+                  <li><a href="#charts" @click="active='charts'" class="ax-cluster" :style="active==='charts' ? 'background:var(--ax-accent-wash);color:var(--ax-accent);' : 'color:var(--ax-text-muted);'" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);">Charts</a></li>
+                </ul>
+              </div>
+              <div class="ax-label" style="margin-bottom:0;">Resources</div>
+              <ul style="list-style:none;padding:0;margin:-8px 0 0;display:flex;flex-direction:column;gap:1px;">
+                <li><a href="#" class="ax-cluster" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Changelog</a></li>
+                <li><a href="#" class="ax-cluster" style="gap:var(--ax-space-2);padding:6px var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Support<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-inline-start:auto;"><path d="M12 6h-6a2 2 0 0 0 -2 2v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-6"/><path d="M11 13l9 -9"/><path d="M15 4h5v5"/></svg></a></li>
+              </ul>
+            </div>
+          </aside>
+
+          <!-- ───────── DOC BODY (6) ───────── -->
+          <div class="ax-col--6" style="display:flex;flex-direction:column;gap:var(--ax-space-6);min-width:0;">
+
+            <!-- ░░ HERO / GETTING STARTED ░░ -->
+            <section class="ax-card ax-card--accent-edge" role="region" aria-label="Getting started" id="introduction">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--pill" style="align-self:flex-start;">Getting started</span>
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);line-height:1.2;">Build premium admin UIs in minutes</h2>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-md);line-height:1.7;">Vireo is a token-driven admin template that ships nine framework editions, light &amp; dark themes, twelve accents and a live customizer — all from a single role-token layer. This guide gets you from zero to a running dashboard.</p>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:wrap;margin-top:var(--ax-space-1);">
+                  <a href="#installation" class="ax-btn ax-btn--primary"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg><span class="ax-btn__label">Quick start</span></a>
+                  <a href="#components" class="ax-btn ax-btn--secondary"><span class="ax-btn__label">Browse components</span></a>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ INSTALLATION ░░ -->
+            <section class="ax-card" role="region" aria-label="Installation" id="installation">
+              <div class="ax-card__header"><div class="ax-card__titles"><span class="ax-card__eyebrow">Step 1</span><h2 class="ax-card__title">Installation</h2><p class="ax-card__subtitle">Node 18+ and a package manager are all you need.</p></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.7;">Clone the HTML edition, install dependencies and start the dev server. Vite watches your files and Tailwind compiles on the fly.</p>
+                <!-- terminal block -->
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;background:var(--ax-surface-subtle);">
+                  <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-2) var(--ax-space-4);border-bottom:1px solid var(--ax-border);background:var(--ax-surface);">
+                    <span class="ax-cluster" style="gap:6px;"><span style="width:9px;height:9px;border-radius:50%;background:var(--ax-danger-500);"></span><span style="width:9px;height:9px;border-radius:50%;background:var(--ax-warning-500);"></span><span style="width:9px;height:9px;border-radius:50%;background:var(--ax-success-500);"></span></span>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="copied='install';setTimeout(()=>copied='',1600)" aria-label="Copy install commands">
+                      <svg class="ax-btn__icon" x-show="copied!=='install'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z"/><path d="M16 8v-2a2 2 0 0 0 -2 -2h-8a2 2 0 0 0 -2 2v8a2 2 0 0 0 2 2h2"/></svg>
+                      <svg class="ax-btn__icon" x-show="copied==='install'" x-cloak viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-emerald);"><path d="M5 12l5 5l10 -10"/></svg>
+                    </button>
+                  </div>
+                  <pre style="margin:0;padding:var(--ax-space-4);overflow-x:auto;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);line-height:1.9;color:var(--ax-text);"><span style="color:var(--ax-text-subtle);"># install dependencies</span>
+<span style="color:var(--ax-viz-emerald);">$</span> npm install
+<span style="color:var(--ax-text-subtle);"># start the dev server</span>
+<span style="color:var(--ax-viz-emerald);">$</span> npm run dev
+<span style="color:var(--ax-viz-cyan);">  ➜  Local:</span>   http://localhost:5173/</pre>
+                </div>
+                <!-- callout: tip -->
+                <div class="ax-alert ax-alert--info" role="note" style="margin:0;">
+                  <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9h.01"/><path d="M11 12h1v4h1"/><path d="M12 3a9 9 0 1 0 0 18a9 9 0 0 0 0 -18"/></svg></span>
+                  <div class="ax-alert__content"><p class="ax-alert__title">Use any package manager</p><p class="ax-alert__message"><code class="ax-code">pnpm</code>, <code class="ax-code">yarn</code> and <code class="ax-code">bun</code> all work — the lockfile is the only thing that differs.</p></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ PROJECT STRUCTURE ░░ -->
+            <section class="ax-card" role="region" aria-label="Project structure" id="structure">
+              <div class="ax-card__header"><div class="ax-card__titles"><span class="ax-card__eyebrow">Step 2</span><h2 class="ax-card__title">Project structure</h2><p class="ax-card__subtitle">Where everything lives.</p></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;background:var(--ax-surface-subtle);">
+                  <pre style="margin:0;padding:var(--ax-space-4);overflow-x:auto;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);line-height:1.85;color:var(--ax-text);"><span style="color:var(--ax-viz-amber);">src/</span>
+├─ <span style="color:var(--ax-viz-amber);">html/</span>      <span style="color:var(--ax-text-subtle);">— pages &amp; partials</span>
+├─ <span style="color:var(--ax-viz-amber);">styles/</span>    <span style="color:var(--ax-text-subtle);">— tokens, components, shell</span>
+│  ├─ <span style="color:var(--ax-viz-cyan);">tokens/</span>  <span style="color:var(--ax-text-subtle);">— the role layer (edit themes here)</span>
+│  └─ <span style="color:var(--ax-viz-cyan);">components.css</span>
+└─ <span style="color:var(--ax-viz-amber);">js/</span>        <span style="color:var(--ax-text-subtle);">— alpine + chart wrapper</span></pre>
+                </div>
+                <ul style="display:flex;flex-direction:column;gap:var(--ax-space-3);list-style:none;padding:0;margin:0;">
+                  <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ax-accent);"></span><span style="font-size:var(--ax-text-sm);color:var(--ax-text);line-height:1.6;"><code class="ax-code">styles/tokens/</code> is the only place you change colours — never edit component files.</span></li>
+                  <li class="ax-cluster" style="gap:var(--ax-space-3);align-items:flex-start;flex-wrap:nowrap;"><span style="flex:none;margin-top:7px;width:6px;height:6px;border-radius:50%;background:var(--ax-viz-cyan);"></span><span style="font-size:var(--ax-text-sm);color:var(--ax-text);line-height:1.6;">Pages live under <code class="ax-code">html/&lt;category&gt;/&lt;slug&gt;.html</code> and pull in shared partials.</span></li>
+                </ul>
+              </div>
+            </section>
+
+            <!-- ░░ THEMING ░░ -->
+            <section class="ax-card" role="region" aria-label="Theming" id="theming">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Theming &amp; tokens</h2><p class="ax-card__subtitle">One variable swap retheme everything.</p></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.7;">Components reference <b style="color:var(--ax-text-strong);">role tokens</b> only. Change the accent on <code class="ax-code">:root</code> and every button, link and chart retheme at once — in light, dark, and all twelve accents.</p>
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;background:var(--ax-surface-subtle);">
+                  <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-2) var(--ax-space-4);border-bottom:1px solid var(--ax-border);background:var(--ax-surface);"><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">my-theme.css</span></div>
+                  <pre style="margin:0;padding:var(--ax-space-4);overflow-x:auto;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);line-height:1.75;color:var(--ax-text);"><span style="color:var(--ax-viz-violet);">:root</span> {
+  <span style="color:var(--ax-viz-cyan);">--ax-accent</span>: <span style="color:var(--ax-viz-emerald);">#14b8a6</span>;       <span style="color:var(--ax-text-subtle);">/* teal */</span>
+  <span style="color:var(--ax-viz-cyan);">--ax-radius-md</span>: <span style="color:var(--ax-viz-emerald);">12px</span>;
+}</pre>
+                </div>
+                <!-- warning callout -->
+                <div class="ax-alert ax-alert--warning" role="note" style="margin:0;">
+                  <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16h.01"/></svg></span>
+                  <div class="ax-alert__content"><p class="ax-alert__title">Never hard-code colours</p><p class="ax-alert__message">Raw hex in component markup only works in one theme. Always reference a role token via <code class="ax-code">var(--ax-*)</code>.</p></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ COMPONENTS ░░ -->
+            <section class="ax-card" role="region" aria-label="Components" id="components">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Components</h2><p class="ax-card__subtitle">Copy-paste building blocks.</p></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.7;">Compose pages from existing primitives. Here's a primary button — the icon is decorative, the label carries meaning.</p>
+                <!-- live example + code -->
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;">
+                  <div style="padding:var(--ax-space-5);display:grid;place-items:center;background:var(--ax-canvas);">
+                    <button type="button" class="ax-btn ax-btn--primary"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg><span class="ax-btn__label">New report</span></button>
+                  </div>
+                  <pre style="margin:0;padding:var(--ax-space-4);border-top:1px solid var(--ax-border);overflow-x:auto;font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);line-height:1.7;color:var(--ax-text);background:var(--ax-surface-subtle);"><span style="color:var(--ax-text-subtle);">&lt;</span><span style="color:var(--ax-viz-pink);">button</span> <span style="color:var(--ax-viz-cyan);">class</span>=<span style="color:var(--ax-viz-emerald);">"ax-btn ax-btn--primary"</span><span style="color:var(--ax-text-subtle);">&gt;</span>…<span style="color:var(--ax-text-subtle);">&lt;/</span><span style="color:var(--ax-viz-pink);">button</span><span style="color:var(--ax-text-subtle);">&gt;</span></pre>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ CHARTS ░░ -->
+            <section class="ax-card" role="region" aria-label="Charts" id="charts">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Charts</h2><p class="ax-card__subtitle">Themed, dark-mode-aware, retheme on the fly.</p></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.7;">Charts go through one wrapper so they inherit the palette automatically. The simplest path is a declarative data attribute:</p>
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;background:var(--ax-surface-subtle);">
+                  <pre style="margin:0;padding:var(--ax-space-4);overflow-x:auto;font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);line-height:1.7;color:var(--ax-text);"><span style="color:var(--ax-text-subtle);">&lt;</span><span style="color:var(--ax-viz-pink);">div</span> <span style="color:var(--ax-viz-cyan);">class</span>=<span style="color:var(--ax-viz-emerald);">"ax-chart"</span> <span style="color:var(--ax-viz-cyan);">data-ax-chart</span>
+     <span style="color:var(--ax-viz-cyan);">data-ax-chart-type</span>=<span style="color:var(--ax-viz-emerald);">"area"</span>
+     <span style="color:var(--ax-viz-cyan);">data-ax-chart-series</span>=<span style="color:var(--ax-viz-emerald);">'[…]'</span><span style="color:var(--ax-text-subtle);">&gt;&lt;/</span><span style="color:var(--ax-viz-pink);">div</span><span style="color:var(--ax-text-subtle);">&gt;</span></pre>
+                </div>
+                <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.7;">And here it is, live:</p>
+                <div class="ax-chart" data-ax-chart="apex" data-ax-chart-type="area" data-ax-chart-height="180" data-ax-chart-legend="none" data-ax-chart-accent="true" data-ax-chart-series='[{"name":"Reads","data":[31,40,28,51,42,62,69,74]}]' aria-label="Example area chart of documentation reads"></div>
+                <div class="ax-alert ax-alert--success" role="note" style="margin:0;">
+                  <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                  <div class="ax-alert__content"><p class="ax-alert__title">It just re-themes</p><p class="ax-alert__message">Toggle dark mode or change the accent in the customizer — the chart above updates instantly, no code change required.</p></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───────── RAIL (3) ───────── -->
+          <aside class="ax-col--3" style="display:flex;flex-direction:column;gap:var(--ax-space-6);min-width:0;">
+
+            <!-- quick links -->
+            <section class="ax-card" role="region" aria-label="Popular pages" style="align-self:start;position:sticky;top:var(--ax-space-5);">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Popular pages</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                <a href="#theming" class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-accent) 18%,transparent);color:var(--ax-accent);flex:none;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 4a1 1 0 0 1 1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 1 1 1v1a1 1 0 0 0 1 1h1a1 1 0 0 1 1 1c0 4.97 -4.03 9 -9 9a9 9 0 0 1 0 -18"/><path d="M8.5 8.5l0 .01"/><path d="M6 12l0 .01"/><path d="M8.5 15.5l0 .01"/></svg></span>
+                  <span style="min-width:0;"><span style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Theming guide</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Tokens &amp; accents</span></span>
+                </a>
+                <a href="#components" class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);flex:none;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h.01"/><path d="M7 12a5 5 0 0 1 5 -5"/><path d="M12 3a9 9 0 0 1 9 9"/></svg></span>
+                  <span style="min-width:0;"><span style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Component API</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Classes &amp; modifiers</span></span>
+                </a>
+                <a href="#charts" class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-2);border-radius:var(--ax-radius-sm);text-decoration:none;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);flex:none;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M20 18v-13"/><path d="M16 18v-7"/><path d="M12 18v-10"/><path d="M8 18v-4"/></svg></span>
+                  <span style="min-width:0;"><span style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Chart wrapper</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">renderChart() API</span></span>
+                </a>
+              </div>
+            </section>
+
+            <!-- FAQ accordion -->
+            <section class="ax-card" role="region" aria-label="Frequently asked">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Quick answers</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div class="ax-accordion" x-data="{ open:1 }">
+                  <div class="ax-accordion__item">
+                    <button type="button" class="ax-accordion__header" :aria-expanded="(open===1).toString()" @click="open = open===1 ? 0 : 1">
+                      <span class="ax-accordion__title">Which frameworks are included?</span>
+                      <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                    </button>
+                    <div class="ax-accordion__panel" :hidden="open!==1" style="padding:0 var(--ax-space-4) var(--ax-space-4);"><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.6;">Eight editions: HTML, React, Next, Vue, Nuxt, Laravel, Django and plain PHP — all from one design system.</p></div>
+                  </div>
+                  <div class="ax-accordion__item">
+                    <button type="button" class="ax-accordion__header" :aria-expanded="(open===2).toString()" @click="open = open===2 ? 0 : 2">
+                      <span class="ax-accordion__title">Is dark mode automatic?</span>
+                      <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                    </button>
+                    <div class="ax-accordion__panel" :hidden="open!==2" style="padding:0 var(--ax-space-4) var(--ax-space-4);"><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.6;">Yes. Because everything reads role tokens, dark mode is guaranteed-correct with no per-component work.</p></div>
+                  </div>
+                  <div class="ax-accordion__item">
+                    <button type="button" class="ax-accordion__header" :aria-expanded="(open===3).toString()" @click="open = open===3 ? 0 : 3">
+                      <span class="ax-accordion__title">Can I use my own fonts?</span>
+                      <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                    </button>
+                    <div class="ax-accordion__panel" :hidden="open!==3" style="padding:0 var(--ax-space-4) var(--ax-space-4);"><p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.6;">Swap <code class="ax-code">--ax-font-sans</code> and <code class="ax-code">--ax-font-display</code> in your theme file. Type scale stays consistent.</p></div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- help card -->
+            <section class="ax-card ax-card--accent-edge" role="region" aria-label="Need help">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);text-align:center;">
+                <span class="ax-avatar ax-avatar--lg ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);margin:0 auto;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1 -1 1h-7l-4 4v-4h-3a1 1 0 0 1 -1 -1v-9a1 1 0 0 1 1 -1"/></svg></span>
+                <h3 style="font-family:var(--ax-font-display);font-size:var(--ax-text-md);font-weight:600;color:var(--ax-text-strong);">Still stuck?</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.55;">Our team replies to support tickets within one business day.</p>
+                <a href="/pages/support/" class="ax-btn ax-btn--primary ax-btn--block"><span class="ax-btn__label">Contact support</span></a>
+              </div>
+            </section>
+          </aside>
+        </div>
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{# utilities/breakpoints — faithful port of src/html/utilities/breakpoints.html.
+   Same DOM/classes/ARIA, same demo copy. The reference put x-data on <main>;
+   base.html owns <main>, so the page-root x-data moves to a wrapper div (the
+   edition convention). Reference hrefs -> clean Django routes. #}
+
+{% block main %}
+<div x-data="{
+          w: window.innerWidth,
+          bps: [
+            ['xs', 0, 575, 'Phones', 'device-mobile'],
+            ['sm', 576, 767, 'Large phones', 'device-mobile'],
+            ['md', 768, 991, 'Tablets · sidebar overlays', 'device-tablet'],
+            ['lg', 992, 1199, 'Small laptops', 'device-laptop'],
+            ['xl', 1200, 1399, 'Desktops', 'device-desktop'],
+            ['2xl', 1400, 99999, 'Wide · boxed max', 'device-desktop']
+          ],
+          get active(){ return this.bps.find(b => this.w >= b[1] && this.w <= b[2]) || this.bps[0]; },
+          init(){ const on = () => this.w = window.innerWidth; window.addEventListener('resize', on, { passive:true }); }
+        }">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Breakpoints</h1>
+              <p class="ax-page-head__subtitle">Six responsive tiers drive every layout shift. Resize the window — the live indicator tracks the active tier in real time.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/utilities/position/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 9l3 3l-3 3"/><path d="M15 12h6"/><path d="M6 9l-3 3l3 3"/><path d="M3 12h6"/><path d="M9 18l3 3l3 -3"/><path d="M12 15v6"/><path d="M15 6l-3 -3l-3 3"/><path d="M12 3v6"/></svg>
+                <span class="ax-btn__label">Positioning</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/utilities/colors/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 0 1 0 -18c4.97 0 9 3.582 9 8c0 1.06 -.474 2.078 -1.318 2.828c-.844 .75 -1.989 1.172 -3.182 1.172h-2.5a2 2 0 0 0 -1 3.75a1.3 1.3 0 0 1 -1 2.25"/><path d="M7.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11.5 7.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M15.5 10.5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                <span class="ax-btn__label">Color tokens</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Live indicator -->
+          <section class="ax-card ax-col--5" role="region" aria-label="Live breakpoint indicator">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Live</span>
+                <h2 class="ax-card__title">Active tier</h2>
+                <p class="ax-card__subtitle">Drag your window edge to watch it change.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);" aria-live="polite">
+              <div style="text-align:center;padding:var(--ax-space-6) var(--ax-space-4);border-radius:var(--ax-radius-lg);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);">
+                <div class="ax-display" style="font-size:var(--ax-text-3xl);color:var(--ax-accent);line-height:1;" x-text="active[0]"></div>
+                <div style="margin-top:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="active[3]"></div>
+              </div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span class="ax-eyebrow">Viewport</span>
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-lg);color:var(--ax-text-strong);"><span x-text="w"></span> px</span>
+              </div>
+              <!-- segmented tier strip -->
+              <div style="display:flex;gap:4px;">
+                <template x-for="b in bps" :key="b[0]">
+                  <div :style="'flex:1;text-align:center;padding:6px 0;border-radius:var(--ax-radius-sm);font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);'+(active[0]===b[0] ? 'background:var(--ax-accent);color:var(--ax-on-accent);' : 'background:var(--ax-surface-subtle);color:var(--ax-text-subtle);')" x-text="b[0]"></div>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- Reference table -->
+          <section class="ax-card ax-col--7" role="region" aria-label="Breakpoint reference table">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">--ax-bp-*</span>
+                <h2 class="ax-card__title">Reference table</h2>
+                <p class="ax-card__subtitle">The token, its min-width and what changes at each step. The current row is highlighted.</p>
+              </div>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Token</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Min</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Range</th>
+                    <th class="ax-table__th" scope="col">Typical target</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="b in bps" :key="b[0]">
+                    <tr class="ax-table__row" :style="active[0]===b[0] ? 'background:var(--ax-accent-wash);box-shadow:inset 2px 0 0 var(--ax-accent);' : ''" :aria-selected="active[0]===b[0]">
+                      <td class="ax-table__td">
+                        <code class="ax-code" :style="active[0]===b[0] ? 'color:var(--ax-accent);' : ''" x-text="'--ax-bp-'+b[0]"></code>
+                      </td>
+                      <td class="ax-table__td ax-table__td--num" x-text="b[1]+'px'"></td>
+                      <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text-muted);" x-text="b[2]===99999 ? b[1]+'px +' : b[1]+'–'+b[2]"></td>
+                      <td class="ax-table__td" style="color:var(--ax-text-muted);" x-text="b[3]"></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+            <div class="ax-card__footer">
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Sidebar collapses to an overlay below <code class="ax-code">--ax-bp-md</code>; the boxed-max container engages at <code class="ax-code">--ax-bp-2xl</code>.</span>
+            </div>
+          </section>
+
+          <!-- Grid behaviour at each tier -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Grid collapse behaviour">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">In practice</span>
+                <h2 class="ax-card__title">How the grid collapses</h2>
+                <p class="ax-card__subtitle">The same four-up KPI row and 8+4 hero re-flow across the tiers — resize to feel it.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <span class="ax-eyebrow">4 × .ax-col--3 → halves (≤992) → full (≤576)</span>
+                </div>
+                <div class="ax-dash-grid" style="gap:var(--ax-space-3);">
+                  <template x-for="k in [['Revenue','--ax-viz-cyan'],['Orders','--ax-viz-violet'],['Customers','--ax-viz-pink'],['AOV','--ax-viz-amber']]" :key="k[0]">
+                    <div class="ax-col--3" style="padding:var(--ax-space-4);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);">
+                      <span style="display:block;font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="k[0]"></span>
+                      <i aria-hidden="true" :style="'display:block;width:60%;height:10px;border-radius:var(--ax-radius-xs);margin-top:8px;background:var('+k[1]+');'"></i>
+                    </div>
+                  </template>
+                </div>
+              </div>
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.ax-col--8 + .ax-col--4 → stacked full-width (≤992)</span>
+                <div class="ax-dash-grid" style="gap:var(--ax-space-3);">
+                  <div class="ax-col--8" style="height:64px;border-radius:var(--ax-radius-md);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);display:grid;place-items:center;color:var(--ax-accent);font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">ax-col--8 · hero</div>
+                  <div class="ax-col--4" style="height:64px;border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);border:1px solid var(--ax-border);display:grid;place-items:center;color:var(--ax-text-muted);font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">ax-col--4 · rail</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+</div>
+{% endblock %}

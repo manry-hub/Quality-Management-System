@@ -1,0 +1,308 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Chart.js Gallery</h1>
+              <p class="ax-page-head__subtitle">Line, bar, radar &amp; doughnut — the same Aurora palette &amp; chrome, proving cross-library parity.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M3.6 9h16.8"/><path d="M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>
+                <span class="ax-btn__label">Docs</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid"
+             x-data="{ tab: 'all' }">
+
+          <!-- Filter segmented control (full width chip row) -->
+          <div class="ax-col--12">
+            <div class="ax-tabs ax-tabs--pill" role="tablist" aria-label="Filter chart types">
+              <div class="ax-tabs__list">
+                <button type="button" class="ax-tabs__tab" :class="{ 'is-active': tab==='all' }" :aria-selected="tab==='all'" @click="tab='all'" role="tab">All</button>
+                <button type="button" class="ax-tabs__tab" :class="{ 'is-active': tab==='cartesian' }" :aria-selected="tab==='cartesian'" @click="tab='cartesian'" role="tab">Cartesian</button>
+                <button type="button" class="ax-tabs__tab" :class="{ 'is-active': tab==='radial' }" :aria-selected="tab==='radial'" @click="tab='radial'" role="tab">Radial</button>
+                <button type="button" class="ax-tabs__tab" :class="{ 'is-active': tab==='mixed' }" :aria-selected="tab==='mixed'" @click="tab='mixed'" role="tab">Mixed</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── Line (8) + Doughnut (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Revenue line chart" x-show="['all','cartesian'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Line</span>
+                <h2 class="ax-card__title">Revenue vs. Target</h2>
+                <p class="ax-card__subtitle">Monthly · Jul 2025 – Jun 2026</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Revenue</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Target</small></span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-line" aria-label="Line chart of monthly revenue versus target"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Category doughnut chart" x-show="['all','radial'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Doughnut</span>
+                <h2 class="ax-card__title">Category Split</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-doughnut" aria-label="Doughnut chart of revenue by product category"></div>
+            </div>
+          </section>
+
+          <!-- ───── Bar (6) + Column stacked (6) ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Horizontal bar chart" x-show="['all','cartesian'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Bar</span>
+                <h2 class="ax-card__title">Orders by Channel</h2>
+                <p class="ax-card__subtitle">Last quarter</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-bar" aria-label="Horizontal bar chart of orders by channel"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Stacked column chart" x-show="['all','cartesian'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Stacked column</span>
+                <h2 class="ax-card__title">New vs. Returning</h2>
+                <p class="ax-card__subtitle">Visitors per month</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-column" aria-label="Stacked column chart of new versus returning visitors"></div>
+            </div>
+          </section>
+
+          <!-- ───── Radar (4) + Polar (4) + Pie (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Radar chart" x-show="['all','radial'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Radar</span>
+                <h2 class="ax-card__title">Team Skills</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-radar" aria-label="Radar chart comparing two team members across six skills"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Polar area chart" x-show="['all','radial'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Polar area</span>
+                <h2 class="ax-card__title">Support Load</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-polar" aria-label="Polar area chart of support load by team"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Pie chart" x-show="['all','radial'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Pie</span>
+                <h2 class="ax-card__title">Traffic Sources</h2>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-pie" aria-label="Pie chart of traffic sources"></div>
+            </div>
+          </section>
+
+          <!-- ───── Mixed (8) + scatter (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Mixed bar and line chart" x-show="['all','mixed'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Mixed</span>
+                <h2 class="ax-card__title">Sessions &amp; Conversion</h2>
+                <p class="ax-card__subtitle">Columns = sessions · line = conversion %</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-mixed" aria-label="Mixed chart of sessions columns and conversion-rate line"></div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-card--chart ax-col--4" role="region" aria-label="Bubble chart" x-show="['all','mixed'].includes(tab)" x-transition>
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Bubble</span>
+                <h2 class="ax-card__title">Campaigns</h2>
+                <p class="ax-card__subtitle">Spend × reach × ROAS</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="cj-bubble" aria-label="Bubble chart of campaign spend, reach and ROAS"></div>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const months = ['Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+    // ── Line ──
+    const line = document.getElementById('cj-line');
+    if (line) renderChart(line, 'line', [
+      { name: 'Revenue', data: [42, 48, 45, 53, 57, 55, 62, 60, 68, 72, 70, 74] },
+      { name: 'Target', data: [45, 48, 50, 52, 55, 57, 60, 62, 65, 68, 70, 72] },
+    ], {
+      height: 320, legend: 'none', accent: true,
+      apex: {
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan')],
+        stroke: { width: [2.5, 2], curve: 'smooth', dashArray: [0, 5] },
+        markers: { size: 0, hover: { size: 5 } },
+        xaxis: { categories: months },
+        yaxis: { labels: { formatter: (v) => '$' + v + 'K' } },
+      },
+    });
+
+    // ── Doughnut ──
+    const doughnut = document.getElementById('cj-doughnut');
+    if (doughnut) renderChart(doughnut, 'donut', [32, 24, 18, 11, 9, 6], {
+      height: 320, legend: 'bottom',
+      apex: {
+        labels: ['Lighting', 'Desk', 'Drinkware', 'Storage', 'Stationery', 'Tech'],
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3'), cv('--ax-chart-4'), cv('--ax-chart-5'), cv('--ax-chart-6')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '68%', labels: { show: true,
+          name: { fontFamily: cv('--ax-font-sans') },
+          value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600, formatter: (v) => v + '%' },
+          total: { show: true, label: 'Categories', formatter: () => '6' } } } } },
+      },
+    });
+
+    // ── Horizontal bar ──
+    const bar = document.getElementById('cj-bar');
+    if (bar) renderChart(bar, 'bar', [{ name: 'Orders', data: [486, 372, 214, 158, 96] }], {
+      height: 300, legend: 'none',
+      apex: {
+        plotOptions: { bar: { horizontal: true, borderRadius: 4, barHeight: '60%', distributed: true } },
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3'), cv('--ax-chart-4'), cv('--ax-chart-5')],
+        xaxis: { categories: ['Organic', 'Direct', 'Referral', 'Social', 'Email'] },
+      },
+    });
+
+    // ── Stacked column ──
+    const column = document.getElementById('cj-column');
+    if (column) renderChart(column, 'bar', [
+      { name: 'New', data: [41, 46, 43, 50, 56, 52] },
+      { name: 'Returning', data: [32, 35, 34, 39, 41, 40] },
+    ], {
+      height: 300, legend: 'bottom', stacked: true,
+      apex: {
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2')],
+        plotOptions: { bar: { columnWidth: '52%', borderRadius: 4 } },
+        xaxis: { categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'] },
+      },
+    });
+
+    // ── Radar ──
+    const radar = document.getElementById('cj-radar');
+    if (radar) renderChart(radar, 'radar', [
+      { name: 'Marcus', data: [85, 72, 90, 65, 78, 88] },
+      { name: 'Priya', data: [70, 88, 75, 92, 84, 66] },
+    ], {
+      height: 320, legend: 'bottom',
+      apex: {
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2')],
+        stroke: { width: 2 },
+        fill: { opacity: 0.14 },
+        markers: { size: 3 },
+        xaxis: { categories: ['Code', 'Design', 'Data', 'Comms', 'Ops', 'QA'] },
+      },
+    });
+
+    // ── Polar area ──
+    const polar = document.getElementById('cj-polar');
+    if (polar) renderChart(polar, 'polarArea', [14, 23, 11, 17, 9], {
+      height: 320, legend: 'bottom',
+      apex: {
+        labels: ['Billing', 'Bugs', 'How-to', 'Feature', 'Account'],
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3'), cv('--ax-chart-4'), cv('--ax-chart-5')],
+        stroke: { width: 1, colors: [cv('--ax-border')] },
+        fill: { opacity: 0.78 },
+        yaxis: { show: false },
+      },
+    });
+
+    // ── Pie ──
+    const pie = document.getElementById('cj-pie');
+    if (pie) renderChart(pie, 'pie', [38, 27, 14, 9, 7, 5], {
+      height: 320, legend: 'bottom',
+      apex: {
+        labels: ['Direct', 'Organic', 'Referral', 'Social', 'Email', 'Paid'],
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3'), cv('--ax-chart-4'), cv('--ax-chart-5'), cv('--ax-chart-6')],
+        stroke: { width: 0 },
+      },
+    });
+
+    // ── Mixed (column + line) ──
+    const mixed = document.getElementById('cj-mixed');
+    if (mixed) renderChart(mixed, 'line', [
+      { name: 'Sessions', type: 'column', data: [9.2, 10.4, 9.8, 11.2, 12.6, 11.9, 13.4, 14.1, 13.7, 15.2, 16.1, 17.4] },
+      { name: 'Conversion %', type: 'line', data: [2.1, 2.3, 2.2, 2.5, 2.6, 2.4, 2.8, 3.0, 2.9, 3.2, 3.4, 3.6] },
+    ], {
+      height: 320, legend: 'bottom',
+      apex: {
+        colors: [cv('--ax-viz-cyan'), cv('--ax-accent')],
+        stroke: { width: [0, 2.8], curve: 'smooth' },
+        plotOptions: { bar: { columnWidth: '48%', borderRadius: 4 } },
+        xaxis: { categories: months },
+        yaxis: [
+          { labels: { formatter: (v) => v + 'K' } },
+          { opposite: true, labels: { formatter: (v) => v.toFixed(1) + '%' } },
+        ],
+      },
+    });
+
+    // ── Bubble ──
+    const bubble = document.getElementById('cj-bubble');
+    if (bubble) renderChart(bubble, 'bubble', [
+      { name: 'Pulse', data: [[40, 28, 14]] },
+      { name: 'Beacon', data: [[62, 44, 22]] },
+      { name: 'Halo', data: [[78, 60, 9]] },
+      { name: 'Drift', data: [[55, 36, 17]] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-chart-1'), cv('--ax-chart-2'), cv('--ax-chart-3'), cv('--ax-chart-4')],
+        fill: { opacity: 0.7 },
+        xaxis: { tickAmount: 5, labels: { formatter: (v) => '$' + Math.round(v) + 'K' } },
+        yaxis: { max: 70, labels: { formatter: (v) => Math.round(v) + 'K' } },
+      },
+    });
+  </script>
+{% endblock %}

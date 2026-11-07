@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Swiper</h1>
+              <p class="ax-page-head__subtitle">A touch-style slider gallery — switchable effects, a thumbnail filmstrip and a vertical track, all built on pure Alpine and CSS transforms.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/carousel/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                <span class="ax-btn__label">Carousel</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ═══════ HERO SLIDER · switchable effects ═══════ -->
+          <section class="ax-card ax-col--8" role="region" aria-roledescription="carousel" aria-label="Featured slides"
+            x-data="{
+              i:0, effect:'slide',
+              slides:[
+                {tag:'New release', tone:'accent', c1:'var(--ax-viz-violet)', c2:'var(--ax-viz-cyan)', t:'Vireo 3.0 is here', d:'Twelve Aurora accents, a live customizer and 200+ pages — shipped today.'},
+                {tag:'Workshop', tone:'warning', c1:'var(--ax-viz-amber)', c2:'var(--ax-viz-pink)', t:'Charts that re-theme live', d:'Switch accent or mode and every chart re-colours in 200ms — no reload, no flash.'},
+                {tag:'Performance', tone:'success', c1:'var(--ax-viz-emerald)', c2:'var(--ax-viz-cyan)', t:'98 Lighthouse, zero jank', d:'Lazy-loaded plugins and token-only styling keep the bundle lean and fast.'},
+                {tag:'Accessible', tone:'info', c1:'var(--ax-viz-cyan)', c2:'var(--ax-viz-violet)', t:'Keyboard-first by design', d:'Arrow keys, focus-visible rings and ARIA roles on every interactive surface.'}
+              ],
+              get total(){ return this.slides.length },
+              go(n){ this.i = (n + this.total) % this.total },
+              next(){ this.go(this.i+1) },
+              prev(){ this.go(this.i-1) },
+              styleFor(n){
+                const base = 'position:absolute;inset:0;transition:transform .5s var(--ax-ease-standard),opacity .5s var(--ax-ease-standard);';
+                if(this.effect==='fade'){ return base + (n===this.i ? 'opacity:1;transform:scale(1);z-index:2;' : 'opacity:0;transform:scale(1.02);z-index:1;pointer-events:none;') }
+                if(this.effect==='cards'){
+                  const off = n - this.i;
+                  if(off===0) return base + 'opacity:1;transform:translateX(0) scale(1) rotateY(0);z-index:3;';
+                  if(off===1||off===1-this.total) return base + 'opacity:.5;transform:translateX(10%) scale(.9) rotateY(-12deg);z-index:2;pointer-events:none;';
+                  if(off===-1||off===this.total-1) return base + 'opacity:.5;transform:translateX(-10%) scale(.9) rotateY(12deg);z-index:2;pointer-events:none;';
+                  return base + 'opacity:0;transform:scale(.8);z-index:1;pointer-events:none;';
+                }
+                return base + 'transform:translateX('+((n-this.i)*100)+'%);opacity:1;z-index:'+(n===this.i?2:1)+';';
+              }
+            }" @keydown.right.prevent="next()" @keydown.left.prevent="prev()" tabindex="0">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Effects</span>
+                <h2 class="ax-card__title">Hero slider</h2>
+                <p class="ax-card__subtitle">Pick a transition — slide, fade or a stacked cards effect.</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Slide effect">
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': effect==='slide' }" role="radio" :aria-checked="effect==='slide'" @click="effect='slide'">Slide</button>
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': effect==='fade' }" role="radio" :aria-checked="effect==='fade'" @click="effect='fade'">Fade</button>
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': effect==='cards' }" role="radio" :aria-checked="effect==='cards'" @click="effect='cards'">Cards</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <!-- stage -->
+              <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-lg);perspective:1200px;">
+                <div class="ax-ratio" style="--ax-ratio:16/8;">
+                  <template x-for="(s,n) in slides" :key="n">
+                    <div role="group" aria-roledescription="slide" :aria-label="(n+1) + ' of ' + total" :style="styleFor(n)">
+                      <div style="width:100%;height:100%;display:flex;align-items:flex-end;border-radius:var(--ax-radius-lg);overflow:hidden;" :style="'background:linear-gradient(125deg,color-mix(in oklab,'+s.c1+' 34%,var(--ax-surface)),color-mix(in oklab,'+s.c2+' 26%,var(--ax-surface)))'">
+                        <div style="padding:var(--ax-space-7);">
+                          <span class="ax-badge ax-badge--solid ax-badge--pill" :class="'ax-badge--'+s.tone" style="margin-bottom:var(--ax-space-3);" x-text="s.tag"></span>
+                          <h3 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="s.t"></h3>
+                          <p style="margin:var(--ax-space-1) 0 0;color:var(--ax-text-muted);max-width:48ch;" x-text="s.d"></p>
+                        </div>
+                      </div>
+                    </div>
+                  </template>
+                </div>
+                <!-- arrows -->
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" @click="prev()" aria-label="Previous slide" style="position:absolute;inset-block-start:50%;inset-inline-start:var(--ax-space-4);transform:translateY(-50%);z-index:5;">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" @click="next()" aria-label="Next slide" style="position:absolute;inset-block-start:50%;inset-inline-end:var(--ax-space-4);transform:translateY(-50%);z-index:5;">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+              </div>
+              <!-- pagination -->
+              <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:center;margin-top:var(--ax-space-4);" role="tablist" aria-label="Choose slide">
+                <template x-for="(s,n) in slides" :key="n">
+                  <button type="button" @click="go(n)" role="tab" :aria-selected="i===n" :aria-label="'Go to slide ' + (n+1)"
+                    :style="'width:'+(i===n?'24px':'8px')+';height:8px;border-radius:var(--ax-radius-pill);border:0;cursor:pointer;transition:all var(--ax-motion-base) var(--ax-ease-standard);background:'+(i===n?'var(--ax-accent)':'var(--ax-border-strong)')"></button>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ VERTICAL SLIDER ═══════ -->
+          <section class="ax-card ax-col--4" role="region" aria-roledescription="carousel" aria-label="Release notes"
+            x-data="{ i:0, notes:[
+              {v:'v3.0', date:'Jun 2026', c:'var(--ax-viz-violet)', t:'Aurora redesign', d:'Glassy surfaces, ambient glow and a brand-new customizer.'},
+              {v:'v2.6', date:'Apr 2026', c:'var(--ax-viz-cyan)', t:'Vector maps', d:'jsVectorMap wrapper with choropleth and region selection.'},
+              {v:'v2.4', date:'Feb 2026', c:'var(--ax-viz-emerald)', t:'Editable tables', d:'Inline cell editing with dirty-state tracking and save.'},
+              {v:'v2.0', date:'Nov 2025', c:'var(--ax-viz-amber)', t:'8 stack editions', d:'HTML, React, Vue, Nuxt, Laravel and more — one design.'}
+            ],
+            next(){ this.i = (this.i+1) % this.notes.length },
+            prev(){ this.i = (this.i-1+this.notes.length) % this.notes.length } }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Vertical</span>
+                <h2 class="ax-card__title">Release notes</h2>
+              </div>
+              <div class="ax-card__actions">
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon ax-btn--sm" @click="prev()" aria-label="Previous note">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon ax-btn--sm" @click="next()" aria-label="Next note">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;gap:var(--ax-space-4);">
+              <!-- vertical stage -->
+              <div style="position:relative;overflow:hidden;flex:1 1 auto;height:230px;border-radius:var(--ax-radius-md);">
+                <div style="transition:transform .45s var(--ax-ease-standard);" :style="'transform:translateY(-'+(i*230)+'px)'">
+                  <template x-for="(s,n) in notes" :key="n">
+                    <div style="height:230px;display:flex;flex-direction:column;justify-content:center;gap:var(--ax-space-2);padding:var(--ax-space-5);border-radius:var(--ax-radius-md);" :style="'background:linear-gradient(135deg,color-mix(in oklab,'+s.c+' 22%,var(--ax-surface)),var(--ax-surface-subtle))'">
+                      <span class="ax-badge ax-badge--soft ax-badge--pill ax-num" :style="'color:'+s.c+';background:color-mix(in oklab,'+s.c+' 16%,transparent);align-self:flex-start;'" x-text="s.v"></span>
+                      <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.06em;color:var(--ax-text-subtle);" x-text="s.date"></div>
+                      <h3 style="margin:0;font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="s.t"></h3>
+                      <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.55;" x-text="s.d"></p>
+                    </div>
+                  </template>
+                </div>
+              </div>
+              <!-- vertical dots -->
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);justify-content:center;" role="tablist" aria-label="Choose note">
+                <template x-for="(s,n) in notes" :key="n">
+                  <button type="button" @click="i=n" role="tab" :aria-selected="i===n" :aria-label="'Note ' + (n+1)"
+                    :style="'width:8px;height:'+(i===n?'24px':'8px')+';border-radius:var(--ax-radius-pill);border:0;cursor:pointer;transition:all var(--ax-motion-base) var(--ax-ease-standard);background:'+(i===n?'var(--ax-accent)':'var(--ax-border-strong)')"></button>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- ═══════ THUMBNAIL GALLERY (main + filmstrip) ═══════ -->
+          <section class="ax-card ax-col--12" role="region" aria-roledescription="carousel" aria-label="Product gallery"
+            x-data="{ i:0, slides:[
+              {n:'Aperture Desk Lamp', m:'Lighting · $129', c1:'var(--ax-viz-amber)', c2:'var(--ax-viz-pink)'},
+              {n:'Walnut Monitor Riser', m:'Desk · $96', c1:'var(--ax-viz-emerald)', c2:'var(--ax-viz-cyan)'},
+              {n:'Matte Ceramic Mug', m:'Drinkware · $24', c1:'var(--ax-viz-violet)', c2:'var(--ax-viz-cyan)'},
+              {n:'Brass Task Light', m:'Lighting · $182', c1:'var(--ax-viz-cyan)', c2:'var(--ax-viz-violet)'},
+              {n:'Grid Notebook A5', m:'Stationery · $16', c1:'var(--ax-viz-pink)', c2:'var(--ax-viz-amber)'},
+              {n:'Stoneware Carafe', m:'Drinkware · $52', c1:'var(--ax-viz-emerald)', c2:'var(--ax-viz-amber)'}
+            ],
+            next(){ this.i = (this.i+1) % this.slides.length },
+            prev(){ this.i = (this.i-1+this.slides.length) % this.slides.length } }"
+            @keydown.right.prevent="next()" @keydown.left.prevent="prev()" tabindex="0">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Thumbs · sync</span>
+                <h2 class="ax-card__title">Product gallery</h2>
+                <p class="ax-card__subtitle">Main slide and the thumbnail filmstrip stay in sync — click a thumb or use the arrows.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="(i+1) + ' / ' + slides.length"></span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:1fr;gap:var(--ax-space-4);">
+              <!-- main stage -->
+              <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-lg);">
+                <div class="ax-ratio" style="--ax-ratio:21/8;">
+                  <template x-for="(s,n) in slides" :key="n">
+                    <div class="ax-flex" x-show="i===n" x-transition.opacity.duration.350ms style="position:absolute;inset:0;align-items:flex-end;" :style="'background:linear-gradient(135deg,color-mix(in oklab,'+s.c1+' 32%,var(--ax-surface)),color-mix(in oklab,'+s.c2+' 24%,var(--ax-surface)))'">
+                      <div style="padding:var(--ax-space-6);">
+                        <div style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="s.n"></div>
+                        <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-top:2px;" x-text="s.m"></div>
+                      </div>
+                      <svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="var(--ax-text-strong)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-block-start:var(--ax-space-5);inset-inline-end:var(--ax-space-5);opacity:.7;"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>
+                    </div>
+                  </template>
+                </div>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" @click="prev()" aria-label="Previous image" style="position:absolute;inset-block-start:50%;inset-inline-start:var(--ax-space-4);transform:translateY(-50%);">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--icon" @click="next()" aria-label="Next image" style="position:absolute;inset-block-start:50%;inset-inline-end:var(--ax-space-4);transform:translateY(-50%);">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+              </div>
+              <!-- thumbnail filmstrip -->
+              <div class="ax-scroll" style="display:flex;gap:var(--ax-space-3);overflow-x:auto;padding-bottom:var(--ax-space-1);">
+                <template x-for="(s,n) in slides" :key="n">
+                  <button type="button" @click="i=n" :aria-label="'View ' + s.n" :aria-current="i===n"
+                    style="flex:0 0 96px;height:64px;border-radius:var(--ax-radius-md);cursor:pointer;position:relative;overflow:hidden;transition:all var(--ax-motion-base) var(--ax-ease-standard);"
+                    :style="'background:linear-gradient(135deg,color-mix(in oklab,'+s.c1+' 32%,var(--ax-surface)),color-mix(in oklab,'+s.c2+' 24%,var(--ax-surface)));border:2px solid '+(i===n?'var(--ax-accent)':'transparent')+';opacity:'+(i===n?'1':'.6')">
+                  </button>
+                </template>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

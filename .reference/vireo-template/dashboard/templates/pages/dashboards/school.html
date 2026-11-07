@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">School Admin</h1>
+              <p class="ax-page-head__subtitle">Attendance, performance and fees — Greenfield Academy, term 3.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg>
+                <span class="ax-btn__label">All grades</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Add Student</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Students 2,340, up 2.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 9l-10 -4l-10 4l10 4l10 -4v6"/><path d="M6 10.6v5.4a6 3 0 0 0 12 0v-5.4"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.0%</span>
+              </div>
+              <div class="ax-kpi__label">Total Students</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">2,340</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[7,8,9,12,13,16,19,22]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Teachers 148, up 1.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1"/><path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M17 10h2a2 2 0 0 1 2 2v1"/><path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M3 13v-1a2 2 0 0 1 2 -2h2"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.0%</span>
+              </div>
+              <div class="ax-kpi__label">Teachers</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">148</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Trend","data":[10,10,11,12,13,14,15,17]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Attendance Rate 94.8%, up 0.4%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4"/><path d="M15 19l2 2l4 -4"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>0.4%</span>
+              </div>
+              <div class="ax-kpi__label">Attendance Rate</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">94.8%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[14,15,14,17,16,19,18,21]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Fee Collection 88%, up 3.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>3.0%</span>
+              </div>
+              <div class="ax-kpi__label">Fee Collection</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">88%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[8,10,9,14,15,19,21,25]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Attendance Overview column (8) + Students by Grade donut (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Attendance overview">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">This week</span>
+                <h2 class="ax-card__title">Attendance Overview</h2>
+                <p class="ax-card__subtitle">Present, late and absent per day</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Present</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Late</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Absent</small></span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-school-attendance" aria-label="Stacked column chart of present, late and absent students per weekday"></div>
+            </div>
+          </section>
+
+          <!-- Students by Grade donut -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Students by grade">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">By Grade</h2>
+                <p class="ax-card__subtitle">Enrollment distribution</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-school-grade" aria-label="Donut: Grade 9, Grade 10, Grade 11, Grade 12"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Grade 9</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">648</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Grade 10</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">612</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Grade 11</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">558</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Grade 12</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">522</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── Exam Results bar (8) + Fee Collection goal (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Exam results by subject">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Average Exam Scores</h2>
+                <p class="ax-card__subtitle">Mid-term results by subject (out of 100)</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Gradebook</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-school-exams" aria-label="Column chart of average exam scores by subject"></div>
+            </div>
+          </section>
+
+          <!-- Fee Collection goal -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Fee collection status">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Fee Collection</h2>
+                <p class="ax-card__subtitle">Term 3 · $1.84M billed</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Collected</span><b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-sm);">$1.62M</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:88%;background:var(--ax-viz-emerald);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Pending</span><b class="ax-num" style="color:var(--ax-warning-500);font-size:var(--ax-text-sm);">$148K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:8%;background:var(--ax-warning-500);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Overdue</span><b class="ax-num" style="color:var(--ax-danger-500);font-size:var(--ax-text-sm);">$72K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:4%;background:var(--ax-danger-500);"></div></div></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);text-align:center;margin-top:var(--ax-space-2);padding-top:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Paid in full</small><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-md);">2,058</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Defaulters</small><b class="ax-num" style="color:var(--ax-danger-500);font-size:var(--ax-text-md);">94</b></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Today's Timetable (4) + Notices (4) + Top Performers (4) ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Today's timetable">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Today's Timetable</h2>
+                <p class="ax-card__subtitle">Grade 11-B</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Full</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">08:30</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Mathematics</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Ms. Ferreira · Room 14</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">09:30</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Physics</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Mr. Adeyemi · Lab 2</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">11:00</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">English Literature</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Ms. Holloway · Room 9</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:48px;font-weight:600;">13:30</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Chemistry</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Dr. Singh · Lab 1</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Notices and announcements">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Notices</h2>
+                <p class="ax-card__subtitle">Latest announcements</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Board</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-timeline">
+                <li class="ax-timeline__item ax-timeline__item--success">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Sports Day</b> moved to Jul 4 — full schedule posted</p>
+                    <span class="ax-timeline__time">2h ago · Admin</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 9l1 0"/><path d="M9 13l6 0"/><path d="M9 17l6 0"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title">Mid-term <b style="color:var(--ax-text-strong);">report cards</b> available to parents</p>
+                    <span class="ax-timeline__time">Yesterday · Academics</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Parent-teacher</b> meetings on Jul 9, 16:00</p>
+                    <span class="ax-timeline__time">Jun 25 · Admin</span>
+                  </div>
+                </li>
+                <li class="ax-timeline__item">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 17v-13h13v13"/><path d="M9 8h13"/><path d="M5 21v-9a2 2 0 0 1 2 -2h2"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <p class="ax-timeline__title">Library closed Jul 2 for <b style="color:var(--ax-text-strong);">inventory</b></p>
+                    <span class="ax-timeline__time">Jun 24 · Facilities</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Top performers">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Top Performers</h2>
+                <p class="ax-card__subtitle">By GPA · this term</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 20%,transparent);color:var(--ax-viz-amber);font-weight:700;">1</span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Aisha Rahman</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Grade 12-A</div></div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;color:var(--ax-text-strong);">4.00</div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-text-subtle) 22%,transparent);color:var(--ax-text-muted);font-weight:700;">2</span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Noah Castellanos</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Grade 11-B</div></div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;color:var(--ax-text-strong);">3.98</div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 20%,transparent);color:var(--ax-viz-pink);font-weight:700;">3</span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Mei Lin Chow</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Grade 12-C</div></div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;color:var(--ax-text-strong);">3.95</div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">4</span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Oliver Tan</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Grade 10-A</div></div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;color:var(--ax-text-strong);">3.92</div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:600;">5</span>
+                <div style="flex:1 1 auto;min-width:0;"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Sara Bianchi</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Grade 11-A</div></div>
+                <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:600;color:var(--ax-text-strong);">3.90</div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Recent Admissions (12) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Recent admissions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Admissions</h2>
+                <p class="ax-card__subtitle">New student enrollments</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Student</th>
+                    <th class="ax-table__th" scope="col">Grade</th>
+                    <th class="ax-table__th" scope="col">Guardian</th>
+                    <th class="ax-table__th" scope="col">Enrolled</th>
+                    <th class="ax-table__th" scope="col">Fees</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">LK</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Leah Kowalski</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">#S-22841</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Grade 9</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Anna Kowalski</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 24</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">Paid</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Active</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:600;">JM</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Jamal Mensah</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">#S-22840</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Grade 10</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Kofi Mensah</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 23</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">Partial</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Active</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);font-weight:600;">YN</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Yara Nasser</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">#S-22839</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Grade 9</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Layla Nasser</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 22</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">Paid</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Active</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);font-weight:600;">DP</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Diego Paredes</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">#S-22838</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Grade 11</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Rosa Paredes</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 21</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">Overdue</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Pending</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);font-weight:600;">HK</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Hana Kim</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">#S-22837</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Grade 12</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Soo-jin Kim</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 20</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill">Paid</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Active</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // Attendance — stacked column present/late/absent
+    const att = document.getElementById('ax-school-attendance');
+    if (att) renderChart(att, 'bar', [
+      { name: 'Present', data: [2180, 2210, 2150, 2240, 2120] },
+      { name: 'Late', data: [92, 78, 110, 64, 102] },
+      { name: 'Absent', data: [68, 52, 80, 36, 118] },
+    ], {
+      height: 310, legend: 'none', stacked: true, accent: true,
+      apex: {
+        colors: [cv('--ax-accent'), cv('--ax-viz-amber'), cv('--ax-viz-pink')],
+        plotOptions: { bar: { columnWidth: '46%', borderRadius: 4 } },
+        xaxis: { categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'] },
+      },
+    });
+
+    // Students by grade donut
+    const grade = document.getElementById('ax-school-grade');
+    if (grade) renderChart(grade, 'donut', [648, 612, 558, 522], {
+      height: 220, legend: 'none',
+      apex: {
+        labels: ['Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
+        colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: { show: true, value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 }, total: { show: true, label: 'Students', formatter: () => '2,340' } } } } },
+      },
+    });
+
+    // Exam scores by subject column
+    const exams = document.getElementById('ax-school-exams');
+    if (exams) renderChart(exams, 'bar', [{ name: 'Avg score', data: [82, 76, 88, 71, 79, 85, 68] }], {
+      height: 290, legend: 'none', accent: true,
+      apex: {
+        plotOptions: { bar: { columnWidth: '52%', borderRadius: 5, distributed: true } },
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber'), cv('--ax-viz-emerald'), cv('--ax-accent')],
+        xaxis: { categories: ['Math', 'Physics', 'English', 'Chem', 'Biology', 'History', 'Geo'] },
+        yaxis: { max: 100 },
+        tooltip: { y: { formatter: (v) => v + ' / 100' } },
+      },
+    });
+  </script>
+{% endblock %}

@@ -1,0 +1,263 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Accordions</h1>
+              <p class="ax-page-head__subtitle">Collapsible panels — single-open, multi-open, bordered, flush and icon-led, all driven by Alpine with proper aria state.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/pages/faq/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 8a3.5 3 0 0 1 3.5 -3h1a3.5 3 0 0 1 3.5 3a3 3 0 0 1 -2 3a3 4 0 0 0 -2 4"/><path d="M12 19l0 .01"/></svg>
+                <span class="ax-btn__label">FAQ page</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Single-open -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Single-open accordion">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Default</span>
+                <h2 class="ax-card__title">Single-open</h2>
+                <p class="ax-card__subtitle">Opening one panel closes the others.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-accordion" x-data="{ open: 1 }">
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===1).toString()" @click="open = open===1 ? null : 1" aria-controls="sa-1">
+                    <span class="ax-accordion__title">What is included in the Vireo license?</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="sa-1" x-show="open===1" x-collapse x-cloak>
+                    A single regular license covers one end product. It bundles all 9 framework editions, lifetime updates and 6 months of support, extendable to 12.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===2).toString()" @click="open = open===2 ? null : 2" aria-controls="sa-2">
+                    <span class="ax-accordion__title">Can I use it for a client project?</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="sa-2" x-show="open===2" x-collapse x-cloak>
+                    Yes. Build one client dashboard per license; the client may be charged once for the finished product. For SaaS that end users pay to access, an extended license applies.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===3).toString()" @click="open = open===3 ? null : 3" aria-controls="sa-3">
+                    <span class="ax-accordion__title">Which build tools do I need?</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="sa-3" x-show="open===3" x-collapse x-cloak>
+                    Node 20+ and a package manager. The HTML edition runs on Vite with Tailwind v4 and Alpine — <code class="ax-code">npm install</code> then <code class="ax-code">npm run dev</code>.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Multi-open -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Multi-open accordion">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Independent</span>
+                <h2 class="ax-card__title">Multi-open</h2>
+                <p class="ax-card__subtitle">Each panel toggles on its own.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-accordion" x-data="{ open: { ship:true, returns:false, tax:false } }">
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="open.ship.toString()" @click="open.ship = !open.ship" aria-controls="ma-1">
+                    <span class="ax-accordion__title">Shipping &amp; delivery</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ma-1" x-show="open.ship" x-collapse x-cloak>
+                    Orders ship within 2 business days. Standard delivery is 3–5 days; express is next-day for orders placed before 2pm.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="open.returns.toString()" @click="open.returns = !open.returns" aria-controls="ma-2">
+                    <span class="ax-accordion__title">Returns &amp; refunds</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ma-2" x-show="open.returns" x-collapse x-cloak>
+                    Unused items can be returned within 30 days for a full refund. Refunds settle to the original payment method within 5 business days.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="open.tax.toString()" @click="open.tax = !open.tax" aria-controls="ma-3">
+                    <span class="ax-accordion__title">Tax &amp; invoicing</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ma-3" x-show="open.tax" x-collapse x-cloak>
+                    VAT is added at checkout where applicable. A tax invoice is emailed with every order and is available under Billing → Invoices.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Bordered -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Bordered accordion">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variant</span>
+                <h2 class="ax-card__title">Bordered</h2>
+                <p class="ax-card__subtitle">Each item is a separate boxed card.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-accordion ax-accordion--bordered" x-data="{ open: 1 }">
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===1).toString()" @click="open = open===1 ? null : 1" aria-controls="ba-1">
+                    <span class="ax-accordion__title">Connect your data source</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ba-1" x-show="open===1" x-collapse x-cloak>
+                    Link a warehouse, a REST endpoint or upload a CSV. Vireo maps columns automatically and previews the first rows before import.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===2).toString()" @click="open = open===2 ? null : 2" aria-controls="ba-2">
+                    <span class="ax-accordion__title">Build your first dashboard</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ba-2" x-show="open===2" x-collapse x-cloak>
+                    Drag KPI cards, charts and tables onto the grid. Every widget retheme­s with your accent and respects the 12-column layout.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===3).toString()" @click="open = open===3 ? null : 3" aria-controls="ba-3">
+                    <span class="ax-accordion__title">Invite your team</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ba-3" x-show="open===3" x-collapse x-cloak>
+                    Send invites by email and assign roles — Owner, Admin or Member. Pending invites expire after 7 days and can be resent at any time.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Flush -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Flush accordion">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variant</span>
+                <h2 class="ax-card__title">Flush</h2>
+                <p class="ax-card__subtitle">No outer chrome — hairline dividers only, for sidebars &amp; settings.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding:0;">
+              <div class="ax-accordion" x-data="{ open: null }">
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===1).toString()" @click="open = open===1 ? null : 1" aria-controls="fa-1">
+                    <span class="ax-accordion__title">Notifications</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="fa-1" x-show="open===1" x-collapse x-cloak>
+                    Choose which events email you and which only appear in the bell. Critical alerts can never be muted.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===2).toString()" @click="open = open===2 ? null : 2" aria-controls="fa-2">
+                    <span class="ax-accordion__title">Security</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="fa-2" x-show="open===2" x-collapse x-cloak>
+                    Manage two-factor authentication, active sessions and trusted devices. Revoke any session you don't recognise.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="(open===3).toString()" @click="open = open===3 ? null : 3" aria-controls="fa-3">
+                    <span class="ax-accordion__title">API &amp; webhooks</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="fa-3" x-show="open===3" x-collapse x-cloak>
+                    Generate scoped API keys and register webhook endpoints. Each delivery is retried up to 5 times with exponential backoff.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- With icons -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Icon-led accordion">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Rich</span>
+                <h2 class="ax-card__title">With icons &amp; meta</h2>
+                <p class="ax-card__subtitle">A leading tile, a supporting badge, and the chevron — the most detailed variant.</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" x-data @click="$dispatch('ax-open-all')">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l16 0"/><path d="M4 12l16 0"/><path d="M4 18l16 0"/></svg>
+                <span class="ax-btn__label">Expand all</span>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-accordion ax-accordion--bordered" x-data="{ open: { plan:true, usage:false, alerts:false } }"
+                @ax-open-all.window="open = { plan:true, usage:true, alerts:true }">
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="open.plan.toString()" @click="open.plan = !open.plan" aria-controls="ia-1" style="gap:var(--ax-space-4);">
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);" aria-hidden="true">
+                      <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21l-1 -7l16 0l-1 7z"/><path d="M5 11l-2 -6l5 3l4 -5l4 5l5 -3l-2 6"/></svg>
+                    </span>
+                    <span class="ax-accordion__title" style="display:flex;flex-direction:column;gap:2px;">
+                      <span style="color:var(--ax-text-strong);">Plan &amp; billing</span>
+                      <span style="font-weight:var(--ax-weight-regular);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Team plan · renews Jul 1</span>
+                    </span>
+                    <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill ax-badge--sm">Active</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ia-1" x-show="open.plan" x-collapse x-cloak>
+                    Your team is on the annual plan at $23 / seat / month with 9 active seats. Add or remove seats at any time; changes are prorated to the next invoice.
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="open.usage.toString()" @click="open.usage = !open.usage" aria-controls="ia-2" style="gap:var(--ax-space-4);">
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 16%,transparent);color:var(--ax-viz-cyan);" aria-hidden="true">
+                      <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19l16 0"/><path d="M4 15l4 -6l4 2l4 -5l4 4"/></svg>
+                    </span>
+                    <span class="ax-accordion__title" style="display:flex;flex-direction:column;gap:2px;">
+                      <span style="color:var(--ax-text-strong);">Usage this month</span>
+                      <span style="font-weight:var(--ax-weight-regular);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">72% of API quota used</span>
+                    </span>
+                    <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill ax-badge--sm">Watch</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ia-2" x-show="open.usage" x-collapse x-cloak>
+                    You've made 1.44M of your 2M monthly API calls. At the current rate you'll reach the limit around Jun 27 — upgrade or buy a top-up to avoid throttling.
+                    <div class="ax-progress ax-progress--sm" style="margin-top:var(--ax-space-3);max-width:320px;"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:72%;background:var(--ax-viz-amber);"></div></div></div>
+                  </div>
+                </div>
+                <div class="ax-accordion__item">
+                  <button type="button" class="ax-accordion__header" :aria-expanded="open.alerts.toString()" @click="open.alerts = !open.alerts" aria-controls="ia-3" style="gap:var(--ax-space-4);">
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 16%,transparent);color:var(--ax-viz-violet);" aria-hidden="true">
+                      <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/></svg>
+                    </span>
+                    <span class="ax-accordion__title" style="display:flex;flex-direction:column;gap:2px;">
+                      <span style="color:var(--ax-text-strong);">Alert rules</span>
+                      <span style="font-weight:var(--ax-weight-regular);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">4 rules · 1 muted</span>
+                    </span>
+                    <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill ax-badge--sm">4</span>
+                    <svg class="ax-accordion__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-accordion__panel" id="ia-3" x-show="open.alerts" x-collapse x-cloak>
+                    Alerts fire when revenue drops more than 10% day-over-day, a payment fails, stock falls below threshold, or a deploy fails. Delivery goes to the bell and #ops in Slack.
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

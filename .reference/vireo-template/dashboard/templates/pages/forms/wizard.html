@@ -1,0 +1,331 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axWizard()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Form wizard</h1>
+              <p class="ax-page-head__subtitle">A multi-step onboarding flow — validated per step, with a review summary before submit.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);" x-text="'Step ' + (step+1) + ' of ' + steps.length"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- success state -->
+        <template x-if="submitted">
+          <div class="ax-dash-grid">
+            <section class="ax-card ax-col--12" role="region" aria-label="Submission complete">
+              <div class="ax-card__body" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--ax-space-4);padding:var(--ax-space-10) var(--ax-space-6);">
+                <span class="ax-center" style="width:72px;height:72px;border-radius:50%;background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);">
+                  <svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                </span>
+                <h2 class="ax-display" style="font-size:var(--ax-text-2xl);color:var(--ax-text-strong);margin:0;">Workspace created</h2>
+                <p style="margin:0;max-width:40ch;color:var(--ax-text-muted);">We've set up <b style="color:var(--ax-text-strong);" x-text="form.workspace || 'your workspace'"></b> and emailed an invite to <b style="color:var(--ax-text-strong);" x-text="form.email || 'your team'"></b>. You're all set.</p>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);margin-top:var(--ax-space-2);">
+                  <button type="button" class="ax-btn ax-btn--secondary" @click="reset()">Start over</button>
+                  <a class="ax-btn ax-btn--primary" href="/"><span class="ax-btn__label">Go to dashboard</span></a>
+                </div>
+              </div>
+            </section>
+          </div>
+        </template>
+
+        <div class="ax-dash-grid" x-show="!submitted">
+
+          <!-- ───── STEPPER HEADER ───── -->
+          <div class="ax-card ax-col--12" role="region" aria-label="Wizard progress">
+            <div class="ax-card__body" style="padding:var(--ax-space-5) var(--ax-space-6);">
+              <ol style="display:flex;align-items:flex-start;gap:0;list-style:none;margin:0;padding:0;" aria-label="Onboarding steps">
+                <template x-for="(s, i) in steps" :key="s.id">
+                  <li style="flex:1 1 0;display:flex;flex-direction:column;align-items:center;position:relative;min-width:0;">
+                    <span x-show="i > 0" aria-hidden="true" style="position:absolute;top:18px;height:2px;inset-inline-end:50%;width:100%;"
+                          :style="i <= step ? 'background:var(--ax-accent);' : 'background:var(--ax-border);'"></span>
+                    <button type="button" @click="goTo(i)" :disabled="i > maxReached"
+                            :aria-current="i === step ? 'step' : 'false'" :aria-label="'Step ' + (i+1) + ': ' + s.label"
+                            style="position:relative;z-index:1;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--ax-font-mono);font-weight:600;font-size:var(--ax-text-sm);border:2px solid;background:var(--ax-surface-solid);transition:all var(--ax-motion-fast) var(--ax-ease-standard);"
+                            :style="i < step ? 'background:var(--ax-accent);border-color:var(--ax-accent);color:var(--ax-on-accent);cursor:pointer;'
+                                    : i === step ? 'border-color:var(--ax-accent);color:var(--ax-accent);box-shadow:0 0 0 4px var(--ax-accent-wash);'
+                                    : 'border-color:var(--ax-border-strong);color:var(--ax-text-subtle);cursor:default;'">
+                      <template x-if="i < step"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></template>
+                      <span x-show="i >= step" x-html="i === step ? s.icon : (i+1)"></span>
+                    </button>
+                    <span style="margin-top:var(--ax-space-2);font-size:var(--ax-text-xs);text-align:center;font-weight:var(--ax-weight-medium);"
+                          :style="i === step ? 'color:var(--ax-text-strong);' : i < step ? 'color:var(--ax-text);' : 'color:var(--ax-text-subtle);'"
+                          x-text="s.label"></span>
+                    <span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-align:center;display:none;" class="ax-step-hint" x-text="s.hint"></span>
+                  </li>
+                </template>
+              </ol>
+            </div>
+          </div>
+
+          <!-- ───── PANEL ───── -->
+          <section class="ax-card ax-col--8" role="region" :aria-label="steps[step].label" style="min-height:380px;">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow" x-text="'Step ' + (step+1) + ' of ' + steps.length"></span>
+                <h2 class="ax-card__title" x-text="steps[step].label"></h2>
+                <p class="ax-card__subtitle" x-text="steps[step].sub"></p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+
+              <!-- error summary -->
+              <div x-show="errorList.length" x-cloak class="ax-alert ax-alert--danger" role="alert" tabindex="-1" x-ref="errSummary" style="margin-bottom:var(--ax-space-5);">
+                <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0"/></svg></span>
+                <div class="ax-alert__content">
+                  <div class="ax-alert__title" x-text="'Please fix ' + errorList.length + ' field' + (errorList.length===1?'':'s') + ' to continue'"></div>
+                  <ul class="ax-alert__message" style="margin:4px 0 0;padding-inline-start:1.1em;"><template x-for="e in errorList" :key="e"><li x-text="e"></li></template></ul>
+                </div>
+              </div>
+
+              <!-- ░░ STEP 1 · ACCOUNT ░░ -->
+              <div class="ax-flex" x-show="step===0" x-transition.opacity style="flex-direction:column;gap:var(--ax-space-5);">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-5);">
+                  <div class="ax-field">
+                    <label class="ax-label" for="w-first">First name <span class="ax-field__required">*</span></label>
+                    <input id="w-first" type="text" class="ax-input" x-model="form.first" :class="errors.first ? 'is-invalid' : ''" :aria-invalid="!!errors.first" autocomplete="given-name">
+                    <span class="ax-field__message ax-error" x-show="errors.first" x-text="errors.first"></span>
+                  </div>
+                  <div class="ax-field">
+                    <label class="ax-label" for="w-last">Last name <span class="ax-field__required">*</span></label>
+                    <input id="w-last" type="text" class="ax-input" x-model="form.last" :class="errors.last ? 'is-invalid' : ''" :aria-invalid="!!errors.last" autocomplete="family-name">
+                    <span class="ax-field__message ax-error" x-show="errors.last" x-text="errors.last"></span>
+                  </div>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="w-email">Work email <span class="ax-field__required">*</span></label>
+                  <div class="ax-field__control">
+                    <span class="ax-field__affix ax-field__affix--leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></span>
+                    <input id="w-email" type="email" class="ax-input ax-input--with-leading-icon" x-model="form.email" :class="errors.email ? 'is-invalid' : ''" :aria-invalid="!!errors.email" placeholder="you@company.com" autocomplete="email">
+                  </div>
+                  <span class="ax-field__message ax-error" x-show="errors.email" x-text="errors.email"></span>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="w-pass">Password <span class="ax-field__required">*</span></label>
+                  <input id="w-pass" type="password" class="ax-input" x-model="form.pass" :class="errors.pass ? 'is-invalid' : ''" :aria-invalid="!!errors.pass" autocomplete="new-password">
+                  <span class="ax-field__message" :class="errors.pass ? 'ax-error' : ''" x-text="errors.pass || 'At least 8 characters.'" :style="errors.pass ? '' : 'color:var(--ax-text-subtle);'"></span>
+                </div>
+              </div>
+
+              <!-- ░░ STEP 2 · WORKSPACE ░░ -->
+              <div class="ax-flex" x-show="step===1" x-transition.opacity style="flex-direction:column;gap:var(--ax-space-5);">
+                <div class="ax-field">
+                  <label class="ax-label" for="w-name">Workspace name <span class="ax-field__required">*</span></label>
+                  <input id="w-name" type="text" class="ax-input" x-model="form.workspace" :class="errors.workspace ? 'is-invalid' : ''" :aria-invalid="!!errors.workspace" placeholder="Acme Studio">
+                  <span class="ax-field__message ax-error" x-show="errors.workspace" x-text="errors.workspace"></span>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="w-url">Workspace URL</label>
+                  <div class="ax-input-group">
+                    <span class="ax-input-group__addon">vireo.app/</span>
+                    <input id="w-url" type="text" class="ax-input ax-mono" :value="slug()" readonly aria-label="Workspace URL slug">
+                  </div>
+                  <span class="ax-help">Generated from the workspace name.</span>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="w-size">Team size</label>
+                  <select id="w-size" class="ax-select" x-model="form.teamSize">
+                    <option>Just me</option><option>2–10 people</option><option>11–50 people</option><option>51–200 people</option><option>200+ people</option>
+                  </select>
+                </div>
+                <div class="ax-field">
+                  <span class="ax-label">Primary use</span>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-top:var(--ax-space-1);">
+                    <template x-for="u in uses" :key="u.id">
+                      <label style="cursor:pointer;display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-4);border:1.5px solid;border-radius:var(--ax-radius-md);transition:border-color var(--ax-motion-fast) var(--ax-ease-standard);"
+                             :style="form.use===u.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);' : 'border-color:var(--ax-border);'">
+                        <input type="radio" class="ax-radio" name="use" :value="u.id" x-model="form.use">
+                        <span style="display:flex;flex-direction:column;"><b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);" x-text="u.label"></b><span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="u.desc"></span></span>
+                      </label>
+                    </template>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ░░ STEP 3 · PREFERENCES ░░ -->
+              <div class="ax-flex" x-show="step===2" x-transition.opacity style="flex-direction:column;gap:var(--ax-space-5);">
+                <div class="ax-field">
+                  <label class="ax-label" for="w-tz">Timezone</label>
+                  <select id="w-tz" class="ax-select" x-model="form.tz">
+                    <option>(GMT-08:00) Pacific Time</option><option>(GMT-05:00) Eastern Time</option><option>(GMT+00:00) London</option><option>(GMT+01:00) Berlin</option><option>(GMT+05:30) India</option><option>(GMT+09:00) Tokyo</option>
+                  </select>
+                </div>
+                <div>
+                  <span class="ax-label" style="display:block;margin-bottom:var(--ax-space-3);">Notifications</span>
+                  <div style="display:flex;flex-direction:column;gap:var(--ax-space-1);">
+                    <template x-for="n in notifs" :key="n.id">
+                      <label class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-4);cursor:pointer;padding:var(--ax-space-3) 0;border-bottom:1px solid var(--ax-border);">
+                        <span><span style="display:block;font-weight:500;color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="n.title"></span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="n.desc"></span></span>
+                        <input type="checkbox" class="ax-switch" role="switch" x-model="n.on" :aria-label="n.title">
+                      </label>
+                    </template>
+                  </div>
+                </div>
+                <label class="ax-check" style="align-items:flex-start;">
+                  <input type="checkbox" class="ax-checkbox" x-model="form.terms" :class="errors.terms ? 'is-invalid' : ''" :aria-invalid="!!errors.terms" style="margin-top:2px;">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">I agree to the <a class="ax-link" href="/pages/terms/">Terms of Service</a> and <a class="ax-link" href="/pages/privacy/">Privacy Policy</a>. <span class="ax-field__required">*</span></span>
+                </label>
+                <span class="ax-field__message ax-error" x-show="errors.terms" x-text="errors.terms" style="margin-top:-12px;"></span>
+              </div>
+
+              <!-- ░░ STEP 4 · REVIEW ░░ -->
+              <div class="ax-flex" x-show="step===3" x-transition.opacity style="flex-direction:column;gap:var(--ax-space-5);">
+                <p style="margin:0;color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Confirm your details below. Use the <b style="color:var(--ax-text);">Edit</b> links to jump back to any section.</p>
+                <!-- account -->
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;">
+                  <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-subtle);">
+                    <b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Account</b>
+                    <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="goTo(0)">Edit</button>
+                  </div>
+                  <dl style="margin:0;padding:var(--ax-space-4);display:grid;grid-template-columns:auto 1fr;gap:var(--ax-space-2) var(--ax-space-5);font-size:var(--ax-text-sm);">
+                    <dt style="color:var(--ax-text-subtle);">Name</dt><dd style="margin:0;color:var(--ax-text-strong);" x-text="(form.first + ' ' + form.last).trim() || '—'"></dd>
+                    <dt style="color:var(--ax-text-subtle);">Email</dt><dd style="margin:0;color:var(--ax-text-strong);" x-text="form.email || '—'"></dd>
+                  </dl>
+                </div>
+                <!-- workspace -->
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;">
+                  <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-subtle);">
+                    <b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Workspace</b>
+                    <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="goTo(1)">Edit</button>
+                  </div>
+                  <dl style="margin:0;padding:var(--ax-space-4);display:grid;grid-template-columns:auto 1fr;gap:var(--ax-space-2) var(--ax-space-5);font-size:var(--ax-text-sm);">
+                    <dt style="color:var(--ax-text-subtle);">Name</dt><dd style="margin:0;color:var(--ax-text-strong);" x-text="form.workspace || '—'"></dd>
+                    <dt style="color:var(--ax-text-subtle);">URL</dt><dd style="margin:0;" class="ax-mono" x-text="'vireo.app/' + slug()"></dd>
+                    <dt style="color:var(--ax-text-subtle);">Team size</dt><dd style="margin:0;color:var(--ax-text-strong);" x-text="form.teamSize"></dd>
+                    <dt style="color:var(--ax-text-subtle);">Primary use</dt><dd style="margin:0;color:var(--ax-text-strong);" x-text="(uses.find(u=>u.id===form.use)||{}).label || '—'"></dd>
+                  </dl>
+                </div>
+                <!-- prefs -->
+                <div style="border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);overflow:hidden;">
+                  <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-3) var(--ax-space-4);background:var(--ax-surface-subtle);">
+                    <b style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Preferences</b>
+                    <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="goTo(2)">Edit</button>
+                  </div>
+                  <dl style="margin:0;padding:var(--ax-space-4);display:grid;grid-template-columns:auto 1fr;gap:var(--ax-space-2) var(--ax-space-5);font-size:var(--ax-text-sm);">
+                    <dt style="color:var(--ax-text-subtle);">Timezone</dt><dd style="margin:0;color:var(--ax-text-strong);" x-text="form.tz"></dd>
+                    <dt style="color:var(--ax-text-subtle);">Notifications</dt><dd style="margin:0;color:var(--ax-text-strong);" x-text="notifs.filter(n=>n.on).map(n=>n.title).join(', ') || 'None'"></dd>
+                  </dl>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- sticky action row -->
+            <div class="ax-card__footer" style="justify-content:space-between;border-top:1px solid var(--ax-border);">
+              <button type="button" class="ax-btn ax-btn--ghost" @click="prev()" x-show="step>0">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                <span class="ax-btn__label">Back</span>
+              </button>
+              <span x-show="step===0"></span>
+              <button type="button" class="ax-btn ax-btn--primary" @click="next()" x-show="step < steps.length-1">
+                <span class="ax-btn__label">Continue</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="submit()" x-show="step === steps.length-1" :aria-busy="submitting">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                <span class="ax-btn__label" x-text="submitting ? 'Creating…' : 'Create workspace'"></span>
+              </button>
+            </div>
+          </section>
+
+          <!-- ───── HELP RAIL ───── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <section class="ax-card" role="region" aria-label="Why we ask">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title" x-text="steps[step].helpTitle"></h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <p style="margin:0;color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.6;" x-text="steps[step].help"></p>
+              </div>
+            </section>
+            <section class="ax-card" role="region" aria-label="Your progress">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Progress</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Completion</span>
+                  <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="Math.round((step)/(steps.length-1)*100) + '%'"></b>
+                </div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" :style="'width:'+Math.round((step)/(steps.length-1)*100)+'%;'"></div></div></div>
+                <ul style="list-style:none;margin:var(--ax-space-4) 0 0;padding:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="(s, i) in steps" :key="s.id">
+                    <li class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);" :style="i<=step ? 'color:var(--ax-text);' : 'color:var(--ax-text-subtle);'">
+                      <span class="ax-center" style="width:18px;height:18px;border-radius:50%;flex:0 0 auto;" :style="i<step ? 'background:var(--ax-accent);color:var(--ax-on-accent);' : i===step ? 'border:2px solid var(--ax-accent);' : 'border:1.5px solid var(--ax-border-strong);'">
+                        <svg x-show="i<step" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                      </span>
+                      <span x-text="s.label"></span>
+                    </li>
+                  </template>
+                </ul>
+              </div>
+            </section>
+          </aside>
+
+        </div>
+
+
+        <style>
+          @media (min-width:992px){ .ax-step-hint{ display:block !important; } }
+        </style>
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+        <script>
+          function axWizard(){
+            const ic=(p)=>'<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>';
+            return {
+              step:0, maxReached:0, submitting:false, submitted:false,
+              steps:[
+                {id:'account',label:'Account',sub:'Tell us who you are.',hint:'Your details',icon:ic('<path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>'),helpTitle:'About your account',help:'We use your work email to send the workspace invite and important security notices. Your password is hashed and never stored in plain text.'},
+                {id:'workspace',label:'Workspace',sub:'Set up your team space.',hint:'Team setup',icon:ic('<path d="M3 21l18 0"/><path d="M5 21v-14l8 -4v18"/><path d="M19 21v-10l-6 -4"/><path d="M9 9l0 .01"/><path d="M9 12l0 .01"/><path d="M9 15l0 .01"/>'),helpTitle:'Naming your workspace',help:'The workspace name appears across the app and in invites. The URL slug is generated automatically and can be changed later in settings.'},
+                {id:'prefs',label:'Preferences',sub:'Choose how you want to work.',hint:'Fine-tune',icon:ic('<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/>'),helpTitle:'Final touches',help:'Set your timezone so reminders fire at the right moment, and pick which notifications matter to you. Everything here is editable later.'},
+                {id:'review',label:'Review',sub:'Double-check before we create everything.',hint:'Confirm',icon:ic('<path d="M9 12l2 2l4 -4"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/>'),helpTitle:'Ready to launch',help:'Review your selections and create the workspace. We will provision it instantly and email an invite to your team.'},
+              ],
+              form:{ first:'Maya', last:'Chen', email:'', pass:'', workspace:'Acme Studio', teamSize:'2–10 people', use:'product', tz:'(GMT-08:00) Pacific Time', terms:false },
+              uses:[
+                {id:'product',label:'Product',desc:'Roadmaps & specs'},
+                {id:'eng',label:'Engineering',desc:'Issues & sprints'},
+                {id:'design',label:'Design',desc:'Files & reviews'},
+                {id:'ops',label:'Operations',desc:'Docs & workflows'},
+              ],
+              notifs:[
+                {id:'mentions',title:'Mentions',desc:'When someone @mentions you.',on:true},
+                {id:'assigned',title:'Assignments',desc:'When work is assigned to you.',on:true},
+                {id:'digest',title:'Weekly digest',desc:'A Monday summary by email.',on:false},
+              ],
+              errors:{}, errorList:[],
+              slug(){ return (this.form.workspace||'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'') || 'workspace'; },
+              validate(){
+                this.errors={}; const e=this.errors;
+                if(this.step===0){
+                  if(!this.form.first.trim()) e.first='First name is required.';
+                  if(!this.form.last.trim()) e.last='Last name is required.';
+                  if(!this.form.email.trim()) e.email='Email is required.';
+                  else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.form.email)) e.email='Enter a valid email address.';
+                  if(!this.form.pass) e.pass='Password is required.';
+                  else if(this.form.pass.length<8) e.pass='Use at least 8 characters.';
+                }
+                if(this.step===1){ if(!this.form.workspace.trim()) e.workspace='Workspace name is required.'; }
+                if(this.step===2){ if(!this.form.terms) e.terms='You must accept the terms to continue.'; }
+                this.errorList=Object.values(e);
+                return this.errorList.length===0;
+              },
+              next(){
+                if(!this.validate()){ this.$nextTick(()=>this.$refs.errSummary && this.$refs.errSummary.focus()); return; }
+                if(this.step<this.steps.length-1){ this.step++; this.maxReached=Math.max(this.maxReached,this.step); this.errorList=[]; window.scrollTo({top:0,behavior:'smooth'}); }
+              },
+              prev(){ if(this.step>0){ this.errors={}; this.errorList=[]; this.step--; window.scrollTo({top:0,behavior:'smooth'}); } },
+              goTo(i){ if(i<this.step){ this.errors={}; this.errorList=[]; this.step=i; } else if(i<=this.maxReached){ if(this.validate()){ this.step=i; this.errorList=[]; } } window.scrollTo({top:0,behavior:'smooth'}); },
+              submit(){ if(!this.validate()) return; this.submitting=true; setTimeout(()=>{ this.submitting=false; this.submitted=true; window.scrollTo({top:0,behavior:'smooth'}); },900); },
+              reset(){ this.submitted=false; this.step=0; this.maxReached=0; this.errors={}; this.errorList=[]; },
+            };
+          }
+        </script>
+{% endblock %}

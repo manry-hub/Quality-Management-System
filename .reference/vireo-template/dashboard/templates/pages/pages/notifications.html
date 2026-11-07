@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{ filter: 'all', unread: 4, cleared: false,
+                      markAll() { this.unread = 0; this.cleared = true; setTimeout(() => this.cleared = false, 3000); } }">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Notifications</h1>
+              <p class="ax-page-head__subtitle">Everything that needs your attention, in one place.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/pages/profile-settings/#notifications">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>
+                <span class="ax-btn__label">Settings</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--primary" @click="markAll()" :disabled="unread===0">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 12l5 5l10 -10"/><path d="M2 12l5 5m5 -5l5 -5"/></svg>
+                <span class="ax-btn__label">Mark all as read</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12" role="region" aria-label="Notifications list">
+            <div class="ax-card__header">
+              <div class="ax-card__titles" style="flex:1 1 auto;">
+                <div class="ax-tabs">
+                  <div class="ax-tabs__list" role="tablist" aria-label="Filter notifications">
+                    <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="filter==='all'" :class="{ 'is-active': filter==='all' }" @click="filter='all'">All<span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral ax-num">9</span></button>
+                    <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="filter==='unread'" :class="{ 'is-active': filter==='unread' }" @click="filter='unread'">Unread<span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--accent ax-num" x-text="unread"></span></button>
+                    <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="filter==='mentions'" :class="{ 'is-active': filter==='mentions' }" @click="filter='mentions'">Mentions<span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral ax-num">2</span></button>
+                    <button type="button" class="ax-tabs__tab" role="tab" :aria-selected="filter==='system'" :class="{ 'is-active': filter==='system' }" @click="filter='system'">System<span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral ax-num">3</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="ax-card__body" style="padding-top:0;" aria-live="polite">
+              <!-- undo toast -->
+              <div x-show="cleared" x-cloak class="ax-alert ax-alert--success" style="margin-bottom:var(--ax-space-4);" x-transition>
+                <span class="ax-alert__icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                <div class="ax-alert__content"><p class="ax-alert__message">All notifications marked as read.</p></div>
+                <div class="ax-alert__actions"><button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="unread=4; cleared=false">Undo</button></div>
+              </div>
+
+              <!-- TODAY -->
+              <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);padding:var(--ax-space-2) 0;position:sticky;top:0;background:var(--ax-surface-raised);z-index:1;">Today</div>
+              <ul class="ax-list">
+                <!-- unread mention -->
+                <li class="ax-list__row" :style="unread>0 ? 'border-inline-start:2px solid var(--ax-accent);background:var(--ax-accent-wash);padding-inline-start:var(--ax-space-3);' : 'padding-inline:0;'" x-show="filter==='all'||filter==='unread'||filter==='mentions'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">TH</span></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title"><b style="color:var(--ax-text-strong);">Tomás Herrera</b> mentioned you in <span style="color:var(--ax-accent);">#design-systems</span></span><span class="ax-list__meta">"can you review the new density tokens before standup? @maya"</span></span>
+                  <span class="ax-list__trailing" style="display:flex;align-items:center;gap:var(--ax-space-3);">
+                    <span x-show="unread>0" style="width:8px;height:8px;border-radius:50%;background:var(--ax-accent);" aria-label="Unread"></span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">9:42 AM</span>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                  </span>
+                </li>
+                <!-- unread comment -->
+                <li class="ax-list__row" :style="unread>0 ? 'border-inline-start:2px solid var(--ax-accent);background:var(--ax-accent-wash);padding-inline-start:var(--ax-space-3);' : 'padding-inline:0;'" x-show="filter==='all'||filter==='unread'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Payment of <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);">$312.00</b> received from Camila Rossi</span><span class="ax-list__meta">Order #4821 · Stripe</span></span>
+                  <span class="ax-list__trailing" style="display:flex;align-items:center;gap:var(--ax-space-3);">
+                    <span x-show="unread>0" style="width:8px;height:8px;border-radius:50%;background:var(--ax-accent);" aria-label="Unread"></span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">8:15 AM</span>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                  </span>
+                </li>
+                <!-- read -->
+                <li class="ax-list__row" style="padding-inline:0;" x-show="filter==='all'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">DK</span></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title"><b style="color:var(--ax-text-strong);">Devon Okafor</b> assigned you to <span style="color:var(--ax-text);">TSK-318</span></span><span class="ax-list__meta">Fix focus ring on segmented control</span></span>
+                  <span class="ax-list__trailing" style="display:flex;align-items:center;gap:var(--ax-space-3);"><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">7:50 AM</span><button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </li>
+              </ul>
+
+              <!-- YESTERDAY -->
+              <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);padding:var(--ax-space-2) 0;margin-top:var(--ax-space-3);position:sticky;top:0;background:var(--ax-surface-raised);z-index:1;">Yesterday</div>
+              <ul class="ax-list">
+                <li class="ax-list__row" :style="unread>0 ? 'border-inline-start:2px solid var(--ax-accent);background:var(--ax-accent-wash);padding-inline-start:var(--ax-space-3);' : 'padding-inline:0;'" x-show="filter==='all'||filter==='unread'||filter==='system'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-warning-500) 18%,transparent);color:var(--ax-warning-500);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title"><b style="color:var(--ax-text-strong);">New sign-in</b> from Madrid, Spain <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">Security</span></span><span class="ax-list__meta ax-num" style="font-family:var(--ax-font-mono);">Edge 126 · 88.4.220.9</span></span>
+                  <span class="ax-list__trailing ax-flex" style="align-items:center;gap:var(--ax-space-3);"><span x-show="unread>0" style="width:8px;height:8px;border-radius:50%;background:var(--ax-accent);" aria-label="Unread"></span><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">6:30 PM</span><button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;" x-show="filter==='all'||filter==='mentions'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);"><span class="ax-avatar__initials">AS</span></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title"><b style="color:var(--ax-text-strong);">Ava Sutton</b> replied to your comment on <span style="color:var(--ax-accent);">Sidebar density</span></span><span class="ax-list__meta">"agreed — let's ship the tighter spec @maya"</span></span>
+                  <span class="ax-list__trailing" style="display:flex;align-items:center;gap:var(--ax-space-3);"><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">2:18 PM</span><button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;" x-show="filter==='all'||filter==='system'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 16h.01"/><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Your weekly digest is ready <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">System</span></span><span class="ax-list__meta">14 updates across 3 projects</span></span>
+                  <span class="ax-list__trailing" style="display:flex;align-items:center;gap:var(--ax-space-3);"><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">9:00 AM</span><button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </li>
+              </ul>
+
+              <!-- EARLIER -->
+              <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);padding:var(--ax-space-2) 0;margin-top:var(--ax-space-3);position:sticky;top:0;background:var(--ax-surface-raised);z-index:1;">Earlier</div>
+              <ul class="ax-list">
+                <li class="ax-list__row" style="padding-inline:0;" x-show="filter==='all'||filter==='system'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -8"/><path d="M3 10l18 0"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Your card ending <span class="ax-num" style="font-family:var(--ax-font-mono);">7045</span> expires next month <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">Billing</span></span><span class="ax-list__meta">Update it to avoid interruption</span></span>
+                  <span class="ax-list__trailing" style="display:flex;align-items:center;gap:var(--ax-space-3);"><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Jun 22</span><button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;" x-show="filter==='all'">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);"><span class="ax-avatar__initials">PN</span></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title"><b style="color:var(--ax-text-strong);">Priya Nair</b> shared the Q2 report with you</span><span class="ax-list__meta">Quarterly metrics · 18 pages</span></span>
+                  <span class="ax-list__trailing" style="display:flex;align-items:center;gap:var(--ax-space-3);"><span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Jun 21</span><button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Dismiss notification"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </li>
+              </ul>
+
+              <!-- caught up marker -->
+              <div class="ax-cluster" style="justify-content:center;gap:var(--ax-space-2);padding:var(--ax-space-5) 0 var(--ax-space-2);color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                You're all caught up
+              </div>
+            </div>
+          </section>
+        </div>
+      
+</div>
+{% endblock %}

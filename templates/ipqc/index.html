@@ -1,0 +1,155 @@
+{% extends "base_qms.html" %}
+
+{% block title %}In-Process Quality Control (IPQC){% endblock %}
+
+{% block content %}
+<div class="row gy-4 mb-4">
+    <div class="col-12 d-flex flex-wrap align-items-center justify-content-between gap-3">
+        <div>
+            <h4 class="mb-1 text-primary-light fw-bold">Shopfloor Machine Surveillance &amp; FAI Hard-Gating</h4>
+            <p class="text-secondary-light mb-0">10 Injection Molding Machines &bull; Sub-200ms Cryptographic Authorization</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success-subtle text-success-main font-monospace px-3 py-2">
+                <i class="ri-checkbox-circle-fill me-1"></i> FAI RELEASE ENFORCED
+            </span>
+            <span class="badge bg-primary-subtle text-primary-600 font-monospace px-3 py-2">
+                <i class="ri-pulse-line me-1"></i> TELEMETRY WINDOW &plusmn;0.5mm
+            </span>
+        </div>
+    </div>
+</div>
+
+<!-- 10 Machine Status Grid -->
+<div class="row g-3 mb-4">
+    {% for m in machines %}
+    <div class="col-xxl-2 col-lg-3 col-sm-6">
+        <div class="card radius-12 p-16 h-100 bg-base border {% if m.is_andon %}border-danger border-2 shadow-sm{% elif m.is_fai_released %}border-success border-1 shadow-sm{% else %}border-warning border-1{% endif %}">
+            <div class="d-flex align-items-center justify-content-between mb-8">
+                <span class="fw-bold text-primary-light font-monospace text-md">{{ m.code }}</span>
+                {% if m.is_andon %}
+                <span class="badge bg-danger text-white font-monospace animate-pulse">ANDON STOP</span>
+                {% elif m.is_fai_released %}
+                <span class="badge bg-success-subtle text-success-main font-monospace">RUNNING</span>
+                {% else %}
+                <span class="badge bg-warning-subtle text-warning-main font-monospace">SETUP</span>
+                {% endif %}
+            </div>
+
+            {% if m.latest_shot %}
+            <div class="font-monospace text-xs mb-8">
+                <div class="d-flex justify-content-between text-secondary-light">
+                    <span>Cushion:</span>
+                    <strong class="{% if m.latest_shot.cushion_drift_alert %}text-danger{% else %}text-primary-light{% endif %}">
+                        {{ m.latest_shot.cushion_mm }} mm
+                    </strong>
+                </div>
+                <div class="d-flex justify-content-between text-secondary-light">
+                    <span>Pressure:</span>
+                    <span>{{ m.latest_shot.peak_pressure_bar }} bar</span>
+                </div>
+                <div class="d-flex justify-content-between text-secondary-light">
+                    <span>Shot Count:</span>
+                    <span>#{{ m.latest_shot.shot_number }}</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="text-xs text-secondary-light py-12 text-center">
+                Standby &bull; No active shot
+            </div>
+            {% endif %}
+
+            <div class="border-top pt-8 mt-auto d-flex align-items-center justify-content-between">
+                <span class="text-xxs text-secondary-light">FAI:</span>
+                {% if m.active_fai %}
+                    {% if m.active_fai.disposition == 'RELEASED' %}
+                    <span class="text-xs text-success-main fw-semibold">Gated OK</span>
+                    {% else %}
+                    <span class="text-xs text-warning-main fw-semibold">Pending</span>
+                    {% endif %}
+                {% else %}
+                <span class="text-xs text-secondary-light">&mdash;</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- FAI Inspection Ledger & Approval Actions -->
+<div class="row">
+    <div class="col-12">
+        <div class="card radius-12 border-0 shadow-sm p-20 bg-base">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-20">
+                <h6 class="mb-0 text-primary-light fw-bold">First Article Inspection (FAI) Approval Log</h6>
+                <span class="text-xs text-secondary-light">Sub-200ms cryptographic release handshake to MES</span>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0 text-sm">
+                    <thead class="bg-neutral-100 text-secondary-light font-monospace">
+                        <tr>
+                            <th class="py-12 px-16">MACHINE</th>
+                            <th class="py-12 px-16">MES RUN ID</th>
+                            <th class="py-12 px-16">PART NUMBER</th>
+                            <th class="py-12 px-16">MOLD CODE</th>
+                            <th class="py-12 px-16">DISPOSITION</th>
+                            <th class="py-12 px-16">MES TOKEN</th>
+                            <th class="py-12 px-16 text-end">ACTION</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for insp in inspections %}
+                        <tr>
+                            <td class="py-12 px-16 fw-bold text-primary-light font-monospace">{{ insp.machine_code }}</td>
+                            <td class="py-12 px-16 font-monospace text-xs text-secondary-light">{{ insp.mes_run_id }}</td>
+                            <td class="py-12 px-16">
+                                <span class="fw-semibold text-primary-light d-block">{{ insp.part.part_number }}</span>
+                                <span class="text-xs text-secondary-light">{{ insp.part.part_name }}</span>
+                            </td>
+                            <td class="py-12 px-16 font-monospace">{{ insp.mold_code }}</td>
+                            <td class="py-12 px-16">
+                                {% if insp.disposition == 'RELEASED' %}
+                                <span class="badge bg-success-subtle text-success-main font-monospace">RELEASED</span>
+                                {% elif insp.disposition == 'REJECTED' %}
+                                <span class="badge bg-danger-subtle text-danger-main font-monospace">REJECTED</span>
+                                {% else %}
+                                <span class="badge bg-warning-subtle text-warning-main font-monospace">PENDING</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-12 px-16 font-monospace text-xs">
+                                {% if insp.signature_token %}
+                                <span class="text-success-main" title="{{ insp.signature_token }}">
+                                    <i class="ri-shield-keyhole-line me-1"></i>{{ insp.signature_token|slice:":12" }}...
+                                </span>
+                                {% else %}
+                                <span class="text-secondary-light">Not Signed</span>
+                                {% endif %}
+                            </td>
+                            <td class="py-12 px-16 text-end">
+                                {% if insp.disposition == 'PENDING' %}
+                                <form method="POST" action="{% url 'ipqc:fai_approve' insp.id %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-sm btn-success-600 radius-6 px-16">
+                                        <i class="ri-checkbox-circle-line me-1"></i> Sign-Off FAI
+                                    </button>
+                                </form>
+                                {% else %}
+                                <span class="text-xs text-secondary-light font-monospace">{{ insp.signed_at|date:"H:i:s"|default:"&mdash;" }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="7" class="text-center py-24 text-secondary-light">
+                                No active FAI inspections in queue.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

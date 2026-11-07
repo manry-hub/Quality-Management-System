@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Mixed Charts</h1>
+              <p class="ax-page-head__subtitle">ApexCharts combo charts — line + column, area + line, and dual-axis pairings where one metric leads on the accent colour.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="https://apexcharts.com/docs/chart-types/mixed-charts/" target="_blank" rel="noopener">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2h-5"/><path d="M3 16h5v5"/><path d="M3 21l5 -5"/></svg>
+                <span class="ax-btn__label">Docs</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export all</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M9 17v-5"/><path d="M13 17v-3"/><path d="M17 17v-7"/><path d="M9 9l4 -2l4 -3"/></svg>
+                <span class="ax-btn__label">New chart</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── LINE + COLUMN — hero, 8 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Combo chart of revenue columns and conversion line"
+                   x-data="{ tab: 'chart' }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Line + column</span>
+                <h2 class="ax-card__title">Revenue &amp; Conversion</h2>
+                <p class="ax-card__subtitle">Monthly revenue as columns, conversion rate as the accent line</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="tablist" aria-label="View mode">
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='chart' }" @click="tab='chart'" :aria-selected="tab==='chart'" role="tab">Chart</button>
+                  <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': tab==='table' }" @click="tab='table'" :aria-selected="tab==='table'" role="tab">Table</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Revenue</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:14px;height:3px;border-radius:2px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Conversion %</small></span>
+              </div>
+              <div x-show="tab==='chart'">
+                <div id="ax-mix-linecol" aria-label="Combo chart of revenue columns and conversion rate line by month"></div>
+              </div>
+              <div x-show="tab==='table'" x-cloak class="ax-table-wrap">
+                <table class="ax-table ax-table--compact">
+                  <caption class="ax-visually-hidden">Revenue and conversion rate by month</caption>
+                  <thead class="ax-table__head"><tr><th class="ax-table__th" scope="col">Month</th><th class="ax-table__th ax-table__th--num" scope="col">Revenue</th><th class="ax-table__th ax-table__th--num" scope="col">Conv.</th></tr></thead>
+                  <tbody>
+                    <tr class="ax-table__row"><td class="ax-table__td">Jan</td><td class="ax-table__td ax-table__td--num">$62K</td><td class="ax-table__td ax-table__td--num">2.4%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Feb</td><td class="ax-table__td ax-table__td--num">$60K</td><td class="ax-table__td ax-table__td--num">2.5%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Mar</td><td class="ax-table__td ax-table__td--num">$69K</td><td class="ax-table__td ax-table__td--num">2.7%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Apr</td><td class="ax-table__td ax-table__td--num">$72K</td><td class="ax-table__td ax-table__td--num">2.9%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">May</td><td class="ax-table__td ax-table__td--num">$70K</td><td class="ax-table__td ax-table__td--num">3.0%</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td">Jun</td><td class="ax-table__td ax-table__td--num">$75K</td><td class="ax-table__td ax-table__td--num">3.2%</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── COMBO LEGEND / NOTES rail — 4 col ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Mixed chart guidance">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Reading combos</h2>
+                <p class="ax-card__subtitle">Two metrics, one frame</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19l16 0"/><path d="M4 15l4 -6l4 2l4 -5l4 4"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Lead with the line</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">The accent line is the story; columns give it context.</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v16"/><path d="M4 8h12"/><path d="M4 16h6"/><path d="M16 4l4 4l-4 4"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Use a second axis</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Different units (dollars vs. percent) need their own scale.</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M20 18l-6 -6l-4 4l-6 -6"/></svg></span>
+                <div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Keep it to two</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Three or more series in a combo gets hard to read fast.</div></div>
+              </div>
+              <div class="ax-divider" style="margin:var(--ax-space-1) 0;"></div>
+              <div class="ax-cluster" style="justify-content:space-between;">
+                <span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Best conversion month</span>
+                <span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill ax-num">Jun · 3.2%</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── AREA + LINE — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Area and line combo of traffic and signups">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Area + line</span>
+                <h2 class="ax-card__title">Traffic &amp; Signups</h2>
+                <p class="ax-card__subtitle">Sessions as a tinted area, signups as a line</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Sessions</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:14px;height:3px;border-radius:2px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Signups</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-mix-arealine" aria-label="Combo chart of sessions area and signups line by month"></div>
+            </div>
+          </section>
+
+          <!-- ───── MULTI-AXIS — 6 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--6" role="region" aria-label="Dual-axis combo of spend and ROAS">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Dual axis</span>
+                <h2 class="ax-card__title">Ad Spend &amp; ROAS</h2>
+                <p class="ax-card__subtitle">Spend in dollars (left), return on ad spend (right)</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Spend</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:14px;height:3px;border-radius:2px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">ROAS</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-mix-multiaxis" aria-label="Dual-axis combo chart of ad spend columns and ROAS line"></div>
+            </div>
+          </section>
+
+          <!-- ───── TRIPLE COMBO — full width, 12 col ───── -->
+          <section class="ax-card ax-card--chart ax-col--12" role="region" aria-label="Combo chart of inventory, sell-through and returns">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Column + column + line</span>
+                <h2 class="ax-card__title">Inventory Health</h2>
+                <p class="ax-card__subtitle">Stock received and sold as columns, sell-through rate as the accent line</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-cluster" style="gap:var(--ax-space-4);flex-wrap:wrap;">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Received</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Sold</small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:14px;height:3px;border-radius:2px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">Sell-through %</small></span>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-mix-triple" aria-label="Combo chart of inventory received, sold and sell-through rate across twelve months"></div>
+            </div>
+          </section>
+
+        </div>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    // Line + column — revenue columns, conversion line on a second axis
+    const lineCol = document.getElementById('ax-mix-linecol');
+    if (lineCol) renderChart(lineCol, 'line', [
+      { name: 'Revenue',      type: 'column', data: [62, 60, 69, 72, 70, 75] },
+      { name: 'Conversion %', type: 'line',   data: [2.4, 2.5, 2.7, 2.9, 3.0, 3.2] },
+    ], {
+      height: 330, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-cyan'), cv('--ax-accent')],
+        stroke: { width: [0, 3], curve: 'smooth' },
+        plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '46%' } },
+        markers: { size: 0, hover: { size: 6 } },
+        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun'] },
+        yaxis: [
+          { labels: { formatter: (v) => '$' + v + 'K' } },
+          { opposite: true, labels: { formatter: (v) => v.toFixed(1) + '%' } },
+        ],
+      },
+    });
+
+    // Area + line — sessions area, signups line
+    const areaLine = document.getElementById('ax-mix-arealine');
+    if (areaLine) renderChart(areaLine, 'line', [
+      { name: 'Sessions', type: 'area', data: [92, 104, 98, 112, 126, 119, 134] },
+      { name: 'Signups',  type: 'line', data: [18, 21, 19, 24, 28, 26, 31] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-cyan'), cv('--ax-accent')],
+        stroke: { width: [2, 3], curve: 'smooth' },
+        fill: { type: ['gradient', 'solid'], gradient: { opacityFrom: 0.3, opacityTo: 0.02, stops: [0, 95] } },
+        markers: { size: 0, hover: { size: 6 } },
+        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun','Jul'] },
+        yaxis: { labels: { formatter: (v) => v + 'K' } },
+      },
+    });
+
+    // Multi-axis — spend columns (left), ROAS line (right)
+    const multiAxis = document.getElementById('ax-mix-multiaxis');
+    if (multiAxis) renderChart(multiAxis, 'line', [
+      { name: 'Spend', type: 'column', data: [12.4, 14.1, 13.2, 16.8, 18.2, 17.6] },
+      { name: 'ROAS',  type: 'line',   data: [3.1, 3.4, 3.0, 3.8, 4.2, 4.6] },
+    ], {
+      height: 300, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-violet'), cv('--ax-accent')],
+        stroke: { width: [0, 3], curve: 'smooth' },
+        plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '46%' } },
+        markers: { size: 0, hover: { size: 6 } },
+        xaxis: { categories: ['Jan','Feb','Mar','Apr','May','Jun'] },
+        yaxis: [
+          { title: { text: 'Spend ($K)', style: { color: cv('--ax-text-subtle'), fontFamily: cv('--ax-font-sans') } }, labels: { formatter: (v) => '$' + v + 'K' } },
+          { opposite: true, title: { text: 'ROAS', style: { color: cv('--ax-text-subtle'), fontFamily: cv('--ax-font-sans') } }, labels: { formatter: (v) => v.toFixed(1) + '×' } },
+        ],
+      },
+    });
+
+    // Triple combo — received + sold columns, sell-through line
+    const triple = document.getElementById('ax-mix-triple');
+    if (triple) renderChart(triple, 'line', [
+      { name: 'Received',       type: 'column', data: [420, 380, 460, 510, 480, 540, 500, 560, 590, 620, 600, 640] },
+      { name: 'Sold',           type: 'column', data: [360, 340, 410, 470, 440, 500, 470, 520, 560, 590, 580, 610] },
+      { name: 'Sell-through %', type: 'line',   data: [86, 89, 89, 92, 92, 93, 94, 93, 95, 95, 97, 95] },
+    ], {
+      height: 340, legend: 'none',
+      apex: {
+        colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-accent')],
+        stroke: { width: [0, 0, 3], curve: 'smooth' },
+        plotOptions: { bar: { borderRadius: 4, borderRadiusApplication: 'end', columnWidth: '60%' } },
+        markers: { size: 0, hover: { size: 6 } },
+        xaxis: { categories: ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'] },
+        yaxis: [
+          { labels: { formatter: (v) => v + '' } },
+          { show: false },
+          { opposite: true, min: 80, max: 100, labels: { formatter: (v) => v + '%' } },
+        ],
+      },
+    });
+  </script>
+{% endblock %}

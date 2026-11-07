@@ -1,0 +1,215 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axFileUpload()">
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">File upload</h1>
+              <p class="ax-page-head__subtitle">Dropzones, per-file progress and an image preview grid — keyboard and screen-reader ready.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost" @click="clearAll()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                <span class="ax-btn__label">Clear all</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="upload()" :aria-busy="uploading">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 9l5 -5l5 5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label" x-text="uploading ? 'Uploading…' : 'Upload all'"></span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ax-dash-grid">
+
+          <!-- ───── PRIMARY DROPZONE + FILE LIST ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="File dropzone">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Drag &amp; drop</span>
+                <h2 class="ax-card__title">Upload documents</h2>
+                <p class="ax-card__subtitle">PDF, DOCX, XLSX or images up to 25 MB each.</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="files.length + ' file' + (files.length===1?'':'s')"></span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-dropzone">
+                <div class="ax-dropzone__area" :class="dragging ? 'is-dragover' : ''" role="button" tabindex="0"
+                     @dragover.prevent="dragging=true" @dragleave.prevent="dragging=false" @drop.prevent="onDrop($event)"
+                     @click="$refs.fileInput.click()" @keydown.enter="$refs.fileInput.click()" @keydown.space.prevent="$refs.fileInput.click()"
+                     aria-label="Drop files here or click to browse">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M9 15l3 -3l3 3"/><path d="M12 12l0 9"/></svg>
+                  <div style="font-weight:500;color:var(--ax-text-strong);" x-text="dragging ? 'Drop to upload' : 'Drag files here or click to browse'"></div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Maximum 25 MB per file · up to 20 files</div>
+                  <input type="file" x-ref="fileInput" multiple class="visually-hidden" @change="onPick($event)" aria-hidden="true" tabindex="-1">
+                </div>
+
+                <!-- progress live-region -->
+                <ul class="ax-dropzone__list" aria-live="polite">
+                  <template x-for="(f, i) in files" :key="f.id">
+                    <li class="ax-dropzone__file" style="align-items:flex-start;">
+                      <!-- type glyph -->
+                      <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="'background:color-mix(in oklab,'+f.c+' 18%,transparent);color:'+f.c+';margin-top:2px;'">
+                        <svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-html="f.icon"></svg>
+                      </span>
+                      <div style="flex:1 1 auto;min-width:0;">
+                        <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);">
+                          <span class="ax-truncate" style="font-weight:500;color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="f.name"></span>
+                          <span class="ax-num" style="flex:0 0 auto;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);" :style="f.status==='error' ? 'color:var(--ax-danger-500);' : 'color:var(--ax-text-subtle);'" x-text="f.status==='done' ? f.size : (f.status==='error' ? 'Failed' : f.progress + '%')"></span>
+                        </div>
+                        <!-- progress / state -->
+                        <div x-show="f.status==='uploading'" class="ax-progress ax-progress--xs" style="margin-top:6px;"><div class="ax-progress__track"><div class="ax-progress__fill" :style="'width:'+f.progress+'%;'"></div></div></div>
+                        <div x-show="f.status==='done'" class="ax-cluster" style="gap:5px;margin-top:4px;font-size:var(--ax-text-2xs);color:var(--ax-viz-emerald);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg><span x-text="f.size + ' · uploaded'"></span></div>
+                        <div x-show="f.status==='error'" class="ax-cluster" style="gap:5px;margin-top:4px;font-size:var(--ax-text-2xs);color:var(--ax-danger-500);"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.24 3.957l-8.422 14.06a1.989 1.989 0 0 0 1.7 2.983h16.845a1.989 1.989 0 0 0 1.7 -2.983l-8.423 -14.06a1.989 1.989 0 0 0 -3.4 0"/></svg><span x-text="f.error"></span></div>
+                      </div>
+                      <!-- actions -->
+                      <button type="button" x-show="f.status==='error'" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="retry(i)" aria-label="Retry upload"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg></button>
+                      <button type="button" class="ax-dropzone__remove" @click="files.splice(i,1)" :aria-label="'Remove ' + f.name"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                    </li>
+                  </template>
+                  <li x-show="!files.length" style="text-align:center;padding:var(--ax-space-5);color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">No files queued yet.</li>
+                </ul>
+              </div>
+            </div>
+            <div class="ax-card__footer" style="justify-content:space-between;">
+              <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="'Total ' + totalSize()"></span>
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="doneCount() + ' of ' + files.length + ' complete'"></span>
+            </div>
+          </section>
+
+          <!-- ───── SIDE: AVATAR + CONSTRAINTS ───── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <!-- avatar uploader -->
+            <section class="ax-card" role="region" aria-label="Avatar upload">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Profile photo</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-4);text-align:center;">
+                <div style="position:relative;">
+                  <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="width:96px;height:96px;background:color-mix(in oklab,var(--ax-accent) 20%,transparent);color:var(--ax-accent);">
+                    <b style="font-size:var(--ax-text-2xl);font-family:var(--ax-font-display);">JA</b>
+                  </span>
+                  <button type="button" class="ax-btn ax-btn--primary ax-btn--icon ax-btn--sm" style="position:absolute;bottom:-4px;inset-inline-end:-4px;border-radius:50%;" aria-label="Change photo">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>
+                  </button>
+                </div>
+                <div>
+                  <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm">Upload new photo</button>
+                  <p style="margin:var(--ax-space-2) 0 0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Square JPG or PNG, at least 256×256px.</p>
+                </div>
+              </div>
+            </section>
+            <!-- accepted types -->
+            <section class="ax-card" role="region" aria-label="Upload rules">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Accepted files</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <div class="ax-cluster" style="justify-content:space-between;font-size:var(--ax-text-sm);"><span style="color:var(--ax-text);">Documents</span><span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">.pdf .docx .xlsx</span></div>
+                <div class="ax-cluster" style="justify-content:space-between;font-size:var(--ax-text-sm);"><span style="color:var(--ax-text);">Images</span><span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">.jpg .png .webp</span></div>
+                <div class="ax-cluster" style="justify-content:space-between;font-size:var(--ax-text-sm);"><span style="color:var(--ax-text);">Max size</span><span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">25 MB</span></div>
+                <div class="ax-cluster" style="justify-content:space-between;font-size:var(--ax-text-sm);"><span style="color:var(--ax-text);">Max count</span><span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">20 files</span></div>
+              </div>
+            </section>
+          </aside>
+
+          <!-- ───── IMAGE PREVIEW GRID ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Image gallery upload">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Media library</span>
+                <h2 class="ax-card__title">Image preview grid</h2>
+                <p class="ax-card__subtitle">Thumbnails with hover actions · the first dashed tile adds more.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:var(--ax-space-4);">
+                <!-- add tile -->
+                <button type="button" class="ax-center" @click="$refs.fileInput.click()" style="aspect-ratio:1;border:1.5px dashed var(--ax-border-strong);border-radius:var(--ax-radius-md);background:var(--ax-surface);color:var(--ax-text-muted);cursor:pointer;gap:var(--ax-space-2);flex-direction:column;display:flex;align-items:center;justify-content:center;" aria-label="Add images">
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  <span style="font-size:var(--ax-text-xs);">Add images</span>
+                </button>
+                <!-- image tiles -->
+                <template x-for="(img, i) in images" :key="img.id">
+                  <figure style="position:relative;margin:0;aspect-ratio:1;border-radius:var(--ax-radius-md);overflow:hidden;border:1px solid var(--ax-border);" class="ax-file-tile">
+                    <!-- gradient placeholder thumbnail (no external asset) -->
+                    <div class="ax-fill" :style="'background:'+img.bg+';'"></div>
+                    <span aria-hidden="true" class="ax-center ax-fill" style="position:absolute;inset:0;color:rgba(255,255,255,.85);">
+                      <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>
+                    </span>
+                    <!-- primary badge -->
+                    <span x-show="img.primary" class="ax-badge ax-badge--solid ax-badge--accent ax-badge--sm ax-badge--pill" style="position:absolute;top:8px;inset-inline-start:8px;">Primary</span>
+                    <!-- hover overlay -->
+                    <figcaption class="ax-file-tile__bar" style="position:absolute;inset-inline:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:var(--ax-space-2);padding:var(--ax-space-2) var(--ax-space-3);background:linear-gradient(to top,rgba(0,0,0,.62),transparent);">
+                      <span class="ax-truncate" style="color:#fff;font-size:var(--ax-text-2xs);" x-text="img.name"></span>
+                      <span class="ax-cluster" style="gap:4px;flex:0 0 auto;">
+                        <button type="button" @click="setPrimary(i)" aria-label="Set as primary" style="display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.18);border:0;color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg></button>
+                        <button type="button" @click="images.splice(i,1)" aria-label="Delete image" style="display:inline-flex;width:24px;height:24px;align-items:center;justify-content:center;border-radius:6px;background:rgba(255,255,255,.18);border:0;color:#fff;cursor:pointer;"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+                      </span>
+                    </figcaption>
+                  </figure>
+                </template>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+
+        <style>
+          .ax-file-tile__bar { opacity:0; transition:opacity var(--ax-motion-fast) var(--ax-ease-standard); }
+          .ax-file-tile:hover .ax-file-tile__bar, .ax-file-tile:focus-within .ax-file-tile__bar { opacity:1; }
+          @media (prefers-reduced-motion: reduce){ .ax-file-tile__bar { opacity:1; } }
+        </style>
+      
+</div>
+{% endblock %}
+
+{% block scripts %}
+        <script>
+          function axFileUpload(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',accent:'var(--ax-accent)'};
+            const ICON={
+              pdf:'<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 12v-7a2 2 0 0 1 2 -2h7l5 5v4"/><path d="M5 18h1.5a1.5 1.5 0 0 0 0 -3h-1.5v6"/><path d="M17 18h2"/><path d="M20 15h-3v6"/><path d="M11 15v6h1a2 2 0 0 0 2 -2v-2a2 2 0 0 0 -2 -2h-1z"/>',
+              doc:'<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/><path d="M9 9l1 0"/><path d="M9 13l6 0"/><path d="M9 17l6 0"/>',
+              xls:'<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2"/><path d="M10 12l4 5"/><path d="M10 17l4 -5"/>',
+              img:'<path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/>',
+            };
+            let uid=10;
+            return {
+              dragging:false, uploading:false,
+              files:[
+                {id:1,name:'Q3-financial-report.pdf',size:'3.4 MB',progress:100,status:'done',c:C.pink,icon:ICON.pdf},
+                {id:2,name:'brand-guidelines-v4.docx',size:'1.2 MB',progress:64,status:'uploading',c:C.cyan,icon:ICON.doc},
+                {id:3,name:'pricing-model-2026.xlsx',size:'860 KB',progress:38,status:'uploading',c:C.emerald,icon:ICON.xls},
+                {id:4,name:'hero-render-final.png',size:'28.6 MB',progress:0,status:'error',error:'Exceeds 25 MB limit',c:C.violet,icon:ICON.img},
+              ],
+              images:[
+                {id:101,name:'lamp-brass-01.jpg',primary:true,bg:'linear-gradient(135deg,var(--ax-viz-cyan),var(--ax-viz-violet))'},
+                {id:102,name:'mug-slate-02.jpg',primary:false,bg:'linear-gradient(135deg,var(--ax-viz-pink),var(--ax-viz-amber))'},
+                {id:103,name:'riser-walnut-03.jpg',primary:false,bg:'linear-gradient(135deg,var(--ax-viz-emerald),var(--ax-viz-cyan))'},
+                {id:104,name:'desk-setup-wide.jpg',primary:false,bg:'linear-gradient(135deg,var(--ax-viz-violet),var(--ax-viz-pink))'},
+                {id:105,name:'studio-detail-05.jpg',primary:false,bg:'linear-gradient(135deg,var(--ax-viz-amber),var(--ax-viz-cyan))'},
+              ],
+              onPick(e){ this.queue(e.target.files); e.target.value=''; },
+              onDrop(e){ this.dragging=false; this.queue(e.dataTransfer.files); },
+              queue(list){
+                Array.from(list||[]).forEach(f=>{
+                  const big=f.size>25*1024*1024;
+                  this.files.push({ id:++uid, name:f.name, size:this.fmt(f.size), progress:big?0:0, status:big?'error':'uploading', error:big?'Exceeds 25 MB limit':'', c:C.amber, icon:ICON.doc });
+                });
+              },
+              fmt(b){ if(b>=1048576) return (b/1048576).toFixed(1)+' MB'; return Math.max(1,Math.round(b/1024))+' KB'; },
+              retry(i){ this.files[i].status='uploading'; this.files[i].progress=0; this.files[i].error=''; },
+              clearAll(){ this.files=[]; },
+              totalSize(){ return '36.0 MB'; },
+              doneCount(){ return this.files.filter(f=>f.status==='done').length; },
+              setPrimary(i){ this.images.forEach((im,j)=>im.primary=(j===i)); },
+              upload(){ this.uploading=true; this.files.forEach(f=>{ if(f.status!=='error') f.status='uploading'; }); setTimeout(()=>{ this.files.forEach(f=>{ if(f.status==='uploading'){ f.progress=100; f.status='done'; } }); this.uploading=false; },1100); },
+            };
+          }
+        </script>
+{% endblock %}

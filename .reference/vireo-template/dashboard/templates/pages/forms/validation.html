@@ -1,0 +1,231 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Form Validation</h1>
+              <p class="ax-page-head__subtitle">Live valid &amp; invalid states, accessible error messaging, and a working submit demo.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/forms/layouts/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6l16 0"/><path d="M4 12l16 0"/><path d="M4 18l16 0"/></svg>
+                <span class="ax-btn__label">Layouts</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Static state reference ───── -->
+          <section class="ax-card ax-col--5" role="region" aria-label="Validation state reference">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Reference</span>
+                <h2 class="ax-card__title">Field States</h2>
+                <p class="ax-card__subtitle">Rest, valid, invalid &amp; disabled — side by side.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <!-- rest -->
+              <div class="ax-field">
+                <label class="ax-label" for="vs-rest">Rest</label>
+                <input id="vs-rest" type="text" class="ax-input" placeholder="you@company.com">
+                <span class="ax-field__message ax-help">We'll never share your address.</span>
+              </div>
+              <!-- valid -->
+              <div class="ax-field">
+                <label class="ax-label" for="vs-valid">Valid</label>
+                <div class="ax-field__control">
+                  <input id="vs-valid" type="text" class="ax-input is-valid ax-input--with-trailing" value="amelia.hart@northwind.io" aria-describedby="vs-valid-msg">
+                  <span class="ax-field__affix ax-field__affix--trailing" aria-hidden="true" style="color:var(--ax-success-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                </div>
+                <span id="vs-valid-msg" class="ax-field__message ax-field__message--success">Looks good — this email is available.</span>
+              </div>
+              <!-- invalid -->
+              <div class="ax-field">
+                <label class="ax-label" for="vs-invalid">Invalid</label>
+                <div class="ax-field__control">
+                  <input id="vs-invalid" type="text" class="ax-input is-invalid ax-input--with-trailing" value="amelia.hart@" aria-invalid="true" aria-describedby="vs-invalid-msg">
+                  <span class="ax-field__affix ax-field__affix--trailing" aria-hidden="true" style="color:var(--ax-danger-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></span>
+                </div>
+                <span id="vs-invalid-msg" class="ax-field__message ax-field__message--error" role="alert">Enter a complete email address, e.g. name@company.com.</span>
+              </div>
+              <!-- disabled -->
+              <div class="ax-field" style="opacity:.6;">
+                <label class="ax-label" for="vs-disabled" style="color:var(--ax-text-muted);">Disabled</label>
+                <input id="vs-disabled" type="text" class="ax-input" value="locked@company.com" disabled>
+                <span class="ax-field__message ax-help">Managed by your administrator.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Live demo form ───── -->
+          <section class="ax-card ax-col--7" role="region" aria-label="Live validation demo"
+            x-data="signupForm()">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Live demo</span>
+                <h2 class="ax-card__title">Create your account</h2>
+                <p class="ax-card__subtitle">Validates on submit, then re-validates on input. Try submitting empty.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <!-- success state -->
+              <template x-if="done">
+                <div class="ax-alert ax-alert--success" role="status">
+                  <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                  <div class="ax-alert__content"><p class="ax-alert__title">Account created</p><p class="ax-alert__message">A confirmation link is on its way to <b x-text="fields.email.value"></b>.</p></div>
+                  <div class="ax-alert__actions"><button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="reset()"><span class="ax-btn__label">Start over</span></button></div>
+                </div>
+              </template>
+
+              <form class="ax-flex" x-show="!done" @submit.prevent="submit()" novalidate style="flex-direction:column;gap:var(--ax-space-5);">
+                <!-- error summary -->
+                <div x-show="summaryVisible" x-cloak x-ref="summary" tabindex="-1" role="alert"
+                     style="padding:var(--ax-space-4);background:color-mix(in oklab,var(--ax-danger-500) 10%,transparent);border:1px solid color-mix(in oklab,var(--ax-danger-500) 35%,transparent);border-radius:var(--ax-radius-md);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);color:var(--ax-danger-500);font-weight:var(--ax-weight-semibold);font-size:var(--ax-text-sm);">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                    <span x-text="'There ' + (errorCount===1 ? 'is 1 problem' : 'are ' + errorCount + ' problems') + ' with this form'"></span>
+                  </div>
+                  <ul style="margin:var(--ax-space-2) 0 0;padding-inline-start:var(--ax-space-6);font-size:var(--ax-text-xs);color:var(--ax-danger-500);">
+                    <template x-for="(f,k) in fields" :key="k">
+                      <li x-show="f.error"><a :href="'#'+f.id" @click.prevent="focusField(k)" style="color:inherit;text-decoration:underline;" x-text="f.error"></a></li>
+                    </template>
+                  </ul>
+                </div>
+
+                <!-- name -->
+                <div class="ax-field">
+                  <label class="ax-label" for="vd-name">Full name <span class="ax-field__required" aria-hidden="true">*</span></label>
+                  <input id="vd-name" type="text" class="ax-input" x-model="fields.name.value"
+                         :class="{ 'is-invalid': fields.name.error, 'is-valid': fields.name.touched && !fields.name.error }"
+                         :aria-invalid="fields.name.error ? 'true' : 'false'" aria-describedby="vd-name-msg"
+                         @input="revalidate('name')" @blur="touch('name')" placeholder="Amelia Hart">
+                  <span id="vd-name-msg" class="ax-field__message" :class="fields.name.error ? 'ax-field__message--error' : 'ax-help'"
+                        x-text="fields.name.error || 'Your name as it should appear on invoices.'">Your name as it should appear on invoices.</span>
+                </div>
+
+                <!-- email -->
+                <div class="ax-field">
+                  <label class="ax-label" for="vd-email">Work email <span class="ax-field__required" aria-hidden="true">*</span></label>
+                  <div class="ax-field__control">
+                    <input id="vd-email" type="email" class="ax-input ax-input--with-trailing" x-model="fields.email.value"
+                           :class="{ 'is-invalid': fields.email.error, 'is-valid': fields.email.touched && !fields.email.error }"
+                           :aria-invalid="fields.email.error ? 'true' : 'false'" aria-describedby="vd-email-msg"
+                           @input="revalidate('email')" @blur="touch('email')" placeholder="you@company.com">
+                    <span class="ax-field__affix ax-field__affix--trailing" aria-hidden="true" x-show="fields.email.touched"
+                          :style="fields.email.error ? 'color:var(--ax-danger-500)' : 'color:var(--ax-success-500)'">
+                      <svg x-show="!fields.email.error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5l10 -10"/></svg>
+                      <svg x-show="fields.email.error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
+                    </span>
+                  </div>
+                  <span id="vd-email-msg" class="ax-field__message" :class="fields.email.error ? 'ax-field__message--error' : 'ax-help'"
+                        x-text="fields.email.error || 'We send the confirmation link here.'">We send the confirmation link here.</span>
+                </div>
+
+                <!-- password -->
+                <div class="ax-field">
+                  <label class="ax-label" for="vd-pass">Password <span class="ax-field__required" aria-hidden="true">*</span></label>
+                  <input id="vd-pass" type="password" class="ax-input" x-model="fields.pass.value"
+                         :class="{ 'is-invalid': fields.pass.error, 'is-valid': fields.pass.touched && !fields.pass.error }"
+                         :aria-invalid="fields.pass.error ? 'true' : 'false'" aria-describedby="vd-pass-msg"
+                         @input="revalidate('pass')" @blur="touch('pass')" placeholder="At least 8 characters">
+                  <span id="vd-pass-msg" class="ax-field__message" :class="fields.pass.error ? 'ax-field__message--error' : 'ax-help'"
+                        x-text="fields.pass.error || 'Minimum 8 characters with one number.'">Minimum 8 characters with one number.</span>
+                </div>
+
+                <!-- plan select -->
+                <div class="ax-field">
+                  <label class="ax-label" for="vd-plan">Plan <span class="ax-field__required" aria-hidden="true">*</span></label>
+                  <select id="vd-plan" class="ax-select" x-model="fields.plan.value"
+                          :class="{ 'is-invalid': fields.plan.error, 'is-valid': fields.plan.touched && !fields.plan.error }"
+                          :aria-invalid="fields.plan.error ? 'true' : 'false'" aria-describedby="vd-plan-msg"
+                          @change="revalidate('plan'); touch('plan')">
+                    <option value="">Select a plan…</option>
+                    <option value="starter">Starter — $29/mo</option>
+                    <option value="growth">Growth — $79/mo</option>
+                    <option value="scale">Scale — $199/mo</option>
+                  </select>
+                  <span id="vd-plan-msg" class="ax-field__message" :class="fields.plan.error ? 'ax-field__message--error' : 'ax-help'"
+                        x-text="fields.plan.error || 'Change or cancel any time.'">Change or cancel any time.</span>
+                </div>
+
+                <!-- terms -->
+                <div class="ax-field">
+                  <label class="ax-check" style="display:flex;gap:var(--ax-space-3);align-items:flex-start;min-height:auto;">
+                    <input type="checkbox" class="ax-checkbox" x-model="fields.terms.value"
+                           :class="{ 'is-invalid': fields.terms.error }" @change="revalidate('terms'); touch('terms')" style="margin-top:2px;"
+                           :aria-invalid="fields.terms.error ? 'true' : 'false'" aria-describedby="vd-terms-msg">
+                    <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">I agree to the <a class="ax-link" href="#">Terms</a> and <a class="ax-link" href="#">Privacy Policy</a>.</span>
+                  </label>
+                  <span id="vd-terms-msg" class="ax-field__message ax-field__message--error" x-show="fields.terms.error" x-text="fields.terms.error"></span>
+                </div>
+
+                <div class="ax-cluster" style="justify-content:flex-end;gap:var(--ax-space-3);">
+                  <button type="reset" class="ax-btn ax-btn--ghost" @click="reset()"><span class="ax-btn__label">Reset</span></button>
+                  <button type="submit" class="ax-btn ax-btn--primary" :disabled="submitting" :aria-busy="submitting">
+                    <span class="ax-spinner ax-spinner--xs" x-show="submitting" x-cloak aria-hidden="true"></span>
+                    <span class="ax-btn__label" x-text="submitting ? 'Creating…' : 'Create account'">Create account</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+        </div>
+
+      
+{% endblock %}
+
+{% block scripts %}
+        <script>
+          function signupForm() {
+            return {
+              submitting: false,
+              done: false,
+              attempted: false,
+              fields: {
+                name:  { id:'vd-name',  value:'', error:'', touched:false },
+                email: { id:'vd-email', value:'', error:'', touched:false },
+                pass:  { id:'vd-pass',  value:'', error:'', touched:false },
+                plan:  { id:'vd-plan',  value:'', error:'', touched:false },
+                terms: { id:'vd-terms', value:false, error:'', touched:false },
+              },
+              rules: {
+                name:  (v) => !v.trim() ? 'Enter your full name.' : (v.trim().length < 2 ? 'Name is too short.' : ''),
+                email: (v) => !v.trim() ? 'Enter your work email.' : (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? 'Enter a valid email address.' : ''),
+                pass:  (v) => !v ? 'Choose a password.' : (v.length < 8 ? 'Use at least 8 characters.' : (!/\d/.test(v) ? 'Include at least one number.' : '')),
+                plan:  (v) => !v ? 'Choose a plan to continue.' : '',
+                terms: (v) => !v ? 'You must accept the terms.' : '',
+              },
+              get errorCount() { return Object.values(this.fields).filter(f => f.error).length; },
+              get summaryVisible() { return this.attempted && this.errorCount > 0; },
+              validateField(k) { this.fields[k].error = this.rules[k](this.fields[k].value); },
+              revalidate(k) { if (this.attempted || this.fields[k].touched) this.validateField(k); },
+              touch(k) { this.fields[k].touched = true; this.validateField(k); },
+              focusField(k) { document.getElementById(this.fields[k].id)?.focus(); },
+              submit() {
+                this.attempted = true;
+                Object.keys(this.fields).forEach(k => { this.fields[k].touched = true; this.validateField(k); });
+                if (this.errorCount > 0) {
+                  this.$nextTick(() => this.$refs.summary?.focus());
+                  return;
+                }
+                this.submitting = true;
+                setTimeout(() => { this.submitting = false; this.done = true; }, 1100);
+              },
+              reset() {
+                this.done = false; this.attempted = false; this.submitting = false;
+                Object.keys(this.fields).forEach(k => { this.fields[k].value = (k==='terms'?false:''); this.fields[k].error=''; this.fields[k].touched=false; });
+              },
+            };
+          }
+        </script>
+{% endblock %}

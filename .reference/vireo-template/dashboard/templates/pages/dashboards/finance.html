@@ -1,0 +1,406 @@
+{% extends 'base.html' %}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Finance &amp; Banking</h1>
+              <p class="ax-page-head__subtitle">Balances, cash flow &amp; budgets — last 30 days.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/><path d="M11 15h1"/><path d="M12 15v3"/></svg>
+                <span class="ax-btn__label">Last 30 days</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Refresh dashboard">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Add transaction</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Balance $312,540, up 3.1%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9 -6l9 6"/><path d="M4 10v10h16v-10"/><path d="M9 20v-6h6v6"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>3.1%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Total Balance</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$312,540</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[8,10,9,14,16,20,23,27]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Monthly Income $48,200, up 4.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l9 -10"/><path d="M12 5v6"/><path d="M9 8l3 3l3 -3"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.0%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Monthly Income</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$48,200</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-emerald" data-ax-chart-series='[{"name":"Trend","data":[7,10,9,16,18,22,25,29]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Monthly Expenses $31,760, up 6.7 percent which is unfavourable">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 -5l9 10"/><path d="M12 19v-6"/><path d="M9 16l3 3l3 -3"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--down">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>6.7%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Monthly Expenses</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">$31,760</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-red" data-ax-chart-series='[{"name":"Trend","data":[12,14,12,17,16,21,20,25]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Net Savings Rate 34 percent, up 1.5%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a4 4 0 0 1 4 -4h7l6 6v6a4 4 0 0 1 -4 4h-1"/><path d="M12 15m-3 0a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/><path d="M5 13h2"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.5%
+                </span>
+              </div>
+              <div class="ax-kpi__label">Net Savings Rate</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">34%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[10,12,11,16,15,20,19,23]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Cash Flow (mixed diverging) + Total Balance plate ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Cash flow">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Cash flow</span>
+                <h2 class="ax-card__title">Income vs. Expenses</h2>
+                <p class="ax-card__subtitle">Monthly inflow, outflow &amp; net position</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Date range">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">6M</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">12M</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">YTD</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-success-500);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Income</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-danger-500);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Expenses</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Net</small></span>
+              </div>
+              <div id="ax-cashflow-mixed" aria-label="Mixed chart of income columns up, expenses columns down, and net cash line"></div>
+            </div>
+          </section>
+
+          <!-- Total Balance gradient plate (W-BALANCE) -->
+          <section class="ax-card ax-card--balance ax-col--4" role="region" aria-label="Total balance">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Total Balance</h2></div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Currency">
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">USD</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">GBP</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">EUR</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div style="position:relative;overflow:hidden;border-radius:var(--ax-radius-lg);padding:var(--ax-space-5);background:var(--ax-gradient-plate);box-shadow:var(--ax-shadow-md);color:#fff;min-height:172px;display:flex;flex-direction:column;">
+                <span aria-hidden="true" style="position:absolute;top:-40px;right:-30px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.18);filter:blur(6px);"></span>
+                <span aria-hidden="true" style="position:absolute;bottom:-50px;left:-20px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.12);"></span>
+                <div class="ax-cluster" style="justify-content:space-between;position:relative;">
+                  <b style="font-family:var(--ax-font-display);letter-spacing:.02em;color:inherit;">Vireo · Operating</b>
+                  <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.9;"><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h2"/><path d="M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2"/></svg>
+                </div>
+                <div style="margin-top:auto;position:relative;">
+                  <div style="font-size:var(--ax-text-xs);opacity:.85;">Available balance</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;line-height:1.1;letter-spacing:-.01em;">$312,540.00</div>
+                  <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);letter-spacing:.12em;opacity:.92;margin-top:var(--ax-space-3);">4921&nbsp;&nbsp;••••&nbsp;&nbsp;••••&nbsp;&nbsp;7045</div>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+                <button type="button" class="ax-btn ax-btn--solid ax-btn--block">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                  <span class="ax-btn__label">Transfer</span>
+                </button>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--block">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M18 13l-6 6"/><path d="M6 13l6 6"/></svg>
+                  <span class="ax-btn__label">Deposit</span>
+                </button>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--ax-space-3);text-align:center;">
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Income</small><b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-md);">+$48,200</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Expenses</small><b class="ax-num" style="color:var(--ax-viz-red);font-size:var(--ax-text-md);">−$31,760</b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-xs);margin-bottom:2px;">Saved</small><b class="ax-num" style="color:var(--ax-viz-cyan);font-size:var(--ax-text-md);">$16,440</b></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Spending donut + Accounts + Budget rings ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Spending by category">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Spending by Category</h2></div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-spend-donut" aria-label="Donut chart of spending: payroll 44%, software 18%, marketing 15%, office 13%, other 10%"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Payroll</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$13,974</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Software</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$5,717</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Marketing</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$4,764</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Office</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$4,129</span>
+                </li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;">
+                  <span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Other</span></span>
+                  <span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">$3,176</span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- Accounts -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Accounts">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Accounts</h2></div>
+              <a class="ax-btn ax-btn--link" href="#">Manage</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-accent) 18%,transparent);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10h18"/><path d="M5 5h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10a2 2 0 0 1 2 -2"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Operating Checking</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">•••• 7045</div></div>
+                <div style="text-align:right;"><b class="ax-num" style="color:var(--ax-text-strong);">$184,210</b><div class="ax-kpi__delta ax-kpi__delta--up" style="justify-content:flex-end;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.4%</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a4 4 0 0 1 4 -4h7l6 6v6a4 4 0 0 1 -4 4h-1"/><path d="M12 15m-3 0a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">High-Yield Savings</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">•••• 2208</div></div>
+                <div style="text-align:right;"><b class="ax-num" style="color:var(--ax-text-strong);">$96,400</b><div class="ax-kpi__delta ax-kpi__delta--up" style="justify-content:flex-end;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>4.0%</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10h18"/><path d="M7 15h.01"/><path d="M11 15h2"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Corporate Card</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">•••• 3391</div></div>
+                <div style="text-align:right;"><b class="ax-num" style="color:var(--ax-viz-red);">−$8,420</b><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">due Jun 28</div></div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                <span class="ax-avatar ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 8v-3a1 1 0 0 0 -1 -1h-10a2 2 0 0 0 0 4h12a1 1 0 0 1 1 1v3m0 4v3a1 1 0 0 1 -1 1h-12a2 2 0 0 1 -2 -2v-12"/><path d="M20 12v4h-4a2 2 0 0 1 0 -4z"/></svg></span>
+                <div style="flex:1 1 auto;min-width:0;"><div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Tax Reserve</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">•••• 0117</div></div>
+                <div style="text-align:right;"><b class="ax-num" style="color:var(--ax-text-strong);">$40,350</b><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">locked</div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Budget rings (W-GOAL multi) -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Budget utilization">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Budget Utilization</h2><p class="ax-card__subtitle">June envelopes</p></div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Payroll</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$13.9K / $15K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:93%;background:var(--ax-accent);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Software</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$5.7K / $6K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:95%;background:var(--ax-viz-cyan);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Marketing</span><b class="ax-num" style="color:var(--ax-viz-red);font-size:var(--ax-text-sm);">$4.8K / $4K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:100%;background:var(--ax-danger-500);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Office</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$4.1K / $5K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:82%;background:var(--ax-viz-violet);"></div></div></div>
+              </div>
+              <div class="ax-alert ax-alert--danger" role="status">
+                <svg class="ax-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path d="M12 16h.01"/></svg>
+                <div class="ax-alert__content"><p class="ax-alert__message">Marketing is 19% over budget.</p></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Recent Transactions (8) + Upcoming Bills (4) ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Recent transactions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Recent Transactions</h2><p class="ax-card__subtitle">Latest movements across accounts</p></div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Date</th>
+                    <th class="ax-table__th" scope="col">Payee</th>
+                    <th class="ax-table__th" scope="col">Category</th>
+                    <th class="ax-table__th" scope="col">Account</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 12</td>
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Stripe Payout</div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft">Revenue</span></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Checking •7045</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$18,420.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 11</td>
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Gusto Payroll</div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft">Payroll</span></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Checking •7045</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$13,974.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 11</td>
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">AWS</div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft">Software</span></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Card •3391</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$2,840.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 10</td>
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Pulse Ads</div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft">Marketing</span></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Card •3391</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$1,640.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 09</td>
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Acme Co Invoice</div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft">Revenue</span></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Checking •7045</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$9,200.00</td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">Jun 08</td>
+                    <td class="ax-table__td"><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">WeWork</div></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft">Office</span></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Checking •7045</td>
+                    <td class="ax-table__td ax-table__td--num" style="color:var(--ax-text);">−$4,129.00</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- Upcoming Bills -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Upcoming bills">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">Upcoming Bills</h2></div>
+              <a class="ax-btn ax-btn--link" href="#">Schedule</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-list ax-list--compact">
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-danger-500) 18%,transparent);color:var(--ax-danger-500);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5m0 3a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3z"/><path d="M3 10h18"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Corporate Card</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Due Jun 28</span></span>
+                  <span class="ax-list__trailing"><b class="ax-num" style="color:var(--ax-text-strong);">$8,420</b><div><span class="ax-badge ax-badge--soft ax-badge--danger">2 days</span></div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-warning-500) 18%,transparent);color:var(--ax-warning-500);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M5 21v-14l8 -4v18"/><path d="M19 21v-10l-6 -4"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Office Lease</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Due Jul 01</span></span>
+                  <span class="ax-list__trailing"><b class="ax-num" style="color:var(--ax-text-strong);">$4,129</b><div><span class="ax-badge ax-badge--soft ax-badge--warning">5 days</span></div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l4.5 0"/><path d="M3 6l9 0"/><path d="M14 6l6 0l0 13l-6 0z"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">SaaS Stack</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Due Jul 05</span></span>
+                  <span class="ax-list__trailing"><b class="ax-num" style="color:var(--ax-text-strong);">$2,840</b><div><span class="ax-badge ax-badge--soft">9 days</span></div></span>
+                </li>
+                <li class="ax-list__row" style="padding-inline:0;">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14c0 1.657 2.686 3 6 3s6 -1.343 6 -3s-2.686 -3 -6 -3s-6 1.343 -6 3"/><path d="M9 14v4c0 1.656 2.686 3 6 3s6 -1.344 6 -3v-4"/><path d="M3 6c0 1.072 1.144 2.062 3 2.598s4.144 .536 6 0s3 -1.526 3 -2.598s-1.144 -2.062 -3 -2.598s-4.144 -.536 -6 0s-3 1.526 -3 2.598"/><path d="M3 6v10c0 .888 .772 1.45 2 2"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Quarterly Tax</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Due Jul 15</span></span>
+                  <span class="ax-list__trailing"><b class="ax-num" style="color:var(--ax-text-strong);">$22,100</b><div><span class="ax-badge ax-badge--soft">19 days</span></div></span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    const mixed = document.getElementById('ax-cashflow-mixed');
+    if (mixed) renderChart(mixed, 'line', [
+      { name: 'Income', type: 'column', data: [38,40,39,43,45,42,46,47,45,48,47,48.2] },
+      { name: 'Expenses', type: 'column', data: [-26,-28,-27,-29,-31,-30,-32,-33,-31,-32,-33,-31.76] },
+      { name: 'Net', type: 'line', data: [12,12,12,14,14,12,14,14,14,16,14,16.44] },
+    ], {
+      height: 320, legend: 'none',
+      apex: {
+        colors: [cv('--ax-success-500'), cv('--ax-danger-500'), cv('--ax-accent')],
+        stroke: { width: [0, 0, 2.5], curve: 'smooth' },
+        plotOptions: { bar: { borderRadius: 4, columnWidth: '52%' } },
+        yaxis: { labels: { formatter: (v) => '$' + Math.abs(v).toFixed(0) + 'K' } },
+        xaxis: { categories: ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'] },
+      },
+    });
+
+    const el = document.getElementById('ax-spend-donut');
+    if (el) renderChart(el, 'donut', [44,18,15,13,10], {
+      height: 230, legend: 'none',
+      apex: {
+        labels: ['Payroll','Software','Marketing','Office','Other'],
+        colors: [cv('--ax-accent'), cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: {
+          show: true, name: { fontFamily: cv('--ax-font-sans') },
+          value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 },
+          total: { show: true, label: 'Spent', formatter: () => '$31.8K' } } } } },
+      },
+    });
+  </script>
+{% endblock %}

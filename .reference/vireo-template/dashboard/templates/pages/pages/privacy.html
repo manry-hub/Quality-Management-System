@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{
+          active: 'collect',
+          sections: ['collect','use','cookies','sharing','retention','rights','transfers','children','changes','contact'],
+          init() {
+            const obs = new IntersectionObserver((entries) => {
+              entries.forEach(e => { if (e.isIntersecting) this.active = e.target.id; });
+            }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+            this.$nextTick(() => this.sections.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); }));
+          }
+        }">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Privacy Policy</h1>
+              <p class="ax-page-head__subtitle">
+                <span style="color:var(--ax-text-muted);">Last updated</span>
+                <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">April 18, 2026</span>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill ax-num" style="margin-inline-start:var(--ax-space-2);">v3.2</span>
+              </p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary" onclick="window.print()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2"/><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4"/><path d="M7 15a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2l0 -4"/></svg>
+                <span class="ax-btn__label">Print</span>
+              </button>
+              <a class="ax-btn ax-btn--primary" href="#" download>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Download PDF</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DOC LAYOUT: TOC + BODY ════════════════ -->
+        <div style="display:grid;grid-template-columns:1fr;gap:var(--ax-space-6);align-items:start;" class="ax-doc">
+
+          <!-- TOC sidebar -->
+          <nav class="ax-card ax-doc__toc" aria-label="Table of contents" style="position:sticky;top:var(--ax-space-6);align-self:start;">
+            <div class="ax-card__body" style="padding:var(--ax-space-5);">
+              <p class="ax-card__eyebrow" style="margin-bottom:var(--ax-space-3);">On this page</p>
+              <ul style="display:flex;flex-direction:column;gap:2px;list-style:none;margin:0;padding:0;">
+                <li><a href="#collect" class="ax-toc__link" :style="active==='collect' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">01</span>Information we collect</a></li>
+                <li><a href="#use" class="ax-toc__link" :style="active==='use' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">02</span>How we use it</a></li>
+                <li><a href="#cookies" class="ax-toc__link" :style="active==='cookies' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">03</span>Cookies &amp; tracking</a></li>
+                <li><a href="#sharing" class="ax-toc__link" :style="active==='sharing' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">04</span>Data sharing</a></li>
+                <li><a href="#retention" class="ax-toc__link" :style="active==='retention' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">05</span>Data retention</a></li>
+                <li><a href="#rights" class="ax-toc__link" :style="active==='rights' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">06</span>Your rights</a></li>
+                <li><a href="#transfers" class="ax-toc__link" :style="active==='transfers' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">07</span>International transfers</a></li>
+                <li><a href="#children" class="ax-toc__link" :style="active==='children' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">08</span>Children's privacy</a></li>
+                <li><a href="#changes" class="ax-toc__link" :style="active==='changes' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">09</span>Changes to this policy</a></li>
+                <li><a href="#contact" class="ax-toc__link" :style="active==='contact' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">10</span>Contact us</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- doc body -->
+          <article class="ax-card ax-doc__body">
+            <div class="ax-card__body" style="max-width:72ch;padding:var(--ax-space-8);display:flex;flex-direction:column;gap:var(--ax-space-7);">
+
+              <div class="ax-alert ax-alert--accent ax-alert--accent-edge" role="note">
+                <svg class="ax-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg>
+                <div class="ax-alert__content">
+                  <p class="ax-alert__message" style="color:var(--ax-text);">Your privacy matters to us. This policy explains what we collect, why, and the choices you have. It is provided as template copy — replace it with your own before production.</p>
+                </div>
+              </div>
+
+              <section id="collect" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">1. Information we collect</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">We collect information you provide directly, information generated automatically as you use the Service, and information from third parties.</p>
+                <h3 style="font-size:var(--ax-text-md);font-weight:600;color:var(--ax-text-strong);margin:var(--ax-space-4) 0 var(--ax-space-2);">1.1 Information you provide</h3>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">Account details such as your name, email address and password, billing information, and any content you upload to the Service.</p>
+                <h3 style="font-size:var(--ax-text-md);font-weight:600;color:var(--ax-text-strong);margin:var(--ax-space-4) 0 var(--ax-space-2);">1.2 Information collected automatically</h3>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">Device and log data, including IP address, browser type, pages viewed, and timestamps, collected to operate and secure the Service.</p>
+              </section>
+
+              <section id="use" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">2. How we use it</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">We use the information we collect to:</p>
+                <ul style="color:var(--ax-text);line-height:1.7;margin:0;padding-inline-start:var(--ax-space-5);display:flex;flex-direction:column;gap:6px;">
+                  <li>provide, maintain and improve the Service;</li>
+                  <li>process transactions and send related information;</li>
+                  <li>detect, prevent and address fraud and security issues;</li>
+                  <li>communicate with you about updates and support;</li>
+                  <li>comply with legal obligations.</li>
+                </ul>
+              </section>
+
+              <section id="cookies" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">3. Cookies &amp; tracking</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">We use cookies and similar technologies to keep you signed in, remember your preferences and understand how the Service is used. You can control non-essential cookies through your browser or our cookie banner. Disabling essential cookies may impair functionality.</p>
+              </section>
+
+              <section id="sharing" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">4. Data sharing</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">We do not sell your personal data. We share information only with service providers who process it on our behalf under strict contractual safeguards, with your consent, or when required by law. A current list of subprocessors is available on request.</p>
+              </section>
+
+              <section id="retention" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">5. Data retention</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">We retain personal data for as long as your account is active or as needed to provide the Service. After account closure we delete or anonymize data within 90 days, except where a longer period is required for legal, accounting or security purposes.</p>
+              </section>
+
+              <section id="rights" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">6. Your rights</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">Depending on your location, you may have the right to access, correct, delete or port your personal data, and to object to or restrict certain processing.</p>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">To exercise these rights, contact us at privacy@vireo.io. We will respond within the time required by applicable law, typically within 30 days.</p>
+              </section>
+
+              <section id="transfers" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">7. International transfers</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">We may transfer and process your data in countries other than your own. When we do, we rely on appropriate safeguards such as Standard Contractual Clauses to ensure your data receives an adequate level of protection.</p>
+              </section>
+
+              <section id="children" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">8. Children's privacy</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">The Service is not directed to children under 16, and we do not knowingly collect personal data from them. If you believe a child has provided us with personal data, contact us and we will delete it promptly.</p>
+              </section>
+
+              <section id="changes" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">9. Changes to this policy</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">We may update this Privacy Policy from time to time. When we make material changes we will notify you by email or through the Service and update the "Last updated" date above. Please review it periodically.</p>
+              </section>
+
+              <section id="contact" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">10. Contact us</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-4);">Questions about this policy or your data? Reach our privacy team:</p>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></span>
+                  <div>
+                    <p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">privacy@vireo.io</p>
+                    <p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Vireo, Inc. · Data Protection Officer · San Francisco, CA</p>
+                  </div>
+                </div>
+              </section>
+
+              <div class="ax-divider" style="border-top:1px solid var(--ax-border);margin:var(--ax-space-2) 0;"></div>
+              <div class="ax-cluster" style="justify-content:space-between;flex-wrap:wrap;gap:var(--ax-space-3);">
+                <a class="ax-link" href="/pages/terms/">Read our Terms &amp; Conditions →</a>
+                <a class="ax-btn ax-btn--ghost ax-btn--sm" href="#ax-main">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M18 11l-6 -6"/><path d="M6 11l6 -6"/></svg>
+                  <span class="ax-btn__label">Back to top</span>
+                </a>
+              </div>
+
+            </div>
+          </article>
+        </div>
+
+        <style>
+          @media (min-width: 992px) {
+            .ax-doc { grid-template-columns: 260px minmax(0, 1fr) !important; }
+          }
+          @media (max-width: 991px) {
+            .ax-doc__toc { position: static !important; }
+          }
+          @media print {
+            .ax-sidebar, .ax-header, .ax-footer, .ax-customizer, .ax-doc__toc, .ax-page-head__actions, .ax-ambient { display: none !important; }
+          }
+        </style>
+
+      
+</div>
+{% endblock %}

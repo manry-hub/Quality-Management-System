@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+
+{# CRM · Deals — faithful re-expression of src/html/crm/deals.html. Drag-and-drop
+   Kanban pipeline board (5 stages + closed rail), deal drawer with stage stepper,
+   next-steps checklist and activity timeline (axDeals Alpine, native HTML5 DnD). #}
+
+{% block main %}
+      <div x-data="axDeals()">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Deals Pipeline</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num" x-text="items.length"></span> open deals · <span class="ax-num" x-text="money(totalOpen())"></span> weighted value · Q3 close target <span class="ax-num">$1.2M</span>.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227"/></svg>
+                <span class="ax-btn__label">Filter</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="openNew('lead')">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New deal</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CRM SUB-NAV ════════════════ -->
+        <nav class="ax-tabs ax-tabs--pill" aria-label="CRM sections" style="margin-bottom:var(--ax-space-5);">
+          <div class="ax-tabs__list" role="tablist">
+            <a class="ax-tabs__tab" role="tab" href="/crm/contacts/">Contacts</a>
+            <a class="ax-tabs__tab" role="tab" href="/crm/companies/">Companies</a>
+            <a class="ax-tabs__tab is-active" role="tab" aria-selected="true" aria-current="page" href="/crm/deals/">Deals</a>
+            <a class="ax-tabs__tab" role="tab" href="/crm/leads/">Leads</a>
+          </div>
+        </nav>
+
+        <!-- ════════════════ TOOLBAR ════════════════ -->
+        <div class="ax-cluster" style="margin-bottom:var(--ax-space-5);gap:var(--ax-space-3);">
+          <div style="position:relative;flex:1 1 240px;max-width:340px;min-width:200px;">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+            <input type="search" class="ax-input" placeholder="Search deals or companies…" x-model="q" style="padding-inline-start:36px;" aria-label="Search deals">
+          </div>
+          <select class="ax-select ax-select--sm" x-model="fOwner" aria-label="Filter by owner" style="flex:0 0 auto;width:auto;min-width:160px;max-width:220px;">
+            <option value="">All owners</option>
+            <option>Maya Lindqvist</option>
+            <option>Tomás Herrera</option>
+            <option>Ava Sutton</option>
+            <option>Devon Okafor</option>
+          </select>
+          <div class="ax-segment" role="radiogroup" aria-label="Pipeline view" style="margin-inline-start:auto;">
+            <button type="button" class="ax-segment__option is-active" role="radio" aria-checked="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l6 0"/><path d="M14 4l6 0"/><path d="M4 10a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -8"/><path d="M14 10a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"/></svg>
+              Board
+            </button>
+            <button type="button" class="ax-segment__option" role="radio" aria-checked="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+              List
+            </button>
+          </div>
+        </div>
+
+        <!-- ════════════════ PIPELINE BOARD ════════════════ -->
+        <div style="display:flex;gap:var(--ax-space-5);overflow-x:auto;padding-bottom:var(--ax-space-3);align-items:flex-start;">
+          <template x-for="col in columns" :key="col.id">
+            <section class="ax-pl-col"
+              :class="{ 'ax-pl-col--over': dragOverCol === col.id }"
+              @dragover.prevent="dragOverCol = col.id"
+              @dragleave="dragOverCol === col.id && (dragOverCol = null)"
+              @drop="drop(col.id)"
+              role="region"
+              :aria-label="col.title + ' stage'">
+              <!-- column header -->
+              <div style="padding:var(--ax-space-1) var(--ax-space-1) var(--ax-space-3);">
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                    <i style="width:9px;height:9px;border-radius:3px;" :style="`background:${col.color};`"></i>
+                    <b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="col.title"></b>
+                    <span class="ax-badge ax-badge--neutral ax-badge--pill ax-num" style="font-family:var(--ax-font-mono);" x-text="cards(col.id).length"></span>
+                  </div>
+                  <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Add deal to ' + col.title" @click="openNew(col.id)">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  </button>
+                </div>
+                <!-- column value total -->
+                <div class="ax-cluster" style="justify-content:space-between;">
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-md);" x-text="money(colTotal(col.id))"></span>
+                  <span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;" x-text="col.prob + '% prob'"></span>
+                </div>
+                <div class="ax-progress ax-progress--xs" style="margin-top:6px;"><div class="ax-progress__track"><div class="ax-progress__fill" :style="`width:${col.prob}%;background:${col.color};`"></div></div></div>
+              </div>
+
+              <!-- cards -->
+              <div class="ax-pl-col__body">
+                <template x-for="card in cards(col.id)" :key="card.id">
+                  <article class="ax-pl-card"
+                    :class="{ 'ax-pl-card--ghost': draggingId === card.id }"
+                    draggable="true"
+                    @dragstart="dragStart(card.id, col.id)"
+                    @dragend="dragEnd()"
+                    @click="openEdit(card)"
+                    tabindex="0"
+                    @keydown.enter="openEdit(card)"
+                    role="button"
+                    :aria-label="card.title + ', ' + money(card.value)">
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);flex-wrap:nowrap;">
+                      <p class="ax-pl-card__title" x-text="card.title"></p>
+                      <span x-show="card.hot" class="ax-badge ax-badge--soft ax-badge--danger ax-badge--sm ax-badge--pill" style="flex:0 0 auto;" title="High priority">Hot</span>
+                    </div>
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;">
+                      <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" :style="`background:color-mix(in oklab,${card.coC} 18%,transparent);color:${card.coC};font-weight:700;font-size:var(--ax-text-2xs);`" x-text="card.coMark"></span>
+                      <span class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);" x-text="card.company"></span>
+                    </div>
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);">
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="money(card.value)"></span>
+                      <span class="ax-cluster ax-num" style="gap:4px;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);" :style="card.overdue ? 'color:var(--ax-danger-500);' : 'color:var(--ax-text-subtle);'">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg>
+                        <span x-text="card.close"></span>
+                      </span>
+                    </div>
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);padding-top:6px;border-top:1px solid var(--ax-border);">
+                      <div class="ax-cluster" style="gap:6px;flex-wrap:nowrap;color:var(--ax-text-subtle);">
+                        <span x-show="card.tasks" class="ax-cluster ax-num" style="gap:3px;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8"/><path d="M14 19l2 2l4 -4"/><path d="M9 8h4"/><path d="M9 12h2"/></svg>
+                          <span x-text="card.tasks"></span>
+                        </span>
+                        <span x-show="card.notes" class="ax-cluster ax-num" style="gap:3px;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293l-4.7 1"/></svg>
+                          <span x-text="card.notes"></span>
+                        </span>
+                      </div>
+                      <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" :style="`background:color-mix(in oklab,${card.who.c} 20%,transparent);color:${card.who.c};font-weight:600;font-size:var(--ax-text-2xs);`" :title="card.who.n" x-text="card.who.i"></span>
+                    </div>
+                  </article>
+                </template>
+
+                <button type="button" class="ax-pl-add" @click="openNew(col.id)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  Add deal
+                </button>
+              </div>
+            </section>
+          </template>
+
+          <!-- won / lost summary rail -->
+          <section class="ax-pl-col" role="region" aria-label="Closed this quarter" style="flex:0 0 260px;width:260px;">
+            <div style="padding:var(--ax-space-1) var(--ax-space-1) var(--ax-space-3);">
+              <b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Closed · Q3</b>
+            </div>
+            <div class="ax-pl-col__body">
+              <div class="ax-card" style="margin:0;border-color:color-mix(in oklab,var(--ax-success-500) 30%,var(--ax-border));">
+                <div class="ax-card__body" style="display:flex;flex-direction:column;gap:6px;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-success-500) 18%,transparent);color:var(--ax-success-500);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                    <div><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Won</div><b class="ax-num" style="color:var(--ax-success-500);font-size:var(--ax-text-lg);">$842K</b></div>
+                  </div>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">14 deals · 64% win rate</span>
+                </div>
+              </div>
+              <div class="ax-card" style="margin:0;">
+                <div class="ax-card__body" style="display:flex;flex-direction:column;gap:6px;">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                    <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-danger-500) 18%,transparent);color:var(--ax-danger-500);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></span>
+                    <div><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Lost</div><b class="ax-num" style="color:var(--ax-danger-500);font-size:var(--ax-text-lg);">$214K</b></div>
+                  </div>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">8 deals · top reason: price</span>
+                </div>
+              </div>
+              <div class="ax-card" style="margin:0;">
+                <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);text-transform:uppercase;letter-spacing:.04em;">Forecast vs target</span>
+                  <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:70%;background:var(--ax-accent);"></div></div></div>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">$842K of $1.2M committed</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════════════════ DEAL DRAWER ════════════════ -->
+        <div x-show="drawerOpen" x-cloak class="ax-drawer-scrim" @click="drawerOpen=false" x-transition.opacity>
+          <div class="ax-card" role="dialog" aria-modal="true" aria-label="Deal detail" @click.stop
+            style="width:min(540px,100%);height:100%;border-radius:0;overflow:auto;" x-transition:enter="ax-slide-in">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow" x-text="(columns.find(c=>c.id===active.col)||{}).title + ' · ' + (active.coName || active.company)"></span>
+                <h2 class="ax-card__title" x-text="active.title"></h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Close" @click="drawerOpen=false"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+              <!-- value + meta -->
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-4);">
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Deal value</small><b class="ax-num" style="color:var(--ax-text-strong);font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);" x-text="money(active.value || 0)"></b></div>
+                <div><small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px;">Expected close</small><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-lg);" x-text="active.close || '—'"></b></div>
+              </div>
+
+              <!-- stage stepper -->
+              <div>
+                <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--ax-space-3);">Stage</small>
+                <div class="ax-cluster" style="gap:6px;flex-wrap:wrap;">
+                  <template x-for="c in columns" :key="c.id">
+                    <button type="button" class="ax-badge ax-badge--pill ax-badge--sm" :class="active.col===c.id ? 'ax-badge--accent' : 'ax-badge--soft ax-badge--neutral'" @click="moveActive(c.id)" :style="`cursor:pointer;`"><span x-text="c.title"></span></button>
+                  </template>
+                </div>
+              </div>
+
+              <!-- key people -->
+              <div>
+                <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--ax-space-3);">Key contacts</small>
+                <ul class="ax-list ax-list--compact">
+                  <li class="ax-list__row" style="border:0;padding-inline:0;">
+                    <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);font-weight:700;font-size:10px;">ML</span></span>
+                    <span class="ax-list__content"><span class="ax-list__title">Maya Lindqvist</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Economic buyer · CFO</span></span>
+                    <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--sm">Champion</span></span>
+                  </li>
+                  <li class="ax-list__row" style="border:0;padding-inline:0;">
+                    <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:700;font-size:10px;">TH</span></span>
+                    <span class="ax-list__content"><span class="ax-list__title">Tomás Herrera</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Technical evaluator</span></span>
+                    <span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm">Influencer</span></span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- next steps -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                  <small style="color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;">Next steps</small>
+                  <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">2/4</span>
+                </div>
+                <ul class="ax-list ax-list--compact">
+                  <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);color:var(--ax-text-subtle);text-decoration:line-through;">Send pricing proposal</span></span></li>
+                  <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);color:var(--ax-text-subtle);text-decoration:line-through;">Loop in procurement</span></span></li>
+                  <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox"></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);">Security review call</span></span></li>
+                  <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox"></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);">Redline contract</span></span></li>
+                </ul>
+              </div>
+
+              <!-- activity -->
+              <div>
+                <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--ax-space-3);">Activity</small>
+                <ul class="ax-timeline">
+                  <li class="ax-timeline__item ax-timeline__item--success">
+                    <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                    <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Ava Sutton</b> moved deal to <span style="color:var(--ax-accent);">Proposal</span></p><span class="ax-timeline__time">3h ago</span></div>
+                  </li>
+                  <li class="ax-timeline__item">
+                    <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span>
+                    <div class="ax-timeline__content"><p class="ax-timeline__title">Discovery call · 32 min with <b style="color:var(--ax-text-strong);">Maya</b></p><span class="ax-timeline__time">Yesterday</span></div>
+                  </li>
+                </ul>
+                <div style="margin-top:var(--ax-space-3);">
+                  <textarea class="ax-textarea" rows="2" placeholder="Log a note or next step…" aria-label="Add note"></textarea>
+                </div>
+              </div>
+
+            </div>
+            <div class="ax-card__footer" style="display:flex;gap:var(--ax-space-3);justify-content:space-between;">
+              <button type="button" class="ax-btn ax-btn--soft-success" @click="winActive()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                <span class="ax-btn__label">Mark won</span>
+              </button>
+              <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="drawerOpen=false">Close</button>
+                <button type="button" class="ax-btn ax-btn--primary" @click="drawerOpen=false">Save deal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <style>
+          .ax-drawer-scrim { position:fixed; inset:0; z-index:120; display:flex; justify-content:flex-end; background:var(--ax-backdrop); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px); }
+          .ax-pl-col { flex:0 0 300px; width:300px; display:flex; flex-direction:column; background:var(--ax-surface-subtle); border:1px solid var(--ax-border); border-radius:var(--ax-radius-lg); padding:var(--ax-space-3); transition:background var(--ax-motion-fast) var(--ax-ease-standard), box-shadow var(--ax-motion-fast) var(--ax-ease-standard); }
+          .ax-pl-col--over { background:var(--ax-accent-wash); box-shadow:inset 0 0 0 2px var(--ax-accent); }
+          .ax-pl-col__body { display:flex; flex-direction:column; gap:var(--ax-space-3); min-height:40px; }
+          .ax-pl-card { position:relative; display:flex; flex-direction:column; gap:var(--ax-space-2); padding:var(--ax-space-3); background:var(--ax-surface-solid); border:1px solid var(--ax-border); border-radius:var(--ax-radius-md); box-shadow:var(--ax-shadow-sm); cursor:grab; text-align:left; transition:box-shadow var(--ax-motion-fast) var(--ax-ease-standard), transform var(--ax-motion-fast) var(--ax-ease-standard); }
+          .ax-pl-card:hover { box-shadow:var(--ax-shadow-md); }
+          .ax-pl-card:focus-visible { outline:none; box-shadow:0 0 0 2px var(--ax-canvas), 0 0 0 4px var(--ax-focus-ring); }
+          .ax-pl-card:active { cursor:grabbing; }
+          .ax-pl-card--ghost { opacity:.4; }
+          .ax-pl-card__title { color:var(--ax-text-strong); font-size:var(--ax-text-sm); font-weight:var(--ax-weight-medium); line-height:1.4; }
+          .ax-pl-add { display:inline-flex; align-items:center; gap:var(--ax-space-2); width:100%; padding:var(--ax-space-2) var(--ax-space-3); font-size:var(--ax-text-sm); color:var(--ax-text-muted); background:transparent; border:1px dashed var(--ax-border-strong); border-radius:var(--ax-radius-md); cursor:pointer; transition:color var(--ax-motion-fast), background var(--ax-motion-fast); }
+          .ax-pl-add:hover { color:var(--ax-accent); background:var(--ax-fill-hover); }
+          .ax-slide-in { animation:axSlideIn .18s var(--ax-ease-standard); }
+          @keyframes axSlideIn { from { transform:translateX(24px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+          @media (prefers-reduced-motion: reduce){ .ax-pl-card, .ax-slide-in { transition:none; animation:none; } }
+        </style>
+
+      </div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    function axDeals(){
+      return {
+        q:'', fOwner:'',
+        draggingId:null, dragOverCol:null, drawerOpen:false, active:{},
+        columns:[
+          { id:'lead', title:'Lead', color:'var(--ax-text-subtle)', prob:10 },
+          { id:'qualified', title:'Qualified', color:'var(--ax-viz-cyan)', prob:30 },
+          { id:'proposal', title:'Proposal', color:'var(--ax-viz-violet)', prob:55 },
+          { id:'negotiation', title:'Negotiation', color:'var(--ax-viz-amber)', prob:75 },
+          { id:'closing', title:'Closing', color:'var(--ax-viz-emerald)', prob:90 },
+        ],
+        items:[
+          { id:1, col:'lead', title:'Northwind — Platform expansion', company:'Northwind Labs', coMark:'NW', coC:'var(--ax-viz-cyan)', value:124000, close:'Aug 14', overdue:false, hot:false, tasks:'0/3', notes:1, who:{i:'ML',n:'Maya Lindqvist',c:'var(--ax-viz-emerald)'} },
+          { id:2, col:'lead', title:'Meadow Foods — POS rollout', company:'Meadow Foods', coMark:'MF', coC:'var(--ax-viz-amber)', value:48000, close:'Sep 02', overdue:false, hot:false, tasks:'', notes:0, who:{i:'DO',n:'Devon Okafor',c:'var(--ax-viz-cyan)'} },
+          { id:3, col:'lead', title:'Pulse Media — Retainer renewal', company:'Pulse Media', coMark:'PM', coC:'var(--ax-viz-violet)', value:36000, close:'Aug 20', overdue:false, hot:false, tasks:'1/2', notes:2, who:{i:'AS',n:'Ava Sutton',c:'var(--ax-viz-emerald)'} },
+          { id:4, col:'qualified', title:'Brightline — Risk suite', company:'Brightline Capital', coMark:'BC', coC:'var(--ax-viz-violet)', value:186000, close:'Jul 30', overdue:false, hot:true, tasks:'2/4', notes:5, who:{i:'TH',n:'Tomás Herrera',c:'var(--ax-viz-violet)'} },
+          { id:5, col:'qualified', title:'Clearbox — Seat upgrade', company:'Clearbox', coMark:'CB', coC:'var(--ax-viz-cyan)', value:74000, close:'Aug 08', overdue:false, hot:false, tasks:'1/3', notes:1, who:{i:'TH',n:'Tomás Herrera',c:'var(--ax-viz-violet)'} },
+          { id:6, col:'qualified', title:'Harbor — Logistics module', company:'Harbor Freight Co', coMark:'HF', coC:'var(--ax-viz-amber)', value:98000, close:'Sep 10', overdue:false, hot:false, tasks:'', notes:0, who:{i:'DO',n:'Devon Okafor',c:'var(--ax-viz-cyan)'} },
+          { id:7, col:'proposal', title:'Meridian — EHR integration', company:'Meridian Health', coMark:'MH', coC:'var(--ax-viz-pink)', value:241000, close:'Jul 24', overdue:false, hot:true, tasks:'3/5', notes:8, who:{i:'ML',n:'Maya Lindqvist',c:'var(--ax-viz-emerald)'} },
+          { id:8, col:'proposal', title:'Loop — Fleet analytics', company:'Loop Robotics', coMark:'LR', coC:'var(--ax-viz-cyan)', value:132000, close:'Aug 03', overdue:false, hot:false, tasks:'2/4', notes:3, who:{i:'TH',n:'Tomás Herrera',c:'var(--ax-viz-violet)'} },
+          { id:9, col:'negotiation', title:'Ridgeline — Grid monitoring', company:'Ridgeline Energy', coMark:'RE', coC:'var(--ax-viz-pink)', value:206000, close:'Jul 18', overdue:true, hot:true, tasks:'4/5', notes:6, who:{i:'ML',n:'Maya Lindqvist',c:'var(--ax-viz-emerald)'} },
+          { id:10, col:'negotiation', title:'Postoak — Claims automation', company:'Postoak Insurance', coMark:'PI', coC:'var(--ax-viz-emerald)', value:158000, close:'Jul 27', overdue:false, hot:false, tasks:'3/4', notes:4, who:{i:'AS',n:'Ava Sutton',c:'var(--ax-viz-emerald)'} },
+          { id:11, col:'closing', title:'Crate & Co — Annual contract', company:'Crate & Co', coMark:'CC', coC:'var(--ax-viz-amber)', value:128400, close:'Jul 12', overdue:false, hot:false, tasks:'5/5', notes:2, who:{i:'AS',n:'Ava Sutton',c:'var(--ax-viz-emerald)'} },
+          { id:12, col:'closing', title:'Studioform — Brand system', company:'Studioform', coMark:'SF', coC:'var(--ax-viz-emerald)', value:64000, close:'Jul 09', overdue:false, hot:false, tasks:'4/4', notes:1, who:{i:'DO',n:'Devon Okafor',c:'var(--ax-viz-cyan)'} },
+        ],
+        cards(colId){ const t=this.q.trim().toLowerCase(); return this.items.filter(c=>c.col===colId && (!this.fOwner || c.who.n===this.fOwner) && (!t || c.title.toLowerCase().includes(t) || c.company.toLowerCase().includes(t))); },
+        colTotal(colId){ return this.cards(colId).reduce((s,c)=>s+c.value,0); },
+        totalOpen(){ return this.items.reduce((s,c)=>s+c.value,0); },
+        money(v){ if(v>=1000000) return '$'+(v/1000000).toFixed(v%1000000===0?0:2)+'M'; return v>=1000 ? '$'+(v/1000).toFixed(v%1000===0?0:1)+'K' : '$'+v; },
+        dragStart(id){ this.draggingId=id; },
+        dragEnd(){ this.draggingId=null; this.dragOverCol=null; },
+        drop(colId){ const c=this.items.find(i=>i.id===this.draggingId); if(c){ c.col=colId; } this.dragEnd(); },
+        moveActive(colId){ this.active.col=colId; const c=this.items.find(i=>i.id===this.active.id); if(c) c.col=colId; },
+        winActive(){ const i=this.items.findIndex(x=>x.id===this.active.id); if(i>-1) this.items.splice(i,1); this.drawerOpen=false; },
+        openEdit(card){ this.active=card; this.drawerOpen=true; },
+        openNew(colId){ this.active={ col:colId, title:'New deal', company:'—', value:0, close:'', who:{n:'Unassigned',i:'?',c:'var(--ax-text-subtle)'} }; this.drawerOpen=true; },
+      };
+    }
+  </script>
+{% endblock %}

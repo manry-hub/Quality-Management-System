@@ -1,0 +1,132 @@
+{% load static %}<!doctype html>
+{% comment %}
+  Standalone document shell for OFF-APP auth / cover / status pages
+  (sign-in, sign-up, reset/create password, lock screen, two-step, coming-soon,
+  maintenance). These pages have NO sidebar/header/footer/customizer — just the
+  loader, the ambient backdrop, and the page body. This mirrors the HTML
+  reference, where auth pages use `<body class="ax-standalone">` (or a bare body
+  for cover layouts) instead of the app shell.
+
+  It reproduces base.html's <head> VERBATIM (anti-flash IIFE first, fonts,
+  compiled stylesheet) so theme/accent/RTL restore identically, then exposes:
+    {% block body_class %}  — body classes (default "ax-standalone")
+    {% block body_style %}  — inline body style (cover pages use "margin:0;")
+    {% block auth_body %}   — the page body markup
+    {% block auth_scripts %}— page-scoped <style>/<script> (Alpine helpers)
+  The vireo.js runtime still boots (Alpine + theme wiring + loader hide).
+{% endcomment %}
+<html
+  lang="en"
+  data-ax-route="{{ ax_route }}"
+  data-ax-manifest="{% static 'data/nav-manifest.json' %}"
+>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+  <!-- ============================================================ -->
+  <!-- VIREO ANTI-FLASH THEME RESTORE — MUST be first executable    -->
+  <!-- in <head>, before any stylesheet. Runs synchronously (~1ms), -->
+  <!-- reads ax: localStorage, resolves system theme via matchMedia,-->
+  <!-- and writes all data-ax-* + dir + lang on <html> before paint.-->
+  <!-- Framework-agnostic IIFE; verbatim from the HTML reference.   -->
+  <!-- ============================================================ -->
+  <script>
+  /* Vireo anti-flash — must be FIRST in <head>, before stylesheets. */
+  (function () {
+    var D = document.documentElement, LS;
+    try { LS = window.localStorage; } catch (e) { LS = null; }
+    function get(k){ try { return LS && LS.getItem(k); } catch(e){ return null; } }
+
+    /* schema guard: wipe unknown shape, never throw */
+    try { if (LS && get('ax:schema') && get('ax:schema') !== '1') {
+      Object.keys(LS).forEach(function(k){ if (k.indexOf('ax:')===0) LS.removeItem(k); });
+    } if (LS) LS.setItem('ax:schema','1'); } catch(e){}
+
+    /* ---- THEME (light | dark | system) ---- */
+    var theme = get('ax:theme') || 'system';
+    var sysDark = false;
+    try { sysDark = window.matchMedia('(prefers-color-scheme: dark)').matches; } catch(e){}
+    var resolved = (theme === 'system') ? (sysDark ? 'dark' : 'light') : theme;
+    D.setAttribute('data-ax-theme', resolved);  /* always written so CSS [data-ax-theme] selectors match */
+
+    /* ---- ACCENT ---- */
+    var accent = get('ax:accent') || 'verdigris';
+    if (accent === 'verdigris') D.removeAttribute('data-ax-accent');
+    else D.setAttribute('data-ax-accent', accent);
+
+    /* ---- LANG + DIR ---- */
+    var lang = (get('ax:lang') || 'EN').toUpperCase();
+    D.setAttribute('lang', lang.toLowerCase());                 /* EN -> en */
+    var dirStored = get('ax:dir');                              /* explicit wins */
+    var dir = dirStored ? dirStored : (lang === 'AR' ? 'rtl' : 'ltr');
+    D.setAttribute('dir', dir);
+
+    /* ---- LAYOUT / SCHEME attributes (write only non-defaults; keep DOM clean) ---- */
+    function setAttr(attr, key, def){
+      var v = get(key);
+      if (v && v !== def) D.setAttribute(attr, v); else D.removeAttribute(attr);
+    }
+    setAttr('data-ax-nav',              'ax:nav',              'vertical');
+    setAttr('data-ax-shell-style',      'ax:shell-style',      'default');
+    setAttr('data-ax-sidebar-behavior', 'ax:sidebar-behavior', 'collapsible');
+    setAttr('data-ax-menu',             'ax:menu',             'click');
+    setAttr('data-ax-page',             'ax:page',             'regular');
+    setAttr('data-ax-width',            'ax:width',            'fluid');
+    setAttr('data-ax-header-position',  'ax:header-position',  'fixed');
+    setAttr('data-ax-sidebar-position', 'ax:sidebar-position', 'fixed');
+    setAttr('data-ax-sidebar',          'ax:sidebar-scheme',   'light');
+    setAttr('data-ax-header',           'ax:header-scheme',    'light');
+    setAttr('data-ax-sidebar-image',    'ax:sidebar-image',    'none');
+    setAttr('data-ax-loader',           'ax:loader',           'on');
+
+    /* ---- COLLAPSED RAIL (header toggle; boolean presence, default expanded) ---- */
+    var behavior = get('ax:sidebar-behavior') || 'collapsible';
+    if (behavior === 'collapsible' && get('ax:collapsed') === '1') D.setAttribute('data-ax-collapsed', '');
+    else D.removeAttribute('data-ax-collapsed');
+
+    /* ---- CUSTOM COLOR PICKERS (inline style; re-derive ramp deterministically) ---- */
+    var customAccent = get('ax:accent-custom');
+    if (accent === 'custom' && customAccent) {
+      D.style.setProperty('--ax-accent', customAccent);
+      var h = customAccent.replace('#','');
+      var r=parseInt(h.substr(0,2),16),g=parseInt(h.substr(2,2),16),b=parseInt(h.substr(4,2),16);
+      var L = (0.2126*r + 0.7152*g + 0.0722*b)/255;
+      D.style.setProperty('--ax-on-accent', L > 0.62 ? '#1F1602' : '#FFFFFF');
+      D.setAttribute('data-ax-accent','custom');
+    }
+    var bg = get(resolved === 'dark' ? 'ax:bg-custom-dark' : 'ax:bg-custom');
+    if (bg) D.style.setProperty('--ax-canvas', bg);
+  })();
+  </script>
+
+  <title>{% block title %}{{ ax_title }}{% endblock %} · Vireo</title>
+  <meta name="description" content="Vireo — premium multipurpose admin & dashboard template with an Aurora glass interface, 17 dashboards, 8 web apps and a full eCommerce suite." />
+  <meta name="theme-color" content="#0A0C11" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#FCFBF9" media="(prefers-color-scheme: light)" />
+  <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}" />
+
+  <!-- Google Fonts — Inter (sans) · Space Grotesk (display) · JetBrains Mono (mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600&display=swap"
+    rel="stylesheet"
+  />
+
+  <!-- Compiled application stylesheet (token chain + Tailwind v4 @theme bridge + shell/components) -->
+  <link rel="stylesheet" href="{% static 'dist/vireo.css' %}" />
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="{% block body_class %}ax-standalone{% endblock %}" style="{% block body_style %}{% endblock %}">
+  {% include 'partials/loader.html' %}
+  <div class="ax-ambient" aria-hidden="true"><i></i></div>
+
+  {% block auth_body %}{% endblock %}
+
+  <!-- VIREO RUNTIME — single ES module: boots Alpine + plugins, registers shell
+       components, fetches the nav-manifest, wires theme + loader hide. -->
+  <script type="module" src="{% static 'dist/vireo.js' %}"></script>
+  {% block auth_scripts %}{% endblock %}
+</body>
+</html>

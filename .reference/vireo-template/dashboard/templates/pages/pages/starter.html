@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{# Starter Page — faithful re-expression of src/html/pages/starter.html: a blank
+   scaffold showing the canonical empty-state pattern, an empty-state variant
+   reference list and a loading-skeleton reference. Reference hrefs converted to
+   clean Django routes. #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Starter Page</h1>
+              <p class="ax-page-head__subtitle">A blank scaffold with the standard page shell — drop your content into the marked region below.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 9h1"/><path d="M9 13h6"/><path d="M9 17h6"/></svg>
+                <span class="ax-btn__label">View docs</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New item</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Canonical empty-state (first-run) — full width ───── -->
+          <!-- ┌────────────────────────────────────────────────────────────┐ -->
+          <!-- │  REGION: primary content. Replace this empty-state block    │ -->
+          <!-- │  with your page's cards / table / chart / form.             │ -->
+          <!-- └────────────────────────────────────────────────────────────┘ -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Get started">
+            <div class="ax-card__body" style="padding-block:var(--ax-space-10);">
+              <div style="max-width:420px;margin-inline:auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:var(--ax-space-5);">
+                <!-- thin-line two-tone illustration (single accent highlight) -->
+                <span aria-hidden="true" style="position:relative;display:grid;place-items:center;width:128px;height:128px;border-radius:50%;background:radial-gradient(circle at 50% 40%, var(--ax-accent-wash), transparent 70%);">
+                  <span style="position:absolute;inset:0;border-radius:50%;border:1px dashed var(--ax-border-strong);"></span>
+                  <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="var(--ax-text-muted)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 3v4a1 1 0 0 0 1 1h4"/>
+                    <path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>
+                    <path d="M12 11l0 6" stroke="var(--ax-accent)"/>
+                    <path d="M9 14l3 -3l3 3" stroke="var(--ax-accent)"/>
+                  </svg>
+                </span>
+                <div>
+                  <h2 style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-lg);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Nothing here yet</h2>
+                  <p style="margin:var(--ax-space-2) 0 0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.55;">This is the canonical empty-state pattern reused across every list, table and feed. Create your first item to get going.</p>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);justify-content:center;">
+                  <button type="button" class="ax-btn ax-btn--primary">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                    <span class="ax-btn__label">Create item</span>
+                  </button>
+                  <a class="ax-link" href="/pages/support/" style="font-size:var(--ax-text-sm);">or import from a file</a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Empty-state variant reference ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Empty-state variants">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">State Variants</h2>
+                <p class="ax-card__subtitle">One pattern, four contexts</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-list ax-list--compact">
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">First-run</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">CTA to create the first record</span></span>
+                </li>
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16"/><path d="M6 12h12"/><path d="M9 18h6"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Filtered-empty</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">"Clear filters" secondary action</span></span>
+                </li>
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Search-empty</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">No matches + spelling tips</span></span>
+                </li>
+                <li class="ax-list__row">
+                  <span class="ax-list__leading"><span class="ax-avatar ax-avatar--xs" style="background:color-mix(in oklab,var(--ax-viz-red) 18%,transparent);color:var(--ax-viz-red);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/><path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/></svg></span></span>
+                  <span class="ax-list__content"><span class="ax-list__title">Error-empty</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">"Retry" action after a failure</span></span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── Skeleton placeholder reference (the only place gray boxes are allowed) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Loading skeleton reference">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Loading Skeleton</h2>
+                <p class="ax-card__subtitle">Reserve layout while async data resolves — no content shift</p>
+              </div>
+              <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill" aria-live="polite">Loading…</span>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:var(--ax-space-4);">
+                <div style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                  <span class="ax-skeleton" style="width:40px;height:40px;border-radius:var(--ax-radius-md);flex:0 0 auto;"></span>
+                  <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <span class="ax-skeleton" style="width:80%;height:10px;border-radius:var(--ax-radius-pill);"></span>
+                    <span class="ax-skeleton" style="width:55%;height:10px;border-radius:var(--ax-radius-pill);"></span>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                  <span class="ax-skeleton" style="width:40px;height:40px;border-radius:var(--ax-radius-md);flex:0 0 auto;"></span>
+                  <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <span class="ax-skeleton" style="width:70%;height:10px;border-radius:var(--ax-radius-pill);"></span>
+                    <span class="ax-skeleton" style="width:45%;height:10px;border-radius:var(--ax-radius-pill);"></span>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                  <span class="ax-skeleton" style="width:40px;height:40px;border-radius:var(--ax-radius-md);flex:0 0 auto;"></span>
+                  <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <span class="ax-skeleton" style="width:85%;height:10px;border-radius:var(--ax-radius-pill);"></span>
+                    <span class="ax-skeleton" style="width:60%;height:10px;border-radius:var(--ax-radius-pill);"></span>
+                  </div>
+                </div>
+              </div>
+              <!-- ┌─ REGION: add your real rows here once data has loaded ─┐ -->
+            </div>
+          </section>
+        </div>
+{% endblock %}

@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Spinners &amp; Loaders</h1>
+              <p class="ax-page-head__subtitle">Ring spinners, dot and bar loaders, in-button states and skeleton placeholders.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/progress/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5m0 1a1 1 0 0 1 1 -1h12a1 1 0 0 1 1 1v0a1 1 0 0 1 -1 1h-12a1 1 0 0 1 -1 -1z"/><path d="M5 12m0 1a1 1 0 0 1 1 -1h8a1 1 0 0 1 1 1v0a1 1 0 0 1 -1 1h-8a1 1 0 0 1 -1 -1z"/></svg>
+                <span class="ax-btn__label">Progress</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Ring sizes ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Spinner sizes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Ring</span>
+                <h2 class="ax-card__title">Sizes</h2>
+                <p class="ax-card__subtitle">From a 12px inline cue to a 40px page spinner.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;align-items:flex-end;justify-content:space-around;gap:var(--ax-space-5);padding-block:var(--ax-space-6);">
+              <div style="text-align:center;"><span class="ax-spinner ax-spinner--xs" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-3);">xs</div></div>
+              <div style="text-align:center;"><span class="ax-spinner ax-spinner--sm" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-3);">sm</div></div>
+              <div style="text-align:center;"><span class="ax-spinner ax-spinner--md" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-3);">md</div></div>
+              <div style="text-align:center;"><span class="ax-spinner ax-spinner--lg" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span><div style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-3);">lg</div></div>
+            </div>
+          </section>
+
+          <!-- ───── Colors ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Spinner colors">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Tone</span>
+                <h2 class="ax-card__title">Colors</h2>
+                <p class="ax-card__subtitle">The glyph inherits <code class="ax-code">currentColor</code>, so any role token works.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;align-items:center;justify-content:space-around;gap:var(--ax-space-5);padding-block:var(--ax-space-6);">
+              <span class="ax-spinner ax-spinner--lg" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span>
+              <span class="ax-spinner ax-spinner--lg" style="color:var(--ax-success-500);" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span>
+              <span class="ax-spinner ax-spinner--lg" style="color:var(--ax-warning-500);" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span>
+              <span class="ax-spinner ax-spinner--lg" style="color:var(--ax-danger-500);" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span>
+              <span class="ax-spinner ax-spinner--lg" style="color:var(--ax-viz-violet);" role="status" aria-label="Loading"><span class="ax-spinner__glyph"></span></span>
+            </div>
+          </section>
+
+          <!-- ───── Dots ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Dot loaders">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Bounce</span>
+                <h2 class="ax-card__title">Dots</h2>
+                <p class="ax-card__subtitle">A three-dot pulse.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);align-items:center;padding-block:var(--ax-space-5);">
+              <span class="ax-dots" role="status" aria-label="Loading">
+                <i style="background:var(--ax-accent);"></i><i style="background:var(--ax-accent);"></i><i style="background:var(--ax-accent);"></i>
+              </span>
+              <span class="ax-dots ax-dots--lg" role="status" aria-label="Loading">
+                <i style="background:var(--ax-viz-cyan);"></i><i style="background:var(--ax-viz-violet);"></i><i style="background:var(--ax-viz-pink);"></i>
+              </span>
+            </div>
+          </section>
+
+          <!-- ───── Bars ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Bar loaders">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Equalizer</span>
+                <h2 class="ax-card__title">Bars</h2>
+                <p class="ax-card__subtitle">Five staggered columns.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);align-items:center;padding-block:var(--ax-space-5);">
+              <span class="ax-bars" role="status" aria-label="Loading">
+                <i style="background:var(--ax-accent);"></i><i style="background:var(--ax-accent);"></i><i style="background:var(--ax-accent);"></i><i style="background:var(--ax-accent);"></i><i style="background:var(--ax-accent);"></i>
+              </span>
+              <span class="ax-bars" role="status" aria-label="Loading">
+                <i style="background:var(--ax-viz-cyan);"></i><i style="background:var(--ax-viz-violet);"></i><i style="background:var(--ax-viz-pink);"></i><i style="background:var(--ax-viz-amber);"></i><i style="background:var(--ax-viz-emerald);"></i>
+              </span>
+            </div>
+          </section>
+
+          <!-- ───── In context (buttons + overlay) ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Loaders in context">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">In context</span>
+                <h2 class="ax-card__title">Buttons</h2>
+                <p class="ax-card__subtitle">Inline busy states.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);align-items:flex-start;">
+              <button type="button" class="ax-btn ax-btn--primary" aria-busy="true" disabled>
+                <span class="ax-spinner ax-spinner--sm ax-spinner--inline" style="color:currentColor;" aria-hidden="true"><span class="ax-spinner__glyph"></span></span>
+                <span class="ax-btn__label">Saving…</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--secondary" aria-busy="true" disabled>
+                <span class="ax-spinner ax-spinner--sm ax-spinner--inline" aria-hidden="true"><span class="ax-spinner__glyph"></span></span>
+                <span class="ax-btn__label">Syncing</span>
+              </button>
+              <span class="ax-cluster" style="gap:var(--ax-space-2);color:var(--ax-text-muted);font-size:var(--ax-text-sm);">
+                <span class="ax-spinner ax-spinner--sm" aria-hidden="true"><span class="ax-spinner__glyph"></span></span> Fetching latest activity…
+              </span>
+            </div>
+          </section>
+
+          <!-- ───── Skeletons ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Skeleton placeholders">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Loading state</span>
+                <h2 class="ax-card__title">Skeletons</h2>
+                <p class="ax-card__subtitle">Shimmer placeholders that mirror the content they replace.</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="/ui/skeletons/">All skeletons</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);" aria-busy="true" aria-label="Loading content">
+              <!-- media row -->
+              <div class="ax-skeleton-row">
+                <div class="ax-skeleton ax-skeleton--circle" style="width:44px;height:44px;flex:0 0 auto;"></div>
+                <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                  <div class="ax-skeleton ax-skeleton--line" style="width:40%;"></div>
+                  <div class="ax-skeleton ax-skeleton--line" style="width:65%;"></div>
+                </div>
+                <div class="ax-skeleton ax-skeleton--rect" style="width:72px;height:28px;flex:0 0 auto;"></div>
+              </div>
+              <!-- paragraph -->
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <div class="ax-skeleton ax-skeleton--line" style="width:100%;"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:92%;"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:78%;"></div>
+              </div>
+              <!-- media block -->
+              <div class="ax-skeleton ax-skeleton--rect" style="width:100%;height:140px;"></div>
+            </div>
+          </section>
+
+          <!-- ───── Card skeleton ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Stat skeleton">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Variants</span>
+                <h2 class="ax-card__title">Shimmer · Pulse</h2>
+                <p class="ax-card__subtitle">Two animation styles.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);" aria-busy="true" aria-label="Loading stat">
+              <div class="ax-skeleton-stat">
+                <div class="ax-skeleton ax-skeleton--rect" style="width:36px;height:36px;border-radius:var(--ax-radius-md);"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:50%;"></div>
+                <div class="ax-skeleton ax-skeleton--line" style="width:70%;height:1.2em;"></div>
+              </div>
+              <div class="ax-divider"></div>
+              <div class="ax-skeleton-row">
+                <div class="ax-skeleton ax-skeleton--pulse ax-skeleton--circle" style="width:32px;height:32px;flex:0 0 auto;"></div>
+                <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                  <div class="ax-skeleton ax-skeleton--pulse ax-skeleton--line" style="width:60%;"></div>
+                  <div class="ax-skeleton ax-skeleton--pulse ax-skeleton--line" style="width:40%;"></div>
+                </div>
+              </div>
+              <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Pulse opacity loop above, shimmer sweep elsewhere.</span>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Page-local loader composites (dots / bars). Color comes 100% from
+             inline role tokens on each <i>; only motion + geometry live here. -->
+        <style>
+          .ax-dots { display:inline-flex; align-items:center; gap:7px; }
+          .ax-dots > i { width:9px; height:9px; border-radius:50%; display:inline-block; animation:ax-dot-pulse 1.2s var(--ax-ease-standard) infinite; }
+          .ax-dots > i:nth-child(2) { animation-delay:.16s; }
+          .ax-dots > i:nth-child(3) { animation-delay:.32s; }
+          .ax-dots--lg > i { width:13px; height:13px; gap:9px; }
+          @keyframes ax-dot-pulse { 0%,80%,100% { transform:scale(.55); opacity:.5; } 40% { transform:scale(1); opacity:1; } }
+
+          .ax-bars { display:inline-flex; align-items:flex-end; gap:5px; height:34px; }
+          .ax-bars > i { width:6px; height:100%; border-radius:var(--ax-radius-xs); transform-origin:bottom; animation:ax-bar-stretch 1s var(--ax-ease-standard) infinite; }
+          .ax-bars > i:nth-child(2) { animation-delay:.1s; }
+          .ax-bars > i:nth-child(3) { animation-delay:.2s; }
+          .ax-bars > i:nth-child(4) { animation-delay:.3s; }
+          .ax-bars > i:nth-child(5) { animation-delay:.4s; }
+          @keyframes ax-bar-stretch { 0%,100% { transform:scaleY(.35); } 50% { transform:scaleY(1); } }
+
+          @media (prefers-reduced-motion: reduce) {
+            .ax-dots > i, .ax-bars > i { animation-duration:0s; }
+            .ax-dots > i { transform:scale(.85); opacity:.85; }
+            .ax-bars > i { transform:scaleY(.7); }
+          }
+        </style>
+
+{% endblock %}

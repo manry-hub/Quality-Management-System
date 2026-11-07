@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Toasts</h1>
+              <p class="ax-page-head__subtitle">Transient glass notifications — five tones, six positions and a live queue.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/alerts/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                <span class="ax-btn__label">Alerts</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Live trigger ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Live toast trigger"
+                   x-data="{ pos:'bottom-end', fire(tone){ const map={ success:{title:'Changes saved', message:'Your report settings were updated.'}, info:{title:'Heads up', message:'A new template is available to import.'}, warning:{title:'Storage almost full', message:'You are using 91% of your plan.'}, danger:{title:'Upload failed', message:'invoice-Q2.pdf could not be processed.'}, accent:{title:'Invite sent', message:'mei.lin@northwindlabs.app was invited.'} }; const t=map[tone]; $store.toasts.push({ tone, title:t.title, msg:t.message, ttl:4000, action:{ label:'Undo', run(){} } }); } }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Live</span>
+                <h2 class="ax-card__title">Trigger a Toast</h2>
+                <p class="ax-card__subtitle">Pushes onto the shared queue and auto-dismisses after 4s.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <button type="button" class="ax-btn ax-btn--success ax-btn--primary" @click="fire('success')"><span class="ax-btn__label">Success</span></button>
+                <button type="button" class="ax-btn ax-btn--secondary" @click="fire('info')"><span class="ax-btn__label">Info</span></button>
+                <button type="button" class="ax-btn ax-btn--warning ax-btn--primary" @click="fire('warning')"><span class="ax-btn__label">Warning</span></button>
+                <button type="button" class="ax-btn ax-btn--danger ax-btn--primary" @click="fire('danger')"><span class="ax-btn__label">Danger</span></button>
+                <button type="button" class="ax-btn ax-btn--primary" @click="fire('accent')"><span class="ax-btn__label">Accent</span></button>
+              </div>
+              <div class="ax-field" style="margin:0;max-width:260px;">
+                <label class="ax-label" for="toast-pos">Position</label>
+                <select id="toast-pos" class="ax-select" x-model="pos">
+                  <option value="bottom-end">Bottom end</option>
+                  <option value="bottom-start">Bottom start</option>
+                  <option value="bottom-center">Bottom center</option>
+                  <option value="top-end">Top end</option>
+                  <option value="top-start">Top start</option>
+                  <option value="top-center">Top center</option>
+                </select>
+                <span class="ax-help">Where the live queue renders on screen.</span>
+              </div>
+
+              <!-- The actual live region, bound to the shared $store.toasts queue. -->
+              <div class="ax-toast-region" :class="'ax-toast-region--' + pos" aria-live="polite" aria-atomic="false">
+                <template x-for="t in $store.toasts.items" :key="t.id">
+                  <div class="ax-toast" :class="'ax-toast--' + (t.tone || 'info')" role="status" x-transition.opacity.duration.200ms>
+                    <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-show="t.tone==='success'"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg>
+                    <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-show="t.tone==='danger'"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                    <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-show="t.tone==='warning'"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/></svg>
+                    <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" x-show="t.tone==='accent' || t.tone==='info' || !t.tone"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>
+                    <div class="ax-toast__content">
+                      <p class="ax-toast__title" x-text="t.title || 'Notification'"></p>
+                      <p class="ax-toast__message" x-text="t.msg"></p>
+                    </div>
+                    <button type="button" class="ax-toast__action" x-show="t.action" @click="$store.toasts.dismiss(t.id)" x-text="t.action && t.action.label"></button>
+                    <button type="button" class="ax-toast__dismiss" @click="$store.toasts.dismiss(t.id)" aria-label="Dismiss notification">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
+                    </button>
+                    <span class="ax-toast__timer" aria-hidden="true" style="animation:ax-toast-timer 4s linear forwards;"></span>
+                  </div>
+                </template>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Positions reference ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Toast positions">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Placement</span>
+                <h2 class="ax-card__title">Six Positions</h2>
+                <p class="ax-card__subtitle">Top and bottom, paired with start, center or end.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="position:relative;height:240px;border:1px dashed var(--ax-border-strong);border-radius:var(--ax-radius-lg);background:var(--ax-surface-subtle);overflow:hidden;">
+                <span style="position:absolute;inset-block-start:10px;inset-inline-start:10px;font-size:var(--ax-text-2xs);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);padding:4px 8px;background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);">top-start</span>
+                <span style="position:absolute;inset-block-start:10px;inset-inline:0;margin-inline:auto;width:max-content;font-size:var(--ax-text-2xs);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);padding:4px 8px;background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);">top-center</span>
+                <span style="position:absolute;inset-block-start:10px;inset-inline-end:10px;font-size:var(--ax-text-2xs);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);padding:4px 8px;background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);">top-end</span>
+                <span style="position:absolute;inset-block-end:10px;inset-inline-start:10px;font-size:var(--ax-text-2xs);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);padding:4px 8px;background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);">bottom-start</span>
+                <span style="position:absolute;inset-block-end:10px;inset-inline:0;margin-inline:auto;width:max-content;font-size:var(--ax-text-2xs);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);padding:4px 8px;background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);">bottom-center</span>
+                <span style="position:absolute;inset-block-end:10px;inset-inline-end:10px;font-size:var(--ax-text-2xs);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);padding:4px 8px;background:var(--ax-accent-wash);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);">bottom-end · default</span>
+                <span style="position:absolute;inset:0;display:grid;place-items:center;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Viewport</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Static variants ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Toast variants">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Anatomy</span>
+                <h2 class="ax-card__title">Tones &amp; Anatomy</h2>
+                <p class="ax-card__subtitle">Icon, title, message, optional action and dismiss — shown inline for reference.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:var(--ax-space-4);">
+
+                <div class="ax-toast ax-toast--success" role="status" style="backdrop-filter:none;-webkit-backdrop-filter:none;">
+                  <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg>
+                  <div class="ax-toast__content"><p class="ax-toast__title">Changes saved</p><p class="ax-toast__message">Your report settings were updated.</p></div>
+                  <button type="button" class="ax-toast__dismiss" style="opacity:1;" aria-label="Dismiss"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                </div>
+
+                <div class="ax-toast ax-toast--info" role="status" style="backdrop-filter:none;-webkit-backdrop-filter:none;">
+                  <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>
+                  <div class="ax-toast__content"><p class="ax-toast__title">New template</p><p class="ax-toast__message">“Aurora analytics” is ready to import.</p></div>
+                  <button type="button" class="ax-toast__action">Import</button>
+                </div>
+
+                <div class="ax-toast ax-toast--warning" role="status" style="backdrop-filter:none;-webkit-backdrop-filter:none;">
+                  <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/></svg>
+                  <div class="ax-toast__content"><p class="ax-toast__title">Storage almost full</p><p class="ax-toast__message">You are using <b class="ax-num" style="color:var(--ax-text-strong);">91%</b> of your plan.</p></div>
+                  <button type="button" class="ax-toast__action">Upgrade</button>
+                </div>
+
+                <div class="ax-toast ax-toast--danger" role="status" style="backdrop-filter:none;-webkit-backdrop-filter:none;">
+                  <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                  <div class="ax-toast__content"><p class="ax-toast__title">Upload failed</p><p class="ax-toast__message">invoice-Q2.pdf could not be processed.</p></div>
+                  <button type="button" class="ax-toast__action">Retry</button>
+                </div>
+
+                <div class="ax-toast ax-toast--accent" role="status" style="backdrop-filter:none;-webkit-backdrop-filter:none;">
+                  <svg class="ax-toast__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>
+                  <div class="ax-toast__content"><p class="ax-toast__title">Invite sent</p><p class="ax-toast__message">mei.lin@northwindlabs.app was invited.</p></div>
+                  <span class="ax-toast__timer" aria-hidden="true" style="transform:scaleX(.4);"></span>
+                </div>
+
+                <div class="ax-toast" role="status" style="backdrop-filter:none;-webkit-backdrop-filter:none;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);flex:0 0 auto;">MR</span>
+                  <div class="ax-toast__content"><p class="ax-toast__title">Marcus Reyes</p><p class="ax-toast__message">Mentioned you in “Design review”.</p></div>
+                  <button type="button" class="ax-toast__action">Reply</button>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Page-local: timer keyframe for the live toast progress line.
+             Color is owned by .ax-toast__timer (role token); only motion here. -->
+        <style>
+          @keyframes ax-toast-timer { from { transform:scaleX(1); } to { transform:scaleX(0); } }
+          @media (prefers-reduced-motion: reduce) {
+            .ax-toast__timer { animation:none !important; }
+          }
+        </style>
+
+{% endblock %}

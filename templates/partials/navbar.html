@@ -1,0 +1,63 @@
+<div class="navbar-header">
+    <div class="row align-items-center justify-content-between">
+        <div class="col-auto">
+            <div class="d-flex flex-wrap align-items-center gap-4">
+                <button type="button" class="sidebar-toggle">
+                    <iconify-icon icon="heroicons:bars-3-solid" class="icon text-2xl non-active"></iconify-icon>
+                    <iconify-icon icon="iconoir:arrow-right" class="icon text-2xl active"></iconify-icon>
+                </button>
+                <button type="button" class="sidebar-mobile-toggle">
+                    <iconify-icon icon="heroicons:bars-3-solid" class="icon"></iconify-icon>
+                </button>
+                <div class="d-none d-md-flex align-items-center gap-2">
+                    <span class="badge bg-neutral-200 text-secondary-light px-3 py-2 radius-8 font-monospace">
+                        <i class="ri-building-line text-primary-600 me-1"></i> FACILITY: IMM-PLANT-01
+                    </span>
+                    <span class="badge bg-success-subtle text-success-main px-3 py-2 radius-8">
+                        <i class="ri-checkbox-circle-fill me-1"></i> IATF 16949 COMPLIANT
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="d-flex flex-wrap align-items-center gap-3">
+                <button type="button" data-theme-toggle class="w-40-px h-40-px bg-neutral-200 rounded-circle d-flex justify-content-center align-items-center text-secondary-light">
+                    <i class="ri-moon-line"></i>
+                </button>
+                <div class="dropdown">
+                    <button class="d-flex align-items-center gap-2 border-0 bg-transparent p-0" type="button" data-bs-toggle="dropdown">
+                        <div class="w-40-px h-40-px bg-primary-subtle text-primary-600 rounded-circle d-flex justify-content-center align-items-center fw-bold">
+                            {{ request.user.username|default:"QA"|slice:":2"|upper }}
+                        </div>
+                        <div class="d-none d-sm-block text-start">
+                            <span class="text-sm fw-semibold text-primary-light d-block line-height-1">
+                                {{ request.user.username|default:"Quality Inspector" }}
+                            </span>
+                            <span class="text-xs text-secondary-light font-monospace">
+                                BADGE: {{ request.user.badge_number|default:"QA-OPERATOR" }}
+                            </span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu to-top dropdown-menu-sm">
+                        <div class="py-12 px-16 radius-8 bg-primary-50 mb-8">
+                            <h6 class="text-md text-primary-light fw-semibold mb-0">{{ request.user.username }}</h6>
+                            <span class="text-xs text-secondary-light">Dept: {{ request.user.department|default:"Quality Assurance" }}</span>
+                        </div>
+                        <ul class="list-unstyled mb-0">
+                            <li>
+                                <a class="dropdown-item px-16 py-8 rounded text-secondary-light hover-bg-neutral-200" href="/admin/">
+                                    <i class="ri-settings-line me-2"></i> Django Admin
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item px-16 py-8 rounded text-danger-main hover-bg-neutral-200" href="/admin/logout/">
+                                    <i class="ri-logout-box-r-line me-2"></i> Log Out
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

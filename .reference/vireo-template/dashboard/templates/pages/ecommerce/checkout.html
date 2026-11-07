@@ -1,0 +1,388 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axCheckout()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Checkout</h1>
+              <p class="ax-page-head__subtitle">Secure checkout — <span class="ax-num">3</span> items in your bag, ships from Portland, OR.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/ecommerce/cart/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg>
+                <span class="ax-btn__label">Back to cart</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ STEPPER ════════════════ -->
+        <div class="ax-card ax-col--12" role="region" aria-label="Checkout progress" style="margin-bottom:var(--ax-space-6);">
+          <div class="ax-card__body" style="padding:var(--ax-space-5) var(--ax-space-6);">
+            <ol style="display:flex;align-items:flex-start;gap:0;list-style:none;margin:0;padding:0;" aria-label="Checkout steps">
+              <template x-for="(s, i) in steps" :key="s.id">
+                <li style="flex:1 1 0;display:flex;flex-direction:column;align-items:center;position:relative;min-width:0;">
+                  <!-- connector to previous node -->
+                  <span x-show="i > 0" aria-hidden="true" style="position:absolute;top:18px;height:2px;inset-inline-end:50%;width:100%;"
+                        :style="i <= step ? 'background:var(--ax-accent);' : 'background:var(--ax-border);'"></span>
+                  <button type="button" @click="goTo(i)" :disabled="i > maxReached"
+                          :aria-current="i === step ? 'step' : 'false'"
+                          :aria-label="'Step ' + (i+1) + ': ' + s.label"
+                          style="position:relative;z-index:1;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--ax-font-mono);font-weight:600;font-size:var(--ax-text-sm);border:2px solid;background:var(--ax-surface-solid);transition:all var(--ax-motion-fast) var(--ax-ease-standard);"
+                          :style="i < step ? 'background:var(--ax-accent);border-color:var(--ax-accent);color:var(--ax-on-accent);cursor:pointer;'
+                                  : i === step ? 'border-color:var(--ax-accent);color:var(--ax-accent);box-shadow:0 0 0 4px var(--ax-accent-wash);'
+                                  : 'border-color:var(--ax-border-strong);color:var(--ax-text-subtle);cursor:default;'">
+                    <template x-if="i < step">
+                      <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                    </template>
+                    <span x-show="i >= step" x-text="i + 1"></span>
+                  </button>
+                  <span style="margin-top:var(--ax-space-2);font-size:var(--ax-text-xs);text-align:center;font-weight:var(--ax-weight-medium);"
+                        :style="i === step ? 'color:var(--ax-text-strong);' : i < step ? 'color:var(--ax-text);' : 'color:var(--ax-text-subtle);'"
+                        x-text="s.label"></span>
+                </li>
+              </template>
+            </ol>
+          </div>
+        </div>
+
+        <!-- ════════════════ MAIN GRID: FORM + SUMMARY RAIL ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───────── LEFT: STEP PANELS ───────── -->
+          <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- ░░ STEP 1 · ADDRESS ░░ -->
+            <section class="ax-card" role="region" aria-label="Shipping address" x-show="step === 0" x-cloak>
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 1 of 4</span>
+                  <h2 class="ax-card__title">Contact &amp; address</h2>
+                  <p class="ax-card__subtitle">Where should we ship your order?</p>
+                </div>
+                <div class="ax-card__actions">
+                  <div class="ax-segment" role="radiogroup" aria-label="Checkout type">
+                    <button type="button" class="ax-segment__option" :class="{ 'is-active': mode==='guest' }" @click="mode='guest'" :aria-checked="mode==='guest'" role="radio">Guest</button>
+                    <button type="button" class="ax-segment__option" :class="{ 'is-active': mode==='account' }" @click="mode='account'" :aria-checked="mode==='account'" role="radio">Account</button>
+                  </div>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+                <div class="ax-field">
+                  <label class="ax-label" for="co-email">Email address <span class="ax-field__required">*</span></label>
+                  <input id="co-email" type="email" class="ax-input" value="amelia.hart@gmail.com" autocomplete="email">
+                  <span class="ax-help">Order confirmation &amp; tracking will be sent here.</span>
+                </div>
+
+                <!-- saved address tiles -->
+                <div>
+                  <div class="ax-label" style="margin-bottom:var(--ax-space-3);">Saved addresses</div>
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+                    <template x-for="a in savedAddresses" :key="a.id">
+                      <label style="position:relative;display:block;cursor:pointer;border-radius:var(--ax-radius-md);padding:var(--ax-space-4);border:1.5px solid;transition:border-color var(--ax-motion-fast) var(--ax-ease-standard);"
+                             :style="savedAddr===a.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);' : 'border-color:var(--ax-border);background:var(--ax-surface);'">
+                        <input type="radio" name="saved-addr" class="ax-radio" :value="a.id" x-model="savedAddr" style="position:absolute;inset-inline-end:var(--ax-space-3);top:var(--ax-space-3);">
+                        <div class="ax-cluster" style="gap:var(--ax-space-2);margin-bottom:var(--ax-space-1);">
+                          <b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="a.name"></b>
+                          <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm ax-badge--pill" x-show="a.tag" x-text="a.tag"></span>
+                        </div>
+                        <p style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-muted);line-height:1.5;" x-text="a.lines"></p>
+                      </label>
+                    </template>
+                    <button type="button" @click="savedAddr='new'" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--ax-space-2);border-radius:var(--ax-radius-md);padding:var(--ax-space-4);border:1.5px dashed var(--ax-border-strong);background:transparent;cursor:pointer;color:var(--ax-text-muted);min-height:84px;"
+                            :style="savedAddr==='new' ? 'border-color:var(--ax-accent);color:var(--ax-accent);' : ''">
+                      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                      <span style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-medium);">Use a new address</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- new address form -->
+                <div class="ax-grid" x-show="savedAddr==='new'" x-cloak x-transition style="grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="co-name">Full name <span class="ax-field__required">*</span></label><input id="co-name" type="text" class="ax-input" placeholder="Amelia Hart" autocomplete="name"></div>
+                  <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="co-line1">Address line 1 <span class="ax-field__required">*</span></label><input id="co-line1" type="text" class="ax-input" placeholder="Street address" autocomplete="address-line1"></div>
+                  <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="co-line2">Address line 2</label><input id="co-line2" type="text" class="ax-input" placeholder="Apartment, suite, etc. (optional)" autocomplete="address-line2"></div>
+                  <div class="ax-field" style="grid-column:span 6;"><label class="ax-label" for="co-city">City <span class="ax-field__required">*</span></label><input id="co-city" type="text" class="ax-input" placeholder="City" autocomplete="address-level2"></div>
+                  <div class="ax-field" style="grid-column:span 3;"><label class="ax-label" for="co-state">State <span class="ax-field__required">*</span></label><input id="co-state" type="text" class="ax-input" placeholder="OR" autocomplete="address-level1"></div>
+                  <div class="ax-field" style="grid-column:span 3;"><label class="ax-label" for="co-zip">ZIP <span class="ax-field__required">*</span></label><input id="co-zip" type="text" class="ax-input ax-num" placeholder="97201" inputmode="numeric" autocomplete="postal-code"></div>
+                  <div class="ax-field" style="grid-column:span 12;"><label class="ax-label" for="co-phone">Phone</label><input id="co-phone" type="tel" class="ax-input" placeholder="(555) 000-0000" autocomplete="tel"></div>
+                </div>
+
+                <label class="ax-check" style="display:flex;gap:var(--ax-space-2);align-items:center;">
+                  <input type="checkbox" class="ax-checkbox" x-model="shipDifferent">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Billing address is different from shipping</span>
+                </label>
+              </div>
+              <div class="ax-card__footer" style="display:flex;justify-content:flex-end;">
+                <button type="button" class="ax-btn ax-btn--primary" @click="next()">
+                  <span class="ax-btn__label">Continue to shipping</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- ░░ STEP 2 · SHIPPING ░░ -->
+            <section class="ax-card" role="region" aria-label="Shipping method" x-show="step === 1" x-cloak>
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 2 of 4</span>
+                  <h2 class="ax-card__title">Shipping method</h2>
+                  <p class="ax-card__subtitle">Delivering to Portland, OR 97201.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <template x-for="m in shipMethods" :key="m.id">
+                  <label style="display:flex;align-items:center;gap:var(--ax-space-4);cursor:pointer;border-radius:var(--ax-radius-md);padding:var(--ax-space-4);border:1.5px solid;transition:border-color var(--ax-motion-fast) var(--ax-ease-standard);"
+                         :style="shipping===m.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);' : 'border-color:var(--ax-border);background:var(--ax-surface);'">
+                    <input type="radio" name="ship-method" class="ax-radio" :value="m.id" x-model="shipping" @change="recompute()">
+                    <span style="width:38px;height:38px;border-radius:var(--ax-radius-md);display:grid;place-items:center;flex:none;" :style="`background:color-mix(in oklab,${m.c} 16%,transparent);color:${m.c};`" x-html="m.icon"></span>
+                    <span style="flex:1 1 auto;min-width:0;">
+                      <span style="display:block;font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="m.name"></span>
+                      <span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-muted);" x-text="m.eta"></span>
+                    </span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);" :style="m.price===0 ? 'color:var(--ax-viz-emerald);' : 'color:var(--ax-text-strong);'" x-text="m.price===0 ? 'Free' : money(m.price)"></span>
+                  </label>
+                </template>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                  <span>Free standard shipping on orders over $75.00.</span>
+                </div>
+              </div>
+              <div class="ax-card__footer" style="display:flex;justify-content:space-between;">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="prev()"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg><span class="ax-btn__label">Back</span></button>
+                <button type="button" class="ax-btn ax-btn--primary" @click="next()"><span class="ax-btn__label">Continue to payment</span><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </div>
+            </section>
+
+            <!-- ░░ STEP 3 · PAYMENT ░░ -->
+            <section class="ax-card" role="region" aria-label="Payment" x-show="step === 2" x-cloak>
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 3 of 4</span>
+                  <h2 class="ax-card__title">Payment</h2>
+                  <p class="ax-card__subtitle">All transactions are secured &amp; encrypted.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+
+                <!-- payment error demo (hidden) -->
+                <div x-show="payError" x-cloak x-transition class="ax-alert ax-alert--danger" role="alert">
+                  <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></span>
+                  <div class="ax-alert__content"><p class="ax-alert__title">Card declined</p><p class="ax-alert__message">Check the number or try another payment method.</p></div>
+                </div>
+
+                <!-- method selector -->
+                <div role="radiogroup" aria-label="Payment method" style="display:grid;grid-template-columns:repeat(4,1fr);gap:var(--ax-space-3);">
+                  <template x-for="p in payMethods" :key="p.id">
+                    <button type="button" role="radio" :aria-checked="payment===p.id" @click="payment=p.id"
+                            style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);padding:var(--ax-space-3);border-radius:var(--ax-radius-md);border:1.5px solid;background:var(--ax-surface);cursor:pointer;transition:border-color var(--ax-motion-fast) var(--ax-ease-standard);"
+                            :style="payment===p.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);color:var(--ax-accent);' : 'border-color:var(--ax-border);color:var(--ax-text-muted);'">
+                      <span x-html="p.icon"></span>
+                      <span style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-medium);" x-text="p.name"></span>
+                    </button>
+                  </template>
+                </div>
+
+                <!-- card form -->
+                <div class="ax-grid" x-show="payment==='card'" x-cloak x-transition style="grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 12;">
+                    <label class="ax-label" for="cc-num">Card number <span class="ax-field__required">*</span></label>
+                    <div class="ax-input-group">
+                      <input id="cc-num" type="text" class="ax-input ax-num" placeholder="4242 4242 4242 4242" inputmode="numeric" maxlength="19" style="border:0;background:transparent;font-family:var(--ax-font-mono);letter-spacing:.08em;">
+                      <span class="ax-input-group__addon" aria-hidden="true" style="padding-inline:var(--ax-space-3);color:var(--ax-text-muted);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -8"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg></span>
+                    </div>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;"><label class="ax-label" for="cc-name">Name on card <span class="ax-field__required">*</span></label><input id="cc-name" type="text" class="ax-input" placeholder="Amelia Hart" autocomplete="cc-name"></div>
+                  <div class="ax-field" style="grid-column:span 3;"><label class="ax-label" for="cc-exp">Expiry <span class="ax-field__required">*</span></label><input id="cc-exp" type="text" class="ax-input ax-num" placeholder="MM / YY" inputmode="numeric" maxlength="7" style="font-family:var(--ax-font-mono);"></div>
+                  <div class="ax-field" style="grid-column:span 3;"><label class="ax-label" for="cc-cvc">CVC <span class="ax-field__required">*</span></label><input id="cc-cvc" type="text" class="ax-input ax-num" placeholder="123" inputmode="numeric" maxlength="4" style="font-family:var(--ax-font-mono);"></div>
+                </div>
+
+                <!-- stub copy for non-card -->
+                <div x-show="payment==='paypal'" x-cloak class="ax-alert ax-alert--info ax-alert--inline" role="status"><span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></span><div class="ax-alert__content"><p class="ax-alert__message">You'll be redirected to PayPal to complete payment securely after placing your order.</p></div></div>
+                <div x-show="payment==='bank'" x-cloak class="ax-alert ax-alert--info ax-alert--inline" role="status"><span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></span><div class="ax-alert__content"><p class="ax-alert__message">Transfer details will appear on the confirmation page. Order ships once payment clears.</p></div></div>
+                <div x-show="payment==='cod'" x-cloak class="ax-alert ax-alert--info ax-alert--inline" role="status"><span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></span><div class="ax-alert__content"><p class="ax-alert__message">Pay the courier in cash on delivery. A $3.00 handling fee applies for COD.</p></div></div>
+
+                <label class="ax-check" style="display:flex;gap:var(--ax-space-2);align-items:center;">
+                  <input type="checkbox" class="ax-checkbox" checked>
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Billing address same as shipping</span>
+                </label>
+
+                <div class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg>
+                  <span>Secured by 256-bit TLS encryption. We never store your CVC.</span>
+                </div>
+              </div>
+              <div class="ax-card__footer" style="display:flex;justify-content:space-between;">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="prev()"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg><span class="ax-btn__label">Back</span></button>
+                <button type="button" class="ax-btn ax-btn--primary" @click="next()"><span class="ax-btn__label">Review order</span><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </div>
+            </section>
+
+            <!-- ░░ STEP 4 · REVIEW ░░ -->
+            <section class="ax-card" role="region" aria-label="Review order" x-show="step === 3" x-cloak>
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <span class="ax-card__eyebrow">Step 4 of 4</span>
+                  <h2 class="ax-card__title">Review &amp; place order</h2>
+                  <p class="ax-card__subtitle">Confirm everything looks right before you pay.</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+
+                <!-- recap: contact -->
+                <div style="display:flex;justify-content:space-between;gap:var(--ax-space-4);padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <div><div class="ax-card__eyebrow" style="margin-bottom:var(--ax-space-1);">Contact</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">amelia.hart@gmail.com</div></div>
+                  <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="goTo(0)">Edit</button>
+                </div>
+                <!-- recap: ship to -->
+                <div style="display:flex;justify-content:space-between;gap:var(--ax-space-4);padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <div><div class="ax-card__eyebrow" style="margin-bottom:var(--ax-space-1);">Ship to</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">Amelia Hart</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">1820 NW Glisan St, Apt 4B · Portland, OR 97201 · United States</div></div>
+                  <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="goTo(0)">Edit</button>
+                </div>
+                <!-- recap: shipping method -->
+                <div style="display:flex;justify-content:space-between;gap:var(--ax-space-4);padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <div><div class="ax-card__eyebrow" style="margin-bottom:var(--ax-space-1);">Shipping</div><div style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);" x-text="currentShip().name"></div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);" x-text="currentShip().eta"></div></div>
+                  <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="goTo(1)">Edit</button>
+                </div>
+                <!-- recap: payment -->
+                <div style="display:flex;justify-content:space-between;gap:var(--ax-space-4);padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <div><div class="ax-card__eyebrow" style="margin-bottom:var(--ax-space-1);">Payment</div><div class="ax-cluster ax-num" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-strong);font-family:var(--ax-font-mono);"><span x-text="payment==='card' ? 'Visa •••• 4242' : currentPay().name"></span></div></div>
+                  <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="goTo(2)">Edit</button>
+                </div>
+
+                <hr class="ax-divider">
+
+                <!-- mini line items -->
+                <ul class="ax-list ax-list--compact">
+                  <template x-for="it in items" :key="it.id">
+                    <li class="ax-list__row">
+                      <span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${it.c} 16%,transparent);color:${it.c};`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8v10a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"/><path d="M9 6a3 3 0 0 1 6 0"/><path d="M8 9l8 0"/></svg></span></span>
+                      <span class="ax-list__content"><span class="ax-list__title" x-text="it.name"></span><span class="ax-list__meta" x-text="it.variant + ' · Qty ' + it.qty"></span></span>
+                      <span class="ax-list__trailing ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);" x-text="money(it.price * it.qty)"></span>
+                    </li>
+                  </template>
+                </ul>
+
+                <label class="ax-check" style="display:flex;gap:var(--ax-space-2);align-items:flex-start;padding:var(--ax-space-3) var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                  <input type="checkbox" class="ax-checkbox" x-model="terms" style="margin-top:2px;">
+                  <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">I agree to the <a href="#" class="ax-link">Terms of Service</a> and <a href="#" class="ax-link">Refund Policy</a>.</span>
+                </label>
+              </div>
+              <div class="ax-card__footer" style="display:flex;justify-content:space-between;align-items:center;gap:var(--ax-space-3);">
+                <button type="button" class="ax-btn ax-btn--ghost" @click="prev()"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg><span class="ax-btn__label">Back</span></button>
+                <button type="button" class="ax-btn ax-btn--primary" :disabled="!terms" @click="placeOrder()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg>
+                  <span class="ax-btn__label">Place order · <span class="ax-num" x-text="money(total())"></span></span>
+                </button>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───────── RIGHT: ORDER SUMMARY RAIL ───────── -->
+          <aside class="ax-col--4">
+            <section class="ax-card" role="region" aria-label="Order summary" style="position:sticky;top:var(--ax-space-6);">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Order summary</h2></div>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill ax-num"><span x-text="items.length"></span> items</span>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <ul class="ax-list ax-list--compact" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <template x-for="it in items" :key="it.id">
+                    <li class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                      <span style="position:relative;flex:none;">
+                        <span class="ax-avatar ax-avatar--squircle" :style="`background:color-mix(in oklab,${it.c} 16%,transparent);color:${it.c};`"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8v10a1 1 0 0 1 -1 1h-6a1 1 0 0 1 -1 -1z"/><path d="M9 6a3 3 0 0 1 6 0"/><path d="M8 9l8 0"/></svg></span>
+                        <span class="ax-num" style="position:absolute;top:-6px;inset-inline-end:-6px;min-width:18px;height:18px;padding:0 4px;border-radius:9px;background:var(--ax-text-strong);color:var(--ax-canvas);font-size:var(--ax-text-2xs);font-family:var(--ax-font-mono);display:grid;place-items:center;" x-text="it.qty"></span>
+                      </span>
+                      <span style="flex:1 1 auto;min-width:0;">
+                        <span class="ax-text-truncate" style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="it.name"></span>
+                        <span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="it.variant"></span>
+                      </span>
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-strong);" x-text="money(it.price * it.qty)"></span>
+                    </li>
+                  </template>
+                </ul>
+
+                <!-- coupon -->
+                <div class="ax-input-group">
+                  <input type="text" class="ax-input" placeholder="Promo code" x-model="coupon" style="border:0;background:transparent;" aria-label="Promo code">
+                  <button type="button" class="ax-input-group__addon ax-btn ax-btn--ghost ax-btn--sm" @click="applyCoupon()" style="border-radius:0;">Apply</button>
+                </div>
+                <p x-show="couponMsg" x-cloak class="ax-num" style="font-size:var(--ax-text-xs);margin:0;" :style="discount>0 ? 'color:var(--ax-viz-emerald);' : 'color:var(--ax-danger-500);'" x-text="couponMsg"></p>
+
+                <hr class="ax-divider" style="margin:0;">
+
+                <!-- totals -->
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);font-size:var(--ax-text-sm);">
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="color:var(--ax-text-muted);">Subtotal</span><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="money(subtotal())"></span></div>
+                  <div class="ax-cluster" style="justify-content:space-between;" x-show="discount>0" x-cloak><span style="color:var(--ax-text-muted);">Discount</span><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-danger-500);" x-text="'−' + money(discountAmt())"></span></div>
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="color:var(--ax-text-muted);">Shipping <span style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">(est.)</span></span><span class="ax-num" style="font-family:var(--ax-font-mono);" :style="shipCost()===0 ? 'color:var(--ax-viz-emerald);' : 'color:var(--ax-text);'" x-text="shipCost()===0 ? 'Free' : money(shipCost())"></span></div>
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="color:var(--ax-text-muted);">Tax <span style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">(est.)</span></span><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="money(tax())"></span></div>
+                </div>
+                <hr class="ax-divider" style="margin:0;">
+                <div class="ax-cluster" style="justify-content:space-between;align-items:baseline;">
+                  <span style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Total</span>
+                  <span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);" x-text="money(total())"></span>
+                </div>
+
+                <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:center;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:var(--ax-space-1);">
+                  <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M9 12l2 2l4 -4"/></svg>
+                  <span>30-day money-back guarantee</span>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axCheckout(){
+            const C2='var(--ax-viz-cyan)', C3='var(--ax-viz-violet)', C4='var(--ax-viz-amber)';
+            return {
+              step:0, maxReached:0, mode:'guest', savedAddr:'home', shipDifferent:false,
+              shipping:'standard', payment:'card', terms:false, payError:false,
+              coupon:'', couponMsg:'', discount:0,
+              steps:[{id:'addr',label:'Address'},{id:'ship',label:'Shipping'},{id:'pay',label:'Payment'},{id:'review',label:'Review'}],
+              savedAddresses:[
+                { id:'home', name:'Amelia Hart', tag:'Default', lines:'1820 NW Glisan St, Apt 4B · Portland, OR 97201' },
+                { id:'work', name:'Amelia Hart', tag:'Work', lines:'500 SW Broadway, Ste 900 · Portland, OR 97205' },
+              ],
+              shipMethods:[
+                { id:'standard', name:'Standard', eta:'5–7 business days', price:0, c:'var(--ax-viz-emerald)', icon:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"/></svg>' },
+                { id:'express', name:'Express', eta:'2–3 business days', price:12.00, c:C2, icon:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>' },
+                { id:'priority', name:'Priority overnight', eta:'Next business day by 12 PM', price:24.50, c:C4, icon:'<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 7v5l3 3"/></svg>' },
+              ],
+              payMethods:[
+                { id:'card', name:'Card', icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -8"/><path d="M3 10l18 0"/><path d="M7 15l.01 0"/><path d="M11 15l2 0"/></svg>' },
+                { id:'paypal', name:'PayPal', icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13l2.5 0c2.5 0 5 -2.5 5 -5c0 -3 -1.9 -4 -3.5 -4l-5.5 0l-2.5 16l3.5 0l.5 -3"/><path d="M19 9c1 .5 1.5 1.5 1.5 3c0 3 -2.5 5 -5 5l-2.5 0l-.5 3"/></svg>' },
+                { id:'bank', name:'Bank', icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21l18 0"/><path d="M3 10l18 0"/><path d="M5 6l7 -3l7 3"/><path d="M4 10l0 11"/><path d="M20 10l0 11"/><path d="M8 14l0 3"/><path d="M12 14l0 3"/><path d="M16 14l0 3"/></svg>' },
+                { id:'cod', name:'Cash', icon:'<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a3 3 0 0 0 -3 3v12a3 3 0 0 0 6 0v-12a3 3 0 0 0 -3 -3"/><path d="M12 3a12 12 0 0 0 8 3"/></svg>' },
+              ],
+              items:[
+                { id:1, name:'Aperture Desk Lamp', variant:'Brass / Warm white', qty:1, price:129.00, c:C2 },
+                { id:2, name:'Matte Ceramic Mug', variant:'Slate · 12 oz', qty:2, price:24.00, c:C3 },
+                { id:3, name:'Walnut Monitor Riser', variant:'Walnut / Large', qty:1, price:96.00, c:C4 },
+              ],
+              money(v){ return '$' + v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              subtotal(){ return this.items.reduce((s,i)=>s+i.price*i.qty,0); },
+              discountAmt(){ return this.subtotal()*this.discount; },
+              shipCost(){ return (this.subtotal()-this.discountAmt()) > 75 && this.shipping==='standard' ? 0 : (this.shipMethods.find(m=>m.id===this.shipping)?.price || 0); },
+              tax(){ return (this.subtotal()-this.discountAmt())*0.0825; },
+              total(){ return this.subtotal()-this.discountAmt()+this.shipCost()+this.tax(); },
+              currentShip(){ return this.shipMethods.find(m=>m.id===this.shipping); },
+              currentPay(){ return this.payMethods.find(m=>m.id===this.payment); },
+              recompute(){ /* totals are reactive getters */ },
+              next(){ if(this.step<3){ this.step++; this.maxReached=Math.max(this.maxReached,this.step); window.scrollTo({top:0,behavior:'smooth'}); } },
+              prev(){ if(this.step>0){ this.step--; window.scrollTo({top:0,behavior:'smooth'}); } },
+              goTo(i){ if(i<=this.maxReached){ this.step=i; window.scrollTo({top:0,behavior:'smooth'}); } },
+              applyCoupon(){ const c=this.coupon.trim().toUpperCase(); if(c==='WELCOME10'){ this.discount=0.10; this.couponMsg='WELCOME10 applied — 10% off'; } else if(c==='SAVE20'){ this.discount=0.20; this.couponMsg='SAVE20 applied — 20% off'; } else if(c){ this.discount=0; this.couponMsg='That code isn’t valid'; } },
+              placeOrder(){ window.location.href='/ecommerce/order-success/'; },
+            };
+          }
+        </script>
+{% endblock %}

@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{ type:'all', q:'',
+                      chips: [{ k:'range', label:'Last 30 days' }, { k:'actor', label:'All actors' }] }">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Activity Log</h1>
+              <p class="ax-page-head__subtitle">A complete audit trail of account and workspace events.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export CSV</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- FILTER BAR -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Filters">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:wrap;">
+                <div style="position:relative;flex:1 1 240px;min-width:200px;">
+                  <svg style="position:absolute;left:var(--ax-space-3);top:50%;transform:translateY(-50%);color:var(--ax-text-subtle);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 0 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                  <input type="search" class="ax-input" placeholder="Search events…" x-model="q" aria-label="Search events" style="padding-inline-start:var(--ax-space-8);">
+                </div>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                  <span class="ax-btn__label">Last 30 days</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+                <select class="ax-select" aria-label="Filter by actor" style="max-width:180px;"><option>All actors</option><option>Maya Albright</option><option>Devon Okafor</option><option>System</option></select>
+              </div>
+              <!-- event-type multi-select as filter chips -->
+              <div class="ax-cluster" style="gap:var(--ax-space-2);" role="group" aria-label="Event types">
+                <button type="button" class="ax-badge ax-badge--filter ax-badge--pill" :class="{ 'is-selected': type==='all' }" :aria-pressed="type==='all'" @click="type='all'">All events</button>
+                <button type="button" class="ax-badge ax-badge--filter ax-badge--pill" :class="{ 'is-selected': type==='auth' }" :aria-pressed="type==='auth'" @click="type='auth'">Sign-in</button>
+                <button type="button" class="ax-badge ax-badge--filter ax-badge--pill" :class="{ 'is-selected': type==='settings' }" :aria-pressed="type==='settings'" @click="type='settings'">Settings</button>
+                <button type="button" class="ax-badge ax-badge--filter ax-badge--pill" :class="{ 'is-selected': type==='billing' }" :aria-pressed="type==='billing'" @click="type='billing'">Billing</button>
+                <button type="button" class="ax-badge ax-badge--filter ax-badge--pill" :class="{ 'is-selected': type==='security' }" :aria-pressed="type==='security'" @click="type='security'">Security</button>
+                <button type="button" class="ax-badge ax-badge--filter ax-badge--pill" :class="{ 'is-selected': type==='data' }" :aria-pressed="type==='data'" @click="type='data'">Data</button>
+              </div>
+              <!-- active filter chips + clear -->
+              <div class="ax-cluster" style="gap:var(--ax-space-2);" x-show="chips.length || type!=='all'">
+                <span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Active:</span>
+                <template x-for="c in chips" :key="c.k">
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill"><span x-text="c.label"></span><button type="button" class="ax-badge__remove" :aria-label="'Remove ' + c.label" @click="chips = chips.filter(x => x.k !== c.k)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                </template>
+                <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="chips=[]; type='all'; q=''">Clear all</button>
+              </div>
+            </div>
+          </section>
+
+          <!-- TIMELINE FEED -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Activity feed">
+            <div class="ax-card__body" style="padding-top:var(--ax-space-5);">
+
+              <!-- TODAY -->
+              <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);margin-bottom:var(--ax-space-3);">Today · Jun 27</div>
+              <ol class="ax-timeline" style="list-style:none;">
+                <!-- security entry, expandable -->
+                <li class="ax-timeline__item" x-data="{ open:false }" x-show="type==='all'||type==='security'">
+                  <span class="ax-timeline__marker" style="color:var(--ax-warning-500);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/><path d="M11 11a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M12 12l0 2.5"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:space-between;flex-wrap:nowrap;">
+                      <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Maya Albright</b> changed a member role <span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill">Security</span></p>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-expanded="open" aria-controls="diff-1" @click="open=!open" aria-label="Toggle details"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="open?'transform:rotate(180deg)':''"><path d="M6 9l6 6l6 -6"/></svg></button>
+                    </div>
+                    <span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">11:24 · 84.91.12.4 · macOS</span>
+                    <div id="diff-1" x-show="open" x-collapse x-cloak style="margin-top:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);overflow:hidden;">
+                      <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-2) var(--ax-space-3);background:var(--ax-surface-subtle);font-size:var(--ax-text-xs);"><span style="color:var(--ax-text-muted);">Member</span><span style="color:var(--ax-text);">Henry Whitlock</span></div>
+                      <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-2) var(--ax-space-3);font-size:var(--ax-text-xs);"><span style="color:var(--ax-text-muted);">Role</span><span class="ax-num" style="font-family:var(--ax-font-mono);"><span style="color:var(--ax-danger-500);text-decoration:line-through;">Editor</span> → <span style="color:var(--ax-success-500);">Admin</span></span></div>
+                    </div>
+                  </div>
+                </li>
+                <!-- billing entry -->
+                <li class="ax-timeline__item" x-show="type==='all'||type==='billing'">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -8"/><path d="M3 10l18 0"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Maya Albright</b> added a payment method <span style="color:var(--ax-text);">Visa ••4921</span> <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Billing</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">10:08 · 84.91.12.4</span></div>
+                </li>
+                <!-- settings entry -->
+                <li class="ax-timeline__item ax-timeline__item--success" x-show="type==='all'||type==='settings'">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Devon Okafor</b> enabled <span style="color:var(--ax-text);">weekly digest</span> emails <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Settings</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">09:31 · 88.22.4.10</span></div>
+                </li>
+              </ol>
+
+              <!-- YESTERDAY -->
+              <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);margin:var(--ax-space-5) 0 var(--ax-space-3);">Yesterday · Jun 26</div>
+              <ol class="ax-timeline" style="list-style:none;">
+                <li class="ax-timeline__item" x-show="type==='all'||type==='auth'">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-cyan);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2"/><path d="M9 12h12l-3 -3"/><path d="M18 15l3 -3"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Maya Albright</b> signed in from <span style="color:var(--ax-text);">Lisbon, Portugal</span> <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Sign-in</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">18:47 · Chrome 126 · 84.91.12.4</span></div>
+                </li>
+                <li class="ax-timeline__item" x-data="{ open:false }" x-show="type==='all'||type==='settings'">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg></span>
+                  <div class="ax-timeline__content">
+                    <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:space-between;flex-wrap:nowrap;">
+                      <p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Maya Albright</b> updated workspace name <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Settings</span></p>
+                      <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-expanded="open" aria-controls="diff-2" @click="open=!open" aria-label="Toggle details"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="open?'transform:rotate(180deg)':''"><path d="M6 9l6 6l6 -6"/></svg></button>
+                    </div>
+                    <span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">16:02 · 84.91.12.4</span>
+                    <div id="diff-2" x-show="open" x-collapse x-cloak style="margin-top:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);overflow:hidden;">
+                      <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-2) var(--ax-space-3);font-size:var(--ax-text-xs);"><span style="color:var(--ax-text-muted);">Workspace</span><span class="ax-num" style="font-family:var(--ax-font-mono);"><span style="color:var(--ax-danger-500);text-decoration:line-through;">Northwind</span> → <span style="color:var(--ax-success-500);">Northwind Studio</span></span></div>
+                    </div>
+                  </div>
+                </li>
+                <li class="ax-timeline__item ax-timeline__item--danger" x-show="type==='all'||type==='auth'||type==='security'">
+                  <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title">Failed sign-in attempt for <b style="color:var(--ax-text-strong);">maya.albright</b> <span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">Security</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">03:11 · 45.12.88.201 · unknown</span></div>
+                </li>
+              </ol>
+
+              <!-- EARLIER -->
+              <div style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);margin:var(--ax-space-5) 0 var(--ax-space-3);">Earlier · Jun 24</div>
+              <ol class="ax-timeline" style="list-style:none;">
+                <li class="ax-timeline__item" x-show="type==='all'||type==='data'">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-emerald);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M5 21v-16a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/><path d="M9 13l2 2l4 -4"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Priya Nair</b> exported <span style="color:var(--ax-text);">Q2 analytics report</span> <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Data</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">Jun 24 · 14:20</span></div>
+                </li>
+                <li class="ax-timeline__item" x-show="type==='all'||type==='billing'">
+                  <span class="ax-timeline__marker" style="color:var(--ax-viz-amber);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                  <div class="ax-timeline__content"><p class="ax-timeline__title">Invoice <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);">INV-2026-0614</span> was paid · <b class="ax-num" style="font-family:var(--ax-font-mono);">$48.00</b> <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">Billing</span></p><span class="ax-timeline__time ax-num" style="font-family:var(--ax-font-mono);">Jun 24 · 09:00</span></div>
+                </li>
+              </ol>
+
+              <!-- load more + end -->
+              <div class="ax-cluster" style="justify-content:center;margin-top:var(--ax-space-5);">
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">Load older events</button>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      
+</div>
+{% endblock %}

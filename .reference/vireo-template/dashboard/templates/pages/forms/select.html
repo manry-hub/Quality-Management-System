@@ -1,0 +1,285 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Enhanced Select</h1>
+              <p class="ax-page-head__subtitle">Searchable, multi-select with chips, tag creation &amp; a tree picker — fully keyboard &amp; ARIA aware.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/forms/elements/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9l4 -4l4 4"/><path d="M16 15l-4 4l-4 -4"/></svg>
+                <span class="ax-btn__label">Native selects</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Single searchable combobox ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Searchable single select"
+            x-data="{
+              open:false, query:'', value:'United States',
+              groups:{
+                'Americas':['United States','Canada','Brazil','Mexico'],
+                'Europe':['United Kingdom','Germany','France','Spain','Netherlands'],
+                'Asia Pacific':['Japan','Singapore','Australia','India']
+              },
+              get filtered(){
+                const q=this.query.toLowerCase(); const out={};
+                for(const[g,items]of Object.entries(this.groups)){
+                  const m=items.filter(i=>i.toLowerCase().includes(q)); if(m.length)out[g]=m;
+                } return out;
+              },
+              get empty(){ return Object.keys(this.filtered).length===0; },
+              pick(v){ this.value=v; this.open=false; this.query=''; }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Combobox</span>
+                <h2 class="ax-card__title">Searchable Single</h2>
+                <p class="ax-card__subtitle">Type to filter grouped options.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field">
+                <label class="ax-label" id="cs-label">Country</label>
+                <div class="ax-combobox" @click.outside="open=false" @keydown.escape="open=false">
+                  <button type="button" class="ax-combobox__trigger" :aria-expanded="open" aria-haspopup="listbox" aria-labelledby="cs-label" @click="open=!open">
+                    <span class="ax-combobox__value" x-text="value"></span>
+                    <svg class="ax-combobox__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-combobox__panel" x-show="open" x-cloak x-transition.opacity role="listbox" aria-labelledby="cs-label">
+                    <input type="text" class="ax-combobox__search" placeholder="Search countries…" x-model="query" x-ref="search" @keydown.escape.stop="open=false" aria-label="Search countries">
+                    <template x-for="(items,g) in filtered" :key="g">
+                      <div>
+                        <div class="ax-combobox__group-label" x-text="g"></div>
+                        <template x-for="item in items" :key="item">
+                          <div class="ax-combobox__option" role="option" :aria-selected="value===item" @click="pick(item)">
+                            <span x-text="item" style="flex:1;"></span>
+                            <svg x-show="value===item" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                          </div>
+                        </template>
+                      </div>
+                    </template>
+                    <div class="ax-combobox__empty" x-show="empty">No countries match "<span x-text="query"></span>".</div>
+                  </div>
+                </div>
+                <span class="ax-help">Drives the region label and postal mask elsewhere.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Multi-select with chips ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Multi select with chips"
+            x-data="{
+              open:false, query:'',
+              all:['Design','Engineering','Marketing','Sales','Support','Finance','Operations','Legal'],
+              selected:['Design','Engineering'],
+              get filtered(){ return this.all.filter(o=>!this.selected.includes(o) && o.toLowerCase().includes(this.query.toLowerCase())); },
+              toggle(o){ this.selected.includes(o) ? this.remove(o) : this.selected.push(o); this.query=''; },
+              remove(o){ this.selected = this.selected.filter(s=>s!==o); }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Combobox</span>
+                <h2 class="ax-card__title">Multi-select Chips</h2>
+                <p class="ax-card__subtitle">Choose several; remove with the chip ✕.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field">
+                <label class="ax-label" id="cm-label">Departments</label>
+                <div class="ax-combobox" @click.outside="open=false" @keydown.escape="open=false">
+                  <div class="ax-combobox__trigger" :aria-expanded="open" style="flex-wrap:wrap;gap:var(--ax-space-1);min-height:var(--ax-control-h);height:auto;padding-block:var(--ax-space-1);align-items:center;" @click="open=true">
+                    <template x-for="o in selected" :key="o">
+                      <span class="ax-badge ax-badge--soft" style="gap:var(--ax-space-1);">
+                        <span x-text="o"></span>
+                        <button type="button" @click.stop="remove(o)" :aria-label="'Remove ' + o" style="display:inline-flex;border:0;background:none;color:inherit;cursor:pointer;padding:0;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                      </span>
+                    </template>
+                    <span x-show="!selected.length" style="color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">Select departments…</span>
+                    <svg class="ax-combobox__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-inline-start:auto;"><path d="M6 9l6 6l6 -6"/></svg>
+                  </div>
+                  <div class="ax-combobox__panel" x-show="open" x-cloak x-transition.opacity role="listbox" aria-labelledby="cm-label" aria-multiselectable="true">
+                    <input type="text" class="ax-combobox__search" placeholder="Filter…" x-model="query" aria-label="Filter departments">
+                    <template x-for="o in filtered" :key="o">
+                      <div class="ax-combobox__option" role="option" aria-selected="false" @click="toggle(o)">
+                        <span class="ax-checkbox" aria-hidden="true" style="pointer-events:none;"></span>
+                        <span x-text="o"></span>
+                      </div>
+                    </template>
+                    <div class="ax-combobox__empty" x-show="!filtered.length">Everything is selected.</div>
+                  </div>
+                </div>
+                <span class="ax-help"><span class="ax-num" x-text="selected.length"></span> of <span class="ax-num" x-text="all.length"></span> selected.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Tag / create input ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Tag creation input"
+            x-data="{
+              tags:['aurora','glassmorphism','dark-mode'], draft:'',
+              add(){ const v=this.draft.trim().replace(/,$/,''); if(v && !this.tags.includes(v)){ this.tags.push(v); } this.draft=''; },
+              backspace(){ if(!this.draft && this.tags.length) this.tags.pop(); },
+              remove(t){ this.tags = this.tags.filter(x=>x!==t); }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Tags</span>
+                <h2 class="ax-card__title">Create Tags</h2>
+                <p class="ax-card__subtitle">Press Enter or comma to add; Backspace removes the last.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field">
+                <label class="ax-label" for="ct-input">Project tags</label>
+                <div class="ax-tags" @click="$refs.tinput.focus()">
+                  <template x-for="t in tags" :key="t">
+                    <span class="ax-badge ax-badge--soft" style="gap:var(--ax-space-1);">
+                      <span x-text="t"></span>
+                      <button type="button" @click="remove(t)" :aria-label="'Remove ' + t" style="display:inline-flex;border:0;background:none;color:inherit;cursor:pointer;padding:0;"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                    </span>
+                  </template>
+                  <input id="ct-input" type="text" class="ax-tags__input" x-ref="tinput" x-model="draft"
+                         placeholder="Add a tag…" @keydown.enter.prevent="add()" @keydown.comma.prevent="add()" @keydown.backspace="backspace()">
+                </div>
+                <span class="ax-help">Tags are lowercased and de-duplicated automatically.</span>
+              </div>
+              <div style="margin-top:var(--ax-space-5);">
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Suggested</div>
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <template x-for="s in ['responsive','accessibility','tailwind','alpine','vite']" :key="s">
+                    <button type="button" class="ax-badge ax-badge--soft ax-badge--pill" style="cursor:pointer;border-style:dashed;" @click="if(!tags.includes(s))tags.push(s)">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                      <span x-text="s"></span>
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Tree select ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Tree select"
+            x-data="{
+              open:false, value:'Lighting', valuePath:'Home › Decor › Lighting',
+              expanded:{ home:true, decor:true, apparel:false },
+              pick(name,path){ this.value=name; this.valuePath=path; this.open=false; }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Tree</span>
+                <h2 class="ax-card__title">Tree Select</h2>
+                <p class="ax-card__subtitle">Nested categories with disclosure carets.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field">
+                <label class="ax-label" id="ctree-label">Category</label>
+                <div class="ax-combobox" @click.outside="open=false" @keydown.escape="open=false">
+                  <button type="button" class="ax-combobox__trigger" :aria-expanded="open" aria-haspopup="tree" aria-labelledby="ctree-label" @click="open=!open">
+                    <span class="ax-combobox__value" style="display:flex;flex-direction:column;gap:1px;">
+                      <span x-text="value" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);"></span>
+                      <span x-text="valuePath" style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);"></span>
+                    </span>
+                    <svg class="ax-combobox__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                  </button>
+                  <div class="ax-combobox__panel" x-show="open" x-cloak x-transition.opacity role="tree" aria-labelledby="ctree-label">
+                    <!-- Home branch -->
+                    <div role="treeitem" :aria-expanded="expanded.home">
+                      <div class="ax-combobox__option" @click="expanded.home=!expanded.home" style="font-weight:var(--ax-weight-medium);">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="expanded.home ? 'transform:rotate(90deg);transition:.15s' : 'transition:.15s'"><path d="M9 6l6 6l-6 6"/></svg>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-cyan);"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/></svg>
+                        <span>Home</span>
+                      </div>
+                      <div x-show="expanded.home" style="padding-inline-start:var(--ax-space-5);">
+                        <div role="treeitem" :aria-expanded="expanded.decor">
+                          <div class="ax-combobox__option" @click="expanded.decor=!expanded.decor" style="font-weight:var(--ax-weight-medium);">
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="expanded.decor ? 'transform:rotate(90deg);transition:.15s' : 'transition:.15s'"><path d="M9 6l6 6l-6 6"/></svg>
+                            <span>Decor</span>
+                          </div>
+                          <div x-show="expanded.decor" style="padding-inline-start:var(--ax-space-5);">
+                            <div class="ax-combobox__option" role="treeitem" :aria-selected="value==='Lighting'" @click="pick('Lighting','Home › Decor › Lighting')"><span style="width:16px;"></span><span style="flex:1;">Lighting</span><svg x-show="value==='Lighting'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></div>
+                            <div class="ax-combobox__option" role="treeitem" :aria-selected="value==='Rugs'" @click="pick('Rugs','Home › Decor › Rugs')"><span style="width:16px;"></span><span style="flex:1;">Rugs</span><svg x-show="value==='Rugs'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></div>
+                            <div class="ax-combobox__option" role="treeitem" :aria-selected="value==='Wall Art'" @click="pick('Wall Art','Home › Decor › Wall Art')"><span style="width:16px;"></span><span style="flex:1;">Wall Art</span><svg x-show="value==='Wall Art'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></div>
+                          </div>
+                        </div>
+                        <div class="ax-combobox__option" role="treeitem" :aria-selected="value==='Furniture'" @click="pick('Furniture','Home › Furniture')"><span style="width:16px;"></span><span style="flex:1;">Furniture</span><svg x-show="value==='Furniture'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></div>
+                      </div>
+                    </div>
+                    <!-- Apparel branch -->
+                    <div role="treeitem" :aria-expanded="expanded.apparel">
+                      <div class="ax-combobox__option" @click="expanded.apparel=!expanded.apparel" style="font-weight:var(--ax-weight-medium);">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" :style="expanded.apparel ? 'transform:rotate(90deg);transition:.15s' : 'transition:.15s'"><path d="M9 6l6 6l-6 6"/></svg>
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-violet);"><path d="M5 12l-2 0l9 -9l9 9l-2 0"/><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"/></svg>
+                        <span>Apparel</span>
+                      </div>
+                      <div x-show="expanded.apparel" style="padding-inline-start:var(--ax-space-5);">
+                        <div class="ax-combobox__option" role="treeitem" :aria-selected="value==='Outerwear'" @click="pick('Outerwear','Apparel › Outerwear')"><span style="width:16px;"></span><span style="flex:1;">Outerwear</span></div>
+                        <div class="ax-combobox__option" role="treeitem" :aria-selected="value==='Footwear'" @click="pick('Footwear','Apparel › Footwear')"><span style="width:16px;"></span><span style="flex:1;">Footwear</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <span class="ax-help">Selected path: <span x-text="valuePath" style="color:var(--ax-text);"></span></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── States: loading / remote / error ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Select states">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">States</span>
+                <h2 class="ax-card__title">Panel States</h2>
+                <p class="ax-card__subtitle">Loading, empty &amp; error — how remote-backed selects communicate.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--ax-space-4);">
+              <!-- loading -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Loading</div>
+                <div class="ax-combobox__panel" style="position:static;max-height:none;">
+                  <div class="ax-combobox__empty" style="display:flex;align-items:center;justify-content:center;gap:var(--ax-space-2);">
+                    <span class="ax-spinner ax-spinner--sm" aria-hidden="true"></span>
+                    <span>Loading options…</span>
+                  </div>
+                </div>
+              </div>
+              <!-- empty -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">No results</div>
+                <div class="ax-combobox__panel" style="position:static;max-height:none;">
+                  <input type="text" class="ax-combobox__search" value="zzqx" readonly aria-label="Search">
+                  <div class="ax-combobox__empty">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-text-subtle);margin-bottom:var(--ax-space-1);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                    <div>No matches for "zzqx".</div>
+                  </div>
+                </div>
+              </div>
+              <!-- error -->
+              <div>
+                <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Error</div>
+                <div class="ax-combobox__panel" style="position:static;max-height:none;">
+                  <div class="ax-combobox__empty" style="color:var(--ax-danger-500);">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="margin-bottom:var(--ax-space-1);"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+                    <div>Couldn't load options.</div>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="margin-top:var(--ax-space-2);"><span class="ax-btn__label">Retry</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}

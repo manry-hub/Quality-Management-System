@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{# Nested Menu — faithful re-expression of src/html/pages/nested-menu.html: a
+   four-level ARIA tree (roving tabindex, arrow-key model, localStorage persist),
+   depth legend and keyboard-model card. axNestedTree() + the page style live in
+   the scripts block. Reference hrefs converted to clean Django routes. #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Nested Menu</h1>
+              <p class="ax-page-head__subtitle">A multi-level navigation tree — proves the information architecture down to four levels of depth.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost" x-data @click="$dispatch('ax-tree-collapse')">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Collapse all</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--secondary" x-data @click="$dispatch('ax-tree-expand')">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                <span class="ax-btn__label">Expand all</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Nested tree ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Nested navigation tree"
+            x-data="axNestedTree()"
+            @ax-tree-collapse.window="collapseAll()" @ax-tree-expand.window="expandAll()">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Information architecture · §5</span>
+                <h2 class="ax-card__title">Workspace Navigation</h2>
+                <p class="ax-card__subtitle">Use ↑ ↓ to move, → ← to open or close, Enter to open a page</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:var(--ax-space-2);">
+              <ul role="tree" aria-label="Workspace navigation" class="ax-tree"
+                style="list-style:none;margin:0;padding:0;font-size:var(--ax-text-sm);"
+                @keydown="onKey($event)">
+
+                <!-- ───────────── L1: Dashboards ───────────── -->
+                <li role="treeitem" :aria-expanded="open.dash" aria-current="false" :data-active="false">
+                  <button type="button" data-key="dash" class="ax-tree__node" :tabindex="focusKey==='dash'?0:-1" :class="focusKey==='dash' && 'is-focused'" @click="toggle('dash')" @focus="focusKey='dash'"
+                    style="display:flex;align-items:center;gap:var(--ax-space-2);width:100%;min-height:36px;padding:0 var(--ax-space-2);border:0;border-radius:var(--ax-radius-sm);background:transparent;color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);cursor:pointer;text-align:start;">
+                    <svg class="ax-tree__caret" :style="open.dash && 'transform:rotate(90deg);'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;color:var(--ax-text-subtle);transition:transform var(--ax-motion-base) var(--ax-ease-standard);"><path d="M9 6l6 6l-6 6"/></svg>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-accent);flex:0 0 auto;"><path d="M4 4h6v8h-6z"/><path d="M4 16h6v4h-6z"/><path d="M14 12h6v8h-6z"/><path d="M14 4h6v4h-6z"/></svg>
+                    <span style="flex:1 1 auto;">Dashboards</span>
+                    <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm ax-num">17</span>
+                  </button>
+                  <ul role="group" x-show="open.dash" x-collapse style="list-style:none;margin:0;padding-inline-start:var(--ax-space-4);border-inline-start:1px solid var(--ax-border);margin-inline-start:var(--ax-space-3);">
+                    <li role="treeitem">
+                      <a href="/" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Sales</a>
+                    </li>
+                    <li role="treeitem">
+                      <a href="/dashboards/analytics/" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Analytics</a>
+                    </li>
+                    <li role="treeitem">
+                      <a href="/dashboards/ecommerce/" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>eCommerce</a>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- ───────────── L1: eCommerce (deep: L2 > L3 > L4) ───────────── -->
+                <li role="treeitem" :aria-expanded="open.ecom">
+                  <button type="button" data-key="ecom" class="ax-tree__node" :tabindex="focusKey==='ecom'?0:-1" :class="focusKey==='ecom' && 'is-focused'" @click="toggle('ecom')" @focus="focusKey='ecom'"
+                    style="display:flex;align-items:center;gap:var(--ax-space-2);width:100%;min-height:36px;padding:0 var(--ax-space-2);border:0;border-radius:var(--ax-radius-sm);background:transparent;color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);cursor:pointer;text-align:start;">
+                    <svg :style="open.ecom && 'transform:rotate(90deg);'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;color:var(--ax-text-subtle);transition:transform var(--ax-motion-base) var(--ax-ease-standard);"><path d="M9 6l6 6l-6 6"/></svg>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-accent);flex:0 0 auto;"><path d="M3 21l18 0"/><path d="M3 21v-13l9 -4l9 4v13"/><path d="M13 13h4v8h-10v-6h6"/></svg>
+                    <span style="flex:1 1 auto;">eCommerce</span>
+                    <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm">L1</span>
+                  </button>
+                  <ul role="group" x-show="open.ecom" x-collapse style="list-style:none;margin:0;padding-inline-start:var(--ax-space-4);border-inline-start:1px solid var(--ax-border);margin-inline-start:var(--ax-space-3);">
+                    <!-- L2: Catalog -->
+                    <li role="treeitem" :aria-expanded="open.catalog">
+                      <button type="button" data-key="catalog" class="ax-tree__node" :tabindex="focusKey==='catalog'?0:-1" :class="focusKey==='catalog' && 'is-focused'" @click="toggle('catalog')" @focus="focusKey='catalog'"
+                        style="display:flex;align-items:center;gap:var(--ax-space-2);width:100%;min-height:34px;padding:0 var(--ax-space-2);border:0;border-radius:var(--ax-radius-sm);background:transparent;color:var(--ax-text);cursor:pointer;text-align:start;">
+                        <svg :style="open.catalog && 'transform:rotate(90deg);'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;color:var(--ax-text-subtle);transition:transform var(--ax-motion-base) var(--ax-ease-standard);"><path d="M9 6l6 6l-6 6"/></svg>
+                        <span style="flex:1 1 auto;">Catalog</span>
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm">L2</span>
+                      </button>
+                      <ul role="group" x-show="open.catalog" x-collapse style="list-style:none;margin:0;padding-inline-start:var(--ax-space-4);border-inline-start:1px solid var(--ax-border);margin-inline-start:var(--ax-space-3);">
+                        <!-- L3: Products -->
+                        <li role="treeitem" :aria-expanded="open.products">
+                          <button type="button" data-key="products" class="ax-tree__node" :tabindex="focusKey==='products'?0:-1" :class="focusKey==='products' && 'is-focused'" @click="toggle('products')" @focus="focusKey='products'"
+                            style="display:flex;align-items:center;gap:var(--ax-space-2);width:100%;min-height:32px;padding:0 var(--ax-space-2);border:0;border-radius:var(--ax-radius-sm);background:transparent;color:var(--ax-text);cursor:pointer;text-align:start;">
+                            <svg :style="open.products && 'transform:rotate(90deg);'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;color:var(--ax-text-subtle);transition:transform var(--ax-motion-base) var(--ax-ease-standard);"><path d="M9 6l6 6l-6 6"/></svg>
+                            <span style="flex:1 1 auto;">Products</span>
+                            <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--sm">L3 · max</span>
+                          </button>
+                          <!-- L4: leaves (deepest level) -->
+                          <ul role="group" x-show="open.products" x-collapse style="list-style:none;margin:0;padding-inline-start:var(--ax-space-4);border-inline-start:1px solid var(--ax-border);margin-inline-start:var(--ax-space-3);">
+                            <li role="treeitem">
+                              <a href="#" class="ax-tree__leaf is-current" aria-current="page" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:30px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-accent);text-decoration:none;font-weight:var(--ax-weight-medium);"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-accent);flex:0 0 auto;"></span>All products <span class="ax-badge ax-badge--soft ax-badge--accent ax-badge--sm ax-num" style="margin-inline-start:auto;">L4</span></a>
+                            </li>
+                            <li role="treeitem"><a href="#" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:30px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Add product</a></li>
+                            <li role="treeitem"><a href="#" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:30px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Import / Export</a></li>
+                          </ul>
+                        </li>
+                        <li role="treeitem"><a href="#" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Categories <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm" style="margin-inline-start:auto;">L3</span></a></li>
+                        <li role="treeitem"><a href="#" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Inventory</a></li>
+                      </ul>
+                    </li>
+                    <!-- L2: Orders -->
+                    <li role="treeitem" :aria-expanded="open.orders">
+                      <button type="button" data-key="orders" class="ax-tree__node" :tabindex="focusKey==='orders'?0:-1" :class="focusKey==='orders' && 'is-focused'" @click="toggle('orders')" @focus="focusKey='orders'"
+                        style="display:flex;align-items:center;gap:var(--ax-space-2);width:100%;min-height:34px;padding:0 var(--ax-space-2);border:0;border-radius:var(--ax-radius-sm);background:transparent;color:var(--ax-text);cursor:pointer;text-align:start;">
+                        <svg :style="open.orders && 'transform:rotate(90deg);'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;color:var(--ax-text-subtle);transition:transform var(--ax-motion-base) var(--ax-ease-standard);"><path d="M9 6l6 6l-6 6"/></svg>
+                        <span style="flex:1 1 auto;">Orders</span>
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--sm ax-num">128</span>
+                      </button>
+                      <ul role="group" x-show="open.orders" x-collapse style="list-style:none;margin:0;padding-inline-start:var(--ax-space-4);border-inline-start:1px solid var(--ax-border);margin-inline-start:var(--ax-space-3);">
+                        <li role="treeitem"><a href="#" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Open orders</a></li>
+                        <li role="treeitem"><a href="#" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Refunds</a></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+
+                <!-- ───────────── L1: Settings (single level) ───────────── -->
+                <li role="treeitem" :aria-expanded="open.settings">
+                  <button type="button" data-key="settings" class="ax-tree__node" :tabindex="focusKey==='settings'?0:-1" :class="focusKey==='settings' && 'is-focused'" @click="toggle('settings')" @focus="focusKey='settings'"
+                    style="display:flex;align-items:center;gap:var(--ax-space-2);width:100%;min-height:36px;padding:0 var(--ax-space-2);border:0;border-radius:var(--ax-radius-sm);background:transparent;color:var(--ax-text-strong);font-weight:var(--ax-weight-medium);cursor:pointer;text-align:start;">
+                    <svg :style="open.settings && 'transform:rotate(90deg);'" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex:0 0 auto;color:var(--ax-text-subtle);transition:transform var(--ax-motion-base) var(--ax-ease-standard);"><path d="M9 6l6 6l-6 6"/></svg>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-accent);flex:0 0 auto;"><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065"/><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0"/></svg>
+                    <span style="flex:1 1 auto;">Settings</span>
+                  </button>
+                  <ul role="group" x-show="open.settings" x-collapse style="list-style:none;margin:0;padding-inline-start:var(--ax-space-4);border-inline-start:1px solid var(--ax-border);margin-inline-start:var(--ax-space-3);">
+                    <li role="treeitem"><a href="/pages/profile-settings/" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Workspace</a></li>
+                    <li role="treeitem"><a href="/pages/billing/" class="ax-tree__leaf" style="display:flex;align-items:center;gap:var(--ax-space-2);min-height:32px;padding:0 var(--ax-space-2);border-radius:var(--ax-radius-sm);color:var(--ax-text);text-decoration:none;"><span style="width:5px;height:5px;border-radius:50%;background:var(--ax-text-subtle);flex:0 0 auto;"></span>Billing</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── Depth legend + behaviour notes ───── -->
+          <div class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <section class="ax-card" role="region" aria-label="Depth legend">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Depth Legend</h2>
+                  <p class="ax-card__subtitle">Maximum nesting is four levels</p>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-num" style="min-width:34px;justify-content:center;">L1</span><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Section root — e.g. eCommerce</span></div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;margin-inline-start:var(--ax-space-3);"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-num" style="min-width:34px;justify-content:center;">L2</span><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Group — Catalog, Orders</span></div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;margin-inline-start:var(--ax-space-6);"><span class="ax-badge ax-badge--soft ax-badge--neutral ax-num" style="min-width:34px;justify-content:center;">L3</span><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Sub-group — Products</span></div>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;margin-inline-start:var(--ax-space-8);"><span class="ax-badge ax-badge--soft ax-badge--accent ax-num" style="min-width:34px;justify-content:center;">L4</span><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Leaf page — deepest allowed</span></div>
+              </div>
+            </section>
+
+            <section class="ax-card" role="region" aria-label="Keyboard model">
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Keyboard Model</h2>
+                </div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Move between nodes</span><span><kbd class="ax-kbd">↑</kbd> <kbd class="ax-kbd">↓</kbd></span></div>
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Open / descend</span><kbd class="ax-kbd">→</kbd></div>
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Close / ascend</span><kbd class="ax-kbd">←</kbd></div>
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Activate leaf</span><kbd class="ax-kbd">Enter</kbd></div>
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">First / last node</span><span><kbd class="ax-kbd">Home</kbd> <kbd class="ax-kbd">End</kbd></span></div>
+                <hr class="ax-divider" aria-hidden="true">
+                <p style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Open branches persist in <span class="ax-num">localStorage</span> (<code class="ax-num">ax:nested-menu:open</code>).</p>
+              </div>
+            </section>
+          </div>
+        </div>
+{% endblock %}
+
+{% block scripts %}
+  <style>
+    .ax-tree__node:hover, .ax-tree__leaf:hover { background: var(--ax-fill-hover); }
+    .ax-tree__node.is-focused, .ax-tree__leaf:focus-visible { outline: 2px solid var(--ax-focus-ring); outline-offset: -1px; }
+    @media (prefers-reduced-motion: reduce) { .ax-tree svg { transition: none !important; } }
+  </style>
+
+  <script>
+    function axNestedTree() {
+      const KEYS = ['dash','ecom','catalog','products','orders','settings'];
+      let saved = {};
+      try { saved = JSON.parse(localStorage.getItem('ax:nested-menu:open') || '{}'); } catch (e) {}
+      return {
+        focusKey: 'dash',
+        open: Object.assign({ dash:false, ecom:true, catalog:true, products:true, orders:false, settings:false }, saved),
+        persist() { try { localStorage.setItem('ax:nested-menu:open', JSON.stringify(this.open)); } catch (e) {} },
+        toggle(k) { this.open[k] = !this.open[k]; this.persist(); },
+        expandAll() { KEYS.forEach(k => this.open[k] = true); this.persist(); },
+        collapseAll() { KEYS.forEach(k => this.open[k] = false); this.persist(); },
+        // Roving-tabindex: walk the visible node buttons in DOM order.
+        visibleNodes() { return Array.from(this.$el.querySelectorAll('.ax-tree__node, .ax-tree__leaf')).filter(el => el.offsetParent !== null); },
+        onKey(e) {
+          const nodes = this.visibleNodes();
+          const cur = document.activeElement;
+          let i = nodes.indexOf(cur);
+          if (e.key === 'ArrowDown') { e.preventDefault(); if (i < nodes.length - 1) nodes[i + 1].focus(); }
+          else if (e.key === 'ArrowUp') { e.preventDefault(); if (i > 0) nodes[i - 1].focus(); }
+          else if (e.key === 'Home') { e.preventDefault(); nodes[0] && nodes[0].focus(); }
+          else if (e.key === 'End') { e.preventDefault(); nodes[nodes.length - 1] && nodes[nodes.length - 1].focus(); }
+          else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            const k = cur.matches('.ax-tree__node') ? cur.getAttribute('data-key') : null;
+            if (k && !this.open[k]) { this.open[k] = true; this.persist(); }
+            else if (i < nodes.length - 1) nodes[i + 1].focus();
+          }
+          else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            const k = cur.matches('.ax-tree__node') ? cur.getAttribute('data-key') : null;
+            if (k && this.open[k]) { this.open[k] = false; this.persist(); }
+            else if (i > 0) nodes[i - 1].focus();
+          }
+        },
+      };
+    }
+  </script>
+{% endblock %}

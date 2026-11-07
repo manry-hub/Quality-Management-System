@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{# Testimonials — faithful re-expression of src/html/pages/testimonials.html:
+   featured quote, role filter chips, masonry testimonial wall (Alpine-filtered)
+   and a logo strip. Reference hrefs converted to clean Django routes. #}
+
+{% block main %}
+<div x-data="{ filter: 'all' }">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Testimonials</h1>
+              <p class="ax-page-head__subtitle">What product teams, founders and engineers say about building on Vireo.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary" href="/pages/pricing/">
+                <span class="ax-btn__label">See pricing</span>
+              </a>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5"/><path d="M19 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5"/></svg>
+                <span class="ax-btn__label">Share your story</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ FEATURED QUOTE ════════════════ -->
+        <div class="ax-dash-grid">
+          <section class="ax-card ax-col--12 ax-card--accent-edge" role="region" aria-label="Featured testimonial">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-5);padding:var(--ax-space-8);">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="var(--ax-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="opacity:.9;"><path d="M10 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5"/><path d="M19 11h-4a1 1 0 0 1 -1 -1v-3a1 1 0 0 1 1 -1h3a1 1 0 0 1 1 1v6c0 2.667 -1.333 4.333 -4 5"/></svg>
+              <blockquote style="margin:0;font-family:var(--ax-font-display);font-size:var(--ax-text-xl);line-height:1.5;color:var(--ax-text-strong);font-weight:500;max-width:60ch;">
+                Vireo replaced three separate tools for us. The Aurora design system meant we shipped a fully branded admin in a weekend, not a quarter — and our customers actually compliment the dashboards now.
+              </blockquote>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--lg ax-avatar--ringed" style="background:color-mix(in oklab,var(--ax-viz-violet) 22%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">EM</span></span>
+                <div style="flex:1 1 auto;">
+                  <p style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Elena Márquez</p>
+                  <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">VP Engineering · Northwind Labs</p>
+                </div>
+                <span class="ax-rating" aria-label="Rated 5 of 5">
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                  <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                </span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════════════════ FILTER CHIPS ════════════════ -->
+        <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;margin-block:var(--ax-space-6) var(--ax-space-5);" role="group" aria-label="Filter testimonials by role">
+          <button type="button" class="ax-btn ax-btn--pill ax-btn--sm" :class="filter==='all' ? 'ax-btn--primary' : 'ax-btn--secondary'" @click="filter='all'">All</button>
+          <button type="button" class="ax-btn ax-btn--pill ax-btn--sm" :class="filter==='founder' ? 'ax-btn--primary' : 'ax-btn--secondary'" @click="filter='founder'">Founders</button>
+          <button type="button" class="ax-btn ax-btn--pill ax-btn--sm" :class="filter==='engineer' ? 'ax-btn--primary' : 'ax-btn--secondary'" @click="filter='engineer'">Engineers</button>
+          <button type="button" class="ax-btn ax-btn--pill ax-btn--sm" :class="filter==='designer' ? 'ax-btn--primary' : 'ax-btn--secondary'" @click="filter='designer'">Designers</button>
+          <button type="button" class="ax-btn ax-btn--pill ax-btn--sm" :class="filter==='pm' ? 'ax-btn--primary' : 'ax-btn--secondary'" @click="filter='pm'">Product</button>
+        </div>
+
+        <!-- ════════════════ MASONRY WALL ════════════════ -->
+        <div class="ax-masonry">
+
+          <article class="ax-card" x-show="filter==='all' || filter==='engineer'" role="region" aria-label="Testimonial from Marcus Bell">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 5 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">The component library is genuinely the best I've used. Tokens are clean, dark mode just works, and the charts re-theme with the accent automatically. Saved us weeks.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 22%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">MB</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Marcus Bell</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Staff Engineer · Quanta</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ax-card" x-show="filter==='all' || filter==='founder'" role="region" aria-label="Testimonial from Priya Anand">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 5 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">We launched our SaaS admin on Vireo and closed our first enterprise deal partly because the product looked so polished in the demo. It punches way above a template.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 22%,transparent);color:var(--ax-viz-pink);"><span class="ax-avatar__initials">PA</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Priya Anand</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Co-founder &amp; CEO · Cadence</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ax-card" x-show="filter==='all' || filter==='designer'" role="region" aria-label="Testimonial from Tom Riley">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 4 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">As a designer I'm picky about spacing and type. Vireo is the first template where I didn't immediately want to rip out the styles. The Aurora glass is tasteful.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 22%,transparent);color:var(--ax-viz-amber);"><span class="ax-avatar__initials">TR</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Tom Riley</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Lead Product Designer · Vellum</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ax-card" x-show="filter==='all' || filter==='pm'" role="region" aria-label="Testimonial from Sofia Castellano">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 5 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">Onboarding new PMs is so much faster now — every internal tool shares the same Vireo shell, so people already know where everything lives.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-emerald) 22%,transparent);color:var(--ax-viz-emerald);"><span class="ax-avatar__initials">SC</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Sofia Castellano</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Group PM · Helio</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ax-card" x-show="filter==='all' || filter==='engineer'" role="region" aria-label="Testimonial from Daniel Okonkwo">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 5 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">The Vite + Tailwind v4 setup is exactly how I'd build it myself. No fighting the framework. I added a custom dashboard in an afternoon and it felt native.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-cyan) 22%,transparent);color:var(--ax-viz-cyan);"><span class="ax-avatar__initials">DO</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Daniel Okonkwo</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Frontend Lead · Brightside</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ax-card" x-show="filter==='all' || filter==='founder'" role="region" aria-label="Testimonial from Hannah Lindqvist">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 5 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">Support has been outstanding — a real engineer answered my edge-case question within hours with a working snippet. That's rare for a one-time purchase.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-violet) 22%,transparent);color:var(--ax-viz-violet);"><span class="ax-avatar__initials">HL</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Hannah Lindqvist</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Founder · Tideway</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ax-card" x-show="filter==='all' || filter==='designer'" role="region" aria-label="Testimonial from Kenji Watanabe">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 5 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">12 accent presets and they all stay accessible. I switched our brand to teal in one click and every chart, badge and button followed. Honestly delightful.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-pink) 22%,transparent);color:var(--ax-viz-pink);"><span class="ax-avatar__initials">KW</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Kenji Watanabe</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Design Systems · Pace</p></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="ax-card" x-show="filter==='all' || filter==='pm'" role="region" aria-label="Testimonial from Grace Mwangi">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <span class="ax-rating ax-rating--sm" aria-label="Rated 4 of 5">
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star ax-rating__star--full" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+                <svg class="ax-rating__star" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873z"/></svg>
+              </span>
+              <p style="color:var(--ax-text);line-height:1.65;font-size:var(--ax-text-md);">The breadth is impressive — 17 dashboards, e-commerce, CRM, all consistent. We picked the analytics dashboard as our starting point and barely changed a thing.</p>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                <span class="ax-avatar ax-avatar--sm" style="background:color-mix(in oklab,var(--ax-viz-amber) 22%,transparent);color:var(--ax-viz-amber);"><span class="ax-avatar__initials">GM</span></span>
+                <div><p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);">Grace Mwangi</p><p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Senior PM · Loftworks</p></div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <!-- ════════════════ LOGO STRIP ════════════════ -->
+        <div class="ax-dash-grid" style="margin-block-start:var(--ax-space-8);">
+          <section class="ax-card ax-col--12" role="region" aria-label="Companies building on Vireo">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-5);padding-block:var(--ax-space-7);">
+              <p class="ax-eyebrow" style="text-align:center;">Trusted by teams at</p>
+              <div class="ax-cluster" style="justify-content:center;gap:var(--ax-space-8);flex-wrap:wrap;color:var(--ax-text-subtle);">
+                <span style="display:inline-flex;align-items:center;gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9z"/></svg>Northwind</span>
+                <span style="display:inline-flex;align-items:center;gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 3v18"/></svg>Cadence</span>
+                <span style="display:inline-flex;align-items:center;gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l16 0l0 16l-16 0z"/><path d="M9 9l6 6"/></svg>Vellum</span>
+                <span style="display:inline-flex;align-items:center;gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 17l-18 0z"/></svg>Helio</span>
+                <span style="display:inline-flex;align-items:center;gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M12 5v14"/></svg>Tideway</span>
+                <span style="display:inline-flex;align-items:center;gap:var(--ax-space-2);font-family:var(--ax-font-display);font-weight:700;font-size:var(--ax-text-lg);"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l8 -4l8 4l-8 4z"/><path d="M4 7v10l8 4l8 -4v-10"/></svg>Brightside</span>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <style>
+          .ax-masonry {
+            column-count: 1;
+            column-gap: var(--ax-space-6);
+          }
+          .ax-masonry > .ax-card {
+            break-inside: avoid;
+            margin-bottom: var(--ax-space-6);
+            display: inline-block;
+            width: 100%;
+          }
+          @media (min-width: 768px)  { .ax-masonry { column-count: 2; } }
+          @media (min-width: 1200px) { .ax-masonry { column-count: 3; } }
+        </style>
+
+</div>
+{% endblock %}

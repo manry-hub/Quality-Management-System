@@ -1,0 +1,310 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axOrders()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Orders</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num">1,284</span> orders this quarter — <span class="ax-num">36</span> awaiting fulfillment, <span class="ax-num">4</span> on hold.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">Create order</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI STRIP ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total orders 1,284, up 8.6%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M17 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>8.6%</span>
+              </div>
+              <div class="ax-kpi__label">Total orders</div>
+              <div class="ax-kpi__value ax-num">1,284</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Revenue $264,910, up 12.1%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3m0 12v3"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>12.1%</span>
+              </div>
+              <div class="ax-kpi__label">Revenue</div>
+              <div class="ax-kpi__value ax-num">$264,910</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Average order value $206.31, up 2.4%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 7v1m0 8v1"/><path d="M14.5 9.5a2.5 2 0 0 0 -2.5 -1.5h-1a2 2 0 1 0 0 4h1a2 2 0 1 1 0 4h-1a2.5 2 0 0 1 -2.5 -1.5"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>2.4%</span>
+              </div>
+              <div class="ax-kpi__label">Avg. order value</div>
+              <div class="ax-kpi__value ax-num">$206.31</div>
+            </div>
+          </div>
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Fulfilled rate 94.2%, down 1.3%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"/></svg></span>
+                <span class="ax-kpi__delta ax-kpi__delta--down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>1.3%</span>
+              </div>
+              <div class="ax-kpi__label">Fulfilled rate</div>
+              <div class="ax-kpi__value ax-num">94.2%</div>
+            </div>
+          </div>
+
+          <!-- ───── ORDERS TABLE ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Orders">
+
+            <!-- status tabs -->
+            <div class="ax-card__body" style="padding-bottom:0;overflow-x:auto;">
+              <div class="ax-tabs">
+                <div class="ax-tabs__list" role="tablist" aria-label="Filter orders by status">
+                  <template x-for="t in statusTabs" :key="t.id">
+                    <button type="button" class="ax-tabs__tab" role="tab"
+                            :class="{ 'is-active': tab===t.id }" :aria-selected="(tab===t.id).toString()"
+                            @click="tab=t.id; selected=[]"
+                            :style="tab===t.id ? 'box-shadow:inset 0 -2px 0 var(--ax-accent);' : ''">
+                      <span x-text="t.label"></span>
+                      <span class="ax-tabs__badge ax-badge ax-badge--soft ax-badge--neutral ax-num" x-text="t.count"></span>
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </div>
+
+            <!-- toolbar -->
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div style="position:relative;flex:1 1 240px;max-width:340px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+                <input type="search" class="ax-input" placeholder="Search order # or customer…" x-model="q" style="padding-inline-start:36px;" aria-label="Search orders">
+              </div>
+              <div class="ax-card__actions" style="flex-wrap:wrap;gap:var(--ax-space-2);">
+                <select class="ax-select ax-select--sm" x-model="fPayment" aria-label="Filter by payment status" style="min-width:140px;">
+                  <option value="">All payments</option>
+                  <option value="Paid">Paid</option>
+                  <option value="Unpaid">Unpaid</option>
+                  <option value="Partially paid">Partially paid</option>
+                  <option value="Refunded">Refunded</option>
+                  <option value="Failed">Failed</option>
+                </select>
+                <select class="ax-select ax-select--sm" x-model="fFulfill" aria-label="Filter by fulfillment" style="min-width:150px;">
+                  <option value="">All fulfillment</option>
+                  <option value="Unfulfilled">Unfulfilled</option>
+                  <option value="Partially fulfilled">Partially fulfilled</option>
+                  <option value="Fulfilled">Fulfilled</option>
+                  <option value="Returned">Returned</option>
+                </select>
+                <select class="ax-select ax-select--sm" x-model="sort" aria-label="Sort orders" style="min-width:140px;">
+                  <option value="newest">Newest first</option>
+                  <option value="oldest">Oldest first</option>
+                  <option value="total-desc">Total: high to low</option>
+                  <option value="total-asc">Total: low to high</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- bulk bar -->
+            <div x-show="selected.length" x-cloak x-transition
+              style="display:flex;align-items:center;gap:var(--ax-space-3);margin:0 var(--ax-space-5) var(--ax-space-3);padding:var(--ax-space-2) var(--ax-space-4);background:var(--ax-accent-wash);border:1px solid var(--ax-accent);border-radius:var(--ax-radius-md);flex-wrap:wrap;">
+              <b class="ax-num" style="color:var(--ax-accent);font-size:var(--ax-text-sm);"><span x-text="selected.length"></span> selected</b>
+              <span style="width:1px;height:18px;background:var(--ax-border-strong);"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8m0 -5h5l3 5"/></svg>
+                <span class="ax-btn__label">Mark fulfilled</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/><path d="M9 17a2 2 0 1 0 0 -4"/></svg>
+                <span class="ax-btn__label">Print</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm">Export</button>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" style="color:var(--ax-danger-500);">Cancel</button>
+              <span style="flex:1 1 auto;"></span>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Clear selection" @click="selected=[]"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+
+            <!-- table -->
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col" style="width:38px;"><input type="checkbox" class="ax-checkbox" aria-label="Select all orders" :checked="allSelected()" @change="toggleAll($event.target.checked)"></th>
+                    <th class="ax-table__th" scope="col">Order</th>
+                    <th class="ax-table__th" scope="col">Date</th>
+                    <th class="ax-table__th" scope="col">Customer</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Items</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col">Total</th>
+                    <th class="ax-table__th" scope="col">Payment</th>
+                    <th class="ax-table__th" scope="col">Fulfillment</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                    <th class="ax-table__th" scope="col" style="width:44px;"><span class="ax-visually-hidden">Actions</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="o in filtered()" :key="o.id">
+                    <tr class="ax-table__row" :style="selected.includes(o.id) ? 'background:var(--ax-accent-wash);' : ''">
+                      <td class="ax-table__td"><input type="checkbox" class="ax-checkbox" :value="o.id" x-model="selected" :aria-label="'Select order ' + o.no"></td>
+                      <td class="ax-table__td">
+                        <a href="/ecommerce/order-details/" class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-accent);font-weight:var(--ax-weight-semibold);text-decoration:none;" x-text="o.no"></a>
+                      </td>
+                      <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);white-space:nowrap;" x-text="o.date"></td>
+                      <td class="ax-table__td">
+                        <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                          <span class="ax-avatar ax-avatar--sm" :style="`background:color-mix(in oklab,${o.c} 18%,var(--ax-surface-solid));color:${o.c};`"><span class="ax-avatar__initials" x-text="o.initials"></span></span>
+                          <div style="min-width:0;">
+                            <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="o.customer"></div>
+                            <div class="ax-text-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="o.email"></div>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="o.items"></td>
+                      <td class="ax-table__td ax-table__td--num ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);" x-text="money(o.total)"></td>
+                      <td class="ax-table__td"><span x-html="payPill(o.payment)"></span></td>
+                      <td class="ax-table__td"><span x-html="fulfillPill(o.fulfillment)"></span></td>
+                      <td class="ax-table__td"><span x-html="statusPill(o.status)"></span></td>
+                      <td class="ax-table__td" style="text-align:end;">
+                        <button type="button" data-menu-trigger :data-row="o.id" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="toggleMenu(o.id)" :aria-label="'Actions for order ' + o.no" :aria-expanded="(menu===o.id).toString()" aria-haspopup="menu">
+                          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 19a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 5a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- empty state -->
+            <div x-show="!filtered().length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M6 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M17 19a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg></span>
+              <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">No orders match your filters</h3>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">Try a different status tab or clear your search.</p>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="q='';fPayment='';fFulfill='';tab='all'">Reset filters</button>
+            </div>
+
+            <!-- footer / pagination -->
+            <div class="ax-card__footer ax-flex" style="justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);" x-show="filtered().length" x-cloak>
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">Showing <span x-text="filtered().length"></span> of <span x-text="orders.length"></span> orders</span>
+              <nav class="ax-pagination" aria-label="Pagination">
+                <button type="button" class="ax-pagination__prev" disabled aria-disabled="true" aria-label="Previous page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                <ul class="ax-pagination__pages">
+                  <li><a href="#" class="ax-pagination__page is-active" aria-current="page">1</a></li>
+                  <li><a href="#" class="ax-pagination__page">2</a></li>
+                  <li><a href="#" class="ax-pagination__page">3</a></li>
+                  <li><span class="ax-pagination__ellipsis">…</span></li>
+                  <li><a href="#" class="ax-pagination__page">52</a></li>
+                </ul>
+                <button type="button" class="ax-pagination__next" aria-label="Next page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+              </nav>
+            </div>
+          </section>
+        </div>
+
+        <!-- ════════════════ ROW ACTIONS MENU ════════════════ -->
+        <!-- Teleported to <body> so it escapes the table-wrap's overflow-x clip; a single
+             shared menu positioned (fixed) at whichever 3-dots trigger is open. -->
+        <template x-teleport="body">
+          <div x-show="menu!==null" x-cloak x-transition class="ax-menu" role="menu"
+            @click.outside="if(!$event.target.closest('[data-menu-trigger]')) menu=null"
+            @keydown.escape.window="menu=null" @scroll.window.capture="positionMenu()" @resize.window="positionMenu()"
+            :style="`position:fixed;top:${menuY}px;inset-inline-end:${menuX}px;z-index:60;min-width:180px;`">
+            <a href="/ecommerce/order-details/" class="ax-menu__item" role="menuitem" @click="menu=null"><span class="ax-menu__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg></span>View order</a>
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><span class="ax-menu__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg></span>Print invoice</button>
+            <button type="button" class="ax-menu__item" role="menuitem" @click="menu=null"><span class="ax-menu__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8"/></svg></span>Mark fulfilled</button>
+            <div class="ax-menu__divider" role="separator"></div>
+            <button type="button" class="ax-menu__item ax-menu__item--danger" role="menuitem" @click="menu=null"><span class="ax-menu__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 13l3 3l3 -3"/><path d="M12 16v-6"/><path d="M4 6h16l-1 14a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2z"/></svg></span>Refund</button>
+            <button type="button" class="ax-menu__item ax-menu__item--danger" role="menuitem" @click="menu=null"><span class="ax-menu__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></span>Cancel order</button>
+          </div>
+        </template>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axOrders(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',red:'var(--ax-viz-red)'};
+            return {
+              q:'', tab:'all', fPayment:'', fFulfill:'', sort:'newest', selected:[], menu:null, menuX:0, menuY:0,
+              statusTabs:[
+                { id:'all', label:'All', count:1284 },
+                { id:'Pending', label:'Pending', count:18 },
+                { id:'Processing', label:'Processing', count:36 },
+                { id:'Shipped', label:'Shipped', count:212 },
+                { id:'Delivered', label:'Delivered', count:984 },
+                { id:'Cancelled', label:'Cancelled', count:22 },
+                { id:'Refunded', label:'Refunded', count:12 },
+              ],
+              orders:[
+                { id:1, no:'#ORD-8042', date:'Jun 27, 2026', customer:'Amelia Hart', email:'amelia.hart@gmail.com', initials:'AH', c:C.cyan, items:3, total:265.97, payment:'Paid', fulfillment:'Unfulfilled', status:'Processing' },
+                { id:2, no:'#ORD-8041', date:'Jun 27, 2026', customer:'Henry Whitlock', email:'h.whitlock@fastmail.com', initials:'HW', c:C.violet, items:1, total:129.00, payment:'Paid', fulfillment:'Fulfilled', status:'Shipped' },
+                { id:3, no:'#ORD-8038', date:'Jun 26, 2026', customer:'Camila Rossi', email:'camila.rossi@outlook.com', initials:'CR', c:C.amber, items:5, total:486.50, payment:'Paid', fulfillment:'Fulfilled', status:'Delivered' },
+                { id:4, no:'#ORD-8035', date:'Jun 26, 2026', customer:'Daniel Cho', email:'daniel.cho@kakao.com', initials:'DC', c:C.pink, items:2, total:74.00, payment:'Failed', fulfillment:'Unfulfilled', status:'Pending' },
+                { id:5, no:'#ORD-8031', date:'Jun 25, 2026', customer:'Priya Nair', email:'priya.nair@proton.me', initials:'PN', c:C.emerald, items:4, total:318.75, payment:'Partially paid', fulfillment:'Partially fulfilled', status:'Processing' },
+                { id:6, no:'#ORD-8029', date:'Jun 25, 2026', customer:'Tomás Herrera', email:'t.herrera@gmail.com', initials:'TH', c:C.cyan, items:1, total:182.00, payment:'Paid', fulfillment:'Fulfilled', status:'Delivered' },
+                { id:7, no:'#ORD-8024', date:'Jun 24, 2026', customer:'Lena Brandt', email:'lena.brandt@web.de', initials:'LB', c:C.violet, items:6, total:642.20, payment:'Paid', fulfillment:'Fulfilled', status:'Shipped' },
+                { id:8, no:'#ORD-8019', date:'Jun 24, 2026', customer:'Marcus Lindqvist', email:'m.lindqvist@telia.se', initials:'ML', c:C.amber, items:2, total:96.00, payment:'Refunded', fulfillment:'Returned', status:'Refunded' },
+                { id:9, no:'#ORD-8015', date:'Jun 23, 2026', customer:'Ava Sutton', email:'ava.sutton@icloud.com', initials:'AS', c:C.pink, items:3, total:228.40, payment:'Paid', fulfillment:'Fulfilled', status:'Delivered' },
+                { id:10, no:'#ORD-8011', date:'Jun 23, 2026', customer:'Devon Okafor', email:'devon.okafor@gmail.com', initials:'DO', c:C.emerald, items:1, total:44.00, payment:'Unpaid', fulfillment:'Unfulfilled', status:'Cancelled' },
+                { id:11, no:'#ORD-8006', date:'Jun 22, 2026', customer:'Sofia Marchetti', email:'s.marchetti@libero.it', initials:'SM', c:C.cyan, items:4, total:412.90, payment:'Paid', fulfillment:'Fulfilled', status:'Delivered' },
+                { id:12, no:'#ORD-8002', date:'Jun 22, 2026', customer:'Noah Bergström', email:'noah.berg@hotmail.com', initials:'NB', c:C.violet, items:2, total:158.00, payment:'Paid', fulfillment:'Partially fulfilled', status:'Processing' },
+              ],
+              money(v){ return '$' + v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              statusPill(s){
+                const map={
+                  Pending:['neutral','<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M8.5 8.5l0 .01"/><path d="M15.5 8.5l0 .01"/><path d="M8.5 15.5l0 .01"/><path d="M15.5 15.5l0 .01"/>'],
+                  Processing:['info','<path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 2"/>'],
+                  Shipped:['accent','<path d="M5 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 17a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M5 17h-2v-11a1 1 0 0 1 1 -1h9v12m-4 0h6m4 0h2v-6h-8"/>'],
+                  Delivered:['success','<path d="M5 12l5 5l10 -10"/>'],
+                  Cancelled:['neutral','<path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M10 10l4 4m0 -4l-4 4"/>'],
+                  Refunded:['danger','<path d="M9 14l-4 -4l4 -4"/><path d="M5 10h11a4 4 0 0 1 0 8h-1"/>'],
+                };
+                const [v,p]=map[s]||map.Pending;
+                return `<span class="ax-badge ax-badge--soft ax-badge--${v} ax-badge--pill" style="text-transform:uppercase;letter-spacing:.04em;font-size:var(--ax-text-2xs);"><span class="ax-badge__dot"></span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:12px;height:12px;">${p}</svg>${s}</span>`;
+              },
+              payPill(s){
+                const map={ 'Paid':'success','Unpaid':'info','Partially paid':'warning','Refunded':'danger','Failed':'danger' };
+                return `<span class="ax-badge ax-badge--soft ax-badge--${map[s]||'neutral'}" style="border-radius:var(--ax-radius-xs);">${s}</span>`;
+              },
+              fulfillPill(s){
+                const map={ 'Fulfilled':'success','Partially fulfilled':'warning','Unfulfilled':'neutral','Returned':'danger' };
+                return `<span class="ax-badge ax-badge--soft ax-badge--${map[s]||'neutral'}" style="border-radius:var(--ax-radius-xs);">${s}</span>`;
+              },
+              filtered(){
+                let r=this.orders.filter(o=>{
+                  const term=this.q.trim().toLowerCase();
+                  if(term && !(o.no.toLowerCase().includes(term) || o.customer.toLowerCase().includes(term) || o.email.toLowerCase().includes(term))) return false;
+                  if(this.tab!=='all' && o.status!==this.tab) return false;
+                  if(this.fPayment && o.payment!==this.fPayment) return false;
+                  if(this.fFulfill && o.fulfillment!==this.fFulfill) return false;
+                  return true;
+                });
+                const by={ 'oldest':(a,b)=>a.id-b.id, 'newest':(a,b)=>b.id-a.id, 'total-desc':(a,b)=>b.total-a.total, 'total-asc':(a,b)=>a.total-b.total };
+                if(by[this.sort]) r=[...r].sort(by[this.sort]);
+                return r;
+              },
+              allSelected(){ const ids=this.filtered().map(o=>o.id); return ids.length>0 && ids.every(id=>this.selected.includes(id)); },
+              toggleAll(on){ this.selected = on ? this.filtered().map(o=>o.id) : []; },
+              toggleMenu(id){ this.menu = this.menu===id ? null : id; if(this.menu!==null){ this.positionMenu(); this.$nextTick(()=>this.positionMenu()); } },
+              // Anchor the (teleported, fixed) menu to its trigger; re-runs on scroll/resize so it
+              // tracks the row, closing only once the row scrolls out of view. menuX is the inline-end
+              // offset (dir-aware, using clientWidth so the scrollbar doesn't skew it); the menu flips
+              // above the trigger when it'd overflow the viewport bottom.
+              positionMenu(){ if(this.menu===null) return; const el=document.querySelector('[data-menu-trigger][data-row="'+this.menu+'"]'); if(!el) return; const b=el.getBoundingClientRect(); const de=document.documentElement, vw=de.clientWidth, vh=de.clientHeight; if(b.bottom<0 || b.top>vh){ this.menu=null; return; } const rtl=de.getAttribute('dir')==='rtl'; this.menuX=Math.max(8, rtl ? b.left : (vw-b.right)); const menuEl=document.querySelector('.ax-menu[role="menu"]'); const h=menuEl?menuEl.offsetHeight:0; this.menuY=(h && (b.bottom+4+h)>vh) ? Math.max(8, b.top-4-h) : (b.bottom+4); },
+            };
+          }
+        </script>
+{% endblock %}

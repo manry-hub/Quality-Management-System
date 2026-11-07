@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axCart()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Shopping Cart</h1>
+              <p class="ax-page-head__subtitle"><span class="ax-num" x-text="items.length"></span> <span x-text="items.length===1 ? 'item' : 'items'"></span> in your bag — free shipping unlocks at <span class="ax-num">$75.00</span>.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/ecommerce/products/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+                <span class="ax-btn__label">Continue shopping</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───────── LEFT: LINE ITEMS (8) ───────── -->
+          <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- undo toast (remove) -->
+            <div x-show="undo.show" x-cloak x-transition class="ax-alert ax-alert--neutral ax-flex" role="status" style="align-items:center;gap:var(--ax-space-3);">
+              <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14l-4 -4l4 -4"/><path d="M5 10h11a4 4 0 1 1 0 8h-1"/></svg></span>
+              <div class="ax-alert__content" style="flex:1 1 auto;"><p class="ax-alert__message"><b x-text="undo.name"></b> removed from cart.</p></div>
+              <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="restore()">Undo</button>
+            </div>
+
+            <!-- out-of-stock blocker -->
+            <div x-show="hasBlocker()" x-cloak class="ax-alert ax-alert--danger" role="alert">
+              <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg></span>
+              <div class="ax-alert__content"><p class="ax-alert__title">An item is out of stock</p><p class="ax-alert__message">Remove the flagged item below to continue to checkout.</p></div>
+            </div>
+
+            <!-- ░░ ACTIVE CART ░░ -->
+            <section class="ax-card" role="region" aria-label="Cart items" x-show="items.length" x-cloak>
+              <div class="ax-card__header">
+                <div class="ax-card__titles">
+                  <h2 class="ax-card__title">Your items</h2>
+                  <p class="ax-card__subtitle">Prices and totals update as you change quantities.</p>
+                </div>
+                <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="clearAll()">Clear cart</button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:0;">
+                <template x-for="(it, idx) in items" :key="it.id">
+                  <div style="display:flex;gap:var(--ax-space-4);padding:var(--ax-space-4) 0;border-top:1px solid var(--ax-border);" :style="idx===0 ? 'border-top:0;' : ''">
+                    <!-- thumb -->
+                    <a href="/ecommerce/product-details/" style="flex:none;width:88px;height:88px;border-radius:var(--ax-radius-md);overflow:hidden;display:grid;place-items:center;text-decoration:none;" :style="`background:color-mix(in oklab,${it.c} 16%,var(--ax-surface-subtle));`">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:34px;height:34px;opacity:.6;" :style="`color:${it.c};`"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/><path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l3 3"/></svg>
+                    </a>
+                    <!-- detail -->
+                    <div style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                      <div class="ax-cluster" style="justify-content:space-between;align-items:flex-start;gap:var(--ax-space-3);flex-wrap:nowrap;">
+                        <div style="min-width:0;">
+                          <a href="/ecommerce/product-details/" class="ax-text-truncate" style="display:block;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);text-decoration:none;line-height:1.3;" x-text="it.name"></a>
+                          <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:2px;" x-text="it.variant"></div>
+                          <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);margin-top:2px;" x-text="it.sku"></div>
+                        </div>
+                        <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="remove(idx)" :aria-label="'Remove ' + it.name">
+                          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg>
+                        </button>
+                      </div>
+
+                      <!-- stock flags -->
+                      <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                        <template x-if="it.stock===0">
+                          <span class="ax-badge ax-badge--danger ax-badge--soft" style="border-radius:var(--ax-radius-xs);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:12px;height:12px;"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M5.7 5.7l12.6 12.6"/></svg>Out of stock</span>
+                        </template>
+                        <template x-if="it.stock>0 && it.qty>=it.stock">
+                          <span class="ax-badge ax-badge--warning ax-badge--soft" style="border-radius:var(--ax-radius-xs);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:12px;height:12px;"><path d="M12 9v4"/><path d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0"/><path d="M12 16h.01"/></svg>Only <span class="ax-num" x-text="it.stock"></span> available</span>
+                        </template>
+                      </div>
+
+                      <!-- qty + price row -->
+                      <div class="ax-cluster" style="justify-content:space-between;align-items:flex-end;gap:var(--ax-space-3);margin-top:auto;flex-wrap:wrap;">
+                        <div class="ax-cluster" style="gap:var(--ax-space-4);">
+                          <!-- qty stepper -->
+                          <div class="ax-cluster" style="gap:0;flex-wrap:nowrap;border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);overflow:hidden;" :style="it.stock===0 ? 'opacity:.5;pointer-events:none;' : ''">
+                            <button type="button" @click="dec(idx)" :disabled="it.qty<=1" style="width:34px;height:34px;display:grid;place-items:center;background:var(--ax-surface);border:0;cursor:pointer;color:var(--ax-text);" :aria-label="'Decrease quantity of ' + it.name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;"><path d="M5 12l14 0"/></svg></button>
+                            <input type="text" class="ax-num" inputmode="numeric" :value="it.qty" @change="setQty(idx, $event.target.value)" style="width:44px;height:34px;text-align:center;border:0;border-inline:1px solid var(--ax-border);background:var(--ax-surface);font-family:var(--ax-font-mono);color:var(--ax-text-strong);" :aria-label="'Quantity of ' + it.name">
+                            <button type="button" @click="inc(idx)" :disabled="it.qty>=it.stock" style="width:34px;height:34px;display:grid;place-items:center;background:var(--ax-surface);border:0;cursor:pointer;color:var(--ax-text);" :aria-label="'Increase quantity of ' + it.name"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:15px;height:15px;"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg></button>
+                          </div>
+                          <!-- save for later -->
+                          <button type="button" class="ax-btn ax-btn--link ax-btn--sm" @click="saveForLater(idx)">
+                            <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21l-1 -1c-3 -3 -7 -5 -7 -10a4 4 0 0 1 8 -1a4 4 0 0 1 8 1c0 5 -4 7 -7 10z"/></svg>
+                            Save for later
+                          </button>
+                        </div>
+                        <!-- line total -->
+                        <div style="text-align:end;">
+                          <div class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-md);" x-text="money(it.price * it.qty)"></div>
+                          <div class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="money(it.price) + ' each'"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </div>
+            </section>
+
+            <!-- ░░ EMPTY CART ░░ -->
+            <section class="ax-card" role="region" aria-label="Empty cart" x-show="!items.length" x-cloak>
+              <div class="ax-card__body" style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+                <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;"><path d="M4 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M15 19a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M17 17h-11v-14h-2"/><path d="M6 5l14 1l-1 7h-13"/></svg></span>
+                <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">Your cart is empty</h3>
+                <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);max-width:340px;margin-inline:auto;">Looks like you haven't added anything yet. Browse the catalog to find something you'll love.</p>
+                <a class="ax-btn ax-btn--primary" href="/ecommerce/products/">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6" transform="rotate(180 12 12)"/><path d="M4 7a1 1 0 0 1 1 -1h14a1 1 0 0 1 1 1v3a2 2 0 0 0 0 4v3a1 1 0 0 1 -1 1h-14a1 1 0 0 1 -1 -1v-3a2 2 0 0 0 0 -4z"/></svg>
+                  <span class="ax-btn__label">Browse products</span>
+                </a>
+              </div>
+            </section>
+
+            <!-- ░░ SAVED FOR LATER ░░ -->
+            <section class="ax-card" role="region" aria-label="Saved for later" x-show="saved.length" x-cloak>
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Saved for later</h2></div>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill ax-num"><span x-text="saved.length"></span></span>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <template x-for="(it, idx) in saved" :key="it.id">
+                  <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                    <span style="flex:none;width:48px;height:48px;border-radius:var(--ax-radius-sm);overflow:hidden;display:grid;place-items:center;" :style="`background:color-mix(in oklab,${it.c} 16%,var(--ax-surface-subtle));`"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:22px;height:22px;opacity:.6;" :style="`color:${it.c};`"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/></svg></span>
+                    <div style="flex:1 1 auto;min-width:0;">
+                      <div class="ax-text-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="it.name"></div>
+                      <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="it.variant"></div>
+                    </div>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="money(it.price)"></span>
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="moveToCart(idx)">Move to cart</button>
+                  </div>
+                </template>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───────── RIGHT: ORDER SUMMARY RAIL (4) ───────── -->
+          <aside class="ax-col--4">
+            <section class="ax-card" role="region" aria-label="Order summary" style="position:sticky;top:var(--ax-space-6);">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Order summary</h2></div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+
+                <!-- free-shipping progress -->
+                <div x-show="items.length" x-cloak>
+                  <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;font-size:var(--ax-text-xs);">
+                    <span style="color:var(--ax-text-muted);" x-show="shipCost()===0">You've unlocked free shipping! 🎉</span>
+                    <span style="color:var(--ax-text-muted);" x-show="shipCost()>0"><span class="ax-num" x-text="money(75 - subtotal())"></span> away from free shipping</span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);" x-text="Math.min(100, Math.round(subtotal()/75*100)) + '%'"></span>
+                  </div>
+                  <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" :style="`width:${Math.min(100, subtotal()/75*100)}%;background:var(--ax-accent);`"></div></div></div>
+                </div>
+
+                <!-- coupon -->
+                <div>
+                  <label class="ax-label" for="cart-coupon" style="margin-bottom:var(--ax-space-2);">Promo code</label>
+                  <div class="ax-input-group">
+                    <input id="cart-coupon" type="text" class="ax-input" placeholder="e.g. WELCOME10" x-model="coupon" @keydown.enter.prevent="applyCoupon()" style="border:0;background:transparent;text-transform:uppercase;">
+                    <button type="button" class="ax-input-group__addon ax-btn ax-btn--ghost ax-btn--sm" @click="applyCoupon()" style="border-radius:0;">Apply</button>
+                  </div>
+                  <p x-show="couponMsg" x-cloak class="ax-num" style="font-size:var(--ax-text-xs);margin:6px 0 0;" :style="discount>0 ? 'color:var(--ax-viz-emerald);' : 'color:var(--ax-danger-500);'" x-text="couponMsg"></p>
+                </div>
+
+                <hr class="ax-divider" style="margin:0;">
+
+                <!-- totals -->
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);font-size:var(--ax-text-sm);">
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="color:var(--ax-text-muted);">Subtotal</span><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="money(subtotal())"></span></div>
+                  <div class="ax-cluster" style="justify-content:space-between;" x-show="discount>0" x-cloak><span style="color:var(--ax-text-muted);"><span class="ax-badge ax-badge--success ax-badge--soft ax-badge--sm" style="border-radius:var(--ax-radius-xs);" x-text="appliedCode"></span> Discount</span><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-danger-500);" x-text="'−' + money(discountAmt())"></span></div>
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="color:var(--ax-text-muted);">Shipping <span style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">(est.)</span></span><span class="ax-num" style="font-family:var(--ax-font-mono);" :style="shipCost()===0 ? 'color:var(--ax-viz-emerald);' : 'color:var(--ax-text);'" x-text="shipCost()===0 ? 'Free' : money(shipCost())"></span></div>
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="color:var(--ax-text-muted);">Tax <span style="color:var(--ax-text-subtle);font-size:var(--ax-text-xs);">(est.)</span></span><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);" x-text="money(tax())"></span></div>
+                </div>
+
+                <hr class="ax-divider" style="margin:0;">
+                <div class="ax-cluster" style="justify-content:space-between;align-items:baseline;">
+                  <span style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">Total</span>
+                  <span class="ax-num" style="font-family:var(--ax-font-display);font-size:var(--ax-text-2xl);font-weight:700;color:var(--ax-text-strong);" x-text="money(total())"></span>
+                </div>
+
+                <a href="/ecommerce/checkout/" class="ax-btn ax-btn--primary ax-btn--block"
+                   :class="(!items.length || hasBlocker()) ? 'is-disabled' : ''"
+                   :aria-disabled="(!items.length || hasBlocker()).toString()"
+                   :tabindex="(!items.length || hasBlocker()) ? '-1' : '0'"
+                   :style="(!items.length || hasBlocker()) ? 'pointer-events:none;opacity:.5;' : ''">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg>
+                  <span class="ax-btn__label">Checkout · <span class="ax-num" x-text="money(total())"></span></span>
+                </a>
+
+                <!-- trust row -->
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v6a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-6"/><path d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path d="M8 11v-4a4 4 0 1 1 8 0v4"/></svg><span>Secure checkout · 256-bit encryption</span></div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg><span>30-day money-back guarantee</span></div>
+                </div>
+
+                <!-- payment marks -->
+                <div class="ax-cluster" style="gap:var(--ax-space-2);justify-content:center;opacity:.6;">
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Visa"><path d="M3 8a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3l0 -8"/><path d="M3 10l18 0"/></svg>
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Mastercard"><path d="M7 12a5 5 0 1 0 10 0a5 5 0 0 0 -10 0"/><path d="M12 7.5a5 5 0 0 1 0 9"/></svg>
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="PayPal"><path d="M10 13l2.5 0c2.5 0 5 -2.5 5 -5c0 -3 -1.9 -4 -3.5 -4l-5.5 0l-2.5 16l3.5 0l.5 -3"/></svg>
+                  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-label="Apple Pay"><path d="M12 7c1 -2 2.5 -2.5 4 -2.5c.5 2 -.5 3.5 -1.5 4.5"/><path d="M14 9c1.5 0 3 1 3 3.5c0 2.5 -2 5.5 -3.5 5.5c-1 0 -1.5 -.5 -2.5 -.5s-1.5 .5 -2.5 .5c-1.5 0 -3.5 -3 -3.5 -5.5c0 -2.5 1.5 -3.5 3 -3.5c1 0 1.5 .5 2.5 .5s1.5 -.5 2.5 -.5"/></svg>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <!-- ════════════════ RELATED RAIL ════════════════ -->
+        <div class="ax-dash-grid" style="margin-top:var(--ax-space-6);" x-show="items.length || saved.length" x-cloak>
+          <section class="ax-card ax-col--12" role="region" aria-label="You may also like">
+            <div class="ax-card__header">
+              <div class="ax-card__titles"><h2 class="ax-card__title">You may also like</h2></div>
+              <a class="ax-btn ax-btn--link" href="/ecommerce/products/">View all</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--ax-space-4);">
+                <template x-for="r in related" :key="r.id">
+                  <article class="ax-card ax-card--interactive" style="margin:0;">
+                    <a href="/ecommerce/product-details/" style="text-decoration:none;display:block;">
+                      <div style="aspect-ratio:1/1;border-radius:var(--ax-radius-md) var(--ax-radius-md) 0 0;overflow:hidden;display:grid;place-items:center;" :style="`background:color-mix(in oklab,${r.c} 16%,var(--ax-surface-subtle));`">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:42px;height:42px;opacity:.55;" :style="`color:${r.c};`"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/></svg>
+                      </div>
+                      <div style="padding:var(--ax-space-4);">
+                        <div style="font-size:var(--ax-text-2xs);text-transform:uppercase;letter-spacing:.05em;color:var(--ax-text-subtle);font-weight:var(--ax-weight-medium);" x-text="r.category"></div>
+                        <div class="ax-text-truncate" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-top:2px;" x-text="r.name"></div>
+                        <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-2);">
+                          <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="money(r.price)"></span>
+                          <span class="ax-rating ax-rating--sm" :aria-label="r.rating + ' out of 5'"><template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="s<=Math.round(r.rating) && 'ax-rating__star--full'" viewBox="0 0 24 24" :fill="s<=Math.round(r.rating) ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span>
+                        </div>
+                      </div>
+                    </a>
+                  </article>
+                </template>
+              </div>
+            </div>
+          </section>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axCart(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)',red:'var(--ax-viz-red)'};
+            return {
+              coupon:'', couponMsg:'', appliedCode:'', discount:0,
+              undo:{ show:false, item:null, index:0, name:'', timer:null },
+              items:[
+                { id:1, name:'Aperture Desk Lamp', variant:'Graphite / 48 cm', sku:'APG-0001', qty:1, price:129.00, stock:84, c:C.cyan },
+                { id:2, name:'Matte Ceramic Mug', variant:'Slate · 12 oz', sku:'APG-0003', qty:2, price:24.00, stock:312, c:C.pink },
+                { id:3, name:'Walnut Monitor Riser', variant:'Walnut / Large', sku:'APG-0004', qty:1, price:96.00, stock:41, c:C.amber },
+                { id:4, name:'Anodized Bottle 750ml', variant:'Forest green', sku:'APG-0011', qty:3, price:34.00, stock:3, c:C.emerald },
+              ],
+              saved:[
+                { id:101, name:'Brass Task Light', variant:'Brass / Warm white', price:182.00, c:C.violet },
+                { id:102, name:'Felt Laptop Sleeve 14"', variant:'Charcoal', price:44.00, c:C.cyan },
+              ],
+              related:[
+                { id:201, name:'Grid Notebook A5', category:'Stationery', price:16.00, rating:4.7, c:C.red },
+                { id:202, name:'Oak Pen Tray', category:'Decor', price:28.00, rating:4.6, c:C.amber },
+                { id:203, name:'Leather Cable Wrap', category:'Tech', price:18.00, rating:4.4, c:C.cyan },
+                { id:204, name:'Cork Desk Mat', category:'Desk', price:38.00, rating:4.3, c:C.violet },
+                { id:205, name:'Stoneware Carafe', category:'Drinkware', price:52.00, rating:4.5, c:C.pink },
+              ],
+              money(v){ return '$' + Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              subtotal(){ return this.items.reduce((s,i)=>s + i.price*i.qty, 0); },
+              discountAmt(){ return this.subtotal()*this.discount; },
+              shipCost(){ if(!this.items.length) return 0; return (this.subtotal()-this.discountAmt()) >= 75 ? 0 : 6.00; },
+              tax(){ return (this.subtotal()-this.discountAmt())*0.0825; },
+              total(){ return Math.max(0, this.subtotal()-this.discountAmt()+this.shipCost()+this.tax()); },
+              hasBlocker(){ return this.items.some(i=>i.stock===0); },
+              inc(idx){ const it=this.items[idx]; if(it.qty<it.stock) it.qty++; },
+              dec(idx){ const it=this.items[idx]; if(it.qty>1) it.qty--; },
+              setQty(idx,val){ const it=this.items[idx]; let n=parseInt(val,10); if(isNaN(n)||n<1) n=1; if(n>it.stock) n=it.stock||1; it.qty=n; },
+              remove(idx){
+                const it=this.items[idx];
+                this.undo={ show:true, item:JSON.parse(JSON.stringify(it)), index:idx, name:it.name, timer:null };
+                this.items.splice(idx,1);
+                clearTimeout(this.undo.timer);
+                this.undo.timer=setTimeout(()=>{ this.undo.show=false; }, 5000);
+              },
+              restore(){ if(this.undo.item){ this.items.splice(this.undo.index,0,this.undo.item); } this.undo.show=false; clearTimeout(this.undo.timer); },
+              clearAll(){ this.items=[]; this.undo.show=false; },
+              saveForLater(idx){ const it=this.items.splice(idx,1)[0]; this.saved.unshift({ id:it.id, name:it.name, variant:it.variant, price:it.price, c:it.c }); },
+              moveToCart(idx){ const it=this.saved.splice(idx,1)[0]; this.items.push({ id:it.id, name:it.name, variant:it.variant, sku:'APG-' + String(it.id).padStart(4,'0'), qty:1, price:it.price, stock:50, c:it.c }); },
+              applyCoupon(){
+                const c=this.coupon.trim().toUpperCase();
+                if(!c){ this.couponMsg=''; return; }
+                if(c==='WELCOME10'){ this.discount=0.10; this.appliedCode='WELCOME10'; this.couponMsg='WELCOME10 applied — 10% off your order.'; }
+                else if(c==='SAVE20'){ this.discount=0.20; this.appliedCode='SAVE20'; this.couponMsg='SAVE20 applied — 20% off your order.'; }
+                else if(c==='FREESHIP'){ this.discount=0; this.appliedCode='FREESHIP'; this.couponMsg='FREESHIP applied — free standard shipping.'; }
+                else { this.discount=0; this.appliedCode=''; this.couponMsg='“'+c+'” isn’t a valid promo code.'; }
+              },
+            };
+          }
+        </script>
+{% endblock %}

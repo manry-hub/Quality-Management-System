@@ -1,0 +1,410 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axProductForm()">
+        <form @submit.prevent="save('publish')">
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);">
+                <h1 class="ax-page-head__title">Edit Product</h1>
+                <span class="ax-badge ax-badge--success ax-badge--soft ax-badge--pill"><span class="ax-badge__dot"></span>Active</span>
+              </div>
+              <p class="ax-page-head__subtitle">SKU <span class="ax-num">APG-0001</span> · <span class="ax-num">84</span> in stock · Last saved <span class="ax-num">Jun 22, 2026 · 2:41 PM</span>.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--ghost" href="/ecommerce/product-details/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>
+                <span class="ax-btn__label">Preview</span>
+              </a>
+              <!-- actions menu -->
+              <div x-data="{ open:false }" @click.outside="open=false" style="position:relative;">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="open=!open" :aria-expanded="open.toString()" aria-haspopup="true">
+                  <span class="ax-btn__label">Actions</span>
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+                <div x-show="open" x-cloak x-transition style="position:absolute;inset-inline-end:0;top:calc(100% + 6px);min-width:200px;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-overlay);box-shadow:var(--ax-shadow-md);z-index:10;" role="menu">
+                  <button type="button" role="menuitem" @click="open=false;duplicate()" style="display:flex;width:100%;align-items:center;gap:var(--ax-space-2);padding:8px var(--ax-space-3);border:0;background:none;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-sm);color:var(--ax-text);text-align:start;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;color:var(--ax-text-muted);"><path d="M7 7m0 2.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/><path d="M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/></svg>
+                    Duplicate
+                  </button>
+                  <button type="button" role="menuitem" @click="open=false;form.status='draft'" style="display:flex;width:100%;align-items:center;gap:var(--ax-space-2);padding:8px var(--ax-space-3);border:0;background:none;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-sm);color:var(--ax-text);text-align:start;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;color:var(--ax-text-muted);"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 10l0 4"/><path d="M15 10l0 4"/></svg>
+                    Unpublish
+                  </button>
+                  <div style="height:1px;background:var(--ax-border);margin:var(--ax-space-1) 0;"></div>
+                  <button type="button" role="menuitem" @click="open=false;confirmDelete=true" style="display:flex;width:100%;align-items:center;gap:var(--ax-space-2);padding:8px var(--ax-space-3);border:0;background:none;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-sm);color:var(--ax-danger-500);text-align:start;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                    Delete product
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- save success toast -->
+        <div x-show="saved" x-cloak x-transition class="ax-alert ax-alert--success" role="status" style="margin-bottom:var(--ax-space-6);">
+          <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+          <div class="ax-alert__content"><p class="ax-alert__title" x-text="savedKind==='draft' ? 'Saved as draft' : 'Changes saved'"></p><p class="ax-alert__message">Your edits to “Aperture Desk Lamp” have been saved.</p></div>
+          <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="saved=false" aria-label="Dismiss"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid" style="padding-bottom:96px;">
+
+          <!-- ───────── LEFT COLUMN (8) ───────── -->
+          <div class="ax-col--8" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+
+            <!-- ░░ BASIC INFO ░░ -->
+            <section class="ax-card" role="region" aria-label="Basic information">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Basic information</h2></div>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div class="ax-field">
+                  <label class="ax-label" for="p-title">Product title <span class="ax-field__required">*</span></label>
+                  <input id="p-title" type="text" class="ax-input" x-model="form.title" @input="syncHandle()" maxlength="120">
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="p-handle">URL handle</label>
+                  <div class="ax-input-group">
+                    <span class="ax-input-group__addon" style="color:var(--ax-text-subtle);font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);">/products/</span>
+                    <input id="p-handle" type="text" class="ax-input ax-num" x-model="form.handle" style="border:0;background:transparent;font-family:var(--ax-font-mono);">
+                  </div>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="p-short">Short description</label>
+                  <input id="p-short" type="text" class="ax-input" x-model="form.short" maxlength="160">
+                  <span class="ax-help"><span class="ax-num" x-text="form.short.length"></span> / 160 characters</span>
+                </div>
+                <div class="ax-field">
+                  <label class="ax-label" for="p-long">Description</label>
+                  <div role="toolbar" aria-label="Formatting" style="display:flex;gap:2px;padding:6px;border:1px solid var(--ax-border);border-bottom:0;border-radius:var(--ax-radius-sm) var(--ax-radius-sm) 0 0;background:var(--ax-surface-subtle);flex-wrap:wrap;">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bold"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5h6a3.5 3.5 0 0 1 0 7h-6z"/><path d="M13 12h1a3.5 3.5 0 0 1 0 7h-7v-7"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Italic"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5l6 0"/><path d="M7 19l6 0"/><path d="M14 5l-4 14"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Underline"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 5v5a5 5 0 0 0 10 0v-5"/><path d="M5 21h14"/></svg></button>
+                    <span style="width:1px;background:var(--ax-border);margin:2px 4px;"></span>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Bulleted list"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Insert link"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 15l6 -6"/><path d="M11 6l.463 -.536a5 5 0 0 1 7.071 7.072l-.534 .464"/><path d="M13 18l-.397 .534a5.068 5.068 0 0 1 -7.127 0a4.972 4.972 0 0 1 0 -7.071l.524 -.463"/></svg></button>
+                  </div>
+                  <textarea id="p-long" class="ax-textarea" rows="6" x-model="form.long" style="border-radius:0 0 var(--ax-radius-sm) var(--ax-radius-sm);min-height:140px;"></textarea>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ MEDIA ░░ -->
+            <section class="ax-card" role="region" aria-label="Media">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Media</h2><p class="ax-card__subtitle">First image is the primary thumbnail. Drag to reorder.</p></div>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill ax-num"><span x-text="media.length"></span> / 8</span>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(116px,1fr));gap:var(--ax-space-3);">
+                  <template x-for="(m, i) in media" :key="m.id">
+                    <div style="position:relative;aspect-ratio:1/1;border-radius:var(--ax-radius-md);overflow:hidden;display:grid;place-items:center;border:1px solid var(--ax-border);" :style="`background:color-mix(in oklab,${m.c} 16%,var(--ax-surface-subtle)); ${i===0 ? 'border-color:var(--ax-accent);box-shadow:0 0 0 1px var(--ax-accent);' : ''}`">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:30px;height:30px;opacity:.55;" :style="`color:${m.c};`"><path d="M15 8h.01"/><path d="M3 6a3 3 0 0 1 3 -3h12a3 3 0 0 1 3 3v12a3 3 0 0 1 -3 3h-12a3 3 0 0 1 -3 -3v-12"/><path d="M3 16l5 -5c.928 -.893 2.072 -.893 3 0l5 5"/></svg>
+                      <span x-show="i===0" class="ax-badge ax-badge--accent ax-badge--solid ax-badge--sm" style="position:absolute;top:6px;inset-inline-start:6px;border-radius:var(--ax-radius-xs);">Primary</span>
+                      <button type="button" class="ax-btn ax-btn--icon ax-btn--sm" @click="removeImage(i)" :aria-label="'Remove image ' + (i+1)" style="position:absolute;top:6px;inset-inline-end:6px;width:24px;height:24px;background:color-mix(in oklab,var(--ax-canvas) 70%,transparent);color:var(--ax-text-strong);border:0;border-radius:var(--ax-radius-xs);"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+                      <button type="button" x-show="i!==0" @click="makePrimary(i)" class="ax-btn ax-btn--sm" style="position:absolute;bottom:6px;inset-inline:6px;height:24px;font-size:var(--ax-text-2xs);background:color-mix(in oklab,var(--ax-canvas) 70%,transparent);color:var(--ax-text-strong);border:0;border-radius:var(--ax-radius-xs);">Set primary</button>
+                    </div>
+                  </template>
+                  <!-- add tile -->
+                  <label for="p-media" @dragover.prevent="dragover=true" @dragleave="dragover=false" @drop.prevent="dragover=false;addImage()" style="aspect-ratio:1/1;border-radius:var(--ax-radius-md);border:1.5px dashed var(--ax-border-strong);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;color:var(--ax-text-muted);" :style="dragover ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);' : ''">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:22px;height:22px;"><path d="M7 18a4.6 4.4 0 0 1 0 -9a5 4.5 0 0 1 11 2h1a3.5 3.5 0 0 1 0 7h-1"/><path d="M9 15l3 -3l3 3"/><path d="M12 12l0 9"/></svg>
+                    <small style="font-size:var(--ax-text-2xs);">Add image</small>
+                    <input id="p-media" type="file" accept="image/*" multiple class="ax-visually-hidden" @change="addImage()">
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ PRICING ░░ -->
+            <section class="ax-card" role="region" aria-label="Pricing">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Pricing</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;">
+                    <label class="ax-label" for="p-price">Price <span class="ax-field__required">*</span></label>
+                    <div class="ax-input-group"><span class="ax-input-group__addon" style="color:var(--ax-text-muted);">$</span><input id="p-price" type="text" class="ax-input ax-num" inputmode="decimal" x-model="form.price" style="border:0;background:transparent;font-family:var(--ax-font-mono);"></div>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;">
+                    <label class="ax-label" for="p-compare">Compare-at price</label>
+                    <div class="ax-input-group"><span class="ax-input-group__addon" style="color:var(--ax-text-muted);">$</span><input id="p-compare" type="text" class="ax-input ax-num" inputmode="decimal" x-model="form.compareAt" style="border:0;background:transparent;font-family:var(--ax-font-mono);"></div>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;">
+                    <label class="ax-label" for="p-cost">Cost per item</label>
+                    <div class="ax-input-group"><span class="ax-input-group__addon" style="color:var(--ax-text-muted);">$</span><input id="p-cost" type="text" class="ax-input ax-num" inputmode="decimal" x-model="form.cost" style="border:0;background:transparent;font-family:var(--ax-font-mono);"></div>
+                  </div>
+                  <div class="ax-field" style="grid-column:span 6;">
+                    <span class="ax-label">Margin</span>
+                    <div style="display:flex;align-items:center;gap:var(--ax-space-4);height:38px;padding-inline:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-surface-subtle);">
+                      <span class="ax-num" style="font-family:var(--ax-font-mono);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);" x-text="marginPct()"></span>
+                      <span style="width:1px;height:18px;background:var(--ax-border);"></span>
+                      <span style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Profit <b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);" x-text="profit()"></b></span>
+                    </div>
+                  </div>
+                </div>
+                <label class="ax-check" style="gap:var(--ax-space-3);">
+                  <input type="checkbox" class="ax-switch" x-model="form.taxable">
+                  <span style="display:flex;flex-direction:column;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-medium);">Charge tax on this product</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Tax is calculated at checkout based on the customer's region.</span></span>
+                </label>
+              </div>
+            </section>
+
+            <!-- ░░ INVENTORY ░░ -->
+            <section class="ax-card" role="region" aria-label="Inventory">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Inventory</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div style="display:grid;grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 6;"><label class="ax-label" for="p-sku">SKU</label><input id="p-sku" type="text" class="ax-input ax-num" x-model="form.sku" style="font-family:var(--ax-font-mono);text-transform:uppercase;"></div>
+                  <div class="ax-field" style="grid-column:span 6;"><label class="ax-label" for="p-barcode">Barcode</label><input id="p-barcode" type="text" class="ax-input ax-num" x-model="form.barcode" style="font-family:var(--ax-font-mono);"></div>
+                </div>
+                <label class="ax-check" style="gap:var(--ax-space-3);">
+                  <input type="checkbox" class="ax-switch" x-model="form.trackQty">
+                  <span style="display:flex;flex-direction:column;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);font-weight:var(--ax-weight-medium);">Track quantity</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Automatically decrease stock as orders come in.</span></span>
+                </label>
+                <div class="ax-grid" x-show="form.trackQty" x-cloak style="grid-template-columns:repeat(12,1fr);gap:var(--ax-space-4);">
+                  <div class="ax-field" style="grid-column:span 4;"><label class="ax-label" for="p-qty">Available</label><input id="p-qty" type="text" class="ax-input ax-num" inputmode="numeric" x-model="form.qty" style="font-family:var(--ax-font-mono);"></div>
+                  <div class="ax-field" style="grid-column:span 4;"><label class="ax-label" for="p-threshold">Low-stock alert at</label><input id="p-threshold" type="text" class="ax-input ax-num" inputmode="numeric" x-model="form.threshold" style="font-family:var(--ax-font-mono);"></div>
+                  <div class="ax-field" style="grid-column:span 4;"><label class="ax-label" for="p-location">Location</label><select id="p-location" class="ax-select" x-model="form.location"><option value="pdx">Portland warehouse</option><option value="ber">Berlin fulfillment</option><option value="sgp">Singapore hub</option></select></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ VARIANTS ░░ -->
+            <section class="ax-card" role="region" aria-label="Variants">
+              <div class="ax-card__header">
+                <div class="ax-card__titles"><h2 class="ax-card__title">Variants</h2><p class="ax-card__subtitle">Per-variant price, SKU and quantity.</p></div>
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="addOption()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  <span class="ax-btn__label">Add option</span>
+                </button>
+              </div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <template x-for="(opt, oi) in options" :key="opt.id">
+                  <div style="display:grid;grid-template-columns:160px 1fr 40px;gap:var(--ax-space-3);align-items:start;">
+                    <div class="ax-field" style="margin:0;"><input type="text" class="ax-input" placeholder="Option name" x-model="opt.name"></div>
+                    <div class="ax-tags">
+                      <template x-for="(v, vi) in opt.values" :key="vi">
+                        <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill" style="gap:4px;"><span x-text="v"></span><button type="button" @click="opt.values.splice(vi,1);buildMatrix()" :aria-label="'Remove ' + v" style="background:none;border:0;cursor:pointer;color:inherit;display:inline-flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:11px;height:11px;"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span>
+                      </template>
+                      <input type="text" class="ax-tags__input" placeholder="Add value…" @keydown.enter.prevent="if($event.target.value.trim()){opt.values.push($event.target.value.trim());$event.target.value='';buildMatrix();}" @keydown.comma.prevent="if($event.target.value.trim()){opt.values.push($event.target.value.trim());$event.target.value='';buildMatrix();}">
+                    </div>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" @click="options.splice(oi,1);buildMatrix()" aria-label="Remove option"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></button>
+                  </div>
+                </template>
+                <div x-show="matrix.length" x-cloak class="ax-table-wrap" style="margin:0 calc(-1 * var(--ax-space-5));">
+                  <table class="ax-table ax-table--hover">
+                    <thead class="ax-table__head">
+                      <tr><th class="ax-table__th" scope="col">Variant</th><th class="ax-table__th ax-table__th--num" scope="col">Price</th><th class="ax-table__th" scope="col">SKU</th><th class="ax-table__th ax-table__th--num" scope="col">Qty</th></tr>
+                    </thead>
+                    <tbody>
+                      <template x-for="row in matrix" :key="row.id">
+                        <tr class="ax-table__row">
+                          <td class="ax-table__td" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="row.label"></td>
+                          <td class="ax-table__td ax-table__td--num"><div class="ax-input-group" style="max-width:120px;margin-inline-start:auto;"><span class="ax-input-group__addon" style="color:var(--ax-text-muted);font-size:var(--ax-text-xs);">$</span><input type="text" class="ax-input ax-num ax-input--sm" inputmode="decimal" x-model="row.price" style="border:0;background:transparent;font-family:var(--ax-font-mono);text-align:right;" :aria-label="'Price for ' + row.label"></div></td>
+                          <td class="ax-table__td"><input type="text" class="ax-input ax-input--sm ax-num" x-model="row.sku" style="font-family:var(--ax-font-mono);max-width:140px;" :aria-label="'SKU for ' + row.label"></td>
+                          <td class="ax-table__td ax-table__td--num"><input type="text" class="ax-input ax-input--sm ax-num" inputmode="numeric" x-model="row.qty" style="font-family:var(--ax-font-mono);max-width:80px;text-align:right;" :aria-label="'Quantity for ' + row.label"></td>
+                        </tr>
+                      </template>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ SEO ░░ -->
+            <section class="ax-card" role="region" aria-label="Search engine listing">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Search engine listing</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div style="padding:var(--ax-space-4);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);background:var(--ax-surface-subtle);">
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);margin-bottom:6px;">
+                    <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:13px;height:13px;"><path d="M19.5 7a9 9 0 0 0 -7.5 -4a8.991 8.991 0 0 0 -7.484 4"/><path d="M11.5 3a16.989 16.989 0 0 0 -1.826 4"/><path d="M12.5 3a16.989 16.989 0 0 1 1.828 4"/><path d="M19.5 17a9 9 0 0 1 -7.5 4a8.991 8.991 0 0 1 -7.484 -4"/><path d="M2 10l1 4l1.5 -4l1.5 4l1 -4"/><path d="M17 10l1 4l1.5 -4l1.5 4l1 -4"/><path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4"/></svg></span>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="'vireo.store › products › ' + (form.handle || 'handle')"></span>
+                  </div>
+                  <div style="color:var(--ax-accent);font-size:var(--ax-text-md);font-weight:var(--ax-weight-medium);" x-text="form.metaTitle || form.title"></div>
+                  <div style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);line-height:1.4;margin-top:2px;" x-text="form.metaDesc || form.short"></div>
+                </div>
+                <div class="ax-field"><label class="ax-label" for="p-metatitle">Page title</label><input id="p-metatitle" type="text" class="ax-input" x-model="form.metaTitle" maxlength="70"><span class="ax-help"><span class="ax-num" :style="form.metaTitle.length>60 ? 'color:var(--ax-warning-500);' : ''" x-text="form.metaTitle.length"></span> / 70 characters</span></div>
+                <div class="ax-field"><label class="ax-label" for="p-metadesc">Meta description</label><textarea id="p-metadesc" class="ax-textarea" rows="3" x-model="form.metaDesc" maxlength="160"></textarea><span class="ax-help"><span class="ax-num" :style="form.metaDesc.length>155 ? 'color:var(--ax-warning-500);' : ''" x-text="form.metaDesc.length"></span> / 160 characters</span></div>
+              </div>
+            </section>
+
+            <!-- ░░ DANGER ZONE ░░ -->
+            <section class="ax-card" role="region" aria-label="Danger zone" style="border-color:color-mix(in oklab,var(--ax-danger-500) 35%,var(--ax-border));">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title" style="color:var(--ax-danger-500);">Danger zone</h2><p class="ax-card__subtitle">Deleting a product is permanent and removes it from all channels.</p></div></div>
+              <div class="ax-card__body" style="padding-top:0;">
+                <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;">
+                  <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">This product has <b class="ax-num" style="color:var(--ax-text);">412</b> lifetime sales and <b class="ax-num" style="color:var(--ax-text);">128</b> reviews.</div>
+                  <button type="button" class="ax-btn ax-btn--danger ax-btn--soft" @click="confirmDelete=true">
+                    <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                    <span class="ax-btn__label">Delete product</span>
+                  </button>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- ───────── RIGHT RAIL (4) ───────── -->
+          <aside class="ax-col--4" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+            <!-- ░░ STATUS ░░ -->
+            <section class="ax-card" role="region" aria-label="Status">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Status</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <template x-for="s in statuses" :key="s.id">
+                  <label style="display:flex;align-items:center;gap:var(--ax-space-3);cursor:pointer;border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);border:1.5px solid;transition:border-color var(--ax-motion-fast) var(--ax-ease-standard);" :style="form.status===s.id ? 'border-color:var(--ax-accent);background:var(--ax-accent-wash);' : 'border-color:var(--ax-border);background:var(--ax-surface);'">
+                    <input type="radio" name="p-status" class="ax-radio" :value="s.id" x-model="form.status">
+                    <span style="width:8px;height:8px;border-radius:50%;flex:none;" :style="`background:${s.c};`"></span>
+                    <span style="flex:1 1 auto;"><span style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" x-text="s.name"></span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="s.desc"></span></span>
+                  </label>
+                </template>
+                <div>
+                  <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Sales channels</div>
+                  <label class="ax-check" style="gap:var(--ax-space-2);"><input type="checkbox" class="ax-checkbox" x-model="form.chOnline"><span style="font-size:var(--ax-text-sm);">Online store</span></label>
+                  <label class="ax-check" style="gap:var(--ax-space-2);"><input type="checkbox" class="ax-checkbox" x-model="form.chPos"><span style="font-size:var(--ax-text-sm);">Point of sale</span></label>
+                  <label class="ax-check" style="gap:var(--ax-space-2);"><input type="checkbox" class="ax-checkbox" x-model="form.chSocial"><span style="font-size:var(--ax-text-sm);">Social &amp; marketplaces</span></label>
+                </div>
+              </div>
+            </section>
+
+            <!-- ░░ PERFORMANCE SNAPSHOT ░░ -->
+            <section class="ax-card" role="region" aria-label="Performance">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Performance</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Units sold</span><b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">412</b></div>
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Revenue</span><b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">$53,148</b></div>
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Conversion</span><b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-viz-emerald);">3.8%</b></div>
+                <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Avg. rating</span><span class="ax-cluster" style="gap:6px;"><span class="ax-rating ax-rating--sm" aria-label="4.7 out of 5"><template x-for="s in 5" :key="s"><svg class="ax-rating__star" :class="s<=5 && 'ax-rating__star--full'" viewBox="0 0 24 24" :fill="s<=5 ? 'currentColor' : 'none'" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17.75l-6.172 3.245l1.179 -6.873l-5 -4.867l6.9 -1l3.086 -6.253l3.086 6.253l6.9 1l-5 4.867l1.179 6.873l-6.158 -3.245"/></svg></template></span><b class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-strong);">4.7</b></span></div>
+              </div>
+            </section>
+
+            <!-- ░░ ORGANIZATION ░░ -->
+            <section class="ax-card" role="region" aria-label="Organization">
+              <div class="ax-card__header"><div class="ax-card__titles"><h2 class="ax-card__title">Organization</h2></div></div>
+              <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <div class="ax-field" style="margin:0;"><label class="ax-label" for="p-category">Category <span class="ax-field__required">*</span></label><input id="p-category" type="text" class="ax-input" x-model="form.category"></div>
+                <div class="ax-field" style="margin:0;"><label class="ax-label" for="p-brand">Brand</label><input id="p-brand" type="text" class="ax-input" x-model="form.brand"></div>
+                <div class="ax-field" style="margin:0;"><label class="ax-label" for="p-vendor">Vendor</label><select id="p-vendor" class="ax-select" x-model="form.vendor"><option value="aperture">Aperture Studio</option><option value="northpine">Northpine Goods</option><option value="mono">Mono Supply Co.</option></select></div>
+                <div>
+                  <div class="ax-label" style="margin-bottom:var(--ax-space-2);">Collections</div>
+                  <div style="display:flex;flex-direction:column;gap:var(--ax-space-1);">
+                    <template x-for="col in collections" :key="col"><label class="ax-check" style="gap:var(--ax-space-2);min-height:30px;"><input type="checkbox" class="ax-checkbox" :value="col" x-model="form.collections"><span style="font-size:var(--ax-text-sm);" x-text="col"></span></label></template>
+                  </div>
+                </div>
+                <div class="ax-field" style="margin:0;">
+                  <label class="ax-label" for="p-tags">Tags</label>
+                  <div class="ax-tags">
+                    <template x-for="(t, ti) in form.tags" :key="ti"><span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill" style="gap:4px;"><span x-text="t"></span><button type="button" @click="form.tags.splice(ti,1)" :aria-label="'Remove tag ' + t" style="background:none;border:0;cursor:pointer;color:inherit;display:inline-flex;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:11px;height:11px;"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button></span></template>
+                    <input id="p-tags" type="text" class="ax-tags__input" placeholder="Add a tag…" @keydown.enter.prevent="addTag($event)" @keydown.comma.prevent="addTag($event)">
+                  </div>
+                </div>
+              </div>
+            </section>
+          </aside>
+        </div>
+
+        <!-- ════════════════ STICKY ACTION BAR ════════════════ -->
+        <div style="position:sticky;bottom:0;z-index:5;margin:0 calc(-1 * var(--ax-space-6));padding:var(--ax-space-4) var(--ax-space-6);background:var(--ax-surface);backdrop-filter:blur(18px) saturate(1.1);border-top:1px solid var(--ax-border);box-shadow:var(--ax-shadow-sm);">
+          <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);flex-wrap:wrap;">
+            <span class="ax-cluster" style="gap:var(--ax-space-2);font-size:var(--ax-text-sm);color:var(--ax-text-muted);">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color:var(--ax-viz-emerald);"><path d="M5 12l5 5l10 -10"/></svg>
+              <span>All changes saved Jun 22, 2026 · 2:41 PM</span>
+            </span>
+            <div class="ax-cluster" style="gap:var(--ax-space-2);">
+              <a class="ax-btn ax-btn--ghost" href="/ecommerce/products/">Cancel</a>
+              <button type="button" class="ax-btn ax-btn--secondary" @click="save('draft')">Save as draft</button>
+              <button type="submit" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"/><path d="M12 14a2 2 0 1 0 0 -4a2 2 0 0 0 0 4"/><path d="M14 4l0 4l-6 0l0 -4"/></svg>
+                <span class="ax-btn__label">Save changes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        </form>
+
+        <!-- ════════════════ DELETE CONFIRM MODAL ════════════════ -->
+        <div class="ax-flex" x-show="confirmDelete" x-cloak style="position:fixed;inset:0;z-index:var(--ax-z-modal,80);align-items:center;justify-content:center;padding:var(--ax-space-5);">
+          <div style="position:absolute;inset:0;background:color-mix(in oklab,var(--ax-canvas) 70%,transparent);backdrop-filter:blur(4px);" @click="confirmDelete=false"></div>
+          <div class="ax-card" style="position:relative;width:min(440px,100%);margin:0;" role="alertdialog" aria-modal="true" aria-labelledby="del-title" @keydown.escape.window="confirmDelete=false">
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);text-align:center;padding:var(--ax-space-7) var(--ax-space-6);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-danger-500) 14%,transparent);color:var(--ax-danger-500);margin:0 auto;"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg></span>
+              <div>
+                <h2 id="del-title" style="font-family:var(--ax-font-display);font-size:var(--ax-text-lg);color:var(--ax-text-strong);margin-bottom:var(--ax-space-2);">Delete this product?</h2>
+                <p style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);line-height:1.6;">“Aperture Desk Lamp” will be permanently removed from your catalog and all sales channels. This action can't be undone.</p>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);justify-content:center;margin-top:var(--ax-space-2);">
+                <button type="button" class="ax-btn ax-btn--secondary" @click="confirmDelete=false">Cancel</button>
+                <button type="button" class="ax-btn ax-btn--danger" @click="deleteProduct()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7l16 0"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                  <span class="ax-btn__label">Delete product</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axProductForm(){
+            const C={cyan:'var(--ax-viz-cyan)',violet:'var(--ax-viz-violet)',pink:'var(--ax-viz-pink)',amber:'var(--ax-viz-amber)',emerald:'var(--ax-viz-emerald)'};
+            return {
+              saved:false, savedKind:'', dragover:false, confirmDelete:false, _mid:5, _oid:2,
+              form:{
+                title:'Aperture Desk Lamp', handle:'aperture-desk-lamp',
+                short:'Precision aluminium task lamp with stepless dimming and tunable white.',
+                long:'The Aperture Desk Lamp pairs a precision aluminium body with a frictionless magnetic joint, letting you angle light exactly where you need it. A stepless dimmer and tunable colour temperature take it from a crisp 4000K work light to a relaxed 2700K glow. USB-C passthrough charging is built into the weighted base.',
+                price:'129.00', compareAt:'159.00', cost:'58.40', taxable:true,
+                sku:'APG-0001', barcode:'0842751093014', trackQty:true, qty:'84', threshold:'10', location:'pdx',
+                metaTitle:'Aperture Desk Lamp — Tunable LED Task Light', metaDesc:'A precision aluminium desk lamp with stepless dimming, a magnetic articulating arm and a warm 2700K–4000K tunable LED. Free shipping over $75.',
+                status:'active', chOnline:true, chPos:true, chSocial:false,
+                category:'Lighting › Task lamps', brand:'Aperture Studio', vendor:'aperture',
+                collections:['Bestsellers','Workspace essentials'], tags:['lamp','desk','led','warm-white','usb-c'],
+              },
+              media:[
+                { id:1, c:C.cyan }, { id:2, c:C.violet }, { id:3, c:C.amber }, { id:4, c:C.emerald }, { id:5, c:C.pink },
+              ],
+              options:[
+                { id:1, name:'Finish', values:['Graphite','Ivory','Sage'] },
+                { id:2, name:'Reach', values:['40 cm','48 cm'] },
+              ],
+              matrix:[],
+              statuses:[
+                { id:'active', name:'Active', desc:'Visible &amp; available to buy', c:'var(--ax-viz-emerald)' },
+                { id:'draft', name:'Draft', desc:'Hidden from the storefront', c:'var(--ax-text-subtle)' },
+                { id:'scheduled', name:'Scheduled', desc:'Publishes on a set date', c:'var(--ax-viz-amber)' },
+              ],
+              collections:['New arrivals','Bestsellers','Workspace essentials','Gift guide','Clearance'],
+              init(){ this.buildMatrix(); },
+              slugify(s){ return s.toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,''); },
+              syncHandle(){ this.form.handle = this.slugify(this.form.title); },
+              num(v){ const n=parseFloat(String(v).replace(/[^0-9.]/g,'')); return isNaN(n) ? 0 : n; },
+              money(v){ return '$' + Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); },
+              marginPct(){ const p=this.num(this.form.price), c=this.num(this.form.cost); if(!p||!c) return '—'; return Math.round((p-c)/p*100) + '%'; },
+              profit(){ const p=this.num(this.form.price), c=this.num(this.form.cost); if(!p||!c) return '—'; return this.money(p-c); },
+              addImage(){ const palette=[C.cyan,C.violet,C.pink,C.amber,C.emerald]; if(this.media.length<8){ this.media.push({ id:++this._mid, c:palette[this.media.length % palette.length] }); } },
+              removeImage(i){ this.media.splice(i,1); },
+              makePrimary(i){ const m=this.media.splice(i,1)[0]; this.media.unshift(m); },
+              addOption(){ if(this.options.length<3){ this.options.push({ id:++this._oid, name:'', values:[] }); } },
+              buildMatrix(){
+                const active=this.options.filter(o=>o.values.length);
+                if(!active.length){ this.matrix=[]; return; }
+                let combos=[[]];
+                active.forEach(o=>{ const next=[]; combos.forEach(c=>{ o.values.forEach(v=>next.push([...c,v])); }); combos=next; });
+                const base=this.num(this.form.price);
+                this.matrix=combos.map((c,i)=>{ const label=c.join(' / '); const existing=this.matrix.find(m=>m.label===label); return existing || { id:i+'-'+label, label, price:base?base.toFixed(2):'', sku:this.form.sku+'-'+(i+1), qty:String(Math.floor(Math.random()*20)+5) }; });
+              },
+              addTag(e){ const v=e.target.value.trim().replace(/,$/,''); if(v && !this.form.tags.includes(v)){ this.form.tags.push(v); } e.target.value=''; },
+              save(kind){ this.savedKind=kind; this.saved=true; window.scrollTo({top:0,behavior:'smooth'}); setTimeout(()=>{ this.saved=false; }, 4000); },
+              duplicate(){ window.location.href='/ecommerce/add-product/'; },
+              deleteProduct(){ this.confirmDelete=false; window.location.href='/ecommerce/products/'; },
+            };
+          }
+        </script>
+{% endblock %}

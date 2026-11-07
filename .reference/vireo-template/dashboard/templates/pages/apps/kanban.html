@@ -1,0 +1,309 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axKanban()"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">Sprint 14 board — 18 cards across 4 columns, 2 due this week.</p>
+          <div class="ax-apphead__actions">
+            <div class="ax-avatar-group" aria-label="Board members">
+              <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 20%,transparent);color:var(--ax-viz-cyan);font-weight:600;" title="Maya Okonkwo">MO</span>
+              <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 20%,transparent);color:var(--ax-viz-violet);font-weight:600;" title="Tom Reyes">TR</span>
+              <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 20%,transparent);color:var(--ax-viz-amber);font-weight:600;" title="Priya Nair">PN</span>
+              <span class="ax-avatar ax-avatar--sm ax-avatar--squircle ax-avatar__overflow" style="font-weight:600;">+4</span>
+            </div>
+            <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h16v2.172a2 2 0 0 1 -.586 1.414l-4.414 4.414v7l-6 2v-8.5l-4.48 -4.928a2 2 0 0 1 -.52 -1.345v-2.227"/></svg>
+              <span class="ax-btn__label">Filter</span>
+            </button>
+            <button type="button" class="ax-btn ax-btn--primary" @click="openNew('todo')">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+              <span class="ax-btn__label">Add card</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ════════════════ TOOLBAR ════════════════ -->
+        <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-3);">
+          <div class="ax-cluster" style="gap:var(--ax-space-3);flex:1 1 320px;">
+            <div style="position:relative;flex:1 1 240px;max-width:340px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="position:absolute;inset-inline-start:11px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--ax-text-subtle);"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg>
+              <input type="search" class="ax-input" placeholder="Search cards…" x-model="q" style="padding-inline-start:36px;" aria-label="Search cards">
+            </div>
+          </div>
+          <div class="ax-segment" role="radiogroup" aria-label="Board view">
+            <button type="button" class="ax-segment__option is-active" role="radio" aria-checked="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4l6 0"/><path d="M14 4l6 0"/><path d="M4 10a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -8"/><path d="M14 10a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2l0 -2"/></svg>
+              Board
+            </button>
+            <button type="button" class="ax-segment__option" role="radio" aria-checked="false">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l11 0"/><path d="M9 12l11 0"/><path d="M9 18l11 0"/><path d="M5 6l0 .01"/><path d="M5 12l0 .01"/><path d="M5 18l0 .01"/></svg>
+              List
+            </button>
+          </div>
+        </div>
+
+        <!-- ════════════════ BOARD ════════════════ -->
+        <div style="display:flex;gap:var(--ax-space-5);overflow-x:auto;padding-bottom:var(--ax-space-3);align-items:flex-start;">
+          <template x-for="col in columns" :key="col.id">
+            <section class="ax-kb-col"
+              :class="{ 'ax-kb-col--over': dragOverCol === col.id }"
+              @dragover.prevent="dragOverCol = col.id"
+              @dragleave="dragOverCol === col.id && (dragOverCol = null)"
+              @drop="drop(col.id)"
+              role="region"
+              :aria-label="col.title + ' column'">
+              <!-- column header -->
+              <div class="ax-cluster" style="justify-content:space-between;padding:var(--ax-space-1) var(--ax-space-1) var(--ax-space-3);">
+                <div class="ax-cluster" style="gap:var(--ax-space-2);">
+                  <i style="width:9px;height:9px;border-radius:3px;" :style="`background:${col.color};`"></i>
+                  <b style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);" x-text="col.title"></b>
+                  <span class="ax-badge ax-badge--neutral ax-badge--pill ax-num" style="font-family:var(--ax-font-mono);" x-text="cards(col.id).length"></span>
+                  <span x-show="col.wip"
+                    class="ax-badge ax-badge--pill ax-num"
+                    :class="cards(col.id).length >= col.wip ? 'ax-badge--danger ax-badge--soft' : 'ax-badge--warning ax-badge--soft'"
+                    style="font-family:var(--ax-font-mono);"
+                    :title="'Work-in-progress limit ' + col.wip"
+                    x-text="'WIP ' + cards(col.id).length + '/' + col.wip"></span>
+                </div>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" :aria-label="'Add card to ' + col.title" @click="openNew(col.id)">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                </button>
+              </div>
+
+              <!-- cards -->
+              <div class="ax-kb-col__body">
+                <template x-for="card in cards(col.id)" :key="card.id">
+                  <article class="ax-kb-card"
+                    :class="{ 'ax-kb-card--ghost': draggingId === card.id }"
+                    draggable="true"
+                    @dragstart="dragStart(card.id, col.id)"
+                    @dragend="dragEnd()"
+                    @click="openEdit(card)"
+                    tabindex="0"
+                    @keydown.enter="openEdit(card)"
+                    role="button"
+                    :aria-label="card.title">
+                    <span x-show="card.cover" class="ax-kb-card__cover" :style="`background:${card.cover};`" aria-hidden="true"></span>
+                    <div class="ax-cluster" style="gap:var(--ax-space-1);flex-wrap:wrap;" x-show="card.labels.length">
+                      <template x-for="lb in card.labels" :key="lb.t">
+                        <span class="ax-badge ax-badge--soft ax-badge--sm ax-badge--pill" :style="`color:${lb.c};background:color-mix(in oklab,${lb.c} 16%,transparent);`" x-text="lb.t"></span>
+                      </template>
+                    </div>
+                    <p class="ax-kb-card__title" x-text="card.title"></p>
+                    <div class="ax-cluster" style="justify-content:space-between;gap:var(--ax-space-2);">
+                      <div class="ax-cluster" style="gap:var(--ax-space-3);color:var(--ax-text-subtle);">
+                        <span x-show="card.due" class="ax-cluster ax-num" style="gap:4px;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);" :style="card.overdue ? 'color:var(--ax-danger-500);' : 'color:var(--ax-text-muted);'">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px;"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg>
+                          <span x-text="card.due"></span>
+                        </span>
+                        <span x-show="card.checklist" class="ax-cluster ax-num" style="gap:4px;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px;"><path d="M9.615 20h-2.615a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8"/><path d="M14 19l2 2l4 -4"/><path d="M9 8h4"/><path d="M9 12h2"/></svg>
+                          <span x-text="card.checklist"></span>
+                        </span>
+                        <span x-show="card.comments" class="ax-cluster ax-num" style="gap:4px;font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px;"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293l-4.7 1"/></svg>
+                          <span x-text="card.comments"></span>
+                        </span>
+                      </div>
+                      <span class="ax-avatar ax-avatar--xs ax-avatar--squircle" :style="`background:color-mix(in oklab,${card.who.c} 20%,transparent);color:${card.who.c};font-weight:600;font-size:var(--ax-text-2xs);`" :title="card.who.n" x-text="card.who.i"></span>
+                    </div>
+                  </article>
+                </template>
+
+                <!-- add card affordance -->
+                <button type="button" class="ax-kb-add" @click="openNew(col.id)">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:16px;height:16px;"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  Add card
+                </button>
+              </div>
+            </section>
+          </template>
+
+          <!-- add column -->
+          <button type="button" class="ax-kb-addcol">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:18px;height:18px;"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+            Add column
+          </button>
+        </div>
+
+        <!-- ════════════════ CARD DRAWER ════════════════ -->
+        <div x-show="drawerOpen" x-cloak class="ax-drawer-scrim" @click="drawerOpen=false" x-transition.opacity>
+          <div class="ax-card" role="dialog" aria-modal="true" aria-label="Card detail" @click.stop
+            style="width:min(560px,100%);height:100%;border-radius:0;overflow:auto;" x-transition:enter="ax-slide-in">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow" x-text="(columns.find(c=>c.id===active.col)||{}).title + ' · ' + active.key"></span>
+                <h2 class="ax-card__title" x-text="active.title"></h2>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Close" @click="drawerOpen=false"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6l-12 12"/><path d="M6 6l12 12"/></svg></button>
+            </div>
+            <div class="ax-card__body" style="display:grid;grid-template-columns:1fr;gap:var(--ax-space-6);">
+
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-5);">
+                <!-- meta chips -->
+                <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:wrap;">
+                  <span class="ax-badge ax-badge--accent ax-badge--soft ax-badge--pill">
+                    <svg class="ax-badge__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/></svg>
+                    <span x-text="active.who && active.who.n"></span>
+                  </span>
+                  <span class="ax-badge ax-badge--soft ax-badge--pill" :class="active.overdue ? 'ax-badge--danger' : 'ax-badge--neutral'" x-show="active.due">
+                    <svg class="ax-badge__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg>
+                    <span class="ax-num" x-text="'Due ' + active.due"></span>
+                  </span>
+                  <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill">3 points</span>
+                </div>
+
+                <!-- description -->
+                <div>
+                  <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--ax-space-2);">Description</small>
+                  <p style="color:var(--ax-text);font-size:var(--ax-text-sm);line-height:1.6;">Wire the new onboarding flow to the auth API and add inline validation for the email and OTP steps. Mirror the empty / error / success states from the design spec, and confirm the deep-link handoff works from the marketing site.</p>
+                </div>
+
+                <!-- checklist -->
+                <div>
+                  <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);">
+                    <small style="color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;">Checklist</small>
+                    <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);color:var(--ax-text-muted);">3/5</span>
+                  </div>
+                  <div class="ax-progress ax-progress--sm" style="margin-bottom:var(--ax-space-3);"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:60%;"></div></div></div>
+                  <ul class="ax-list ax-list--compact">
+                    <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);color:var(--ax-text-subtle);text-decoration:line-through;">Hook up email step to API</span></span></li>
+                    <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);color:var(--ax-text-subtle);text-decoration:line-through;">OTP resend timer</span></span></li>
+                    <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox" checked></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);color:var(--ax-text-subtle);text-decoration:line-through;">Inline validation copy</span></span></li>
+                    <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox"></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);">Deep-link handoff test</span></span></li>
+                    <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><input type="checkbox" class="ax-checkbox"></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-regular);">Empty / error states</span></span></li>
+                  </ul>
+                  <div style="position:relative;margin-top:var(--ax-space-3);">
+                    <input type="text" class="ax-input ax-input--sm" placeholder="Add an item…" aria-label="Add checklist item">
+                  </div>
+                </div>
+
+                <!-- activity -->
+                <div>
+                  <small style="display:block;color:var(--ax-text-subtle);font-size:var(--ax-text-2xs);font-weight:var(--ax-weight-semibold);letter-spacing:.04em;text-transform:uppercase;margin-bottom:var(--ax-space-3);">Activity</small>
+                  <ul class="ax-timeline">
+                    <li class="ax-timeline__item ax-timeline__item--success">
+                      <span class="ax-timeline__marker"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg></span>
+                      <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Tom Reyes</b> checked off OTP resend timer</p><span class="ax-timeline__time">2h ago</span></div>
+                    </li>
+                    <li class="ax-timeline__item">
+                      <span class="ax-timeline__marker" style="color:var(--ax-viz-violet);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20l1.3 -3.9c-2.324 -3.437 -1.426 -7.872 2.1 -10.374c3.526 -2.501 8.59 -2.296 11.845 .48c3.255 2.777 3.695 7.266 1.029 10.501c-2.666 3.235 -7.615 4.215 -11.574 2.293l-4.7 1"/></svg></span>
+                      <div class="ax-timeline__content"><p class="ax-timeline__title"><b style="color:var(--ax-text-strong);">Priya Nair</b> commented "Don't forget the resend rate limit."</p><span class="ax-timeline__time">5h ago</span></div>
+                    </li>
+                  </ul>
+                  <div style="margin-top:var(--ax-space-3);">
+                    <textarea class="ax-textarea" rows="2" placeholder="Write a comment…" aria-label="Add comment"></textarea>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div class="ax-card__footer" style="display:flex;gap:var(--ax-space-3);justify-content:flex-end;">
+              <button type="button" class="ax-btn ax-btn--secondary" @click="drawerOpen=false">Close</button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="drawerOpen=false">Save changes</button>
+            </div>
+          </div>
+        </div>
+
+        <style>
+          .ax-drawer-scrim { position:fixed; inset:0; z-index:120; display:flex; justify-content:flex-end; background:var(--ax-backdrop); -webkit-backdrop-filter:blur(2px); backdrop-filter:blur(2px); }
+          .ax-kb-col { flex:0 0 300px; width:300px; display:flex; flex-direction:column; background:var(--ax-surface-subtle); border:1px solid var(--ax-border); border-radius:var(--ax-radius-lg); padding:var(--ax-space-3); transition:background var(--ax-motion-fast) var(--ax-ease-standard), box-shadow var(--ax-motion-fast) var(--ax-ease-standard); }
+          .ax-kb-col--over { background:var(--ax-accent-wash); box-shadow:inset 0 0 0 2px var(--ax-accent); }
+          .ax-kb-col__body { display:flex; flex-direction:column; gap:var(--ax-space-3); min-height:40px; }
+          .ax-kb-card { position:relative; display:flex; flex-direction:column; gap:var(--ax-space-2); padding:var(--ax-space-3); background:var(--ax-surface-solid); border:1px solid var(--ax-border); border-radius:var(--ax-radius-md); box-shadow:var(--ax-shadow-sm); cursor:grab; text-align:left; transition:box-shadow var(--ax-motion-fast) var(--ax-ease-standard), transform var(--ax-motion-fast) var(--ax-ease-standard); overflow:hidden; }
+          .ax-kb-card:hover { box-shadow:var(--ax-shadow-md); }
+          .ax-kb-card:focus-visible { outline:none; box-shadow:0 0 0 2px var(--ax-canvas), 0 0 0 4px var(--ax-focus-ring); }
+          .ax-kb-card:active { cursor:grabbing; }
+          .ax-kb-card--ghost { opacity:.4; }
+          .ax-kb-card__cover { display:block; height:6px; margin:calc(var(--ax-space-3) * -1) calc(var(--ax-space-3) * -1) 0; }
+          .ax-kb-card__title { color:var(--ax-text-strong); font-size:var(--ax-text-sm); font-weight:var(--ax-weight-medium); line-height:1.4; }
+          .ax-kb-add { display:inline-flex; align-items:center; gap:var(--ax-space-2); width:100%; padding:var(--ax-space-2) var(--ax-space-3); font-size:var(--ax-text-sm); color:var(--ax-text-muted); background:transparent; border:1px dashed var(--ax-border-strong); border-radius:var(--ax-radius-md); cursor:pointer; transition:color var(--ax-motion-fast), background var(--ax-motion-fast); }
+          .ax-kb-add:hover { color:var(--ax-accent); background:var(--ax-fill-hover); }
+          .ax-kb-addcol { flex:0 0 220px; display:inline-flex; align-items:center; justify-content:center; gap:var(--ax-space-2); align-self:stretch; min-height:120px; font-size:var(--ax-text-sm); color:var(--ax-text-muted); background:var(--ax-surface-subtle); border:1px dashed var(--ax-border-strong); border-radius:var(--ax-radius-lg); cursor:pointer; transition:color var(--ax-motion-fast), background var(--ax-motion-fast); }
+          .ax-kb-addcol:hover { color:var(--ax-accent); background:var(--ax-fill-hover); }
+          .ax-slide-in { animation:axSlideIn .18s var(--ax-ease-standard); }
+          @keyframes axSlideIn { from { transform:translateX(24px); opacity:0; } to { transform:translateX(0); opacity:1; } }
+          @media (prefers-reduced-motion: reduce){ .ax-kb-card, .ax-slide-in { transition:none; animation:none; } }
+        </style>
+
+        <script>
+          function axKanban(){
+            return {
+              q: '',
+              draggingId: null,
+              dragOverCol: null,
+              drawerOpen: false,
+              active: {},
+              columns: [
+                { id:'todo', title:'To Do', color:'var(--ax-text-subtle)', wip:0 },
+                { id:'progress', title:'In Progress', color:'var(--ax-viz-cyan)', wip:4 },
+                { id:'review', title:'Review', color:'var(--ax-viz-violet)', wip:3 },
+                { id:'done', title:'Done', color:'var(--ax-viz-emerald)', wip:0 },
+              ],
+              items: [
+                { id:1, key:'APP-118', col:'todo', title:'Add biometric unlock to login', labels:[{t:'Auth',c:'var(--ax-viz-violet)'}], due:'Jul 2', overdue:false, checklist:'0/3', comments:1, who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:2, key:'APP-121', col:'todo', title:'Offline mode for saved articles', labels:[{t:'Feature',c:'var(--ax-viz-cyan)'}], due:'', overdue:false, checklist:'', comments:0, who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:3, key:'APP-124', col:'todo', title:'Crash on Android 13 cold start', labels:[{t:'Bug',c:'var(--ax-danger-500)'}], due:'Jun 26', overdue:true, checklist:'', comments:4, who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:4, key:'APP-110', col:'progress', cover:'var(--ax-accent)', title:'Onboarding flow — wire to auth API', labels:[{t:'Auth',c:'var(--ax-viz-violet)'},{t:'P1',c:'var(--ax-warning-500)'}], due:'Jun 28', overdue:false, checklist:'3/5', comments:6, who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:5, key:'APP-113', col:'progress', title:'Push notification preferences screen', labels:[{t:'Feature',c:'var(--ax-viz-cyan)'}], due:'Jul 1', overdue:false, checklist:'2/4', comments:2, who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:6, key:'APP-115', col:'progress', title:'Dark mode contrast audit', labels:[{t:'Design',c:'var(--ax-viz-pink)'}], due:'', overdue:false, checklist:'', comments:1, who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:7, key:'APP-101', col:'review', title:'Profile settings redesign', labels:[{t:'Design',c:'var(--ax-viz-pink)'}], due:'Jun 27', overdue:false, checklist:'4/4', comments:3, who:{i:'LB',n:'Lena Brandt',c:'var(--ax-viz-pink)'} },
+                { id:8, key:'APP-106', col:'review', title:'Reduce bundle size below 4 MB', labels:[{t:'Perf',c:'var(--ax-viz-amber)'}], due:'', overdue:false, checklist:'', comments:5, who:{i:'DC',n:'Daniel Cho',c:'var(--ax-viz-emerald)'} },
+                { id:9, key:'APP-094', col:'done', title:'Replace deprecated map SDK', labels:[{t:'Tech debt',c:'var(--ax-text-subtle)'}], due:'', overdue:false, checklist:'', comments:0, who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:10, key:'APP-097', col:'done', title:'Localize strings for FR & DE', labels:[{t:'i18n',c:'var(--ax-viz-cyan)'}], due:'', overdue:false, checklist:'6/6', comments:2, who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:11, key:'APP-099', col:'done', title:'Fix flaky checkout E2E test', labels:[{t:'Bug',c:'var(--ax-danger-500)'}], due:'', overdue:false, checklist:'', comments:1, who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+              ],
+              cards(colId){ const t=this.q.trim().toLowerCase(); return this.items.filter(c=>c.col===colId && (!t || c.title.toLowerCase().includes(t) || c.key.toLowerCase().includes(t))); },
+              dragStart(id, col){ this.draggingId = id; },
+              dragEnd(){ this.draggingId = null; this.dragOverCol = null; },
+              drop(colId){ const c = this.items.find(i=>i.id===this.draggingId); if(c){ c.col = colId; } this.dragEnd(); },
+              openEdit(card){ this.active = card; this.drawerOpen = true; },
+              openNew(colId){ this.active = { key:'NEW', col:colId, title:'New card', labels:[], who:{n:'Unassigned'} }; this.drawerOpen = true; },
+            };
+          }
+        </script>
+
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+          function axKanban(){
+            return {
+              q: '',
+              draggingId: null,
+              dragOverCol: null,
+              drawerOpen: false,
+              active: {},
+              columns: [
+                { id:'todo', title:'To Do', color:'var(--ax-text-subtle)', wip:0 },
+                { id:'progress', title:'In Progress', color:'var(--ax-viz-cyan)', wip:4 },
+                { id:'review', title:'Review', color:'var(--ax-viz-violet)', wip:3 },
+                { id:'done', title:'Done', color:'var(--ax-viz-emerald)', wip:0 },
+              ],
+              items: [
+                { id:1, key:'APP-118', col:'todo', title:'Add biometric unlock to login', labels:[{t:'Auth',c:'var(--ax-viz-violet)'}], due:'Jul 2', overdue:false, checklist:'0/3', comments:1, who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:2, key:'APP-121', col:'todo', title:'Offline mode for saved articles', labels:[{t:'Feature',c:'var(--ax-viz-cyan)'}], due:'', overdue:false, checklist:'', comments:0, who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:3, key:'APP-124', col:'todo', title:'Crash on Android 13 cold start', labels:[{t:'Bug',c:'var(--ax-danger-500)'}], due:'Jun 26', overdue:true, checklist:'', comments:4, who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:4, key:'APP-110', col:'progress', cover:'var(--ax-accent)', title:'Onboarding flow — wire to auth API', labels:[{t:'Auth',c:'var(--ax-viz-violet)'},{t:'P1',c:'var(--ax-warning-500)'}], due:'Jun 28', overdue:false, checklist:'3/5', comments:6, who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:5, key:'APP-113', col:'progress', title:'Push notification preferences screen', labels:[{t:'Feature',c:'var(--ax-viz-cyan)'}], due:'Jul 1', overdue:false, checklist:'2/4', comments:2, who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+                { id:6, key:'APP-115', col:'progress', title:'Dark mode contrast audit', labels:[{t:'Design',c:'var(--ax-viz-pink)'}], due:'', overdue:false, checklist:'', comments:1, who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:7, key:'APP-101', col:'review', title:'Profile settings redesign', labels:[{t:'Design',c:'var(--ax-viz-pink)'}], due:'Jun 27', overdue:false, checklist:'4/4', comments:3, who:{i:'LB',n:'Lena Brandt',c:'var(--ax-viz-pink)'} },
+                { id:8, key:'APP-106', col:'review', title:'Reduce bundle size below 4 MB', labels:[{t:'Perf',c:'var(--ax-viz-amber)'}], due:'', overdue:false, checklist:'', comments:5, who:{i:'DC',n:'Daniel Cho',c:'var(--ax-viz-emerald)'} },
+                { id:9, key:'APP-094', col:'done', title:'Replace deprecated map SDK', labels:[{t:'Tech debt',c:'var(--ax-text-subtle)'}], due:'', overdue:false, checklist:'', comments:0, who:{i:'TR',n:'Tom Reyes',c:'var(--ax-viz-violet)'} },
+                { id:10, key:'APP-097', col:'done', title:'Localize strings for FR & DE', labels:[{t:'i18n',c:'var(--ax-viz-cyan)'}], due:'', overdue:false, checklist:'6/6', comments:2, who:{i:'PN',n:'Priya Nair',c:'var(--ax-viz-amber)'} },
+                { id:11, key:'APP-099', col:'done', title:'Fix flaky checkout E2E test', labels:[{t:'Bug',c:'var(--ax-danger-500)'}], due:'', overdue:false, checklist:'', comments:1, who:{i:'MO',n:'Maya Okonkwo',c:'var(--ax-viz-cyan)'} },
+              ],
+              cards(colId){ const t=this.q.trim().toLowerCase(); return this.items.filter(c=>c.col===colId && (!t || c.title.toLowerCase().includes(t) || c.key.toLowerCase().includes(t))); },
+              dragStart(id, col){ this.draggingId = id; },
+              dragEnd(){ this.draggingId = null; this.dragOverCol = null; },
+              drop(colId){ const c = this.items.find(i=>i.id===this.draggingId); if(c){ c.col = colId; } this.dragEnd(); },
+              openEdit(card){ this.active = card; this.drawerOpen = true; },
+              openNew(colId){ this.active = { key:'NEW', col:colId, title:'New card', labels:[], who:{n:'Unassigned'} }; this.drawerOpen = true; },
+            };
+          }
+        </script>
+{% endblock %}

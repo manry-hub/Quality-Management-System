@@ -1,0 +1,379 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Hospital Overview</h1>
+              <p class="ax-page-head__subtitle">Patient flow, capacity and clinical activity — Riverside General.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12"/><path d="M16 3v4"/><path d="M8 3v4"/><path d="M4 11h16"/></svg>
+                <span class="ax-btn__label">Today</span>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+              </button>
+              <button type="button" class="ax-btn ax-btn--ghost">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Export</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                <span class="ax-btn__label">New Appointment</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DASHBOARD GRID ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── KPI ROW ───── -->
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Total Patients 8,940, up 3.2%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c1">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>3.2%</span>
+              </div>
+              <div class="ax-kpi__label">Total Patients</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">8,940</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-accent" data-ax-chart-series='[{"name":"Trend","data":[7,9,10,14,16,20,24,27]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Appointments Today 142, up 5.0%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c2">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/><path d="M8 15h2v2h-2l0 -2"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>5.0%</span>
+              </div>
+              <div class="ax-kpi__label">Appointments Today</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">142</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-cyan" data-ax-chart-series='[{"name":"Trend","data":[10,12,11,16,15,20,22,25]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Average Wait Time 18 minutes, down 9.0% which is good">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c3">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 12l3 2"/><path d="M12 7v5"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>9.0%</span>
+              </div>
+              <div class="ax-kpi__label">Avg Wait Time</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">18 <small style="font-size:var(--ax-text-md);color:var(--ax-text-muted);font-weight:500;">min</small></div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-violet" data-ax-chart-series='[{"name":"Trend","data":[27,25,26,21,20,16,13,9]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ax-card ax-kpi ax-col--3" role="region" aria-label="Bed Occupancy 82%, up 1.4%">
+            <div class="ax-card__body">
+              <div class="ax-kpi__top">
+                <span class="ax-kpi__icon ax-kpi__icon--c4">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/><path d="M22 17v-3h-20"/><path d="M2 8v9"/><path d="M12 14h10v-2a3 3 0 0 0 -3 -3h-7v5"/></svg>
+                </span>
+                <span class="ax-kpi__delta ax-kpi__delta--up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6 -6l6 6"/></svg>1.4%</span>
+              </div>
+              <div class="ax-kpi__label">Bed Occupancy</div>
+              <div class="ax-kpi__meta" style="justify-content:space-between;width:100%;">
+                <div class="ax-kpi__value ax-num">82%</div>
+                <div class="ax-kpi__spark" data-ax-chart="apex" data-ax-chart-type="line" data-ax-chart-sparkline="true" data-ax-chart-tooltip="false" data-ax-chart-height="40" data-ax-chart-color="--ax-viz-amber" data-ax-chart-series='[{"name":"Trend","data":[14,15,14,17,16,18,19,21]}]' style="min-height:40px" aria-hidden="true"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ───── HERO: Patient Visits area (8) + Dept donut (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Patient visits">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Activity</span>
+                <h2 class="ax-card__title">Patient Visits</h2>
+                <p class="ax-card__subtitle">New vs. returning patients per day</p>
+              </div>
+              <div class="ax-card__actions">
+                <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="Range">
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">Week</button>
+                  <button type="button" class="ax-btn ax-btn--sm is-selected" role="radio" aria-checked="true">Month</button>
+                  <button type="button" class="ax-btn ax-btn--sm" role="radio" aria-checked="false">Year</button>
+                </div>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-cluster" style="gap:var(--ax-space-5);margin-block-end:var(--ax-space-3);">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-accent);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">New patients</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Returning</small></span>
+              </div>
+              <div
+                data-ax-chart="apex" data-ax-chart-type="area" data-ax-chart-height="310" data-ax-chart-legend="none" data-ax-chart-accent="true"
+                data-ax-chart-series='[{"name":"New patients","data":[58,64,52,71,68,82,77,90,86,98,94,112]},{"name":"Returning","data":[120,128,118,140,132,150,144,162,158,170,166,184]}]'
+                aria-label="Area chart of new versus returning patient visits"></div>
+            </div>
+          </section>
+
+          <!-- Appointments by Department donut -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Appointments by department">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">By Department</h2>
+                <p class="ax-card__subtitle">Today's appointments</p>
+              </div>
+              <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Department options">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M11 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/><path d="M18 12a1 1 0 1 0 2 0a1 1 0 1 0 -2 0"/></svg>
+              </button>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div id="ax-hc-dept" aria-label="Donut: Cardiology, Neurology, Pediatrics, Orthopedics, General"></div>
+              <ul class="ax-list ax-list--compact" style="margin-top:var(--ax-space-2);">
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Cardiology</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">38</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Neurology</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">31</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Pediatrics</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">28</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">Orthopedics</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">25</span></li>
+                <li class="ax-list__row" style="border:0;padding-inline:0;"><span class="ax-list__leading"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-emerald);display:inline-block;"></i></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);">General</span></span><span class="ax-list__trailing ax-num" style="color:var(--ax-text-strong);">20</span></li>
+              </ul>
+            </div>
+          </section>
+
+          <!-- ───── Admissions vs Discharges (8) + Bed Occupancy by ward (4) ───── -->
+          <section class="ax-card ax-card--chart ax-col--8" role="region" aria-label="Admissions versus discharges">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Admissions &amp; Discharges</h2>
+                <p class="ax-card__subtitle">Daily patient flow this week</p>
+              </div>
+              <div class="ax-card__actions">
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Admissions</small></span>
+                <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i><small style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);">Discharges</small></span>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div
+                data-ax-chart="apex" data-ax-chart-type="bar" data-ax-chart-height="300" data-ax-chart-legend="none"
+                data-ax-chart-series='[{"name":"Admissions","data":[34,42,38,46,40,29,24]},{"name":"Discharges","data":[28,36,40,33,44,31,26]}]'
+                aria-label="Column chart comparing admissions and discharges by weekday"></div>
+            </div>
+          </section>
+
+          <!-- Bed Occupancy by ward — stacked goal bars -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Bed occupancy by ward">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Bed Occupancy</h2>
+                <p class="ax-card__subtitle">By ward · 412 of 502 beds</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">ICU</span><b class="ax-num" style="color:var(--ax-danger-500);font-size:var(--ax-text-sm);">94%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:94%;background:var(--ax-danger-500);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">General Medicine</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">86%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:86%;background:var(--ax-warning-500);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Surgery</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">78%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:78%;background:var(--ax-accent);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Pediatrics</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">71%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:71%;background:var(--ax-viz-cyan);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Maternity</span><b class="ax-num" style="color:var(--ax-viz-emerald);font-size:var(--ax-text-sm);">64%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:64%;background:var(--ax-viz-emerald);"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Today's Schedule (4) + Doctor Availability (4) + Revenue by Service (4) ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Today's schedule">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Today's Schedule</h2>
+                <p class="ax-card__subtitle">Upcoming appointments</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">All</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">09:00</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Marcus Reed</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Dr. Patel · Cardiology · Room 204</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">09:45</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Ivy Tran</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Dr. Osei · Pediatrics · Room 112</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-accent);min-width:48px;font-weight:600;">10:30</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">George Hadley</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Dr. Klein · Neurology · Room 308</div>
+                </div>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:flex-start;">
+                <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-sm);color:var(--ax-text-muted);min-width:48px;font-weight:600;">11:15</span>
+                <div style="flex:1 1 auto;min-width:0;border-left:2px solid var(--ax-border);padding-left:var(--ax-space-3);">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Nadia Farouk</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Dr. Lowe · Orthopedics · Room 220</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Doctor availability">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Doctor Availability</h2>
+                <p class="ax-card__subtitle">On-shift now</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <ul class="ax-list ax-list--compact">
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">AP</span></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Dr. Anita Patel</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Cardiology</span></span><span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Available</span></span></li>
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:600;">KO</span></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Dr. Kwame Osei</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Pediatrics</span></span><span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>In consult</span></span></li>
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);font-weight:600;">HK</span></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Dr. Helena Klein</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Neurology</span></span><span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Available</span></span></li>
+                <li class="ax-list__row"><span class="ax-list__leading"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);font-weight:600;">DL</span></span><span class="ax-list__content"><span class="ax-list__title" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Dr. Daniel Lowe</span><span style="display:block;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Orthopedics</span></span><span class="ax-list__trailing"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-text-muted);"><span class="ax-badge__dot"></span>Off-duty</span></span></li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="ax-card ax-col--4" role="region" aria-label="Revenue by service">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Revenue by Service</h2>
+                <p class="ax-card__subtitle">This month</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">Report</a>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Surgery</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$284K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:88%;background:var(--ax-accent);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Diagnostics</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$176K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:62%;background:var(--ax-viz-cyan);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Consultations</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$132K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:48%;background:var(--ax-viz-violet);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Pharmacy</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$94K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:34%;background:var(--ax-viz-pink);"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:6px;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Lab Tests</span><b class="ax-num" style="color:var(--ax-text-strong);font-size:var(--ax-text-sm);">$71K</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:26%;background:var(--ax-viz-amber);"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Recent Appointments (12) ───── -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Recent appointments">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Recent Appointments</h2>
+                <p class="ax-card__subtitle">Across all departments</p>
+              </div>
+              <a class="ax-btn ax-btn--link" href="#">View all</a>
+            </div>
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover">
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col">Patient</th>
+                    <th class="ax-table__th" scope="col">Doctor</th>
+                    <th class="ax-table__th" scope="col">Department</th>
+                    <th class="ax-table__th" scope="col">Time</th>
+                    <th class="ax-table__th" scope="col">Type</th>
+                    <th class="ax-table__th" scope="col">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-cyan) 18%,transparent);color:var(--ax-viz-cyan);font-weight:600;">MR</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Marcus Reed</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">52 · Male · #P-8841</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Dr. Anita Patel</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Cardiology</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">09:00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">Follow-up</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Confirmed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-pink) 18%,transparent);color:var(--ax-viz-pink);font-weight:600;">IT</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Ivy Tran</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">7 · Female · #P-9210</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Dr. Kwame Osei</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Pediatrics</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">09:45</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-text-muted);">Check-up</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Confirmed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-violet) 18%,transparent);color:var(--ax-viz-violet);font-weight:600;">GH</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">George Hadley</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">64 · Male · #P-7702</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Dr. Helena Klein</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Neurology</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">10:30</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--info ax-badge--pill">Consult</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--warning ax-badge--pill"><span class="ax-badge__dot"></span>Waiting</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-amber) 18%,transparent);color:var(--ax-viz-amber);font-weight:600;">NF</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Nadia Farouk</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">38 · Female · #P-8033</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Dr. Daniel Lowe</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Orthopedics</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">11:15</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--pill" style="color:var(--ax-text-muted);">X-ray</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--success ax-badge--pill"><span class="ax-badge__dot"></span>Confirmed</span></td>
+                  </tr>
+                  <tr class="ax-table__row">
+                    <td class="ax-table__td"><div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;"><span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:color-mix(in oklab,var(--ax-viz-emerald) 18%,transparent);color:var(--ax-viz-emerald);font-weight:600;">PL</span><div><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Priya Lalwani</div><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">29 · Female · #P-9114</div></div></div></td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Dr. Anita Patel</td>
+                    <td class="ax-table__td" style="color:var(--ax-text-muted);">Cardiology</td>
+                    <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);">13:00</td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill">ECG</span></td>
+                    <td class="ax-table__td"><span class="ax-badge ax-badge--soft ax-badge--danger ax-badge--pill"><span class="ax-badge__dot"></span>Cancelled</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}
+
+{% block scripts %}
+<script type="module">
+    const { renderChart } = window.Vireo.charts;
+    const cv = (n) => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+    const dept = document.getElementById('ax-hc-dept');
+    if (dept) renderChart(dept, 'donut', [38, 31, 28, 25, 20], {
+      height: 220, legend: 'none',
+      apex: {
+        labels: ['Cardiology', 'Neurology', 'Pediatrics', 'Orthopedics', 'General'],
+        colors: [cv('--ax-viz-cyan'), cv('--ax-viz-violet'), cv('--ax-viz-pink'), cv('--ax-viz-amber'), cv('--ax-viz-emerald')],
+        stroke: { width: 0 },
+        plotOptions: { pie: { donut: { size: '72%', labels: { show: true, value: { fontFamily: cv('--ax-font-mono'), fontWeight: 600 }, total: { show: true, label: 'Today', formatter: () => '142' } } } } },
+      },
+    });
+  </script>
+{% endblock %}

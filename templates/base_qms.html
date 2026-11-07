@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Executive Quality Dashboard{% endblock %} — QMS Automotive</title>
+    <link rel="icon" type="image/png" href="/static/images/favicon.png" sizes="16x16">
+    <link rel="stylesheet" href="/static/css/remixicon.css">
+    <link rel="stylesheet" href="/static/css/lib/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/lib/apexcharts.css">
+    <link rel="stylesheet" href="/static/css/lib/dataTables.min.css">
+    <link rel="stylesheet" href="/static/css/lib/flatpickr.min.css">
+    <link rel="stylesheet" href="/static/css/style.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% include "partials/sidebar.html" %}
+
+    <main class="dashboard-main">
+        {% include "partials/navbar.html" %}
+
+        <div class="dashboard-main-body">
+            {% if messages %}
+            <div class="row mb-3">
+                <div class="col-12">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show radius-8" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+
+        <footer class="d-footer">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-auto">
+                    <p class="mb-0 text-sm text-secondary-light">
+                        &copy; 2026 <strong>QMS Automotive</strong>. Precision Plastic Injection Molding Governance.
+                    </p>
+                </div>
+                <div class="col-auto">
+                    <p class="mb-0 text-sm text-secondary-light">
+                        Standards: <span class="text-primary-600 fw-semibold">IATF 16949:2016</span> | <span class="text-success-main fw-semibold">21 CFR Part 11</span>
+                    </p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="/static/js/lib/jquery-3.7.1.min.js"></script>
+    <script src="/static/js/lib/bootstrap.bundle.min.js"></script>
+    <script src="/static/js/lib/apexcharts.min.js"></script>
+    <script src="/static/js/lib/iconify-icon.min.js"></script>
+    <script src="/static/js/app.js"></script>
+    {% block script %}{% endblock %}
+</body>
+</html>

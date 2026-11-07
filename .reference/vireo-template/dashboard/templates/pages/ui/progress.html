@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Progress</h1>
+              <p class="ax-page-head__subtitle">Linear and circular progress — sizes, tones, striped, labeled, stacked and indeterminate.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/ui/spinners/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/></svg>
+                <span class="ax-btn__label">Spinners</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/charts/sparklines/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19l4 -6l4 2l4 -5l4 4"/></svg>
+                <span class="ax-btn__label">Sparklines</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Sizes ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Progress sizes">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Track height</span>
+                <h2 class="ax-card__title">Sizes</h2>
+                <p class="ax-card__subtitle">From a 4px hairline to a 12px bar.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Extra small · xs</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">24%</b></div>
+                <div class="ax-progress ax-progress--xs"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:24%;" role="progressbar" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100" aria-label="Extra small progress"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Small · sm</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">42%</b></div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:42%;" role="progressbar" aria-valuenow="42" aria-valuemin="0" aria-valuemax="100" aria-label="Small progress"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Medium · md</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">68%</b></div>
+                <div class="ax-progress ax-progress--md"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:68%;" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" aria-label="Medium progress"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Large · lg</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">86%</b></div>
+                <div class="ax-progress ax-progress--lg"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:86%;" role="progressbar" aria-valuenow="86" aria-valuemin="0" aria-valuemax="100" aria-label="Large progress"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Colors ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Progress colors">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Semantic tones</span>
+                <h2 class="ax-card__title">Colors</h2>
+                <p class="ax-card__subtitle">Accent by default, plus success, warning and danger.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Accent — Storage used</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">61%</b></div>
+                <div class="ax-progress ax-progress--md"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:61%;" role="progressbar" aria-valuenow="61" aria-valuemin="0" aria-valuemax="100" aria-label="Storage used"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Success — Onboarding</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-success-500);">100%</b></div>
+                <div class="ax-progress ax-progress--md ax-progress--success"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:100%;" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" aria-label="Onboarding complete"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Warning — Sync backlog</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-warning-500);">54%</b></div>
+                <div class="ax-progress ax-progress--md ax-progress--warning"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:54%;" role="progressbar" aria-valuenow="54" aria-valuemin="0" aria-valuemax="100" aria-label="Sync backlog"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Danger — Error budget</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-danger-500);">19%</b></div>
+                <div class="ax-progress ax-progress--md ax-progress--danger"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:19%;" role="progressbar" aria-valuenow="19" aria-valuemin="0" aria-valuemax="100" aria-label="Error budget remaining"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Striped & animated ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Striped and animated progress">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Texture</span>
+                <h2 class="ax-card__title">Striped &amp; Animated</h2>
+                <p class="ax-card__subtitle">A diagonal weave, optionally marching to signal active work.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Striped</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">72%</b></div>
+                <div class="ax-progress ax-progress--lg ax-progress--striped"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:72%;" role="progressbar" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100" aria-label="Striped progress"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Striped + animated — Importing</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">47%</b></div>
+                <div class="ax-progress ax-progress--lg ax-progress--striped ax-progress--animated"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:47%;" role="progressbar" aria-valuenow="47" aria-valuemin="0" aria-valuemax="100" aria-label="Import progress"></div></div></div>
+              </div>
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-2);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Indeterminate — Connecting</span><span style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">no fixed length</span></div>
+                <div class="ax-progress ax-progress--lg ax-progress--indeterminate"><div class="ax-progress__track"><div class="ax-progress__fill" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-label="Connecting"></div></div></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Labeled (inline value) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Labeled progress">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Inline value</span>
+                <h2 class="ax-card__title">Labeled</h2>
+                <p class="ax-card__subtitle">The bar and its mono value share one row via __value.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-5);">
+              <div>
+                <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">CPU</div>
+                <div class="ax-progress ax-progress--sm"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:38%;" role="progressbar" aria-valuenow="38" aria-valuemin="0" aria-valuemax="100" aria-label="CPU"></div></div><span class="ax-progress__value ax-num">38%</span></div>
+              </div>
+              <div>
+                <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">Memory</div>
+                <div class="ax-progress ax-progress--sm ax-progress--warning"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:73%;" role="progressbar" aria-valuenow="73" aria-valuemin="0" aria-valuemax="100" aria-label="Memory"></div></div><span class="ax-progress__value ax-num">73%</span></div>
+              </div>
+              <div>
+                <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">Disk</div>
+                <div class="ax-progress ax-progress--sm ax-progress--danger"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:91%;" role="progressbar" aria-valuenow="91" aria-valuemin="0" aria-valuemax="100" aria-label="Disk"></div></div><span class="ax-progress__value ax-num">91%</span></div>
+              </div>
+              <div>
+                <div style="font-size:var(--ax-text-sm);color:var(--ax-text-muted);margin-bottom:var(--ax-space-2);">Bandwidth</div>
+                <div class="ax-progress ax-progress--sm ax-progress--success"><div class="ax-progress__track"><div class="ax-progress__fill" style="width:22%;" role="progressbar" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100" aria-label="Bandwidth"></div></div><span class="ax-progress__value ax-num">22%</span></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Stacked / multi-segment ───── -->
+          <section class="ax-card ax-col--8" role="region" aria-label="Stacked progress">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Breakdown</span>
+                <h2 class="ax-card__title">Stacked</h2>
+                <p class="ax-card__subtitle">Several segments share one track to show composition.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-7);">
+              <!-- storage breakdown -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Storage by type</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">412 GB / 500 GB</b></div>
+                <div class="ax-progress ax-progress--lg ax-progress--stacked">
+                  <div class="ax-progress__track">
+                    <div class="ax-progress__fill" style="width:38%;background:var(--ax-viz-cyan);" role="progressbar" aria-valuenow="38" aria-valuemin="0" aria-valuemax="100" aria-label="Images 38 percent"></div>
+                    <div class="ax-progress__fill" style="width:24%;background:var(--ax-viz-violet);" role="progressbar" aria-valuenow="24" aria-valuemin="0" aria-valuemax="100" aria-label="Video 24 percent"></div>
+                    <div class="ax-progress__fill" style="width:14%;background:var(--ax-viz-amber);" role="progressbar" aria-valuenow="14" aria-valuemin="0" aria-valuemax="100" aria-label="Documents 14 percent"></div>
+                    <div class="ax-progress__fill" style="width:6%;background:var(--ax-viz-pink);" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100" aria-label="Other 6 percent"></div>
+                  </div>
+                </div>
+                <div class="ax-cluster" style="gap:var(--ax-space-5);margin-top:var(--ax-space-3);">
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-cyan);"></i><small style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Images <b class="ax-num" style="color:var(--ax-text-strong);">190 GB</b></small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-violet);"></i><small style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Video <b class="ax-num" style="color:var(--ax-text-strong);">120 GB</b></small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-amber);"></i><small style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Docs <b class="ax-num" style="color:var(--ax-text-strong);">70 GB</b></small></span>
+                  <span class="ax-cluster" style="gap:var(--ax-space-2);"><i style="width:9px;height:9px;border-radius:3px;background:var(--ax-viz-pink);"></i><small style="font-size:var(--ax-text-xs);color:var(--ax-text-muted);">Other <b class="ax-num" style="color:var(--ax-text-strong);">32 GB</b></small></span>
+                </div>
+              </div>
+              <!-- pipeline -->
+              <div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Deal pipeline</span><b class="ax-num" style="font-size:var(--ax-text-sm);color:var(--ax-text-strong);">$284K</b></div>
+                <div class="ax-progress ax-progress--md ax-progress--stacked">
+                  <div class="ax-progress__track">
+                    <div class="ax-progress__fill" style="width:30%;background:var(--ax-accent);" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Qualified"></div>
+                    <div class="ax-progress__fill" style="width:26%;background:var(--ax-viz-cyan);" role="progressbar" aria-valuenow="26" aria-valuemin="0" aria-valuemax="100" aria-label="Proposal"></div>
+                    <div class="ax-progress__fill" style="width:21%;background:var(--ax-viz-emerald);" role="progressbar" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100" aria-label="Won"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Circular ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Circular progress">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Radial</span>
+                <h2 class="ax-card__title">Circular</h2>
+                <p class="ax-card__subtitle">Ring track + value center.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;justify-content:space-around;align-items:center;flex-wrap:wrap;gap:var(--ax-space-5);">
+              <!-- 76% accent — r=32, C=201.06, offset = C*(1-0.76)=48.25 -->
+              <div class="ax-progress ax-progress--circle" style="width:96px;height:96px;" role="progressbar" aria-valuenow="76" aria-valuemin="0" aria-valuemax="100" aria-label="Sprint completion 76 percent">
+                <svg viewBox="0 0 80 80" width="96" height="96" aria-hidden="true">
+                  <circle class="ax-progress__ring-track" cx="40" cy="40" r="32" stroke-width="7"></circle>
+                  <circle class="ax-progress__ring-fill" cx="40" cy="40" r="32" stroke-width="7" stroke-dasharray="201.06" stroke-dashoffset="48.25" transform="rotate(-90 40 40)"></circle>
+                </svg>
+                <div class="ax-progress__center" style="flex-direction:column;line-height:1;">
+                  <b style="font-size:var(--ax-text-lg);color:var(--ax-text-strong);">76%</b>
+                  <small style="font-family:var(--ax-font-sans);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);margin-top:2px;">Sprint</small>
+                </div>
+              </div>
+              <!-- 92% success -->
+              <div class="ax-progress ax-progress--circle" style="width:96px;height:96px;" role="progressbar" aria-valuenow="92" aria-valuemin="0" aria-valuemax="100" aria-label="Uptime 92 percent">
+                <svg viewBox="0 0 80 80" width="96" height="96" aria-hidden="true">
+                  <circle class="ax-progress__ring-track" cx="40" cy="40" r="32" stroke-width="7"></circle>
+                  <circle class="ax-progress__ring-fill" cx="40" cy="40" r="32" stroke-width="7" stroke-dasharray="201.06" stroke-dashoffset="16.08" transform="rotate(-90 40 40)" style="stroke:var(--ax-success-500);"></circle>
+                </svg>
+                <div class="ax-progress__center" style="flex-direction:column;line-height:1;">
+                  <b style="font-size:var(--ax-text-lg);color:var(--ax-text-strong);">92%</b>
+                  <small style="font-family:var(--ax-font-sans);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);margin-top:2px;">SLA</small>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Floating Labels</h1>
+              <p class="ax-page-head__subtitle">The label is the placeholder — it travels to the top edge on focus or fill, pure CSS.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/forms/elements/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l14 0"/><path d="M5 12l6 6"/><path d="M5 12l6 -6"/></svg>
+                <span class="ax-btn__label">Standard labels</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Basic floating inputs ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Floating label inputs">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Inputs</span>
+                <h2 class="ax-card__title">Text &amp; Email</h2>
+                <p class="ax-card__subtitle">One empty (label rests inside), one pre-filled (label floated).</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div class="ax-float">
+                <input id="fl-name" type="text" class="ax-input ax-float__input" placeholder=" ">
+                <label class="ax-float__label" for="fl-name">Full name</label>
+              </div>
+              <div class="ax-float">
+                <input id="fl-email" type="email" class="ax-input ax-float__input" placeholder=" " value="camila@northwind.io">
+                <label class="ax-float__label" for="fl-email">Email address</label>
+              </div>
+              <div class="ax-float" x-data="{ show:false }">
+                <input id="fl-pass" :type="show ? 'text' : 'password'" class="ax-input ax-float__input ax-input--with-trailing" placeholder=" " value="aurora-glass">
+                <label class="ax-float__label" for="fl-pass">Password</label>
+                <button type="button" class="ax-field__affix ax-field__affix--trailing ax-field__affix--button" @click="show=!show" :aria-label="show ? 'Hide password' : 'Show password'" style="top:50%;transform:translateY(-50%);">
+                  <svg x-show="!show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M21 12c-2.4 4 -5.4 6 -9 6c-3.6 0 -6.6 -2 -9 -6c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6"/></svg>
+                  <svg x-show="show" x-cloak viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10.585 10.587a2 2 0 0 0 2.829 2.828"/><path d="M16.681 16.673a8.717 8.717 0 0 1 -4.681 1.327c-3.6 0 -6.6 -2 -9 -6c1.272 -2.12 2.712 -3.678 4.32 -4.674m2.86 -1.146a9.055 9.055 0 0 1 1.82 -.18c3.6 0 6.6 2 9 6c-.666 1.11 -1.379 2.067 -2.138 2.87"/><path d="M3 3l18 18"/></svg>
+                </button>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Leading-icon floating inputs ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Floating labels with leading icons">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Inputs</span>
+                <h2 class="ax-card__title">With Leading Icons</h2>
+                <p class="ax-card__subtitle">The icon offsets the label's rest position.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div class="ax-float ax-float--icon">
+                <span class="ax-field__affix ax-field__affix--leading" aria-hidden="true" style="top:50%;transform:translateY(-50%);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z"/></svg></span>
+                <input id="fl-company" type="text" class="ax-input ax-float__input ax-input--with-leading-icon" placeholder=" ">
+                <label class="ax-float__label ax-float__label--icon" for="fl-company">Company name</label>
+              </div>
+              <div class="ax-float ax-float--icon">
+                <span class="ax-field__affix ax-field__affix--leading" aria-hidden="true" style="top:50%;transform:translateY(-50%);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></span>
+                <input id="fl-phone" type="tel" class="ax-input ax-float__input ax-input--with-leading-icon ax-num" placeholder=" " value="(503) 555-0148" style="font-family:var(--ax-font-mono);">
+                <label class="ax-float__label ax-float__label--icon" for="fl-phone">Phone number</label>
+              </div>
+              <div class="ax-float ax-float--icon">
+                <span class="ax-field__affix ax-field__affix--leading" aria-hidden="true" style="top:50%;transform:translateY(-50%);"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M9 12l2 2l4 -4"/><path d="M12 3a12 12 0 0 0 8.5 3a12 12 0 0 1 -8.5 15a12 12 0 0 1 -8.5 -15a12 12 0 0 0 8.5 -3"/></svg></span>
+                <input id="fl-vat" type="text" class="ax-input ax-float__input ax-input--with-leading-icon ax-num" placeholder=" " style="font-family:var(--ax-font-mono);">
+                <label class="ax-float__label ax-float__label--icon" for="fl-vat">VAT / Tax ID</label>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Select & textarea ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Floating label select and textarea">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Other controls</span>
+                <h2 class="ax-card__title">Select &amp; Textarea</h2>
+                <p class="ax-card__subtitle">Selects float permanently; textarea pins the label to the top.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div class="ax-float ax-float--select">
+                <select id="fl-plan" class="ax-select ax-float__input">
+                  <option value="" selected></option>
+                  <option>Starter</option><option>Growth</option><option>Scale</option>
+                </select>
+                <label class="ax-float__label" for="fl-plan">Subscription plan</label>
+              </div>
+              <div class="ax-float ax-float--select">
+                <select id="fl-country2" class="ax-select ax-float__input">
+                  <option value="" selected></option>
+                  <option>United States</option><option>United Kingdom</option><option>Germany</option>
+                </select>
+                <label class="ax-float__label" for="fl-country2">Country</label>
+              </div>
+              <div class="ax-float ax-float--area">
+                <textarea id="fl-msg" class="ax-textarea ax-float__input" rows="3" placeholder=" "></textarea>
+                <label class="ax-float__label" for="fl-msg">Message</label>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Validation states ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Floating labels with validation">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">States</span>
+                <h2 class="ax-card__title">Valid &amp; Invalid</h2>
+                <p class="ax-card__subtitle">Floating labels carry the same status colors.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-6);">
+              <div>
+                <div class="ax-float">
+                  <input id="fl-ok" type="text" class="ax-input ax-float__input is-valid" placeholder=" " value="northwind-labs" aria-describedby="fl-ok-msg">
+                  <label class="ax-float__label" for="fl-ok">Workspace handle</label>
+                </div>
+                <span id="fl-ok-msg" class="ax-field__message ax-field__message--success" style="display:block;margin-top:var(--ax-space-2);">vireo.app/northwind-labs is available.</span>
+              </div>
+              <div>
+                <div class="ax-float">
+                  <input id="fl-bad" type="email" class="ax-input ax-float__input is-invalid" placeholder=" " value="amelia.hart@" aria-invalid="true" aria-describedby="fl-bad-msg">
+                  <label class="ax-float__label" for="fl-bad">Email address</label>
+                </div>
+                <span id="fl-bad-msg" class="ax-field__message ax-field__message--error" role="alert" style="display:block;margin-top:var(--ax-space-2);">Enter a complete email address.</span>
+              </div>
+              <div style="opacity:.6;">
+                <div class="ax-float">
+                  <input id="fl-dis" type="text" class="ax-input ax-float__input" placeholder=" " value="Managed by Okta" disabled>
+                  <label class="ax-float__label" for="fl-dis">Identity provider</label>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Compact sign-in demo card ───── -->
+          <section class="ax-card ax-col--12 ax-card--accent-edge" role="region" aria-label="Floating label form in context"
+            x-data="{ sent:false }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">In context</span>
+                <h2 class="ax-card__title">Compact Sign-in</h2>
+                <p class="ax-card__subtitle">Floating labels keep dense forms tidy. Submit is simulated.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <template x-if="sent">
+                <div class="ax-alert ax-alert--success" role="status" style="max-width:560px;">
+                  <span class="ax-alert__icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 12l2 2l4 -4"/></svg></span>
+                  <div class="ax-alert__content"><p class="ax-alert__title">Signed in</p><p class="ax-alert__message">Welcome back — redirecting to your dashboard.</p></div>
+                  <div class="ax-alert__actions"><button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="sent=false"><span class="ax-btn__label">Reset</span></button></div>
+                </div>
+              </template>
+              <form x-show="!sent" @submit.prevent="sent=true" style="max-width:560px;">
+                <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ax-space-5);">
+                  <div class="ax-float" style="grid-column:span 2;">
+                    <input id="si-email" type="email" class="ax-input ax-float__input" placeholder=" " autocomplete="email">
+                    <label class="ax-float__label" for="si-email">Work email</label>
+                  </div>
+                  <div class="ax-float">
+                    <input id="si-pass" type="password" class="ax-input ax-float__input" placeholder=" " autocomplete="current-password">
+                    <label class="ax-float__label" for="si-pass">Password</label>
+                  </div>
+                  <div class="ax-float ax-float--select">
+                    <select id="si-team" class="ax-select ax-float__input"><option value="" selected></option><option>Northwind Labs</option><option>Acme Inc.</option></select>
+                    <label class="ax-float__label" for="si-team">Team</label>
+                  </div>
+                </div>
+                <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-5);">
+                  <label class="ax-check" style="display:flex;gap:var(--ax-space-2);align-items:center;min-height:auto;">
+                    <input type="checkbox" class="ax-checkbox" checked>
+                    <span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Keep me signed in</span>
+                  </label>
+                  <button type="submit" class="ax-btn ax-btn--primary"><span class="ax-btn__label">Sign in</span></button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Page-local floating-label recipe — last-resort composition.
+             Uses ONLY role tokens; no raw colors. Works in light + dark for free. -->
+        <style>
+          .ax-float { position: relative; }
+          .ax-float__input::placeholder { color: transparent; }
+          .ax-float__label {
+            position: absolute;
+            inset-inline-start: var(--ax-space-3);
+            top: 50%;
+            transform: translateY(-50%);
+            margin: 0;
+            padding-inline: 4px;
+            font-size: var(--ax-text-sm);
+            color: var(--ax-text-subtle);
+            background: var(--ax-surface-solid);
+            border-radius: var(--ax-radius-xs);
+            pointer-events: none;
+            transition:
+              top var(--ax-motion-fast) var(--ax-ease-standard),
+              font-size var(--ax-motion-fast) var(--ax-ease-standard),
+              color var(--ax-motion-fast) var(--ax-ease-standard);
+          }
+          .ax-float--icon .ax-float__label { inset-inline-start: var(--ax-space-8); }
+          .ax-float--area .ax-float__label { top: calc(var(--ax-space-3) + 9px); transform: none; }
+          /* floated: focused, filled, or native select/textarea */
+          .ax-float__input:focus + .ax-float__label,
+          .ax-float__input:not(:placeholder-shown) + .ax-float__label,
+          .ax-float--select .ax-float__label,
+          .ax-float--area .ax-float__input:focus + .ax-float__label,
+          .ax-float--area .ax-float__input:not(:placeholder-shown) + .ax-float__label {
+            top: 0;
+            font-size: var(--ax-text-2xs);
+            color: var(--ax-text-muted);
+          }
+          .ax-float--icon .ax-float__input:focus + .ax-float__label,
+          .ax-float--icon .ax-float__input:not(:placeholder-shown) + .ax-float__label {
+            inset-inline-start: var(--ax-space-3);
+          }
+          .ax-float__input:focus + .ax-float__label { color: var(--ax-accent); }
+          .ax-float__input.is-invalid + .ax-float__label { color: var(--ax-danger-500); }
+          .ax-float__input.is-valid + .ax-float__label { color: var(--ax-success-500); }
+          @media (prefers-reduced-motion: reduce) {
+            .ax-float__label { transition: none; }
+          }
+        </style>
+      
+{% endblock %}

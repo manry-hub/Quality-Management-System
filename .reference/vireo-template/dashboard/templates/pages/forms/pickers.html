@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Pickers</h1>
+              <p class="ax-page-head__subtitle">Date, range, time &amp; color pickers — masked triggers with glassy popovers.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/forms/elements/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg>
+                <span class="ax-btn__label">All elements</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ PAGE CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- ───── Single date picker ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Date picker"
+            x-data="{
+              open:false, selected:14, label:'Jun 14, 2026',
+              month:'June 2026',
+              days:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30],
+              lead:[28,29,30,31], trail:[1,2,3,4,5],
+              today:9,
+              pick(d){ this.selected=d; this.label='Jun '+d+', 2026'; this.open=false; }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Date</span>
+                <h2 class="ax-card__title">Single Date</h2>
+                <p class="ax-card__subtitle">Typeable trigger + month grid popover.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field" style="position:relative;">
+                <label class="ax-label" for="pk-date">Due date</label>
+                <div class="ax-field__control">
+                  <input id="pk-date" type="text" class="ax-input ax-input--with-trailing ax-num" x-model="label" placeholder="MMM D, YYYY" style="font-family:var(--ax-font-mono);" @focus="open=true">
+                  <button type="button" class="ax-field__affix ax-field__affix--trailing ax-field__affix--button" @click="open=!open" aria-label="Open calendar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg>
+                  </button>
+                </div>
+                <!-- popover -->
+                <div x-show="open" x-cloak x-transition.opacity @click.outside="open=false" @keydown.escape="open=false" role="dialog" aria-label="Choose date"
+                     style="position:absolute;z-index:var(--ax-z-dropdown,40);top:100%;inset-inline-start:0;margin-top:var(--ax-space-2);width:300px;padding:var(--ax-space-4);background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-md);backdrop-filter:blur(18px) saturate(1.1);">
+                  <div class="ax-cluster" style="justify-content:space-between;margin-bottom:var(--ax-space-3);">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Previous month"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6l6 6"/></svg></button>
+                    <b x-text="month" style="font-family:var(--ax-font-display);font-size:var(--ax-text-sm);color:var(--ax-text-strong);"></b>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Next month"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg></button>
+                  </div>
+                  <div role="grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;">
+                    <template x-for="d in ['Su','Mo','Tu','We','Th','Fr','Sa']" :key="d"><span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);padding:var(--ax-space-1) 0;" x-text="d"></span></template>
+                    <template x-for="d in lead" :key="'l'+d"><span class="ax-num" style="padding:var(--ax-space-2) 0;color:var(--ax-text-disabled);font-size:var(--ax-text-xs);" x-text="d"></span></template>
+                    <template x-for="d in days" :key="d">
+                      <button type="button" class="ax-num" @click="pick(d)" :aria-pressed="selected===d"
+                        :style="selected===d
+                          ? 'padding:var(--ax-space-2) 0;border:0;border-radius:var(--ax-radius-sm);font-size:var(--ax-text-xs);cursor:pointer;background:var(--ax-accent);color:var(--ax-on-accent);font-weight:600;'
+                          : (today===d
+                            ? 'padding:var(--ax-space-2) 0;border:1px solid var(--ax-accent);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-xs);cursor:pointer;background:transparent;color:var(--ax-text);'
+                            : 'padding:var(--ax-space-2) 0;border:0;border-radius:var(--ax-radius-sm);font-size:var(--ax-text-xs);cursor:pointer;background:transparent;color:var(--ax-text);')"
+                        x-text="d"></button>
+                    </template>
+                    <template x-for="d in trail" :key="'t'+d"><span class="ax-num" style="padding:var(--ax-space-2) 0;color:var(--ax-text-disabled);font-size:var(--ax-text-xs);" x-text="d"></span></template>
+                  </div>
+                  <div class="ax-cluster" style="justify-content:space-between;margin-top:var(--ax-space-3);padding-top:var(--ax-space-3);border-top:1px solid var(--ax-border);">
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="pick(today); label='Jun 9, 2026'"><span class="ax-btn__label">Today</span></button>
+                    <button type="button" class="ax-btn ax-btn--ghost ax-btn--sm" @click="label=''; open=false"><span class="ax-btn__label">Clear</span></button>
+                  </div>
+                </div>
+                <span class="ax-help">Today is highlighted with an accent ring.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Range picker (presets + inline) ───── -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Date range picker"
+            x-data="{ preset:'last30', label:'May 30 – Jun 28, 2026',
+              choose(p,l){ this.preset=p; this.label=l; } }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Date</span>
+                <h2 class="ax-card__title">Date Range</h2>
+                <p class="ax-card__subtitle">Preset rail + range with accent-wash between endpoints.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field" style="margin-bottom:var(--ax-space-4);">
+                <label class="ax-label" for="pk-range">Reporting period</label>
+                <div class="ax-field__control">
+                  <span class="ax-field__affix ax-field__affix--leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2l0 -12"/><path d="M16 3l0 4"/><path d="M8 3l0 4"/><path d="M4 11l16 0"/></svg></span>
+                  <input id="pk-range" type="text" class="ax-input ax-input--with-leading-icon ax-num" x-model="label" readonly style="font-family:var(--ax-font-mono);">
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:120px 1fr;gap:var(--ax-space-4);">
+                <!-- preset rail -->
+                <div style="display:flex;flex-direction:column;gap:2px;border-inline-end:1px solid var(--ax-border);padding-inline-end:var(--ax-space-3);">
+                  <button type="button" class="ax-num" @click="choose('today','Jun 28, 2026')" :style="preset==='today'?'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:var(--ax-accent-wash);color:var(--ax-accent);font-weight:600;':'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:transparent;color:var(--ax-text-muted);'">Today</button>
+                  <button type="button" class="ax-num" @click="choose('last7','Jun 22 – 28, 2026')" :style="preset==='last7'?'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:var(--ax-accent-wash);color:var(--ax-accent);font-weight:600;':'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:transparent;color:var(--ax-text-muted);'">Last 7 days</button>
+                  <button type="button" class="ax-num" @click="choose('last30','May 30 – Jun 28, 2026')" :style="preset==='last30'?'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:var(--ax-accent-wash);color:var(--ax-accent);font-weight:600;':'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:transparent;color:var(--ax-text-muted);'">Last 30 days</button>
+                  <button type="button" class="ax-num" @click="choose('month','Jun 1 – 28, 2026')" :style="preset==='month'?'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:var(--ax-accent-wash);color:var(--ax-accent);font-weight:600;':'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:transparent;color:var(--ax-text-muted);'">This month</button>
+                  <button type="button" class="ax-num" @click="choose('quarter','Apr 1 – Jun 28, 2026')" :style="preset==='quarter'?'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:var(--ax-accent-wash);color:var(--ax-accent);font-weight:600;':'text-align:start;padding:var(--ax-space-2) var(--ax-space-3);border:0;border-radius:var(--ax-radius-sm);cursor:pointer;font-size:var(--ax-text-xs);background:transparent;color:var(--ax-text-muted);'">This quarter</button>
+                </div>
+                <!-- mini grid with a range -->
+                <div role="grid" aria-label="June 2026">
+                  <div class="ax-cluster" style="justify-content:center;margin-bottom:var(--ax-space-2);"><b style="font-family:var(--ax-font-display);font-size:var(--ax-text-xs);color:var(--ax-text-strong);">June 2026</b></div>
+                  <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;text-align:center;">
+                    <template x-for="d in ['S','M','T','W','T','F','S']" :key="d"><span style="font-size:9px;color:var(--ax-text-subtle);" x-text="d"></span></template>
+                    <template x-for="d in 30" :key="d">
+                      <span class="ax-num"
+                        :style="(d===22)?'padding:5px 0;font-size:10px;background:var(--ax-accent);color:var(--ax-on-accent);border-radius:var(--ax-radius-sm) 0 0 var(--ax-radius-sm);font-weight:600;':((d===28)?'padding:5px 0;font-size:10px;background:var(--ax-accent);color:var(--ax-on-accent);border-radius:0 var(--ax-radius-sm) var(--ax-radius-sm) 0;font-weight:600;':((d>22 && d<28)?'padding:5px 0;font-size:10px;background:var(--ax-accent-wash);color:var(--ax-text);':'padding:5px 0;font-size:10px;color:var(--ax-text-muted);'))"
+                        x-text="d"></span>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Time picker ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Time picker"
+            x-data="{ open:false, hour:'09', minute:'30', mer:'AM',
+              get label(){ return this.hour+':'+this.minute+' '+this.mer; } }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Time</span>
+                <h2 class="ax-card__title">Time</h2>
+                <p class="ax-card__subtitle">12-hour with meridiem toggle.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field" style="position:relative;">
+                <label class="ax-label" for="pk-time">Start time</label>
+                <div class="ax-field__control">
+                  <input id="pk-time" type="text" class="ax-input ax-input--with-trailing ax-num" x-model="label" readonly style="font-family:var(--ax-font-mono);">
+                  <button type="button" class="ax-field__affix ax-field__affix--trailing ax-field__affix--button" @click="open=!open" aria-label="Open time picker">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 7v5l3 3"/></svg>
+                  </button>
+                </div>
+                <div x-show="open" x-cloak x-transition.opacity @click.outside="open=false" role="dialog" aria-label="Choose time"
+                     style="position:absolute;z-index:var(--ax-z-dropdown,40);top:100%;inset-inline-start:0;margin-top:var(--ax-space-2);padding:var(--ax-space-3);background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-md);display:flex;gap:var(--ax-space-2);">
+                  <select class="ax-select ax-select--sm ax-num" x-model="hour" aria-label="Hour" style="font-family:var(--ax-font-mono);"><template x-for="h in ['01','02','03','04','05','06','07','08','09','10','11','12']" :key="h"><option x-text="h" :value="h"></option></template></select>
+                  <span style="align-self:center;color:var(--ax-text-subtle);">:</span>
+                  <select class="ax-select ax-select--sm ax-num" x-model="minute" aria-label="Minute" style="font-family:var(--ax-font-mono);"><template x-for="m in ['00','15','30','45']" :key="m"><option x-text="m" :value="m"></option></template></select>
+                  <div class="ax-btn-group ax-btn-group--segmented" role="radiogroup" aria-label="AM or PM">
+                    <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': mer==='AM' }" :aria-checked="mer==='AM'" role="radio" @click="mer='AM'">AM</button>
+                    <button type="button" class="ax-btn ax-btn--sm" :class="{ 'is-selected': mer==='PM' }" :aria-checked="mer==='PM'" role="radio" @click="mer='PM'">PM</button>
+                  </div>
+                </div>
+                <span class="ax-help">Snaps to 15-minute increments.</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Datetime combined ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Date and time">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Date + Time</span>
+                <h2 class="ax-card__title">Datetime</h2>
+                <p class="ax-card__subtitle">One combined field.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div class="ax-field">
+                <label class="ax-label" for="pk-dt">Scheduled publish</label>
+                <div class="ax-field__control">
+                  <span class="ax-field__affix ax-field__affix--leading" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M11.795 21h-6.795a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v4"/><path d="M18 18m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.5v1.5l.5 .5"/></svg></span>
+                  <input id="pk-dt" type="text" class="ax-input ax-input--with-leading-icon ax-num" value="Jun 14, 2026 · 09:30 AM" readonly style="font-family:var(--ax-font-mono);">
+                </div>
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="pk-month">Month / Year</label>
+                <input id="pk-month" type="text" class="ax-input ax-num" value="Jun 2026" readonly style="font-family:var(--ax-font-mono);">
+              </div>
+              <div class="ax-field">
+                <label class="ax-label" for="pk-week">ISO Week</label>
+                <input id="pk-week" type="text" class="ax-input ax-num" value="2026-W24" readonly style="font-family:var(--ax-font-mono);">
+              </div>
+            </div>
+          </section>
+
+          <!-- ───── Color picker ───── -->
+          <section class="ax-card ax-col--4" role="region" aria-label="Color picker"
+            x-data="{
+              open:false, hex:'#39A185',
+              swatches:['#39A185','#5883DD','#807AD8','#A56EC7','#CD5E9A','#CD674F','#E0A53A','#84A725','#36965C','#15A4B7','#72879D','#86857D'],
+              pick(c){ this.hex=c; }
+            }">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">Color</span>
+                <h2 class="ax-card__title">Color</h2>
+                <p class="ax-card__subtitle">Swatch + hex with a saturation popover.</p>
+              </div>
+            </div>
+            <div class="ax-card__body">
+              <div class="ax-field" style="position:relative;">
+                <label class="ax-label" for="pk-color">Brand color</label>
+                <button type="button" class="ax-combobox__trigger" @click="open=!open" :aria-expanded="open" aria-label="Open color picker" style="gap:var(--ax-space-3);">
+                  <span aria-hidden="true" :style="'width:22px;height:22px;border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border-strong);background:'+hex+';'"></span>
+                  <span class="ax-num" x-text="hex.toUpperCase()" style="font-family:var(--ax-font-mono);flex:1;text-align:start;"></span>
+                  <svg class="ax-combobox__caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6l6 -6"/></svg>
+                </button>
+                <div x-show="open" x-cloak x-transition.opacity @click.outside="open=false" role="dialog" aria-label="Pick a color"
+                     style="position:absolute;z-index:var(--ax-z-dropdown,40);top:100%;inset-inline-start:0;margin-top:var(--ax-space-2);width:240px;padding:var(--ax-space-3);background:var(--ax-surface-overlay);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);box-shadow:var(--ax-shadow-md);">
+                  <!-- saturation box -->
+                  <div aria-hidden="true" :style="'height:120px;border-radius:var(--ax-radius-sm);margin-bottom:var(--ax-space-3);position:relative;background:linear-gradient(to top,#000,transparent),linear-gradient(to right,#fff,'+hex+');'">
+                    <span style="position:absolute;top:14px;right:22px;width:12px;height:12px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.4);"></span>
+                  </div>
+                  <!-- hue slider -->
+                  <input type="range" min="0" max="360" value="160" class="ax-range--native" aria-label="Hue" style="width:100%;height:10px;border-radius:var(--ax-radius-pill);margin-bottom:var(--ax-space-3);background:linear-gradient(to right,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00);">
+                  <!-- hex field -->
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);margin-bottom:var(--ax-space-3);">
+                    <div class="ax-input-group" style="flex:1;">
+                      <span class="ax-input-group__addon">HEX</span>
+                      <input type="text" class="ax-input ax-num" x-model="hex" maxlength="7" style="font-family:var(--ax-font-mono);text-transform:uppercase;">
+                    </div>
+                  </div>
+                  <!-- preset swatches (the 12 accents) -->
+                  <div role="radiogroup" aria-label="Preset colors" style="display:grid;grid-template-columns:repeat(6,1fr);gap:var(--ax-space-2);">
+                    <template x-for="c in swatches" :key="c">
+                      <button type="button" role="radio" :aria-checked="hex.toUpperCase()===c.toUpperCase()" @click="pick(c)" :aria-label="c"
+                        :style="'width:100%;aspect-ratio:1;border-radius:var(--ax-radius-sm);cursor:pointer;background:'+c+';border:'+(hex.toUpperCase()===c.toUpperCase()?'2px solid var(--ax-text-strong)':'1px solid var(--ax-border)')+';display:flex;align-items:center;justify-content:center;'">
+                        <svg x-show="hex.toUpperCase()===c.toUpperCase()" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+                      </button>
+                    </template>
+                  </div>
+                </div>
+                <span class="ax-help">Preset swatches mirror the 12 Aurora accents.</span>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      
+{% endblock %}

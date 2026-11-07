@@ -1,0 +1,249 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="axEditable()">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Editable Table</h1>
+              <p class="ax-page-head__subtitle">Click any cell to edit in place. Add or remove rows, track unsaved changes, then commit them all at once.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <span class="ax-badge ax-badge--soft" :class="dirtyCount() ? 'ax-badge--warning' : 'ax-badge--neutral'" x-show="dirtyCount()" x-cloak>
+                <span class="ax-num"><span x-text="dirtyCount()"></span> unsaved <span x-text="dirtyCount()===1 ? 'change' : 'changes'"></span></span>
+              </span>
+              <button type="button" class="ax-btn ax-btn--ghost" @click="discard()" :disabled="!dirtyCount()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14l-4 -4l4 -4"/><path d="M5 10h11a4 4 0 0 1 0 8h-1"/></svg>
+                <span class="ax-btn__label">Discard</span>
+              </button>
+              <button type="button" class="ax-btn ax-btn--primary" @click="saveAll()" :disabled="!dirtyCount()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 4h10l4 4v10a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2"/><path d="M12 14a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M14 4l0 4l-6 0l0 -4"/></svg>
+                <span class="ax-btn__label">Save changes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- saved toast -->
+          <div x-show="saved" x-cloak x-transition class="ax-col--12 ax-flex" style="justify-content:flex-end;">
+            <div class="ax-alert ax-alert--success" role="status" style="display:inline-flex;align-items:center;gap:var(--ax-space-2);">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5l10 -10"/></svg>
+              Changes saved.
+            </div>
+          </div>
+
+          <section class="ax-card ax-col--12" role="region" aria-label="Editable products">
+            <div class="ax-card__header" style="flex-wrap:wrap;gap:var(--ax-space-3);">
+              <div class="ax-card__titles">
+                <h2 class="ax-card__title">Aperture Goods — Catalog</h2>
+                <p class="ax-card__subtitle">Edit price, stock, category &amp; status inline. <span class="ax-num" x-text="rows.length"></span> products.</p>
+              </div>
+              <div class="ax-card__actions">
+                <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="addRow()">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M5 12l14 0"/></svg>
+                  <span class="ax-btn__label">Add row</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="ax-table-wrap">
+              <table class="ax-table ax-table--hover" style="min-width:840px;">
+                <caption class="ax-visually-hidden">Editable product catalog</caption>
+                <thead class="ax-table__head">
+                  <tr>
+                    <th class="ax-table__th" scope="col" style="width:120px;">SKU</th>
+                    <th class="ax-table__th" scope="col">Product name</th>
+                    <th class="ax-table__th" scope="col" style="width:160px;">Category</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col" style="width:120px;">Price</th>
+                    <th class="ax-table__th ax-table__th--num" scope="col" style="width:110px;">Stock</th>
+                    <th class="ax-table__th" scope="col" style="width:140px;">Status</th>
+                    <th class="ax-table__th" scope="col" style="width:56px;"><span class="ax-visually-hidden">Actions</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <template x-for="(r, i) in rows" :key="r.id">
+                    <tr class="ax-table__row" :style="isDirty(r) ? 'box-shadow:inset 2px 0 0 var(--ax-accent);background:var(--ax-accent-wash);' : ''">
+
+                      <!-- SKU (read-only mono key) -->
+                      <td class="ax-table__td ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-muted);" x-text="r.sku"></td>
+
+                      <!-- name (text) -->
+                      <td class="ax-table__td" style="cursor:text;" @click="edit(r,'name',$event)">
+                        <template x-if="editing.id===r.id && editing.field==='name'">
+                          <input type="text" class="ax-input ax-input--sm" x-model="editing.value" @keydown.enter.prevent="commit(r)" @keydown.escape.prevent="cancel()" @blur="commit(r)" x-init="$nextTick(()=>{$el.focus();$el.select()})" aria-label="Edit name">
+                        </template>
+                        <template x-if="!(editing.id===r.id && editing.field==='name')">
+                          <span style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);"><span x-text="r.name || 'Untitled product'"></span><span x-show="dirtyCell(r,'name')" class="ax-dirty-dot" aria-hidden="true"></span></span>
+                        </template>
+                      </td>
+
+                      <!-- category (select) -->
+                      <td class="ax-table__td" style="cursor:pointer;" @click="edit(r,'category',$event)">
+                        <template x-if="editing.id===r.id && editing.field==='category'">
+                          <select class="ax-select ax-select--sm" x-model="editing.value" @change="commit(r)" @keydown.escape.prevent="cancel()" @blur="commit(r)" x-init="$nextTick(()=>$el.focus())" aria-label="Edit category">
+                            <template x-for="c in categories" :key="c"><option :value="c" x-text="c"></option></template>
+                          </select>
+                        </template>
+                        <template x-if="!(editing.id===r.id && editing.field==='category')">
+                          <span style="color:var(--ax-text);"><span x-text="r.category"></span><span x-show="dirtyCell(r,'category')" class="ax-dirty-dot" aria-hidden="true"></span></span>
+                        </template>
+                      </td>
+
+                      <!-- price (number) -->
+                      <td class="ax-table__td ax-table__td--num" style="cursor:text;" @click="edit(r,'price',$event)">
+                        <template x-if="editing.id===r.id && editing.field==='price'">
+                          <input type="number" step="0.01" min="0" class="ax-input ax-input--sm" style="text-align:end;" x-model.number="editing.value" @keydown.enter.prevent="commit(r)" @keydown.escape.prevent="cancel()" @blur="commit(r)" x-init="$nextTick(()=>{$el.focus();$el.select()})" aria-label="Edit price">
+                        </template>
+                        <template x-if="!(editing.id===r.id && editing.field==='price')">
+                          <span style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">$<span x-text="Number(r.price).toFixed(2)"></span><span x-show="dirtyCell(r,'price')" class="ax-dirty-dot" aria-hidden="true"></span></span>
+                        </template>
+                      </td>
+
+                      <!-- stock (number) -->
+                      <td class="ax-table__td ax-table__td--num" style="cursor:text;" @click="edit(r,'stock',$event)">
+                        <template x-if="editing.id===r.id && editing.field==='stock'">
+                          <input type="number" step="1" min="0" class="ax-input ax-input--sm" style="text-align:end;" x-model.number="editing.value" @keydown.enter.prevent="commit(r)" @keydown.escape.prevent="cancel()" @blur="commit(r)" x-init="$nextTick(()=>{$el.focus();$el.select()})" aria-label="Edit stock">
+                        </template>
+                        <template x-if="!(editing.id===r.id && editing.field==='stock')">
+                          <span :style="Number(r.stock)===0 ? 'color:var(--ax-danger-500);' : 'color:var(--ax-text);'"><span x-text="r.stock"></span><span x-show="dirtyCell(r,'stock')" class="ax-dirty-dot" aria-hidden="true"></span></span>
+                        </template>
+                      </td>
+
+                      <!-- status (select badge) -->
+                      <td class="ax-table__td" style="cursor:pointer;" @click="edit(r,'status',$event)">
+                        <template x-if="editing.id===r.id && editing.field==='status'">
+                          <select class="ax-select ax-select--sm" x-model="editing.value" @change="commit(r)" @keydown.escape.prevent="cancel()" @blur="commit(r)" x-init="$nextTick(()=>$el.focus())" aria-label="Edit status">
+                            <option value="active">Active</option>
+                            <option value="draft">Draft</option>
+                            <option value="out_of_stock">Out of stock</option>
+                          </select>
+                        </template>
+                        <template x-if="!(editing.id===r.id && editing.field==='status')">
+                          <span><span class="ax-badge ax-badge--soft" :class="statusClass(r.status)" x-text="statusLabel(r.status)"></span><span x-show="dirtyCell(r,'status')" class="ax-dirty-dot" aria-hidden="true"></span></span>
+                        </template>
+                      </td>
+
+                      <!-- delete -->
+                      <td class="ax-table__td">
+                        <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" style="color:var(--ax-danger-500);" @click="removeRow(r)" :aria-label="'Delete ' + (r.name || 'row')">
+                          <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16"/><path d="M10 11l0 6"/><path d="M14 11l0 6"/><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/></svg>
+                        </button>
+                      </td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- empty state -->
+            <div x-show="!rows.length" x-cloak style="text-align:center;padding:var(--ax-space-10) var(--ax-space-5);">
+              <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" style="background:var(--ax-surface-subtle);color:var(--ax-text-subtle);margin:0 auto var(--ax-space-4);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:28px;height:28px;"><path d="M12 3l8 4.5l0 9l-8 4.5l-8 -4.5l0 -9l8 -4.5"/><path d="M12 12l8 -4.5"/><path d="M12 12l0 9"/><path d="M12 12l-8 -4.5"/></svg></span>
+              <h3 style="color:var(--ax-text-strong);font-family:var(--ax-font-display);margin-bottom:var(--ax-space-2);">Nothing here yet</h3>
+              <p style="color:var(--ax-text-muted);font-size:var(--ax-text-sm);margin-bottom:var(--ax-space-4);">When there's a product, it'll show up in this table.</p>
+              <button type="button" class="ax-btn ax-btn--primary" @click="addRow()">Add the first row</button>
+            </div>
+
+            <div class="ax-card__footer" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:var(--ax-space-3);">
+              <span class="ax-cluster ax-text-subtle" style="gap:var(--ax-space-2);font-size:var(--ax-text-xs);">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>
+                Press <kbd class="ax-kbd">Enter</kbd> to save a cell, <kbd class="ax-kbd">Esc</kbd> to cancel.
+              </span>
+              <span class="ax-pagination__summary ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-xs);" x-show="dirtyCount()" x-cloak>
+                <span x-text="dirtyCount()"></span> pending
+              </span>
+            </div>
+          </section>
+        </div>
+
+        <!-- page-local marker for a dirty cell (role token, last-resort per kit §0.2) -->
+        <style>
+          .ax-dirty-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ax-accent);margin-inline-start:6px;vertical-align:middle;}
+        </style>
+
+        <script>
+          function axEditable(){
+            return {
+              editing:{ id:null, field:null, value:'' },
+              saved:false, _seq:100,
+              categories:['Lighting','Storage','Drinkware','Desk','Tech accessories','Stationery','Decor'],
+              rows:[],
+              snapshot:'',
+              init(){
+                this.rows=[
+                  { id:'prd_008', sku:'APG-0008', name:'Brass Task Light', category:'Lighting', price:182.00, stock:22, status:'active', _new:false },
+                  { id:'prd_001', sku:'APG-0001', name:'Aperture Desk Lamp', category:'Lighting', price:129.00, stock:84, status:'active', _new:false },
+                  { id:'prd_004', sku:'APG-0004', name:'Walnut Monitor Riser', category:'Desk', price:96.00, stock:41, status:'active', _new:false },
+                  { id:'prd_009', sku:'APG-0009', name:'Stoneware Carafe', category:'Drinkware', price:52.00, stock:120, status:'active', _new:false },
+                  { id:'prd_002', sku:'APG-0002', name:'Linen Pinboard', category:'Storage', price:58.00, stock:0, status:'out_of_stock', _new:false },
+                  { id:'prd_005', sku:'APG-0005', name:'Felt Laptop Sleeve 14"', category:'Tech accessories', price:44.00, stock:158, status:'active', _new:false },
+                  { id:'prd_007', sku:'APG-0007', name:'Cork Desk Mat', category:'Desk', price:38.00, stock:0, status:'draft', _new:false },
+                  { id:'prd_003', sku:'APG-0003', name:'Matte Ceramic Mug', category:'Drinkware', price:24.00, stock:312, status:'active', _new:false },
+                ];
+                this.snapshot=JSON.stringify(this.rows);
+                window.addEventListener('beforeunload', (e)=>{ if(this.dirtyCount()){ e.preventDefault(); e.returnValue=''; } });
+              },
+              base(){ return JSON.parse(this.snapshot); },
+              isDirty(r){
+                if(r._new) return true;
+                const o=this.base().find(x=>x.id===r.id);
+                if(!o) return true;
+                return ['name','category','price','stock','status'].some(f=>String(o[f])!==String(r[f]));
+              },
+              dirtyCell(r,f){
+                if(r._new) return false;
+                const o=this.base().find(x=>x.id===r.id);
+                return o && String(o[f])!==String(r[f]);
+              },
+              dirtyCount(){
+                let n=0;
+                const removed=this.base().filter(o=>!this.rows.find(r=>r.id===o.id)).length;
+                this.rows.forEach(r=>{ if(this.isDirty(r)) n++; });
+                return n + removed;
+              },
+              edit(r,field,e){ if(e && e.target && e.target.closest('input,select,button')) return; this.editing={ id:r.id, field, value:r[field] }; },
+              commit(r){
+                if(this.editing.id!==r.id) return;
+                let v=this.editing.value;
+                if(this.editing.field==='price'){ v=Math.max(0, Number(v)||0); }
+                if(this.editing.field==='stock'){ v=Math.max(0, parseInt(v)||0); }
+                r[this.editing.field]=v;
+                if(this.editing.field==='stock'){ if(v===0 && r.status==='active'){ r.status='out_of_stock'; } if(v>0 && r.status==='out_of_stock'){ r.status='active'; } }
+                this.editing={ id:null, field:null, value:'' };
+              },
+              cancel(){ this.editing={ id:null, field:null, value:'' }; },
+              statusClass(s){ return { active:'ax-badge--success', draft:'ax-badge--neutral', out_of_stock:'ax-badge--danger' }[s] || 'ax-badge--neutral'; },
+              statusLabel(s){ return { active:'Active', draft:'Draft', out_of_stock:'Out of stock' }[s] || s; },
+              addRow(){
+                const n=++this._seq;
+                const r={ id:'new_'+n, sku:'APG-'+String(1000+n).slice(-4), name:'', category:'Lighting', price:0, stock:0, status:'draft', _new:true };
+                this.rows.unshift(r);
+                this.$nextTick(()=>{ this.editing={ id:r.id, field:'name', value:'' }; });
+              },
+              removeRow(r){
+                if(this.confirmDelete(r)){ this.rows=this.rows.filter(x=>x.id!==r.id); }
+              },
+              confirmDelete(r){ return window.confirm('Delete "' + (r.name || 'this row') + '"? This is part of your unsaved changes.'); },
+              saveAll(){
+                if(this.rows.some(r=>!String(r.name).trim())){ window.alert('Every product needs a name before saving.'); return; }
+                this.rows.forEach(r=>{ r._new=false; });
+                this.snapshot=JSON.stringify(this.rows);
+                this.saved=true;
+                setTimeout(()=>{ this.saved=false; }, 2600);
+              },
+              discard(){
+                if(this.dirtyCount() && !window.confirm('Discard all unsaved changes?')) return;
+                this.rows=this.base();
+                this.editing={ id:null, field:null, value:'' };
+              },
+            };
+          }
+        </script>
+
+      
+</div>
+{% endblock %}

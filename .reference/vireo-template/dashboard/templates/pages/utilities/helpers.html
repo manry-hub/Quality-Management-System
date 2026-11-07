@@ -1,0 +1,169 @@
+{% extends 'base.html' %}
+
+{# utilities/helpers — faithful port of src/html/utilities/helpers.html.
+   Same DOM/classes/ARIA, same demo copy. Reference hrefs converted to clean
+   Django routes (# -> /x/). #}
+
+{% block main %}
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Helper utilities</h1>
+              <p class="ax-page-head__subtitle">Token-driven micro-helpers Tailwind doesn't cleanly cover — truncate, clamp, tabular numerics, dividers, skeletons &amp; screen-reader text.</p>
+            </div>
+            <div class="ax-page-head__actions">
+              <a class="ax-btn ax-btn--secondary ax-btn--pill" href="/utilities/flex-grid/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M4 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/><path d="M14 15a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1l0 -4"/></svg>
+                <span class="ax-btn__label">Flex &amp; grid</span>
+              </a>
+              <a class="ax-btn ax-btn--primary" href="/utilities/position/">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 9l3 3l-3 3"/><path d="M15 12h6"/><path d="M6 9l-3 3l3 3"/><path d="M3 12h6"/><path d="M9 18l3 3l3 -3"/><path d="M12 15v6"/><path d="M15 6l-3 -3l-3 3"/><path d="M12 3v6"/></svg>
+                <span class="ax-btn__label">Positioning</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ CONTENT ════════════════ -->
+        <div class="ax-dash-grid">
+
+          <!-- Truncate -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Truncate helper">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-truncate</span>
+                <h2 class="ax-card__title">Single-line truncate</h2>
+                <p class="ax-card__subtitle">Clips overflowing text to one line with an ellipsis. Hover for the full <code class="ax-code">title</code>.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;padding:var(--ax-space-3);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);">
+                <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);">LB</span>
+                <div style="min-width:0;flex:1 1 auto;">
+                  <div class="ax-truncate" style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);" title="Refactor the Aperture Goods checkout flow to support multi-currency and saved carts">Refactor the Aperture Goods checkout flow to support multi-currency and saved carts</div>
+                  <div class="ax-truncate" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" title="lena.brandt@northwindlabs.app · Updated 18 minutes ago">lena.brandt@northwindlabs.app · Updated 18 minutes ago</div>
+                </div>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon ax-btn--sm" aria-label="Open task">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6l-6 6"/></svg>
+                </button>
+              </div>
+              <p style="margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Wrap the flexible child in a <code class="ax-code">min-width:0</code> column so the ellipsis kicks in inside flex rows.</p>
+            </div>
+          </section>
+
+          <!-- Clamp -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Line clamp helper">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-clamp-2 · .ax-clamp-3</span>
+                <h2 class="ax-card__title">Multi-line clamp</h2>
+                <p class="ax-card__subtitle">Caps a block to N lines — ideal for card descriptions &amp; feed previews.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.ax-clamp-2</span>
+                <p class="ax-clamp-2" style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">The Brass Task Light pairs a machined aluminium arm with a dimmable warm-white head, drawing just 6 watts at full output. It ships flat-packed and assembles without tools in under a minute.</p>
+              </div>
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.ax-clamp-3</span>
+                <p class="ax-clamp-3" style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text-muted);">Northwind Labs ships the Aperture Goods range from a single fulfilment hub in Lisbon, reaching most of Europe within two business days. Orders over $80 qualify for free carbon-neutral delivery, and every parcel uses recycled, plastic-free packaging sourced from certified suppliers.</p>
+              </div>
+            </div>
+          </section>
+
+          <!-- Numerics -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Tabular numerics helper">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-num · .ax-mono</span>
+                <h2 class="ax-card__title">Tabular numerics</h2>
+                <p class="ax-card__subtitle">Locks digit widths so figures align in columns and never jitter as they tick.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;">
+              <div class="ax-table-wrap">
+                <table class="ax-table ax-table--hover">
+                  <thead class="ax-table__head">
+                    <tr>
+                      <th class="ax-table__th" scope="col">Currency</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Balance</th>
+                      <th class="ax-table__th ax-table__th--num" scope="col">Income</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-strong);">USD</td><td class="ax-table__td ax-table__td--num">$48,210.00</td><td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+$62,400</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-strong);">GBP</td><td class="ax-table__td ax-table__td--num">£21,540.00</td><td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+£27,100</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-strong);">EUR</td><td class="ax-table__td ax-table__td--num">€33,120.00</td><td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+€40,800</td></tr>
+                    <tr class="ax-table__row"><td class="ax-table__td" style="color:var(--ax-text-strong);">AUD</td><td class="ax-table__td ax-table__td--num">A$15,980.00</td><td class="ax-table__td ax-table__td--num" style="color:var(--ax-viz-emerald);">+A$19,400</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="ax-cluster" style="gap:var(--ax-space-4);margin-top:var(--ax-space-4);">
+                <span><span class="ax-eyebrow" style="display:block;">Default digits</span><span style="font-size:var(--ax-text-lg);color:var(--ax-text-muted);">1111.99</span></span>
+                <span class="ax-divider ax-divider--vertical" style="height:34px;"></span>
+                <span><span class="ax-eyebrow" style="display:block;">.ax-num</span><span class="ax-num" style="font-size:var(--ax-text-lg);color:var(--ax-text-strong);">1111.99</span></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Visually hidden + skeleton -->
+          <section class="ax-card ax-col--6" role="region" aria-label="Accessibility and loading helpers">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.visually-hidden · .ax-skeleton</span>
+                <h2 class="ax-card__title">A11y &amp; loading</h2>
+                <p class="ax-card__subtitle">Screen-reader-only text and reduced-motion-safe placeholders.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:flex;flex-direction:column;gap:var(--ax-space-4);">
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-2);">.visually-hidden</span>
+                <button type="button" class="ax-btn ax-btn--secondary">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                  <span class="visually-hidden">Download the Q2 revenue report as CSV</span>
+                  <span class="ax-btn__label" aria-hidden="true">Export</span>
+                </button>
+                <p style="margin:var(--ax-space-2) 0 0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">The button reads as "Export" but announces the full action to screen readers.</p>
+              </div>
+              <hr class="ax-divider">
+              <div>
+                <span class="ax-eyebrow" style="display:block;margin-bottom:var(--ax-space-3);">.ax-skeleton (honours prefers-reduced-motion)</span>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;">
+                  <span class="ax-skeleton" style="width:40px;height:40px;border-radius:var(--ax-radius-pill);flex:0 0 auto;"></span>
+                  <div style="flex:1 1 auto;display:flex;flex-direction:column;gap:var(--ax-space-2);">
+                    <span class="ax-skeleton" style="width:60%;height:12px;"></span>
+                    <span class="ax-skeleton" style="width:90%;height:10px;"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Inline typography -->
+          <section class="ax-card ax-col--12" role="region" aria-label="Inline typography helpers">
+            <div class="ax-card__header">
+              <div class="ax-card__titles">
+                <span class="ax-card__eyebrow">.ax-code · .ax-kbd · .ax-mark · .ax-link · .ax-eyebrow</span>
+                <h2 class="ax-card__title">Inline typography</h2>
+                <p class="ax-card__subtitle">Small text-level helpers that compose anywhere in body copy.</p>
+              </div>
+            </div>
+            <div class="ax-card__body" style="padding-top:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ax-space-5);">
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text);">Run <code class="ax-code">npm run build</code> then deploy the <code class="ax-code">dist/</code> folder.</p>
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text);">Press <kbd class="ax-kbd">⌘</kbd> <kbd class="ax-kbd">K</kbd> to open the command palette, or <kbd class="ax-kbd">Esc</kbd> to dismiss it.</p>
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text);">Found <mark class="ax-mark">3 matches</mark> for "checkout" across the codebase.</p>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:var(--ax-space-4);">
+                <p style="margin:0;font-size:var(--ax-text-sm);color:var(--ax-text);">See the <a class="ax-link" href="#">migration guide</a> for breaking changes in v2.</p>
+                <div><span class="ax-eyebrow">Section eyebrow</span><div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">Uppercase label above a heading</div></div>
+                <p class="ax-display" style="margin:0;font-size:var(--ax-text-xl);color:var(--ax-text-strong);">.ax-display — Space Grotesk headline</p>
+              </div>
+            </div>
+          </section>
+
+        </div>
+{% endblock %}

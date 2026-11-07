@@ -1,0 +1,247 @@
+{% extends 'base-app.html' %}
+
+{% block appmain_attrs %} x-data="axChat()"{% endblock %}
+
+{% block main %}
+
+        <!-- ════════════════ APP HEAD · status + actions (the app bar names the app) ════════════════ -->
+        <div class="ax-apphead">
+          <p class="ax-apphead__status">4 unread conversations — 7 teammates online right now.</p>
+          <div class="ax-apphead__actions">
+            <button type="button" class="ax-btn ax-btn--secondary ax-btn--pill">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/><path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/></svg>
+              <span class="ax-btn__label">New group</span>
+            </button>
+            <button type="button" class="ax-btn ax-btn--primary">
+              <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 9h8"/><path d="M8 13h6"/><path d="M18 4a3 3 0 0 1 3 3v8a3 3 0 0 1 -3 3h-5l-5 3v-3h-2a3 3 0 0 1 -3 -3v-8a3 3 0 0 1 3 -3z"/></svg>
+              <span class="ax-btn__label">New message</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ════════════════ 2-PANE CHAT ════════════════ -->
+        <div class="ax-card ax-app-fill" role="region" aria-label="Chat workspace"
+             style="padding:0;overflow:hidden;display:grid;grid-template-columns:320px 1fr;">
+
+          <!-- ───────── CONVERSATION LIST ───────── -->
+          <aside aria-label="Conversations" style="border-inline-end:1px solid var(--ax-border);display:flex;flex-direction:column;min-height:0;">
+            <div style="padding:var(--ax-space-4);border-bottom:1px solid var(--ax-border);display:flex;flex-direction:column;gap:var(--ax-space-3);">
+              <div class="ax-field__control">
+                <span class="ax-field__affix ax-field__affix--leading"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/><path d="M21 21l-6 -6"/></svg></span>
+                <input type="search" class="ax-input ax-input--sm ax-input--with-leading-icon" placeholder="Search conversations…" x-model="q" aria-label="Search conversations">
+              </div>
+              <div class="ax-segment" role="tablist" aria-label="Filter conversations" style="width:100%;">
+                <template x-for="f in ['All','Unread','Groups']" :key="f">
+                  <button type="button" role="tab" class="ax-segment__option" style="flex:1 1 0;" :aria-checked="filter === f" @click="filter = f" x-text="f"></button>
+                </template>
+              </div>
+            </div>
+
+            <ul class="ax-scroll-y ax-list" style="flex:1 1 auto;min-height:0;padding:var(--ax-space-2);gap:2px;">
+              <template x-for="c in filtered" :key="c.id">
+                <li>
+                  <button type="button" @click="open(c.id)"
+                          :class="active === c.id ? 'is-selected' : ''"
+                          class="ax-list__row ax-chatrow"
+                          style="position:relative;width:100%;text-align:start;border:0;border-radius:var(--ax-radius-md);cursor:pointer;gap:var(--ax-space-3);align-items:center;padding:var(--ax-space-3);">
+                    <i aria-hidden="true" x-show="active === c.id" style="position:absolute;inset-block:6px;inset-inline-start:0;width:2px;border-radius:2px;background:var(--ax-accent);"></i>
+                    <span class="ax-list__leading" style="position:relative;flex:0 0 auto;">
+                      <span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${c.color} 18%,transparent);color:${c.color};`">
+                        <b x-show="!c.group" x-text="c.initials"></b>
+                        <svg x-show="c.group" class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0"/><path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1"/><path d="M15 5a2 2 0 1 0 0 4"/><path d="M17 10h2a2 2 0 0 1 2 2v1"/><path d="M9 5a2 2 0 1 1 0 4"/><path d="M3 13v-1a2 2 0 0 1 2 -2h2"/></svg>
+                      </span>
+                      <span x-show="!c.group" class="ax-avatar__status" :class="`ax-avatar__status--${c.presence}`" style="inset-block-end:-1px;inset-inline-end:-1px;box-shadow:0 0 0 2px var(--ax-surface);"></span>
+                    </span>
+                    <span class="ax-list__content" style="min-width:0;">
+                      <span class="ax-cluster" style="justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-2);">
+                        <span class="ax-text-truncate ax-list__title" :style="c.unread ? 'font-weight:600;color:var(--ax-text-strong);' : ''" x-text="c.name"></span>
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);flex:0 0 auto;" x-text="c.time"></span>
+                      </span>
+                      <span class="ax-cluster" style="justify-content:space-between;flex-wrap:nowrap;gap:var(--ax-space-2);margin-top:2px;">
+                        <span class="ax-text-truncate" style="font-size:var(--ax-text-xs);" :style="c.typing ? 'color:var(--ax-accent);font-style:italic;' : 'color:var(--ax-text-subtle);'" x-text="c.typing ? 'typing…' : c.preview"></span>
+                        <span x-show="c.unread" class="ax-num" style="flex:0 0 auto;min-width:18px;height:18px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center;background:var(--ax-accent);color:var(--ax-on-accent);border-radius:999px;font-size:var(--ax-text-2xs);font-weight:600;" x-text="c.unread"></span>
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              </template>
+            </ul>
+          </aside>
+
+          <!-- ───────── CONVERSATION THREAD ───────── -->
+          <section aria-label="Conversation" style="display:flex;flex-direction:column;min-height:0;background:var(--ax-canvas);">
+            <!-- header -->
+            <div style="display:flex;align-items:center;gap:var(--ax-space-3);padding:var(--ax-space-3) var(--ax-space-5);border-bottom:1px solid var(--ax-border);background:var(--ax-surface);min-height:64px;flex:0 0 auto;">
+              <span style="position:relative;flex:0 0 auto;">
+                <span class="ax-avatar ax-avatar--md ax-avatar--squircle" :style="`background:color-mix(in oklab,${conv.color} 18%,transparent);color:${conv.color};`"><b x-text="conv.initials"></b></span>
+                <span class="ax-avatar__status" :class="`ax-avatar__status--${conv.presence}`" style="inset-block-end:-1px;inset-inline-end:-1px;box-shadow:0 0 0 2px var(--ax-surface);"></span>
+              </span>
+              <div style="flex:1 1 auto;min-width:0;">
+                <div class="ax-text-truncate" style="font-weight:600;color:var(--ax-text-strong);" x-text="conv.name"></div>
+                <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="conv.presence === 'online' ? 'Active now' : (conv.presence === 'away' ? 'Away' : 'Last seen 2h ago')"></div>
+              </div>
+              <div class="ax-cluster" style="gap:2px;flex:0 0 auto;flex-wrap:nowrap;">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Start voice call"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Start video call"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4"/><path d="M3 8a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2l0 -8"/></svg></button>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" :class="drawer && 'is-selected'" @click="drawer = !drawer" aria-label="Conversation info"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg></button>
+              </div>
+            </div>
+
+            <div style="flex:1 1 auto;min-height:0;display:grid;" :style="drawer ? 'grid-template-columns:1fr 280px;' : 'grid-template-columns:1fr;'">
+              <!-- messages -->
+              <div class="ax-scroll-y" x-ref="scroll" style="min-height:0;padding:var(--ax-space-6);display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                <!-- day separator -->
+                <div class="ax-cluster" style="justify-content:center;margin:var(--ax-space-2) 0;">
+                  <span style="font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);background:var(--ax-surface);border:1px solid var(--ax-border);border-radius:999px;padding:3px 12px;">Today</span>
+                </div>
+
+                <template x-for="(m,i) in conv.messages" :key="i">
+                  <div :style="m.out ? 'align-self:flex-end;max-width:74%;' : 'align-self:flex-start;max-width:74%;display:flex;gap:var(--ax-space-2);'">
+                    <span x-show="!m.out && m.showAvatar" class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`flex:0 0 auto;align-self:flex-end;background:color-mix(in oklab,${conv.color} 18%,transparent);color:${conv.color};`"><b style="font-size:10px;" x-text="conv.initials"></b></span>
+                    <span x-show="!m.out && !m.showAvatar" style="width:28px;flex:0 0 auto;" aria-hidden="true"></span>
+                    <div>
+                      <div :style="m.out
+                            ? 'background:var(--ax-accent-wash);color:var(--ax-text-strong);border:1px solid color-mix(in oklab,var(--ax-accent) 28%,transparent);border-radius:var(--ax-radius-md) var(--ax-radius-md) var(--ax-radius-xs) var(--ax-radius-md);'
+                            : 'background:var(--ax-surface);color:var(--ax-text);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md) var(--ax-radius-md) var(--ax-radius-md) var(--ax-radius-xs);'"
+                            style="padding:var(--ax-space-3) var(--ax-space-4);font-size:var(--ax-text-sm);line-height:1.55;position:relative;" x-html="m.text"></div>
+                      <div class="ax-cluster" :style="m.out ? 'justify-content:flex-end;' : ''" style="gap:5px;margin-top:3px;padding-inline:var(--ax-space-2);">
+                        <span class="ax-num" style="font-family:var(--ax-font-mono);font-size:var(--ax-text-2xs);color:var(--ax-text-subtle);" x-text="m.time"></span>
+                        <svg x-show="m.out" viewBox="0 0 24 24" width="14" height="14" fill="none" :stroke="m.read ? 'var(--ax-accent)' : 'var(--ax-text-subtle)'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 12l5 5l10 -10"/><path d="M2 12l5 5m5 -5l5 -5"/></svg>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+
+                <!-- typing indicator -->
+                <div class="ax-flex" x-show="conv.presence === 'online'" style="align-self:flex-start;gap:var(--ax-space-2);align-items:flex-end;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" :style="`background:color-mix(in oklab,${conv.color} 18%,transparent);color:${conv.color};`"><b style="font-size:10px;" x-text="conv.initials"></b></span>
+                  <div style="background:var(--ax-surface);border:1px solid var(--ax-border);border-radius:var(--ax-radius-md);padding:var(--ax-space-3) var(--ax-space-4);display:flex;gap:4px;align-items:center;">
+                    <span class="ax-chat-dot" aria-hidden="true"></span><span class="ax-chat-dot" aria-hidden="true"></span><span class="ax-chat-dot" aria-hidden="true"></span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- info drawer -->
+              <div x-show="drawer" x-cloak class="ax-scroll-y ax-flex" style="border-inline-start:1px solid var(--ax-border);background:var(--ax-surface);min-height:0;padding:var(--ax-space-5);flex-direction:column;gap:var(--ax-space-5);">
+                <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--ax-space-2);">
+                  <span class="ax-avatar ax-avatar--xl ax-avatar--squircle" :style="`background:color-mix(in oklab,${conv.color} 18%,transparent);color:${conv.color};`"><b style="font-size:var(--ax-text-lg);" x-text="conv.initials"></b></span>
+                  <div><b style="color:var(--ax-text-strong);" x-text="conv.name"></b><div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);" x-text="conv.role"></div></div>
+                  <div class="ax-cluster" style="gap:var(--ax-space-2);margin-top:var(--ax-space-2);">
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" aria-label="Email"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></button>
+                    <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--icon" aria-label="Call"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5l-2.5 1.5a11 11 0 0 0 5 5l1.5 -2.5l5 2v4a2 2 0 0 1 -2 2a16 16 0 0 1 -15 -15a2 2 0 0 1 2 -2"/></svg></button>
+                  </div>
+                </div>
+                <div>
+                  <p class="ax-list__group-label" style="padding:0 0 var(--ax-space-2);">Shared media</p>
+                  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;">
+                    <template x-for="g in ['#34D399','#38BDF8','#A78BFA','#FBBF24','#F472B6','#FB7185']" :key="g">
+                      <span :style="`aspect-ratio:1;border-radius:var(--ax-radius-md);background:color-mix(in oklab,${g} 22%,var(--ax-surface-subtle));`" aria-hidden="true"></span>
+                    </template>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Mute notifications</span><input type="checkbox" class="ax-switch ax-switch--sm" role="switch" aria-label="Mute notifications"></div>
+                  <div class="ax-cluster" style="justify-content:space-between;"><span style="font-size:var(--ax-text-sm);color:var(--ax-text);">Pin conversation</span><input type="checkbox" class="ax-switch ax-switch--sm" role="switch" checked aria-label="Pin conversation"></div>
+                </div>
+                <button type="button" class="ax-btn ax-btn--soft-danger ax-btn--block ax-btn--sm">Block &amp; report</button>
+              </div>
+            </div>
+
+            <!-- composer -->
+            <form @submit.prevent="sendMsg()" style="flex:0 0 auto;padding:var(--ax-space-3) var(--ax-space-5);border-top:1px solid var(--ax-border);background:var(--ax-surface);">
+              <div class="ax-cluster" style="gap:var(--ax-space-2);flex-wrap:nowrap;align-items:flex-end;">
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Attach file"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 7l-6.5 6.5a1.5 1.5 0 0 0 3 3l6.5 -6.5a3 3 0 0 0 -6 -6l-6.5 6.5a4.5 4.5 0 0 0 9 9l6.5 -6.5"/></svg></button>
+                <label for="composer" class="ax-visually-hidden">Message</label>
+                <textarea id="composer" rows="1" class="ax-textarea" x-model="draft"
+                          @keydown.enter.prevent="!$event.shiftKey ? sendMsg() : draft += '\n'"
+                          @input="$el.style.height='auto'; $el.style.height=Math.min($el.scrollHeight,140)+'px'"
+                          placeholder="Write a message…  (Enter to send, Shift+Enter for newline)"
+                          style="flex:1 1 auto;min-height:40px;max-height:140px;resize:none;line-height:1.5;"></textarea>
+                <button type="button" class="ax-btn ax-btn--ghost ax-btn--icon" aria-label="Insert emoji"><svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 10l.01 0"/><path d="M15 10l.01 0"/><path d="M9.5 15a3.5 3.5 0 0 0 5 0"/></svg></button>
+                <button type="submit" class="ax-btn ax-btn--primary ax-btn--icon" :disabled="!draft.trim()" aria-label="Send message">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 14l11 -11"/><path d="M21 3l-6.5 18a.55 .55 0 0 1 -1 0l-3.5 -7l-7 -3.5a.55 .55 0 0 1 0 -1l18 -6.5"/></svg>
+                </button>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <style>
+          /* conversation rows: transparent resting bg, hover + selected via role tokens */
+          [data-ax-route="apps/chat"] .ax-chatrow { background: transparent; }
+          [data-ax-route="apps/chat"] .ax-chatrow:hover { background: var(--ax-fill-hover); }
+          [data-ax-route="apps/chat"] .ax-chatrow.is-selected { background: var(--ax-accent-wash); }
+          .ax-chat-dot { width:6px;height:6px;border-radius:50%;background:var(--ax-text-subtle);animation:ax-chat-bounce 1.2s infinite ease-in-out; }
+          .ax-chat-dot:nth-child(2){ animation-delay:.2s; } .ax-chat-dot:nth-child(3){ animation-delay:.4s; }
+          @keyframes ax-chat-bounce { 0%,60%,100%{ transform:translateY(0);opacity:.5; } 30%{ transform:translateY(-4px);opacity:1; } }
+          @media (prefers-reduced-motion: reduce) { .ax-chat-dot { animation:none; } }
+          @media (max-width: 992px) {
+            [data-ax-route="apps/chat"] .ax-card[aria-label="Chat workspace"] { grid-template-columns: 1fr; }
+            [data-ax-route="apps/chat"] aside[aria-label="Conversations"] { display: none; }
+          }
+        </style>
+      
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function axChat() {
+      return {
+        active:1, filter:'All', q:'', draft:'', drawer:false,
+        conversations:[
+          { id:1, name:'Devon Okafor', initials:'DO', color:'#34D399', presence:'online', group:false, role:'Engineering Lead',
+            preview:'Pushed the fix — can you re-run CI?', time:'9:41 AM', unread:2, typing:false,
+            messages:[
+              { out:false, showAvatar:true, text:'Morning! Did the deploy go through last night?', time:'9:32 AM' },
+              { out:true,  read:true, text:'Yep — went out at 11pm, all green. 🎉', time:'9:34 AM' },
+              { out:false, showAvatar:true, text:'Nice. One thing — the segmented control loses its focus ring in dark mode.', time:'9:38 AM' },
+              { out:true,  read:true, text:'Good catch. I\'ll patch it this morning and push to <b>#481</b>.', time:'9:39 AM' },
+              { out:false, showAvatar:false, text:'Pushed the fix — can you re-run CI?', time:'9:41 AM' },
+            ] },
+          { id:2, name:'Design Crew', initials:'DC', color:'#A78BFA', presence:'online', group:true, role:'5 members',
+            preview:'Lena: dropped the new empty states', time:'9:10 AM', unread:1, typing:true,
+            messages:[
+              { out:false, showAvatar:true, text:'Dropped the new empty-state illustrations in Figma.', time:'9:08 AM' },
+              { out:true, read:true, text:'These look great against the glass surfaces 👏', time:'9:10 AM' },
+            ] },
+          { id:3, name:'Priya Nair', initials:'PN', color:'#FBBF24', presence:'away', group:false, role:'Data Analyst',
+            preview:'You: sent the weekly digest', time:'Yes', unread:0, typing:false,
+            messages:[
+              { out:false, showAvatar:true, text:'Can you forward last week\'s digest?', time:'Mon' },
+              { out:true, read:true, text:'Sent the weekly digest 📊', time:'Mon' },
+            ] },
+          { id:4, name:'Tomás Herrera', initials:'TH', color:'#38BDF8', presence:'offline', group:false, role:'Client · Brightline',
+            preview:'Thanks, talk Friday', time:'Tue', unread:0, typing:false,
+            messages:[
+              { out:false, showAvatar:true, text:'Sent over the redlined contract.', time:'Tue' },
+              { out:true, read:true, text:'Got it — will review and circle back.', time:'Tue' },
+              { out:false, showAvatar:false, text:'Thanks, talk Friday 👍', time:'Tue' },
+            ] },
+          { id:5, name:'Marketing', initials:'Mk', color:'#F472B6', presence:'online', group:true, role:'8 members',
+            preview:'Ava: campaign goes live at noon', time:'Tue', unread:1, typing:false,
+            messages:[ { out:false, showAvatar:true, text:'Campaign goes live at noon — final assets approved.', time:'Tue' } ] },
+          { id:6, name:'Daniel Cho', initials:'DC', color:'#FB7185', presence:'offline', group:false, role:'Product Manager',
+            preview:'12:30 works for ramen 🍜', time:'Mon', unread:0, typing:false,
+            messages:[ { out:false, showAvatar:true, text:'12:30 works for ramen 🍜', time:'Mon' } ] },
+        ],
+        get filtered() {
+          let list = this.conversations;
+          if (this.filter === 'Unread') list = list.filter(c => c.unread);
+          if (this.filter === 'Groups') list = list.filter(c => c.group);
+          if (this.q.trim()) list = list.filter(c => c.name.toLowerCase().includes(this.q.toLowerCase()));
+          return list;
+        },
+        get conv() { return this.conversations.find(c => c.id === this.active) || this.conversations[0]; },
+        open(id) { this.active = id; const c = this.conversations.find(x=>x.id===id); if(c) c.unread = 0; this.$nextTick(()=>this.scrollDown()); },
+        sendMsg() {
+          const t = this.draft.trim(); if (!t) return;
+          this.conv.messages.push({ out:true, read:false, text: t.replace(/</g,'&lt;'), time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) });
+          this.draft = '';
+          this.$nextTick(()=>{ this.scrollDown(); const m = this.conv.messages[this.conv.messages.length-1]; setTimeout(()=>{ m.read = true; }, 1200); });
+        },
+        scrollDown() { const s = this.$refs.scroll; if (s) s.scrollTop = s.scrollHeight; },
+        init() { this.$nextTick(()=>this.scrollDown()); },
+      };
+    }
+  </script>
+{% endblock %}

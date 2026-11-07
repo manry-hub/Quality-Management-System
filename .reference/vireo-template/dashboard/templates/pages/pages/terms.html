@@ -1,0 +1,170 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div x-data="{
+          active: 'introduction',
+          sections: ['introduction','accounts','acceptable-use','subscriptions','intellectual-property','termination','disclaimers','liability','changes','contact'],
+          init() {
+            const obs = new IntersectionObserver((entries) => {
+              entries.forEach(e => { if (e.isIntersecting) this.active = e.target.id; });
+            }, { rootMargin: '-20% 0px -70% 0px', threshold: 0 });
+            this.$nextTick(() => this.sections.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); }));
+          }
+        }">
+        <!-- ════════════════ PAGE HEAD ════════════════ -->
+        <div class="ax-page-head">
+          <div class="ax-page-head__row">
+            <div>
+              <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+              <h1 class="ax-page-head__title">Terms &amp; Conditions</h1>
+              <p class="ax-page-head__subtitle">
+                <span style="color:var(--ax-text-muted);">Last updated</span>
+                <span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text);">April 18, 2026</span>
+                <span class="ax-badge ax-badge--soft ax-badge--neutral ax-badge--pill ax-num" style="margin-inline-start:var(--ax-space-2);">v3.2</span>
+              </p>
+            </div>
+            <div class="ax-page-head__actions">
+              <button type="button" class="ax-btn ax-btn--secondary" onclick="window.print()">
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 17h2a2 2 0 0 0 2 -2v-4a2 2 0 0 0 -2 -2h-14a2 2 0 0 0 -2 2v4a2 2 0 0 0 2 2h2"/><path d="M17 9v-4a2 2 0 0 0 -2 -2h-6a2 2 0 0 0 -2 2v4"/><path d="M7 15a2 2 0 0 1 2 -2h6a2 2 0 0 1 2 2v4a2 2 0 0 1 -2 2h-6a2 2 0 0 1 -2 -2l0 -4"/></svg>
+                <span class="ax-btn__label">Print</span>
+              </button>
+              <a class="ax-btn ax-btn--primary" href="#" download>
+                <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2"/><path d="M7 11l5 5l5 -5"/><path d="M12 4l0 12"/></svg>
+                <span class="ax-btn__label">Download PDF</span>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════ DOC LAYOUT: TOC + BODY ════════════════ -->
+        <div style="display:grid;grid-template-columns:1fr;gap:var(--ax-space-6);align-items:start;" class="ax-doc">
+
+          <!-- TOC sidebar -->
+          <nav class="ax-card ax-doc__toc" aria-label="Table of contents" style="position:sticky;top:var(--ax-space-6);align-self:start;">
+            <div class="ax-card__body" style="padding:var(--ax-space-5);">
+              <p class="ax-card__eyebrow" style="margin-bottom:var(--ax-space-3);">On this page</p>
+              <ul style="display:flex;flex-direction:column;gap:2px;list-style:none;margin:0;padding:0;">
+                <li><a href="#introduction" class="ax-toc__link" :style="active==='introduction' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">01</span>Introduction</a></li>
+                <li><a href="#accounts" class="ax-toc__link" :style="active==='accounts' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">02</span>Your account</a></li>
+                <li><a href="#acceptable-use" class="ax-toc__link" :style="active==='acceptable-use' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">03</span>Acceptable use</a></li>
+                <li><a href="#subscriptions" class="ax-toc__link" :style="active==='subscriptions' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">04</span>Subscriptions &amp; billing</a></li>
+                <li><a href="#intellectual-property" class="ax-toc__link" :style="active==='intellectual-property' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">05</span>Intellectual property</a></li>
+                <li><a href="#termination" class="ax-toc__link" :style="active==='termination' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">06</span>Termination</a></li>
+                <li><a href="#disclaimers" class="ax-toc__link" :style="active==='disclaimers' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">07</span>Disclaimers</a></li>
+                <li><a href="#liability" class="ax-toc__link" :style="active==='liability' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">08</span>Limitation of liability</a></li>
+                <li><a href="#changes" class="ax-toc__link" :style="active==='changes' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">09</span>Changes to these terms</a></li>
+                <li><a href="#contact" class="ax-toc__link" :style="active==='contact' && 'color:var(--ax-accent);background:var(--ax-accent-wash);'" style="display:block;padding:6px var(--ax-space-3);border-radius:var(--ax-radius-sm);font-size:var(--ax-text-sm);color:var(--ax-text-muted);text-decoration:none;"><span class="ax-num" style="font-family:var(--ax-font-mono);color:var(--ax-text-subtle);margin-inline-end:6px;">10</span>Contact us</a></li>
+              </ul>
+            </div>
+          </nav>
+
+          <!-- doc body -->
+          <article class="ax-card ax-doc__body">
+            <div class="ax-card__body" style="max-width:72ch;padding:var(--ax-space-8);display:flex;flex-direction:column;gap:var(--ax-space-7);">
+
+              <div class="ax-alert ax-alert--accent ax-alert--accent-edge" role="note">
+                <svg class="ax-alert__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M12 9h.01"/><path d="M11 12h1v4h1"/></svg>
+                <div class="ax-alert__content">
+                  <p class="ax-alert__message" style="color:var(--ax-text);">These terms are a demonstration of the Vireo long-form document template. Please replace this copy with your own legal text before going to production.</p>
+                </div>
+              </div>
+
+              <section id="introduction" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">1. Introduction</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">Welcome to Vireo. These Terms &amp; Conditions ("Terms") govern your access to and use of the Vireo platform, websites and related services (collectively, the "Service") operated by Vireo, Inc. ("Vireo", "we", "us").</p>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">By creating an account or otherwise using the Service, you agree to be bound by these Terms. If you are entering into these Terms on behalf of a company or other legal entity, you represent that you have the authority to bind that entity.</p>
+              </section>
+
+              <section id="accounts" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">2. Your account</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">To use most features of the Service you must register for an account. You agree to provide accurate, current and complete information and to keep it up to date.</p>
+                <h3 style="font-size:var(--ax-text-md);font-weight:600;color:var(--ax-text-strong);margin:var(--ax-space-4) 0 var(--ax-space-2);">2.1 Account security</h3>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">You are responsible for safeguarding your credentials and for all activity that occurs under your account. Notify us immediately at security@vireo.io if you suspect unauthorized access.</p>
+                <h3 style="font-size:var(--ax-text-md);font-weight:600;color:var(--ax-text-strong);margin:var(--ax-space-4) 0 var(--ax-space-2);">2.2 Eligibility</h3>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">You must be at least 16 years old to use the Service. By using it you represent that you meet this requirement.</p>
+              </section>
+
+              <section id="acceptable-use" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">3. Acceptable use</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">You agree not to misuse the Service. In particular, you may not:</p>
+                <ul style="color:var(--ax-text);line-height:1.7;margin:0;padding-inline-start:var(--ax-space-5);display:flex;flex-direction:column;gap:6px;">
+                  <li>use the Service for any unlawful, harmful or fraudulent purpose;</li>
+                  <li>attempt to gain unauthorized access to any system or data;</li>
+                  <li>interfere with or disrupt the integrity or performance of the Service;</li>
+                  <li>reverse engineer any part of the Service except as permitted by law;</li>
+                  <li>resell or sublicense the Service without our written consent.</li>
+                </ul>
+              </section>
+
+              <section id="subscriptions" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">4. Subscriptions &amp; billing</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">Paid plans are billed in advance on a monthly or annual basis and are non-refundable except as expressly stated in these Terms or required by law. Fees are exclusive of taxes.</p>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">Your subscription renews automatically unless cancelled before the renewal date. You can manage or cancel your plan at any time from your billing settings. See our <a class="ax-link" href="/pages/pricing/">pricing page</a> for current rates.</p>
+              </section>
+
+              <section id="intellectual-property" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">5. Intellectual property</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-3);">The Service and all related software, design and content are the property of Vireo and its licensors and are protected by intellectual property laws. We grant you a limited, non-exclusive, non-transferable license to use the Service in accordance with these Terms.</p>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">You retain all rights to the content you upload. By uploading content you grant us a license to host, process and display it solely to provide the Service to you.</p>
+              </section>
+
+              <section id="termination" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">6. Termination</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">You may stop using the Service at any time. We may suspend or terminate your access if you breach these Terms, fail to pay fees when due, or if required by law. Upon termination your right to use the Service ceases immediately, and we will make your data available for export for 30 days.</p>
+              </section>
+
+              <section id="disclaimers" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">7. Disclaimers</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">The Service is provided "as is" and "as available" without warranties of any kind, whether express or implied, including warranties of merchantability, fitness for a particular purpose and non-infringement. We do not warrant that the Service will be uninterrupted or error-free.</p>
+              </section>
+
+              <section id="liability" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">8. Limitation of liability</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">To the maximum extent permitted by law, Vireo will not be liable for any indirect, incidental, special, consequential or punitive damages, or any loss of profits or revenues. Our total liability for any claim arising out of these Terms is limited to the amount you paid us in the twelve months preceding the claim.</p>
+              </section>
+
+              <section id="changes" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">9. Changes to these terms</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0;">We may update these Terms from time to time. If we make material changes we will notify you by email or through the Service at least 30 days before they take effect. Your continued use after the effective date constitutes acceptance of the revised Terms.</p>
+              </section>
+
+              <section id="contact" style="scroll-margin-top:var(--ax-space-8);">
+                <h2 style="font-family:var(--ax-font-display);font-size:var(--ax-text-xl);font-weight:600;color:var(--ax-text-strong);margin:0 0 var(--ax-space-3);">10. Contact us</h2>
+                <p style="color:var(--ax-text);line-height:1.7;margin:0 0 var(--ax-space-4);">If you have any questions about these Terms, please reach out:</p>
+                <div class="ax-cluster" style="gap:var(--ax-space-3);flex-wrap:nowrap;align-items:center;">
+                  <span class="ax-avatar ax-avatar--sm ax-avatar--squircle" style="background:var(--ax-accent-wash);color:var(--ax-accent);"><svg class="ax-avatar__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10"/><path d="M3 7l9 6l9 -6"/></svg></span>
+                  <div>
+                    <p style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">legal@vireo.io</p>
+                    <p style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Vireo, Inc. · 2261 Market Street, San Francisco, CA</p>
+                  </div>
+                </div>
+              </section>
+
+              <div class="ax-divider" style="border-top:1px solid var(--ax-border);margin:var(--ax-space-2) 0;"></div>
+              <div class="ax-cluster" style="justify-content:space-between;flex-wrap:wrap;gap:var(--ax-space-3);">
+                <a class="ax-link" href="/pages/privacy/">Read our Privacy Policy →</a>
+                <a class="ax-btn ax-btn--ghost ax-btn--sm" href="#ax-main">
+                  <svg class="ax-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5l0 14"/><path d="M18 11l-6 -6"/><path d="M6 11l6 -6"/></svg>
+                  <span class="ax-btn__label">Back to top</span>
+                </a>
+              </div>
+
+            </div>
+          </article>
+        </div>
+
+        <style>
+          @media (min-width: 992px) {
+            .ax-doc { grid-template-columns: 260px minmax(0, 1fr) !important; }
+          }
+          @media (max-width: 991px) {
+            .ax-doc__toc { position: static !important; }
+          }
+          @media print {
+            .ax-sidebar, .ax-header, .ax-footer, .ax-customizer, .ax-doc__toc, .ax-page-head__actions, .ax-ambient { display: none !important; }
+          }
+        </style>
+
+      
+</div>
+{% endblock %}
