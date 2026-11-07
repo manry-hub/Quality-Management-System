@@ -21,7 +21,7 @@ class HealthCheckView(APIView):
             {
                 "status": "healthy",
                 "service": "qms-automotive",
-                "version": "0.1.0",
+                "version": "0.3.0",
                 "mode": "modular_monolith",
             },
             status=status.HTTP_200_OK,
