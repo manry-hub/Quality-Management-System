@@ -13,5 +13,8 @@ urlpatterns = [
     path("iqc/", include("apps.iqc.urls", namespace="iqc")),
     path("ipqc/", include("apps.ipqc.urls", namespace="ipqc")),
     path("oqc/", include("apps.oqc.urls", namespace="oqc")),
+    path("ncr/", include("apps.ncr.urls", namespace="ncr")),
+    path("mrb/", include("apps.mrb.urls", namespace="mrb")),
+    path("traceability/", include("apps.traceability.urls", namespace="traceability")),
     path("api/v1/integrations/", include("apps.integrations.urls", namespace="integrations")),
 ]

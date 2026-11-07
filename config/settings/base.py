@@ -47,6 +47,9 @@ LOCAL_APPS = [
     "apps.iqc.apps.IqcConfig",
     "apps.ipqc.apps.IpqcConfig",
     "apps.oqc.apps.OqcConfig",
+    "apps.ncr.apps.NcrConfig",
+    "apps.mrb.apps.MrbConfig",
+    "apps.traceability.apps.TraceabilityConfig",
     "apps.integrations.apps.IntegrationsConfig",
 ]
 
