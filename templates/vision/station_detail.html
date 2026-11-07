@@ -1,0 +1,227 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Vision Station: {{ station.station_code }}{% endblock %}
+
+{% block content %}
+<div>
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" aria-label="Breadcrumb">
+          <ol style="display:flex;gap:var(--ax-space-2);list-style:none;padding:0;margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+            <li><a href="{% url 'vision:index' %}" style="color:var(--ax-accent);text-decoration:none;">Vision Console</a></li>
+            <li>/</li>
+            <li aria-current="page" style="color:var(--ax-text-strong);">{{ station.station_code }}</li>
+          </ol>
+        </nav>
+        <div style="display:flex;align-items:center;gap:var(--ax-space-3);margin-top:var(--ax-space-2);">
+          <h1 class="ax-page-head__title" style="margin:0;">{{ station.station_code }}</h1>
+          <span class="ax-mono" style="padding:2px 8px;border-radius:var(--ax-radius-sm);background:var(--ax-bg-subtle);border:1px solid var(--ax-border);font-size:var(--ax-text-xs);font-weight:var(--ax-weight-bold);color:var(--ax-text-subtle);">
+            Cell: {{ station.line_cell }}
+          </span>
+          {% if station.is_online %}
+            <span class="ax-badge" style="background:var(--ax-success-100);color:var(--ax-success-800);border:1px solid var(--ax-success-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);">
+              ONLINE ACTIVE
+            </span>
+          {% else %}
+            <span class="ax-badge" style="background:var(--ax-bg-subtle);color:var(--ax-text-subtle);border:1px solid var(--ax-border);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:var(--ax-text-xs);">
+              OFFLINE / STANDBY
+            </span>
+          {% endif %}
+        </div>
+        <p class="ax-page-head__subtitle" style="margin-top:var(--ax-space-1);">Automated Optical Inspection (AOI) Node Telemetry &amp; Defect Classification Stream</p>
+      </div>
+
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <a href="{% url 'vision:index' %}" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill">
+          &larr; Back to Vision Console
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ HARDWARE SPECS & CALIBRATION ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-col--6">
+      <div class="ax-card__header">
+        <h2 class="ax-card__title">Camera &amp; Optics Configuration</h2>
+      </div>
+      <div class="ax-card__body">
+        <dl style="display:grid;grid-template-columns:160px 1fr;gap:var(--ax-space-2) var(--ax-space-3);font-size:var(--ax-text-xs);margin:0;">
+          <dt style="color:var(--ax-text-subtle);">Production Line / Cell</dt>
+          <dd style="margin:0;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ station.line_cell }}</dd>
+
+          <dt style="color:var(--ax-text-subtle);">Camera Sensor Model</dt>
+          <dd style="margin:0;color:var(--ax-text-strong);">{{ station.camera_model }}</dd>
+
+          <dt style="color:var(--ax-text-subtle);">Image Resolution</dt>
+          <dd style="margin:0;" class="ax-mono">{{ station.resolution }}</dd>
+
+          <dt style="color:var(--ax-text-subtle);">Confidence Gating Threshold</dt>
+          <dd style="margin:0;" class="ax-mono">&ge; {{ station.confidence_threshold }}</dd>
+
+          <dt style="color:var(--ax-text-subtle);">Last Optical Calibration</dt>
+          <dd style="margin:0;" class="ax-mono">
+            {% if station.calibration_date %}
+              {{ station.calibration_date|date:"Y-m-d H:i" }}
+            {% else %}
+              <span style="color:var(--ax-text-subtle);">Not recorded</span>
+            {% endif %}
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--6">
+      <div class="ax-card__header">
+        <h2 class="ax-card__title">Station Telemetry Summary</h2>
+      </div>
+      <div class="ax-card__body">
+        <div style="display:grid;grid-template-columns:repeat(3, 1fr);gap:var(--ax-space-4);text-align:center;">
+          <div style="padding:var(--ax-space-3);background:var(--ax-bg-subtle);border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border);">
+            <span class="ax-card__eyebrow" style="font-size:11px;">Shots Logged</span>
+            <div class="ax-mono" style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-accent);margin-top:4px;">
+              {{ inspections|length }}
+            </div>
+            <span style="font-size:11px;color:var(--ax-text-subtle);">Recent cycles</span>
+          </div>
+
+          <div style="padding:var(--ax-space-3);background:var(--ax-bg-subtle);border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border);">
+            <span class="ax-card__eyebrow" style="font-size:11px;">Defect Rate</span>
+            <div class="ax-mono" style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-warning-600);margin-top:4px;">
+              {% if inspections|length > 0 %}
+                {{ inspections|length }}
+              {% else %}
+                0
+              {% endif %}
+            </div>
+            <span style="font-size:11px;color:var(--ax-text-subtle);">Logged events</span>
+          </div>
+
+          <div style="padding:var(--ax-space-3);background:var(--ax-bg-subtle);border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border);">
+            <span class="ax-card__eyebrow" style="font-size:11px;">Network Node</span>
+            <div class="ax-mono" style="font-size:var(--ax-text-lg);font-weight:var(--ax-weight-bold);color:var(--ax-success-600);margin-top:8px;">
+              TCP/IP GigE
+            </div>
+            <span style="font-size:11px;color:var(--ax-text-subtle);">Edge bus active</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ STATION SHOT LOG ════════════════ -->
+  <div class="ax-card">
+    <div class="ax-card__header" style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <h2 class="ax-card__title">Station Inspection Stream</h2>
+        <span class="ax-card__eyebrow">Recent optical sweeps captured by {{ station.station_code }}</span>
+      </div>
+      <span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+        {{ inspections|length }} inspection records
+      </span>
+    </div>
+
+    <div class="ax-card__body" style="padding:0;">
+      <div style="overflow-x:auto;">
+        <table class="ax-table" style="width:100%;font-size:var(--ax-text-xs);border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--ax-border);background:var(--ax-bg-subtle);text-align:left;">
+              <th style="padding:10px 14px;">Timestamp</th>
+              <th style="padding:10px 14px;">Part</th>
+              <th style="padding:10px 14px;text-align:center;">Shot #</th>
+              <th style="padding:10px 14px;text-align:center;">Cavity #</th>
+              <th style="padding:10px 14px;">Defect Classification</th>
+              <th style="padding:10px 14px;text-align:center;">Confidence</th>
+              <th style="padding:10px 14px;text-align:center;">Severity</th>
+              <th style="padding:10px 14px;text-align:center;">Action Taken</th>
+              <th style="padding:10px 14px;">Bounding Boxes</th>
+              <th style="padding:10px 14px;">Linked NCR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for insp in inspections %}
+            <tr style="border-bottom:1px solid var(--ax-border);">
+              <td style="padding:10px 14px;" class="ax-mono">{{ insp.inspection_timestamp|date:"Y-m-d H:i:s" }}</td>
+              <td style="padding:10px 14px;">
+                <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ insp.part.part_number }}</div>
+                <div style="color:var(--ax-text-subtle);font-size:11px;">{{ insp.part.name|truncatechars:24 }}</div>
+              </td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ insp.shot_number }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ insp.cavity_number }}</td>
+              <td style="padding:10px 14px;">
+                {% if insp.primary_defect_type == 'NO_DEFECT' %}
+                  <span style="color:var(--ax-success-600);font-weight:var(--ax-weight-semibold);">&#x2713; Clear (No Defect)</span>
+                {% else %}
+                  <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 8px;border-radius:var(--ax-radius-sm);font-weight:var(--ax-weight-bold);">
+                    {{ insp.get_primary_defect_type_display }}
+                  </span>
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">
+                {{ insp.confidence_score|floatformat:3 }}
+              </td>
+              <td style="padding:10px 14px;text-align:center;">
+                {% if insp.severity == 'CRITICAL' %}
+                  <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;font-weight:bold;">
+                    CRITICAL
+                  </span>
+                {% elif insp.severity == 'MAJOR' %}
+                  <span class="ax-badge" style="background:var(--ax-warning-100);color:var(--ax-warning-800);border:1px solid var(--ax-warning-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    MAJOR
+                  </span>
+                {% elif insp.severity == 'MINOR' %}
+                  <span class="ax-badge" style="background:var(--ax-info-100);color:var(--ax-info-800);border:1px solid var(--ax-info-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    MINOR
+                  </span>
+                {% else %}
+                  <span style="color:var(--ax-text-subtle);">Acceptable</span>
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;text-align:center;">
+                {% if insp.auto_action_taken == 'NCR_HOLD_TRIGGERED' %}
+                  <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:11px;font-weight:bold;">
+                    HOLD TRIGGERED
+                  </span>
+                {% elif insp.auto_action_taken == 'REJECT_DIVERTED' %}
+                  <span class="ax-badge" style="background:var(--ax-warning-100);color:var(--ax-warning-800);border:1px solid var(--ax-warning-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    DIVERTED
+                  </span>
+                {% else %}
+                  <span class="ax-badge" style="background:var(--ax-success-100);color:var(--ax-success-800);border:1px solid var(--ax-success-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    CLEARED
+                  </span>
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" class="ax-mono" style="font-size:10px;color:var(--ax-text-subtle);">
+                {% if insp.bounding_boxes %}
+                  {{ insp.bounding_boxes|length }} box(es) detected
+                {% else %}
+                  None
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;">
+                {% if insp.ncr %}
+                  <a href="{% url 'ncr:index' %}" style="font-weight:var(--ax-weight-bold);color:var(--ax-danger-600);text-decoration:none;" class="ax-mono">
+                    {{ insp.ncr.ncr_number }}
+                  </a>
+                {% else %}
+                  <span style="color:var(--ax-text-subtle);">&#x2014;</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="10" style="padding:var(--ax-space-6);text-align:center;color:var(--ax-text-subtle);">
+                No inspection events logged for this camera station yet.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

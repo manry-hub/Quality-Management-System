@@ -1,0 +1,289 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Supplier Quality: {{ supplier.name }} ({{ supplier.code }}){% endblock %}
+
+{% block content %}
+<div>
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" aria-label="Breadcrumb">
+          <ol style="display:flex;gap:var(--ax-space-2);list-style:none;padding:0;margin:0;font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+            <li><a href="{% url 'sqa:index' %}" style="color:var(--ax-accent);text-decoration:none;">SQA Portal</a></li>
+            <li>/</li>
+            <li aria-current="page" style="color:var(--ax-text-strong);">{{ supplier.code }}</li>
+          </ol>
+        </nav>
+        <div style="display:flex;align-items:center;gap:var(--ax-space-3);margin-top:var(--ax-space-2);">
+          <h1 class="ax-page-head__title" style="margin:0;">{{ supplier.name }}</h1>
+          <span class="ax-mono" style="padding:2px 8px;border-radius:var(--ax-radius-sm);background:var(--ax-bg-subtle);border:1px solid var(--ax-border);font-size:var(--ax-text-xs);font-weight:var(--ax-weight-bold);color:var(--ax-text-subtle);">
+            {{ supplier.code }}
+          </span>
+          {% if supplier.status == 'APPROVED' %}
+            <span class="ax-badge" style="background:var(--ax-success-100);color:var(--ax-success-800);border:1px solid var(--ax-success-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);">
+              APPROVED VENDOR
+            </span>
+          {% elif supplier.status == 'CONDITIONAL' %}
+            <span class="ax-badge" style="background:var(--ax-warning-100);color:var(--ax-warning-800);border:1px solid var(--ax-warning-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);">
+              CONDITIONAL / PROBATION
+            </span>
+          {% else %}
+            <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);">
+              DISQUALIFIED
+            </span>
+          {% endif %}
+        </div>
+        <p class="ax-page-head__subtitle" style="margin-top:var(--ax-space-1);">IATF 16949:2016 §8.4 Supplier Audit Profile, Material CoA History &amp; Monthly Performance Scorecard</p>
+      </div>
+
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <a href="{% url 'sqa:index' %}" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill">
+          &larr; Back to SQA Directory
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SUPPLIER OVERVIEW & STATS ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <!-- Profile Card -->
+    <div class="ax-card ax-col--4">
+      <div class="ax-card__header">
+        <h2 class="ax-card__title">Vendor Governance</h2>
+      </div>
+      <div class="ax-card__body">
+        <dl style="display:grid;grid-template-columns:140px 1fr;gap:var(--ax-space-2) var(--ax-space-3);font-size:var(--ax-text-xs);margin:0;">
+          <dt style="color:var(--ax-text-subtle);">Tier Classification</dt>
+          <dd style="margin:0;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ supplier.get_tier_display }}</dd>
+
+          <dt style="color:var(--ax-text-subtle);">Country of Origin</dt>
+          <dd style="margin:0;color:var(--ax-text-strong);">{{ supplier.country }}</dd>
+
+          <dt style="color:var(--ax-text-subtle);">Contact Person</dt>
+          <dd style="margin:0;color:var(--ax-text-strong);">{{ supplier.quality_contact_name|default:"Quality Manager" }}</dd>
+
+          <dt style="color:var(--ax-text-subtle);">Contact Email</dt>
+          <dd style="margin:0;"><a href="mailto:{{ supplier.contact_email }}" style="color:var(--ax-accent);text-decoration:none;">{{ supplier.contact_email }}</a></dd>
+
+          <dt style="color:var(--ax-text-subtle);">Quality Certifications</dt>
+          <dd style="margin:0;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+            {{ supplier.iso_certification }}
+          </dd>
+
+          <dt style="color:var(--ax-text-subtle);">Certificate Expiry</dt>
+          <dd style="margin:0;">
+            {% if supplier.cert_expiry_date %}
+              <span class="ax-mono">{{ supplier.cert_expiry_date|date:"Y-m-d" }}</span>
+            {% else %}
+              <span style="color:var(--ax-text-subtle);">&#x2014;</span>
+            {% endif %}
+          </dd>
+        </dl>
+      </div>
+    </div>
+
+    <!-- Active Scorecard Highlight -->
+    {% with sc=scorecards.0 %}
+    <div class="ax-card ax-col--8" style="border-left: 3px solid var(--ax-accent);">
+      <div class="ax-card__header" style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 class="ax-card__title">Latest Performance Rating ({{ sc.period_label|default:"Current Period" }})</h2>
+          <span class="ax-card__eyebrow">Calculated as of {{ sc.created_at|default:"N/A"|date:"Y-m-d" }}</span>
+        </div>
+        {% if sc %}
+          <span class="ax-mono" style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);padding:4px 14px;border-radius:var(--ax-radius-md);{% if sc.grade == 'GRADE_A' %}background:var(--ax-success-100);color:var(--ax-success-800);border:1px solid var(--ax-success-300);{% elif sc.grade == 'GRADE_B' %}background:var(--ax-info-100);color:var(--ax-info-800);border:1px solid var(--ax-info-300);{% elif sc.grade == 'GRADE_C' %}background:var(--ax-warning-100);color:var(--ax-warning-800);border:1px solid var(--ax-warning-300);{% else %}background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);{% endif %}">
+            {{ sc.get_grade_display }}
+          </span>
+        {% endif %}
+      </div>
+
+      <div class="ax-card__body">
+        {% if sc %}
+          <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:var(--ax-space-4);text-align:center;">
+            <div style="padding:var(--ax-space-3);background:var(--ax-bg-subtle);border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border);">
+              <span class="ax-card__eyebrow" style="font-size:11px;">CoA Compliance</span>
+              <div class="ax-mono" style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-accent);margin-top:4px;">
+                {{ sc.coa_compliance_pct|floatformat:1 }}%
+              </div>
+              <span style="font-size:11px;color:var(--ax-text-subtle);">Spec tolerances</span>
+            </div>
+
+            <div style="padding:var(--ax-space-3);background:var(--ax-bg-subtle);border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border);">
+              <span class="ax-card__eyebrow" style="font-size:11px;">Defect Rate (PPM)</span>
+              <div class="ax-mono" style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);{% if sc.ppm_defect_rate == 0 %}color:var(--ax-success-600);{% elif sc.ppm_defect_rate < 500 %}color:var(--ax-warning-600);{% else %}color:var(--ax-danger-600);{% endif %}margin-top:4px;">
+                {{ sc.ppm_defect_rate }}
+              </div>
+              <span style="font-size:11px;color:var(--ax-text-subtle);">Parts per million</span>
+            </div>
+
+            <div style="padding:var(--ax-space-3);background:var(--ax-bg-subtle);border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border);">
+              <span class="ax-card__eyebrow" style="font-size:11px;">On-Time Delivery</span>
+              <div class="ax-mono" style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:4px;">
+                {{ sc.on_time_delivery_pct|floatformat:1 }}%
+              </div>
+              <span style="font-size:11px;color:var(--ax-text-subtle);">Dock schedule adherence</span>
+            </div>
+
+            <div style="padding:var(--ax-space-3);background:var(--ax-bg-subtle);border-radius:var(--ax-radius-sm);border:1px solid var(--ax-border);">
+              <span class="ax-card__eyebrow" style="font-size:11px;">Lots Accepted / Total</span>
+              <div class="ax-mono" style="font-size:var(--ax-text-2xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:4px;">
+                {{ sc.accepted_lots }} <span style="font-size:14px;color:var(--ax-text-subtle);">/ {{ sc.total_lots_supplied }}</span>
+              </div>
+              <span style="font-size:11px;color:var(--ax-text-subtle);">{{ sc.rejected_lots }} rejected lot(s)</span>
+            </div>
+          </div>
+        {% else %}
+          <div style="padding:var(--ax-space-6);text-align:center;color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">
+            No performance scorecard generated yet for this vendor. Scorecards compute automatically when receiving lots.
+          </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endwith %}
+  </div>
+
+  <!-- ════════════════ COA CERTIFICATE ARCHIVE ════════════════ -->
+  <div class="ax-card" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card__header" style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <h2 class="ax-card__title">Certificate of Analysis (CoA) Ingestion History</h2>
+        <span class="ax-card__eyebrow">Lot-by-lot polymer verification records against technical datasheets</span>
+      </div>
+      <span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+        Total: {{ coas|length }} records
+      </span>
+    </div>
+
+    <div class="ax-card__body" style="padding:0;">
+      <div style="overflow-x:auto;">
+        <table class="ax-table" style="width:100%;font-size:var(--ax-text-xs);border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--ax-border);background:var(--ax-bg-subtle);text-align:left;">
+              <th style="padding:10px 14px;">CoA Number</th>
+              <th style="padding:10px 14px;">Resin Material</th>
+              <th style="padding:10px 14px;">Lot Number</th>
+              <th style="padding:10px 14px;">Mfg Date</th>
+              <th style="padding:10px 14px;text-align:center;">Moisture (%)</th>
+              <th style="padding:10px 14px;text-align:center;">MFI (g/10min)</th>
+              <th style="padding:10px 14px;text-align:center;">Density (g/cm&sup3;)</th>
+              <th style="padding:10px 14px;text-align:center;">Compliance</th>
+              <th style="padding:10px 14px;text-align:center;">Clearance Status</th>
+              <th style="padding:10px 14px;">Deviations</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in coas %}
+            <tr style="border-bottom:1px solid var(--ax-border);">
+              <td style="padding:10px 14px;" class="ax-mono">
+                {{ c.coa_number }}
+              </td>
+              <td style="padding:10px 14px;">
+                <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ c.material.material_code }}</div>
+                <div style="color:var(--ax-text-subtle);font-size:11px;">{{ c.material.material_name }} ({{ c.material.polymer_type }})</div>
+              </td>
+              <td style="padding:10px 14px;" class="ax-mono">{{ c.lot_number }}</td>
+              <td style="padding:10px 14px;" class="ax-mono">{{ c.manufacture_date|date:"Y-m-d" }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">
+                {{ c.parameters.moisture_pct|default:"—" }}
+              </td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">
+                {{ c.parameters.mfi_g_10min|default:"—" }}
+              </td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">
+                {{ c.parameters.density_g_cm3|default:"—" }}
+              </td>
+              <td style="padding:10px 14px;text-align:center;">
+                <span class="ax-mono" style="font-weight:var(--ax-weight-bold);{% if c.compliance_score >= 90 %}color:var(--ax-success-600);{% elif c.compliance_score >= 70 %}color:var(--ax-warning-600);{% else %}color:var(--ax-danger-600);{% endif %}">
+                  {{ c.compliance_score|floatformat:1 }}%
+                </span>
+              </td>
+              <td style="padding:10px 14px;text-align:center;">
+                {% if c.status == 'APPROVED' %}
+                  <span class="ax-badge" style="background:var(--ax-success-100);color:var(--ax-success-800);border:1px solid var(--ax-success-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    CLEARED
+                  </span>
+                {% elif c.status == 'REJECTED' %}
+                  <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    REJECTED
+                  </span>
+                {% else %}
+                  <span class="ax-badge" style="background:var(--ax-warning-100);color:var(--ax-warning-800);border:1px solid var(--ax-warning-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    PENDING
+                  </span>
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;max-width:240px;color:var(--ax-text-subtle);font-size:11px;">
+                {% if c.deviation_notes %}
+                  <span style="color:var(--ax-danger-600);font-weight:var(--ax-weight-semibold);">{{ c.deviation_notes }}</span>
+                {% else %}
+                  <span style="color:var(--ax-success-600);">&#x2713; Full specification conformance</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="10" style="padding:var(--ax-space-6);text-align:center;color:var(--ax-text-subtle);">
+                No Certificates of Analysis received from this vendor yet.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SCORECARD HISTORY ════════════════ -->
+  <div class="ax-card">
+    <div class="ax-card__header">
+      <h2 class="ax-card__title">Historical Scorecard Evaluations</h2>
+      <span class="ax-card__eyebrow">Monthly quality scorecard evaluation log</span>
+    </div>
+    <div class="ax-card__body" style="padding:0;">
+      <div style="overflow-x:auto;">
+        <table class="ax-table" style="width:100%;font-size:var(--ax-text-xs);border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--ax-border);background:var(--ax-bg-subtle);text-align:left;">
+              <th style="padding:10px 14px;">Evaluation Period</th>
+              <th style="padding:10px 14px;">Date Run</th>
+              <th style="padding:10px 14px;text-align:center;">Lots Supplied</th>
+              <th style="padding:10px 14px;text-align:center;">Lots Accepted</th>
+              <th style="padding:10px 14px;text-align:center;">Lots Rejected</th>
+              <th style="padding:10px 14px;text-align:center;">PPM Rate</th>
+              <th style="padding:10px 14px;text-align:center;">On-Time Delivery</th>
+              <th style="padding:10px 14px;text-align:center;">CoA Compliance</th>
+              <th style="padding:10px 14px;text-align:center;">Overall Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for s in scorecards %}
+            <tr style="border-bottom:1px solid var(--ax-border);">
+              <td style="padding:10px 14px;font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ s.period_label }}</td>
+              <td style="padding:10px 14px;" class="ax-mono">{{ s.created_at|date:"Y-m-d" }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ s.total_lots_supplied }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono" style="color:var(--ax-success-600);">{{ s.accepted_lots }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono" style="{% if s.rejected_lots > 0 %}color:var(--ax-danger-600);font-weight:bold;{% endif %}">{{ s.rejected_lots }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ s.ppm_defect_rate }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ s.on_time_delivery_pct|floatformat:1 }}%</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ s.coa_compliance_pct|floatformat:1 }}%</td>
+              <td style="padding:10px 14px;text-align:center;">
+                <span class="ax-mono" style="font-weight:var(--ax-weight-bold);padding:2px 8px;border-radius:var(--ax-radius-sm);{% if s.grade == 'GRADE_A' %}background:var(--ax-success-100);color:var(--ax-success-800);{% elif s.grade == 'GRADE_B' %}background:var(--ax-info-100);color:var(--ax-info-800);{% elif s.grade == 'GRADE_C' %}background:var(--ax-warning-100);color:var(--ax-warning-800);{% else %}background:var(--ax-danger-100);color:var(--ax-danger-800);{% endif %}">
+                  {{ s.get_grade_display }}
+                </span>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="9" style="padding:var(--ax-space-6);text-align:center;color:var(--ax-text-subtle);">
+                No historical scorecard records found.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -19,5 +19,7 @@ urlpatterns = [
     path("spc/", include("apps.spc.urls", namespace="spc")),
     path("capa/", include("apps.capa.urls", namespace="capa")),
     path("metrology/", include("apps.metrology.urls", namespace="metrology")),
+    path("sqa/", include("apps.sqa.urls", namespace="sqa")),
+    path("vision/", include("apps.vision.urls", namespace="vision")),
     path("api/v1/integrations/", include("apps.integrations.urls", namespace="integrations")),
 ]

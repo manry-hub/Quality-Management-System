@@ -1,0 +1,342 @@
+{% extends "base_qms.html" %}
+
+{% block title %}Supplier Quality Assurance (SQA){% endblock %}
+
+{% block content %}
+<div x-data="{ openCoaModal: false }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">Supplier Quality Assurance (SQA) &amp; CoA Portal</h1>
+        <p class="ax-page-head__subtitle">IATF 16949 §8.4 External Provider Governance, Automated CoA Verification &amp; Performance Scorecards</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openCoaModal = true">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+            <path d="M12 5v14" /><path d="M5 12h14" />
+          </svg>
+          Validate &amp; Ingest CoA
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ METRICS SUMMARY ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Active Qualified Suppliers</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ approved_count }} <span style="font-size:var(--ax-text-sm);font-weight:normal;color:var(--ax-text-subtle);">/ {{ total_suppliers }}</span>
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">IATF 16949 audited raw polymer vendors</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-success-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-success-500);">Digital CoAs Verified</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-success-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ total_coas }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Automated chemical spec clearance</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="{% if conditional_count > 0 %}border-left: 3px solid var(--ax-warning-500);{% else %}border-left: 3px solid var(--ax-border);{% endif %}">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="{% if conditional_count > 0 %}color:var(--ax-warning-500);{% else %}color:var(--ax-text-subtle);{% endif %}">
+          Conditional / Probationary
+        </span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);{% if conditional_count > 0 %}color:var(--ax-warning-500);{% else %}color:var(--ax-text-strong);{% endif %}margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ conditional_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Increased receiving dock inspection frequency</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-accent);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-accent);">Preferred Grade A Vendors</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-accent);margin-top:var(--ax-space-2);" class="ax-mono">
+          Tier 1
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">&gt; 95% composite compliance &amp; delivery</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ FILTER PILLS ════════════════ -->
+  <div style="display:flex;gap:var(--ax-space-2);margin-bottom:var(--ax-space-4);flex-wrap:wrap;">
+    <a href="{% url 'sqa:index' %}" class="ax-btn {% if not status_filter and not tier_filter %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      All Suppliers ({{ total_suppliers }})
+    </a>
+    <a href="{% url 'sqa:index' %}?status=APPROVED" class="ax-btn {% if status_filter == 'APPROVED' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Approved ({{ approved_count }})
+    </a>
+    <a href="{% url 'sqa:index' %}?status=CONDITIONAL" class="ax-btn {% if status_filter == 'CONDITIONAL' %}ax-btn--warning{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Conditional ({{ conditional_count }})
+    </a>
+    <a href="{% url 'sqa:index' %}?tier=TIER_1" class="ax-btn {% if tier_filter == 'TIER_1' %}ax-btn--primary{% else %}ax-btn--secondary{% endif %} ax-btn--sm ax-btn--pill">
+      Tier 1 Direct
+    </a>
+  </div>
+
+  <!-- ════════════════ SUPPLIER REGISTER TABLE ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <section class="ax-card ax-col--12" role="region" aria-label="Supplier Performance Register">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Vendor Governance</span>
+          <h2 class="ax-card__title">Automotive Polymer Suppliers &amp; Performance Scorecard</h2>
+          <p class="ax-card__subtitle">IATF 16949 supplier audit status, PPM defect rate, and lot acceptance scores</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">VENDOR CODE</th>
+                <th class="ax-table__th" scope="col">SUPPLIER NAME</th>
+                <th class="ax-table__th" scope="col">TIER / ORIGIN</th>
+                <th class="ax-table__th" scope="col">QUALITY AUDIT STATUS</th>
+                <th class="ax-table__th" scope="col">SCORECARD GRADE</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">PPM DEFECT RATE</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">COA COMPLIANCE</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in suppliers %}
+              {% with sc=s.scorecards.first %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ s.code }}
+                </td>
+                <td class="ax-table__td">
+                  <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ s.name }}</div>
+                  <div style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">{{ s.iso_certification }}</div>
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-sm);">
+                  {{ s.get_tier_display }} · {{ s.country }}
+                </td>
+                <td class="ax-table__td">
+                  {% if s.status == 'APPROVED' %}
+                    <span class="ax-badge ax-badge--success">Approved</span>
+                  {% elif s.status == 'CONDITIONAL' %}
+                    <span class="ax-badge ax-badge--warning">Conditional</span>
+                  {% else %}
+                    <span class="ax-badge ax-badge--danger">Disqualified</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td">
+                  {% if sc and sc.grade == 'GRADE_A' %}
+                    <span class="ax-badge ax-badge--success">Grade A (Preferred)</span>
+                  {% elif sc and sc.grade == 'GRADE_B' %}
+                    <span class="ax-badge ax-badge--accent" style="background:#1e5885;color:#ffffff;">Grade B (Qualified)</span>
+                  {% elif sc and sc.grade == 'GRADE_C' %}
+                    <span class="ax-badge ax-badge--warning">Grade C (Conditional)</span>
+                  {% elif sc %}
+                    <span class="ax-badge ax-badge--danger">Grade D (Escalated)</span>
+                  {% else %}
+                    <span class="ax-badge ax-badge--neutral">Pending Audit</span>
+                  {% endif %}
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-semibold);
+                  {% if sc and sc.ppm_defect_rate > 5000 %}color:var(--ax-danger-500);{% else %}color:var(--ax-success-500);{% endif %}">
+                  {{ sc.ppm_defect_rate|default:"0.00" }} PPM
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-bold);">
+                  {{ sc.coa_compliance_pct|default:"100.0" }}%
+                </td>
+                <td class="ax-table__td ax-table__td--num">
+                  <a href="{% url 'sqa:supplier_detail' supplier_id=s.id %}" class="ax-btn ax-btn--primary ax-btn--xs ax-btn--pill">
+                    View Dossier →
+                  </a>
+                </td>
+              </tr>
+              {% endwith %}
+              {% empty %}
+              <tr>
+                <td colspan="8" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  No suppliers matching filter criteria.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ RECENT COA INGESTION DOCKET ════════════════ -->
+  <div class="ax-dash-grid">
+    <section class="ax-card ax-col--12" role="region" aria-label="Recent CoAs">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Automated Verification Docket</span>
+          <h2 class="ax-card__title">Recent Raw Polymer Certificates of Analysis (CoA)</h2>
+          <p class="ax-card__subtitle">Inbound lots verified against moisture, Melt Flow Index (MFI), and density limits</p>
+        </div>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div class="ax-table-wrap">
+          <table class="ax-table ax-table--hover">
+            <thead class="ax-table__head">
+              <tr>
+                <th class="ax-table__th" scope="col">COA NUMBER</th>
+                <th class="ax-table__th" scope="col">SUPPLIER</th>
+                <th class="ax-table__th" scope="col">RAW MATERIAL &amp; LOT</th>
+                <th class="ax-table__th" scope="col">MFG DATE</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">MOISTURE (%)</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">MFI (g/10min)</th>
+                <th class="ax-table__th ax-table__th--num" scope="col">COMPLIANCE SCORE</th>
+                <th class="ax-table__th" scope="col">STATUS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in coas %}
+              <tr class="ax-table__row">
+                <td class="ax-table__td ax-mono" style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">
+                  {{ c.coa_number }}
+                </td>
+                <td class="ax-table__td" style="font-size:var(--ax-text-sm);">
+                  {{ c.supplier.name }}
+                </td>
+                <td class="ax-table__td">
+                  <div style="font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">{{ c.material.material_code }}</div>
+                  <div class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">Lot: {{ c.lot_number }}</div>
+                </td>
+                <td class="ax-table__td ax-mono" style="font-size:var(--ax-text-xs);">
+                  {{ c.manufacture_date }}
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:var(--ax-text-sm);">
+                  {{ c.parameters.moisture_pct|default:"—" }}%
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-size:var(--ax-text-sm);">
+                  {{ c.parameters.mfi_g_10min|default:"—" }}
+                </td>
+                <td class="ax-table__td ax-table__td--num ax-mono" style="font-weight:var(--ax-weight-bold);
+                  {% if c.compliance_score >= 95 %}color:var(--ax-success-500);{% else %}color:var(--ax-danger-500);{% endif %}">
+                  {{ c.compliance_score }}%
+                </td>
+                <td class="ax-table__td">
+                  {% if c.status == 'APPROVED' %}
+                    <span class="ax-badge ax-badge--success">Compliant</span>
+                  {% else %}
+                    <span class="ax-badge ax-badge--danger">Out of Spec</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="8" style="text-align:center;padding:var(--ax-space-6);color:var(--ax-text-subtle);">
+                  No Certificates of Analysis ingested yet.
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ════════════════ VALIDATE COA MODAL ════════════════ -->
+  <div class="ax-modal-backdrop" x-show="openCoaModal" x-cloak style="display:flex;align-items:center;justify-content:center;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;">
+    <div class="ax-card" style="width:100%;max-width:580px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);" @click.outside="openCoaModal = false">
+      <div class="ax-card__header">
+        <div class="ax-card__titles">
+          <span class="ax-card__eyebrow">Supplier Inbound Clearance</span>
+          <h2 class="ax-card__title">Validate &amp; Ingest Certificate of Analysis</h2>
+          <p class="ax-card__subtitle">Validates raw polymer chemical specs before receiving dock release</p>
+        </div>
+      </div>
+      <form method="post" action="{% url 'sqa:coa_validate' %}">
+        {% csrf_token %}
+        <div class="ax-card__body">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-bottom:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Supplier
+              </label>
+              <select name="supplier_id" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                {% for s in suppliers %}
+                  <option value="{{ s.id }}">{{ s.code }} — {{ s.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Resin Material Spec
+              </label>
+              <select name="material_id" required class="ax-form-control" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+                {% for m in materials %}
+                  <option value="{{ m.id }}">{{ m.material_code }} ({{ m.material_name }})</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);margin-bottom:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                CoA Number
+              </label>
+              <input type="text" name="coa_number" required placeholder="e.g. COA-2026-BASF-9901" class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+                Material Lot Number
+              </label>
+              <input type="text" name="lot_number" required placeholder="e.g. LOT-PA66-2026-092" class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+          </div>
+
+          <div style="margin-bottom:var(--ax-space-3);">
+            <label style="display:block;font-size:var(--ax-text-sm);font-weight:var(--ax-weight-medium);margin-bottom:var(--ax-space-1);color:var(--ax-text-strong);">
+              Manufacture Date
+            </label>
+            <input type="date" name="manufacture_date" required class="ax-form-control ax-mono" style="width:100%;padding:var(--ax-space-2);border:1px solid var(--ax-border);border-radius:var(--ax-radius-sm);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+          </div>
+
+          <!-- Parameter Limits -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--ax-space-2);margin-bottom:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">
+                Moisture (%)
+              </label>
+              <input type="number" step="0.001" name="moisture_pct" placeholder="0.015" class="ax-form-control ax-mono" style="width:100%;padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">
+                MFI (g/10min)
+              </label>
+              <input type="number" step="0.1" name="mfi_g_10min" placeholder="12.5" class="ax-form-control ax-mono" style="width:100%;padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-medium);color:var(--ax-text-strong);">
+                Density (g/cm³)
+              </label>
+              <input type="number" step="0.01" name="density_g_cm3" placeholder="1.14" class="ax-form-control ax-mono" style="width:100%;padding:4px 8px;font-size:12px;border:1px solid var(--ax-border);background:var(--ax-bg-surface);color:var(--ax-text-strong);">
+            </div>
+          </div>
+        </div>
+
+        <div class="ax-card__footer" style="display:flex;justify-content:flex-end;gap:var(--ax-space-3);padding:var(--ax-space-4);border-top:1px solid var(--ax-border);">
+          <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill" @click="openCoaModal = false">
+            Cancel
+          </button>
+          <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill">
+            Validate &amp; Ingest CoA
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
