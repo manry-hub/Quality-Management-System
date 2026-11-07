@@ -129,15 +129,21 @@ Langkah ini akan membangun image web multi-stage dan menjalankan:
 - `celery_worker` (Outbox & event processing)
 - `celery_beat` (Penjadwal audit kalibrasi & VoE)
 
-#### 3. Jalankan Migrasi & Seed Data di Dalam Kontainer
+#### 3. Inisialisasi Otomatis & Seed Data Master
+Kontainer `web` secara otomatis menjalankan migrasi database dan pengumpulan file statis (*collectstatic* dengan WhiteNoise) saat startup. Untuk memuat data awal (12 peran IATF 16949, master part, dan material resin):
 ```bash
-docker compose exec web python manage.py migrate
 docker compose exec web python manage.py seed_initial_data
 ```
 
-#### 4. Buat Akun Administrator di Dalam Kontainer
-```bash
-docker compose exec -it web python manage.py createsuperuser
+#### 4. Akun Administrator Default (Siap Pakai)
+Sistem telah menyiapkan akun superuser bawaan untuk pengujian:
+- **URL Admin Portal:** [http://127.0.0.1:8001/admin/](http://127.0.0.1:8001/admin/)
+- **Username:** `admin`
+- **Password:** `AdminPassword2026!`
+- **Badge Number:** `QA-ADMIN-001`
+- **Department:** `QA`
+
+*(Anda juga dapat membuat akun admin baru kapan saja dengan `docker compose exec -it web python manage.py createsuperuser`)*.
 ```
 
 #### 5. Pantau Log Kontainer
