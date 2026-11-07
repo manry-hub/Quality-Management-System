@@ -1,0 +1,392 @@
+{% extends "base_qms.html" %}
+
+{% block title %}AI Vision &amp; Defect Classification{% endblock %}
+
+{% block content %}
+<div x-data="{ openSimModal: false }">
+  <!-- ════════════════ PAGE HEAD ════════════════ -->
+  <div class="ax-page-head">
+    <div class="ax-page-head__row">
+      <div>
+        <nav class="ax-breadcrumb" data-ax-breadcrumb aria-label="Breadcrumb"></nav>
+        <h1 class="ax-page-head__title">AI Vision Inspection &amp; Defect Classification</h1>
+        <p class="ax-page-head__subtitle">Edge Camera Stations, Neural Visual Defect Inference, Real-Time Bounding Box Telemetry &amp; Automatic Containment</p>
+      </div>
+      <div class="ax-page-head__actions" style="display:flex;gap:var(--ax-space-3);align-items:center;">
+        <button type="button" class="ax-btn ax-btn--primary ax-btn--sm ax-btn--pill" @click="openSimModal = true">
+          <svg class="ax-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16" aria-hidden="true">
+            <path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z" />
+            <rect x="3" y="6" width="12" height="12" rx="2" />
+          </svg>
+          Simulate Vision Shot
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ METRICS SUMMARY ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <div class="ax-card ax-col--3">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow">Edge Vision Stations</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-text-strong);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ online_stations }} <span style="font-size:var(--ax-text-sm);font-weight:normal;color:var(--ax-text-subtle);">/ {{ stations|length }}</span>
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Online optical inspection nodes</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-accent);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-accent);">Total Shots Inspected</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-accent);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ total_inspections }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Automated cavity &amp; parting line sweeps</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-warning-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-warning-500);">Visual Defects Detected</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-warning-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ defect_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Flash, Short Shots, Sink Marks, Voids</p>
+      </div>
+    </div>
+
+    <div class="ax-card ax-col--3" style="border-left: 3px solid var(--ax-danger-500);">
+      <div class="ax-card__body">
+        <span class="ax-card__eyebrow" style="color:var(--ax-danger-500);">Auto Quality Holds</span>
+        <div style="font-size:var(--ax-text-3xl);font-weight:var(--ax-weight-bold);color:var(--ax-danger-500);margin-top:var(--ax-space-2);" class="ax-mono">
+          {{ hold_triggered_count }}
+        </div>
+        <p class="ax-card__subtitle" style="margin-top:var(--ax-space-1);">Instant emergency containment NCRs</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ CAMERA STATIONS REGISTER & LIVE FEED VIEW ════════════════ -->
+  <div class="ax-dash-grid" style="margin-bottom:var(--ax-space-6);">
+    <!-- Camera Stations List -->
+    <div class="ax-card ax-col--4">
+      <div class="ax-card__header">
+        <h2 class="ax-card__title">Connected Camera Stations</h2>
+        <span class="ax-card__eyebrow">Edge optical stations on active IMM cells</span>
+      </div>
+      <div class="ax-card__body" style="padding:0;">
+        <div style="display:flex;flex-direction:column;">
+          {% for st in stations %}
+          <div style="padding:var(--ax-space-3) var(--ax-space-4);border-bottom:1px solid var(--ax-border);display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="display:flex;align-items:center;gap:var(--ax-space-2);">
+                <a href="{% url 'vision:station_detail' st.id %}" style="font-weight:var(--ax-weight-semibold);color:var(--ax-accent);text-decoration:none;" class="ax-mono">
+                  {{ st.station_code }}
+                </a>
+                {% if st.is_online %}
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ax-success-500);" title="Online"></span>
+                {% else %}
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ax-text-subtle);" title="Offline"></span>
+                {% endif %}
+              </div>
+              <div style="font-size:11px;color:var(--ax-text-subtle);margin-top:2px;">
+                Line/Cell: <strong style="color:var(--ax-text-strong);">{{ st.line_cell }}</strong> &bull; Res: {{ st.resolution }}
+              </div>
+              <div style="font-size:11px;color:var(--ax-text-subtle);">
+                Model: {{ st.camera_model }} &bull; Conf &ge; <span class="ax-mono">{{ st.confidence_threshold }}</span>
+              </div>
+            </div>
+            <div>
+              <a href="{% url 'vision:station_detail' st.id %}" class="ax-btn ax-btn--secondary ax-btn--sm ax-btn--pill">
+                View
+              </a>
+            </div>
+          </div>
+          {% empty %}
+          <div style="padding:var(--ax-space-6);text-align:center;color:var(--ax-text-subtle);font-size:var(--ax-text-sm);">
+            No camera stations configured. Register vision stations in admin.
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- Defect Classification Distribution & Simulated Viewfinder -->
+    <div class="ax-card ax-col--8">
+      <div class="ax-card__header" style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h2 class="ax-card__title">Defect Distribution &amp; Synthetic Viewfinder Preview</h2>
+          <span class="ax-card__eyebrow">Real-time defect categorization across all stations</span>
+        </div>
+        <span class="ax-badge" style="background:var(--ax-bg-subtle);color:var(--ax-text-subtle);border:1px solid var(--ax-border);font-size:11px;">
+          YOLOv8-QMS Vision Engine
+        </span>
+      </div>
+
+      <div class="ax-card__body">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-5);align-items:center;">
+          <!-- Simulated Camera Viewfinder -->
+          <div style="background:#0f172a;border-radius:var(--ax-radius-md);padding:var(--ax-space-3);border:1px solid var(--ax-border);color:#e2e8f0;position:relative;">
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:monospace;color:#94a3b8;margin-bottom:6px;">
+              <span>CAM-IMM03-TOP [LIVE FEED]</span>
+              <span style="color:#22c55e;">● 30 FPS</span>
+            </div>
+
+            <div style="width:100%;height:180px;background:#1e293b;border-radius:var(--ax-radius-sm);position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;">
+              <!-- Automotive Part Wireframe silhouette -->
+              <svg viewBox="0 0 400 240" style="width:100%;height:100%;opacity:0.45;" aria-hidden="true">
+                <rect x="50" y="40" width="300" height="160" rx="20" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4 4" />
+                <circle cx="100" cy="90" r="25" fill="none" stroke="#64748b" stroke-width="1.5" />
+                <circle cx="300" cy="90" r="25" fill="none" stroke="#64748b" stroke-width="1.5" />
+                <path d="M 80 160 Q 200 130 320 160" fill="none" stroke="#64748b" stroke-width="2" />
+                <!-- Parting line -->
+                <line x1="50" y1="120" x2="350" y2="120" stroke="#475569" stroke-width="1" />
+              </svg>
+
+              <!-- Simulated Defect Bounding Box -->
+              <div style="position:absolute;top:35px;right:70px;border:2px solid #ef4444;background:rgba(239,68,68,0.2);padding:2px 6px;border-radius:2px;font-size:10px;font-family:monospace;color:#fecaca;">
+                FLASH (0.96)
+              </div>
+              <div style="position:absolute;bottom:45px;left:85px;border:2px dashed #f59e0b;background:rgba(245,158,11,0.15);padding:2px 4px;border-radius:2px;font-size:9px;font-family:monospace;color:#fef3c7;">
+                SINK_MARK (0.88)
+              </div>
+
+              <!-- Reticle Center -->
+              <div style="position:absolute;width:12px;height:12px;border:1px solid rgba(255,255,255,0.3);border-radius:50%;"></div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;font-size:10px;font-family:monospace;color:#94a3b8;margin-top:6px;">
+              <span>Resolution: 1920x1080</span>
+              <span>Inference: 14.2ms</span>
+            </div>
+          </div>
+
+          <!-- Defect Count Bars -->
+          <div>
+            <h3 style="font-size:var(--ax-text-xs);font-weight:var(--ax-weight-bold);text-transform:uppercase;letter-spacing:0.05em;color:var(--ax-text-subtle);margin-top:0;margin-bottom:var(--ax-space-3);">
+              Detections by Classification Type
+            </h3>
+            <div style="display:flex;flex-direction:column;gap:var(--ax-space-2);">
+              {% for label, cnt in defect_breakdown.items %}
+              <div>
+                <div style="display:flex;justify-content:space-between;font-size:var(--ax-text-xs);margin-bottom:2px;">
+                  <span style="color:var(--ax-text-strong);font-weight:var(--ax-weight-semibold);">{{ label }}</span>
+                  <span class="ax-mono" style="color:var(--ax-text-subtle);">{{ cnt }}</span>
+                </div>
+                <div style="height:6px;background:var(--ax-bg-subtle);border-radius:3px;overflow:hidden;border:1px solid var(--ax-border);">
+                  <div style="height:100%;width:{% if total_inspections > 0 %}{% widthratio cnt total_inspections 100 %}{% else %}0{% endif %}%;background:var(--ax-accent);"></div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ RECENT VISION INSPECTIONS STREAM ════════════════ -->
+  <div class="ax-card">
+    <div class="ax-card__header" style="display:flex;justify-content:space-between;align-items:center;">
+      <div>
+        <h2 class="ax-card__title">Real-Time Shot Inspection Log</h2>
+        <span class="ax-card__eyebrow">Continuous edge camera telemetry, bounding box metadata &amp; gating disposition</span>
+      </div>
+      <span class="ax-mono" style="font-size:var(--ax-text-xs);color:var(--ax-text-subtle);">
+        Showing latest {{ inspections|length }} shots
+      </span>
+    </div>
+
+    <div class="ax-card__body" style="padding:0;">
+      <div style="overflow-x:auto;">
+        <table class="ax-table" style="width:100%;font-size:var(--ax-text-xs);border-collapse:collapse;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--ax-border);background:var(--ax-bg-subtle);text-align:left;">
+              <th style="padding:10px 14px;">Timestamp</th>
+              <th style="padding:10px 14px;">Station</th>
+              <th style="padding:10px 14px;">Part / Mold</th>
+              <th style="padding:10px 14px;text-align:center;">Shot #</th>
+              <th style="padding:10px 14px;text-align:center;">Cavity #</th>
+              <th style="padding:10px 14px;">Defect Type</th>
+              <th style="padding:10px 14px;text-align:center;">Confidence</th>
+              <th style="padding:10px 14px;text-align:center;">Severity</th>
+              <th style="padding:10px 14px;text-align:center;">Gating Action</th>
+              <th style="padding:10px 14px;">Linked NCR</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for insp in inspections %}
+            <tr style="border-bottom:1px solid var(--ax-border);">
+              <td style="padding:10px 14px;" class="ax-mono">{{ insp.inspection_timestamp|date:"Y-m-d H:i:s" }}</td>
+              <td style="padding:10px 14px;">
+                <a href="{% url 'vision:station_detail' insp.station.id %}" style="font-weight:var(--ax-weight-semibold);color:var(--ax-accent);text-decoration:none;" class="ax-mono">
+                  {{ insp.station.station_code }}
+                </a>
+              </td>
+              <td style="padding:10px 14px;">
+                <div style="font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);">{{ insp.part.part_number }}</div>
+                <div style="color:var(--ax-text-subtle);font-size:11px;">{{ insp.part.name|truncatechars:28 }}</div>
+              </td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ insp.shot_number }}</td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">{{ insp.cavity_number }}</td>
+              <td style="padding:10px 14px;">
+                {% if insp.primary_defect_type == 'NO_DEFECT' %}
+                  <span style="color:var(--ax-success-600);font-weight:var(--ax-weight-semibold);">&#x2713; Clear (No Defect)</span>
+                {% else %}
+                  <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 8px;border-radius:var(--ax-radius-sm);font-weight:var(--ax-weight-bold);">
+                    {{ insp.get_primary_defect_type_display }}
+                  </span>
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;text-align:center;" class="ax-mono">
+                {{ insp.confidence_score|floatformat:3 }}
+              </td>
+              <td style="padding:10px 14px;text-align:center;">
+                {% if insp.severity == 'CRITICAL' %}
+                  <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;font-weight:bold;">
+                    CRITICAL
+                  </span>
+                {% elif insp.severity == 'MAJOR' %}
+                  <span class="ax-badge" style="background:var(--ax-warning-100);color:var(--ax-warning-800);border:1px solid var(--ax-warning-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    MAJOR
+                  </span>
+                {% elif insp.severity == 'MINOR' %}
+                  <span class="ax-badge" style="background:var(--ax-info-100);color:var(--ax-info-800);border:1px solid var(--ax-info-300);padding:2px 6px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    MINOR
+                  </span>
+                {% else %}
+                  <span style="color:var(--ax-text-subtle);">Acceptable</span>
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;text-align:center;">
+                {% if insp.auto_action_taken == 'NCR_HOLD_TRIGGERED' %}
+                  <span class="ax-badge" style="background:var(--ax-danger-100);color:var(--ax-danger-800);border:1px solid var(--ax-danger-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:11px;font-weight:bold;">
+                    HOLD TRIGGERED
+                  </span>
+                {% elif insp.auto_action_taken == 'REJECT_DIVERTED' %}
+                  <span class="ax-badge" style="background:var(--ax-warning-100);color:var(--ax-warning-800);border:1px solid var(--ax-warning-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    DIVERTED
+                  </span>
+                {% else %}
+                  <span class="ax-badge" style="background:var(--ax-success-100);color:var(--ax-success-800);border:1px solid var(--ax-success-300);padding:2px 8px;border-radius:var(--ax-radius-full);font-size:11px;">
+                    CLEARED
+                  </span>
+                {% endif %}
+              </td>
+              <td style="padding:10px 14px;">
+                {% if insp.ncr %}
+                  <a href="{% url 'ncr:index' %}" style="font-weight:var(--ax-weight-bold);color:var(--ax-danger-600);text-decoration:none;" class="ax-mono">
+                    {{ insp.ncr.ncr_number }}
+                  </a>
+                {% else %}
+                  <span style="color:var(--ax-text-subtle);">&#x2014;</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="10" style="padding:var(--ax-space-6);text-align:center;color:var(--ax-text-subtle);">
+                No vision inspection events logged yet. Click "Simulate Vision Shot" to run an automated inference sweep.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SIMULATE SHOT MODAL ════════════════ -->
+  <div x-show="openSimModal" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.5);" x-cloak>
+    <div @click.away="openSimModal = false" class="ax-card" style="width:100%;max-width:540px;background:var(--ax-bg-surface);box-shadow:var(--ax-shadow-lg);border:1px solid var(--ax-border);">
+      <div class="ax-card__header" style="display:flex;justify-content:space-between;align-items:center;">
+        <h2 class="ax-card__title">Simulate Edge AI Vision Shot</h2>
+        <button type="button" @click="openSimModal = false" style="background:none;border:none;cursor:pointer;color:var(--ax-text-subtle);font-size:18px;">&times;</button>
+      </div>
+
+      <form method="post" action="{% url 'vision:simulate_shot' %}" class="ax-card__body">
+        {% csrf_token %}
+        <div style="display:flex;flex-direction:column;gap:var(--ax-space-3);">
+          <div>
+            <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-bottom:4px;">
+              Camera Inspection Station *
+            </label>
+            <select name="station_id" class="ax-select" style="width:100%;" required>
+              {% for st in stations %}
+                <option value="{{ st.id }}">{{ st.station_code }} - {{ st.line_cell }} ({{ st.camera_model }})</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div>
+            <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-bottom:4px;">
+              Part / Mold Cavity *
+            </label>
+            <select name="part_id" class="ax-select" style="width:100%;" required>
+              {% for p in parts %}
+                <option value="{{ p.id }}">{{ p.part_number }} - {{ p.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-bottom:4px;">
+                Shot Number
+              </label>
+              <input type="number" name="shot_number" value="101" class="ax-input ax-mono" style="width:100%;" required />
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-bottom:4px;">
+                Cavity Number
+              </label>
+              <input type="number" name="cavity_number" value="1" min="1" max="64" class="ax-input ax-mono" style="width:100%;" required />
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--ax-space-3);">
+            <div>
+              <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-bottom:4px;">
+                Inferred Defect Type *
+              </label>
+              <select name="defect_type" class="ax-select" style="width:100%;" required>
+                {% for dt, label in defect_types %}
+                  <option value="{{ dt }}" {% if dt == 'FLASH' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div>
+              <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-bottom:4px;">
+                Severity Level *
+              </label>
+              <select name="severity" class="ax-select" style="width:100%;" required>
+                {% for sev, label in severity_choices %}
+                  <option value="{{ sev }}" {% if sev == 'CRITICAL' %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label style="display:block;font-size:var(--ax-text-xs);font-weight:var(--ax-weight-semibold);color:var(--ax-text-strong);margin-bottom:4px;">
+              Model Confidence Score (0.00 - 1.00)
+            </label>
+            <input type="number" step="0.01" min="0" max="1" name="confidence_score" value="0.96" class="ax-input ax-mono" style="width:100%;" required />
+            <span style="font-size:11px;color:var(--ax-text-subtle);">Note: CRITICAL severity with confidence above station threshold triggers an instant Emergency NCR Quality Hold.</span>
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:var(--ax-space-2);margin-top:var(--ax-space-3);">
+            <button type="button" class="ax-btn ax-btn--secondary ax-btn--sm" @click="openSimModal = false">
+              Cancel
+            </button>
+            <button type="submit" class="ax-btn ax-btn--primary ax-btn--sm">
+              Trigger Vision Classification
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

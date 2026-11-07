@@ -36,6 +36,22 @@ from apps.metrology.models.metrology import (
     MsaStudy,
 )
 from apps.metrology.services import record_calibration, compute_anova_gauge_rr
+from apps.sqa.models.sqa import (
+    Supplier,
+    CertificateOfAnalysis,
+    SupplierScorecard,
+    SupplierTierChoices,
+    SupplierStatusChoices,
+    ScorecardGradeChoices,
+    CoaStatusChoices,
+)
+from apps.vision.models.vision import (
+    VisionInspectionStation,
+    VisionDefectInspection,
+    DefectTypeChoices,
+    DefectSeverityChoices,
+    VisionActionChoices,
+)
 
 User = get_user_model()
 
@@ -57,6 +73,11 @@ class Command(BaseCommand):
 
         if options.get("reset"):
             self.stdout.write("Purging operational records...")
+            VisionDefectInspection.objects.all().delete()
+            VisionInspectionStation.objects.all().delete()
+            CertificateOfAnalysis.objects.all().delete()
+            SupplierScorecard.objects.all().delete()
+            Supplier.objects.all().delete()
             SpcSubgroup.objects.all().delete()
             SpcControlChart.objects.all().delete()
             CapaVoeRecord.objects.all().delete()
@@ -938,6 +959,322 @@ class Command(BaseCommand):
             self.style.SUCCESS(
                 f"  Created ANOVA Gauge R&R {msa_study.study_number}: %GRR={msa_study.grr_percent}%, "
                 f"ndc={msa_study.ndc} ({msa_study.acceptance_status})."
+            )
+        )
+
+        # ---------------------------------------------------------------------
+        # 10. SQA (SUPPLIERS, COA DOCKETS, SCORECARDS) & AI VISION TELEMETRY
+        # ---------------------------------------------------------------------
+        self.stdout.write("10. Seeding SQA supplier scorecards & edge AI vision stations...")
+
+        sup_basf = Supplier.objects.create(
+            code="SUP-BASF",
+            name="BASF Performance Materials",
+            tier=SupplierTierChoices.TIER_1,
+            status=SupplierStatusChoices.APPROVED,
+            iso_certification="IATF 16949:2016 / ISO 9001",
+            cert_expiry_date=today + timezone.timedelta(days=450),
+            quality_contact_name="Dr. Rainer Weiss",
+            contact_email="quality.automotive@basf.com",
+        )
+
+        sup_covestro = Supplier.objects.create(
+            code="SUP-COVESTRO",
+            name="Covestro Polymers AG",
+            tier=SupplierTierChoices.TIER_1,
+            status=SupplierStatusChoices.APPROVED,
+            iso_certification="IATF 16949:2016 / ISO 9001",
+            cert_expiry_date=today + timezone.timedelta(days=500),
+            quality_contact_name="Claudia Schmitt",
+            contact_email="automotive.qa@covestro.com",
+        )
+
+        sup_celanese = Supplier.objects.create(
+            code="SUP-CELANESE",
+            name="Celanese Engineered Materials",
+            tier=SupplierTierChoices.TIER_2,
+            status=SupplierStatusChoices.APPROVED,
+            iso_certification="ISO 9001:2015",
+            cert_expiry_date=today + timezone.timedelta(days=300),
+            quality_contact_name="Thomas Miller",
+            contact_email="techservice@celanese.com",
+        )
+
+        sup_dupont = Supplier.objects.create(
+            code="SUP-DUPONT",
+            name="DuPont Specialty Polymers",
+            tier=SupplierTierChoices.TIER_1,
+            status=SupplierStatusChoices.CONDITIONAL,
+            iso_certification="IATF 16949:2016",
+            cert_expiry_date=today + timezone.timedelta(days=180),
+            quality_contact_name="Marc Vance",
+            contact_email="materials.support@dupont.com",
+        )
+
+        # CoAs
+        CertificateOfAnalysis.objects.create(
+            coa_number="COA-BASF-2026-081",
+            supplier=sup_basf,
+            material=material_map["RES-PA66-GF30"],
+            lot_number="RESIN-LOT-PA66-2026-081",
+            manufacture_date=today - timezone.timedelta(days=25),
+            expiration_date=today + timezone.timedelta(days=340),
+            parameters={
+                "moisture_pct": 0.012,
+                "mfi_g_10min": 15.2,
+                "density_g_cm3": 1.36,
+            },
+            compliance_score=Decimal("100.00"),
+            status=CoaStatusChoices.APPROVED,
+            deviation_notes="",
+            verified_by=user_map["qc_inspector"],
+        )
+
+        CertificateOfAnalysis.objects.create(
+            coa_number="COA-BASF-2026-092",
+            supplier=sup_basf,
+            material=material_map["RES-PA66-GF30"],
+            lot_number="RESIN-LOT-PA66-2026-092",
+            manufacture_date=today - timezone.timedelta(days=10),
+            expiration_date=today + timezone.timedelta(days=355),
+            parameters={
+                "moisture_pct": 0.011,
+                "mfi_g_10min": 15.4,
+                "density_g_cm3": 1.36,
+            },
+            compliance_score=Decimal("100.00"),
+            status=CoaStatusChoices.APPROVED,
+            deviation_notes="",
+            verified_by=user_map["qc_inspector"],
+        )
+
+        CertificateOfAnalysis.objects.create(
+            coa_number="COA-COV-2026-101",
+            supplier=sup_covestro,
+            material=material_map["RES-ABS-PC"],
+            lot_number="LOT-PCABS-2026-101",
+            manufacture_date=today - timezone.timedelta(days=15),
+            expiration_date=today + timezone.timedelta(days=350),
+            parameters={
+                "moisture_pct": 0.016,
+                "mfi_g_10min": 18.2,
+                "density_g_cm3": 1.15,
+            },
+            compliance_score=Decimal("100.00"),
+            status=CoaStatusChoices.APPROVED,
+            deviation_notes="",
+            verified_by=user_map["qc_inspector"],
+        )
+
+        CertificateOfAnalysis.objects.create(
+            coa_number="COA-CEL-2026-055",
+            supplier=sup_celanese,
+            material=material_map["RES-POM-CO"],
+            lot_number="LOT-POM-2026-055",
+            manufacture_date=today - timezone.timedelta(days=20),
+            expiration_date=today + timezone.timedelta(days=345),
+            parameters={
+                "moisture_pct": 0.008,
+                "mfi_g_10min": 9.1,
+                "density_g_cm3": 1.41,
+            },
+            compliance_score=Decimal("100.00"),
+            status=CoaStatusChoices.APPROVED,
+            deviation_notes="",
+            verified_by=user_map["qc_inspector"],
+        )
+
+        CertificateOfAnalysis.objects.create(
+            coa_number="COA-DUP-2026-044",
+            supplier=sup_dupont,
+            material=material_map["RES-PA66-GF30"],
+            lot_number="LOT-PA66-2026-044",
+            manufacture_date=today - timezone.timedelta(days=18),
+            expiration_date=today + timezone.timedelta(days=347),
+            parameters={
+                "moisture_pct": 0.028,
+                "mfi_g_10min": 15.1,
+                "density_g_cm3": 1.36,
+            },
+            compliance_score=Decimal("60.00"),
+            status=CoaStatusChoices.REJECTED,
+            deviation_notes="moisture_pct 0.028 > target max 0.015",
+            verified_by=user_map["qa_manager"],
+        )
+
+        # Supplier Scorecards
+        SupplierScorecard.objects.create(
+            supplier=sup_basf,
+            period_label="2026-Q1",
+            total_lots_supplied=12,
+            accepted_lots=12,
+            rejected_lots=0,
+            ppm_defect_rate=Decimal("0.00"),
+            on_time_delivery_pct=Decimal("99.20"),
+            coa_compliance_pct=Decimal("100.00"),
+            grade=ScorecardGradeChoices.GRADE_A,
+        )
+
+        SupplierScorecard.objects.create(
+            supplier=sup_covestro,
+            period_label="2026-Q1",
+            total_lots_supplied=8,
+            accepted_lots=8,
+            rejected_lots=0,
+            ppm_defect_rate=Decimal("120.00"),
+            on_time_delivery_pct=Decimal("96.50"),
+            coa_compliance_pct=Decimal("100.00"),
+            grade=ScorecardGradeChoices.GRADE_A,
+        )
+
+        SupplierScorecard.objects.create(
+            supplier=sup_celanese,
+            period_label="2026-Q1",
+            total_lots_supplied=6,
+            accepted_lots=6,
+            rejected_lots=0,
+            ppm_defect_rate=Decimal("350.00"),
+            on_time_delivery_pct=Decimal("95.00"),
+            coa_compliance_pct=Decimal("100.00"),
+            grade=ScorecardGradeChoices.GRADE_B,
+        )
+
+        SupplierScorecard.objects.create(
+            supplier=sup_dupont,
+            period_label="2026-Q1",
+            total_lots_supplied=10,
+            accepted_lots=7,
+            rejected_lots=3,
+            ppm_defect_rate=Decimal("2800.00"),
+            on_time_delivery_pct=Decimal("84.00"),
+            coa_compliance_pct=Decimal("70.00"),
+            grade=ScorecardGradeChoices.GRADE_C,
+        )
+
+        # AI Vision Inspection Stations
+        st_imm03 = VisionInspectionStation.objects.create(
+            station_code="CAM-IMM03-TOP",
+            name="IMM-03 Top Parting Line Camera",
+            line_cell="CELL-03 (Bumper Fascia IMM-3000T)",
+            camera_model="Basler ace 2 Pro GigE 12MP",
+            resolution="4096x3000",
+            confidence_threshold=Decimal("0.85"),
+            is_online=True,
+        )
+
+        st_imm02 = VisionInspectionStation.objects.create(
+            station_code="CAM-IMM02-CAV",
+            name="IMM-02 Multi-Cavity Bezel Camera",
+            line_cell="CELL-02 (Instrument Bezel IMM-1200T)",
+            camera_model="Cognex In-Sight 9912M 12MP",
+            resolution="4096x3000",
+            confidence_threshold=Decimal("0.80"),
+            is_online=True,
+        )
+
+        VisionInspectionStation.objects.create(
+            station_code="CAM-IMM01-OUT",
+            name="IMM-01 Gate & Ejection Camera",
+            line_cell="CELL-01 (Door Bracket IMM-650T)",
+            camera_model="Keyence CV-X480F",
+            resolution="1920x1080",
+            confidence_threshold=Decimal("0.85"),
+            is_online=False,
+        )
+
+        # Vision Inspections
+        # Clean shots on IMM03
+        for shot in range(870, 884):
+            VisionDefectInspection.objects.create(
+                station=st_imm03,
+                part=part_map["PRD-FASCIA-FR"],
+                shot_number=shot,
+                cavity_number=(shot % 2) + 1,
+                primary_defect_type=DefectTypeChoices.NO_DEFECT,
+                confidence_score=Decimal("0.985"),
+                severity=DefectSeverityChoices.ACCEPTABLE,
+                bounding_boxes=[],
+                auto_action_taken=VisionActionChoices.CLEARED,
+                inspection_timestamp=timezone.now() - timezone.timedelta(minutes=(890 - shot) * 2),
+            )
+
+        # Critical Flash on Shot 884 linked to ncr_crit
+        VisionDefectInspection.objects.create(
+            station=st_imm03,
+            part=part_map["PRD-FASCIA-FR"],
+            shot_number=884,
+            cavity_number=1,
+            primary_defect_type=DefectTypeChoices.FLASH,
+            confidence_score=Decimal("0.965"),
+            severity=DefectSeverityChoices.CRITICAL,
+            bounding_boxes=[{
+                "label": "FLASH",
+                "bbox": [150, 110, 80, 35],
+                "confidence": 0.965,
+                "severity": "CRITICAL",
+            }],
+            auto_action_taken=VisionActionChoices.NCR_HOLD_TRIGGERED,
+            ncr=ncr_crit,
+            inspection_timestamp=timezone.now() - timezone.timedelta(minutes=15),
+        )
+
+        # Sink mark on IMM03
+        VisionDefectInspection.objects.create(
+            station=st_imm03,
+            part=part_map["PRD-FASCIA-FR"],
+            shot_number=885,
+            cavity_number=2,
+            primary_defect_type=DefectTypeChoices.SINK_MARK,
+            confidence_score=Decimal("0.880"),
+            severity=DefectSeverityChoices.MINOR,
+            bounding_boxes=[{
+                "label": "SINK_MARK",
+                "bbox": [210, 140, 50, 30],
+                "confidence": 0.880,
+                "severity": "MINOR",
+            }],
+            auto_action_taken=VisionActionChoices.REJECT_DIVERTED,
+            inspection_timestamp=timezone.now() - timezone.timedelta(minutes=10),
+        )
+
+        # Short shot on IMM02
+        VisionDefectInspection.objects.create(
+            station=st_imm02,
+            part=part_map["PRD-IP-BEZEL"],
+            shot_number=540,
+            cavity_number=1,
+            primary_defect_type=DefectTypeChoices.SHORT_SHOT,
+            confidence_score=Decimal("0.940"),
+            severity=DefectSeverityChoices.MAJOR,
+            bounding_boxes=[{
+                "label": "SHORT_SHOT",
+                "bbox": [90, 60, 65, 45],
+                "confidence": 0.940,
+                "severity": "MAJOR",
+            }],
+            auto_action_taken=VisionActionChoices.REJECT_DIVERTED,
+            inspection_timestamp=timezone.now() - timezone.timedelta(minutes=25),
+        )
+
+        # Clean shots on IMM02
+        for shot in range(541, 546):
+            VisionDefectInspection.objects.create(
+                station=st_imm02,
+                part=part_map["PRD-IP-BEZEL"],
+                shot_number=shot,
+                cavity_number=1,
+                primary_defect_type=DefectTypeChoices.NO_DEFECT,
+                confidence_score=Decimal("0.991"),
+                severity=DefectSeverityChoices.ACCEPTABLE,
+                bounding_boxes=[],
+                auto_action_taken=VisionActionChoices.CLEARED,
+                inspection_timestamp=timezone.now() - timezone.timedelta(minutes=(550 - shot) * 3),
+            )
+
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"  Created 4 SQA Suppliers, {CertificateOfAnalysis.objects.count()} CoAs, "
+                f"3 Vision Stations, and {VisionDefectInspection.objects.count()} Vision Shot Inspections."
             )
         )
 

@@ -53,6 +53,8 @@ LOCAL_APPS = [
     "apps.spc.apps.SpcConfig",
     "apps.capa.apps.CapaConfig",
     "apps.metrology.apps.MetrologyConfig",
+    "apps.sqa.apps.SqaConfig",
+    "apps.vision.apps.VisionConfig",
     "apps.integrations.apps.IntegrationsConfig",
 ]
 
